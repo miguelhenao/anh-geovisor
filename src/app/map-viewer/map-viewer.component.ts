@@ -1,30 +1,25 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked } from '@angular/core';
-import { loadModules } from "esri-loader";
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import Map from 'arcgis-js-api/Map';
+import MapView from 'arcgis-js-api/views/MapView';
 
 @Component({
   selector: 'app-map-viewer',
   templateUrl: './map-viewer.component.html',
   styleUrls: ['./map-viewer.component.css']
 })
-export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class MapViewerComponent implements OnInit, OnDestroy {
 
-  @ViewChild("mapViewNode", { static: true }) private mapViewEl: ElementRef;
+  // The <div> where we will place the map
+  @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
   view: any;
 
-  constructor() { }
-
-  ngAfterViewChecked() {
-    document.getElementsByClassName('esri-view')[0] != undefined ? document.getElementsByClassName('esri-view')[0].setAttribute('style', `height: ${window.innerHeight}`) : null;
-  }
+  constructor() {}
 
   async initializeMap() {
     try {
-      // Load the modules for the ArcGIS API for JavaScript
-      const [Map, MapView] = await loadModules(["esri/Map", "esri/views/MapView"]);
-
       // Configure the Map
       const mapProperties = {
-        basemap: "streets"
+        basemap: 'streets'
       };
 
       const map = new Map(mapProperties);
@@ -38,10 +33,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       };
 
       this.view = new MapView(mapViewProperties);
-
       return this.view;
     } catch (error) {
-      console.log("EsriLoader: ", error);
+      console.log('Esri: ', error);
     }
   }
 
