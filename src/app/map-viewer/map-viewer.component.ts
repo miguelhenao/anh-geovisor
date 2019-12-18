@@ -11,7 +11,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   @ViewChild("mapViewNode", { static: true }) private mapViewEl: ElementRef;
   view: any;
-  map: Map
   latitude: number = 4.6486259;
   longitude: number = -74.2478963;
   menu: Array<MenuItem> = [];
