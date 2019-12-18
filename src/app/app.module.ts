@@ -4,6 +4,11 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MapViewerComponent } from './map-viewer/map-viewer.component';
+import {SidebarModule} from 'primeng/sidebar';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {ButtonModule} from 'primeng/button';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import {PanelMenuModule} from 'primeng/panelmenu';
 
 @NgModule({
   declarations: [
@@ -12,7 +17,13 @@ import { MapViewerComponent } from './map-viewer/map-viewer.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    SidebarModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    PanelMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]
