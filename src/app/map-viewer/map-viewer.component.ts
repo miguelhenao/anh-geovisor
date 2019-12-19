@@ -36,10 +36,42 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Archivo GPZ'
           },
           {
-            label: 'Servicio KML'
+            label: 'Servicio KML',
+            command: () => {
+              let dialog = this.dialogService.open(DialogGeoJsonServiceComponent, {
+                width: '50%',
+                baseZIndex: 20,
+                header: 'Cargar un servicio',
+              });
+              dialog.onClose.subscribe(res => {
+                console.log(res);
+                loadModules(['esri/layers/KMLLayer']).then(([KMLLayer]) => {
+                  let geo = new KMLLayer({
+                    url: res
+                  });
+                  this.map.add(geo);
+                });
+              })
+            }
           },
           {
-            label: 'Servicio WMS'
+            label: 'Servicio WMS',
+            command: () => {
+              let dialog = this.dialogService.open(DialogGeoJsonServiceComponent, {
+                width: '50%',
+                baseZIndex: 20,
+                header: 'Cargar un servicio',
+              });
+              dialog.onClose.subscribe(res => {
+                console.log(res);
+                loadModules(['esri/layers/WMSLayer']).then(([WMSLayer]) => {
+                  let geo = new WMSLayer({
+                    url: res
+                  });
+                  this.map.add(geo);
+                });
+              })
+            }
           },
           {
             label: 'Servicio GEOJson',
@@ -47,16 +79,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               let dialog = this.dialogService.open(DialogGeoJsonServiceComponent, {
                 width: '50%',
                 baseZIndex: 20,
-                header: 'Cargar un servicio'
+                header: 'Cargar un servicio',
               });
               dialog.onClose.subscribe(res => {
                 console.log(res);
-                /* loadModules(['esri/layers/GeoJSONLayer']).then(([GeoJSONLayer]) => {
+                loadModules(['esri/layers/GeoJSONLayer']).then(([GeoJSONLayer]) => {
                   let geo = new GeoJSONLayer({
                     url: res
                   });
                   this.map.add(geo);
-                }); */
+                });
               })
             }
           }
@@ -163,8 +195,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-    document.getElementsByClassName('esri-view')[0] != undefined ? document.getElementsByClassName('esri-view')[0].setAttribute('style', `height: ${window.innerHeight}`) : null;
-    document.getElementsByClassName('esri-ui-inner-container esri-ui-corner-container')[0] != undefined ? document.getElementsByClassName('esri-ui-inner-container esri-ui-corner-container')[0].setAttribute('style', 'left: 97%; top: 15px;') : null;
+    /* document.getElementsByClassName('esri-view')[0] != undefined ? document.getElementsByClassName('esri-view')[0].setAttribute('style', `height: ${window.innerHeight}`) : null;
+    document.getElementsByClassName('esri-ui-inner-container esri-ui-corner-container')[0] != undefined ? document.getElementsByClassName('esri-ui-inner-container esri-ui-corner-container')[0].setAttribute('style', 'left: 97%; top: 15px;') : null; */
   }
 
   /**
@@ -182,7 +214,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   async initializeMap() {
     try {
       // Load the modules for the ArcGIS API for JavaScript
-      const [Map, MapView, FeatureLayer, GeoJSONLayer] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/layers/GeoJSONLayer"]);
+      const [Map, MapView, FeatureLayer, GeoJSONLayer, LayerList] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/layers/GeoJSONLayer", "esri/widgets/LayerList"]);
 
       // Configure the Map
       const mapProperties = {
@@ -191,6 +223,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       const map = new Map(mapProperties);
 
+      this.map = map;
       // Initialize the MapView
       const mapViewProperties = {
         container: this.mapViewEl.nativeElement,
@@ -210,14 +243,25 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Parks_and_Open_Space/FeatureServer/0"
       });
 
-     /*  map.add(parksLayer, 0);
-      let geoJSONLayer = new GeoJSONLayer({
-        url: "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson",
+      map.add(parksLayer, 0);
+      let departamentos = new GeoJSONLayer({
+        url: "https://gist.githubusercontent.com/john-guerra/43c7656821069d00dcbc/raw/be6a6e239cd5b5b803c6e7c2ec405b793a9064dd/Colombia.geo.json",
         copyright: "USGS Earthquakes",
+        title: 'Departamentos',
+        opacity: 0.5
       });
-      map.add(geoJSONLayer) */
+      map.add(departamentos);
+
       this.view = new MapView(mapViewProperties);
 
+      var layerList = new LayerList({
+        view: this.view
+      });
+      // Adds widget below other elements in the top left corner of the view
+      this.view.ui.add(layerList, {
+        position: "bottom-right"
+      });
+      this.view.ui.move([ "zoom" ], "top-right");
       return this.view;
     } catch (error) {
       console.log("EsriLoader: ", error);
