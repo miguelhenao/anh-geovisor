@@ -28,7 +28,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         icon: 'pi pi-map-marker',
         items: [
           {
-            label: 'Shapefile'
+            label: 'Shapefile',
+            command: () => {
+              let dialog = this.dialogService.open(DialogFileComponent, {
+                width: '50%',
+                baseZIndex: 20,
+                header: 'Cargar un archivo'
+              });
+            }
           },
           {
             label: 'Archivo CSV'
