@@ -20,6 +20,6 @@ export class MapViewerService {
   constructor(private http: HttpClient) { }
 
   public getJson(url: string): Observable<any[]> {
-    return this.http.get<any[]>('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson');
+    return this.http.get<any[]>(url);
   }
 }

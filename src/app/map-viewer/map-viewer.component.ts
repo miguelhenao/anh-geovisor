@@ -5,6 +5,11 @@ import FeatureLayer from 'arcgis-js-api/layers/FeatureLayer';
 import GeoJSONLayer from 'arcgis-js-api/layers/GeoJSONLayer';
 import { risaralda } from './../../assets/municipiosRisaralda';
 import { MapViewerService } from './map-viewer.service';
+import * as _terraformer_ from 'terraformer-arcgis-parser';
+
+declare global {
+  const terraformer: typeof _terraformer_;
+}
 
 @Component({
   selector: 'app-map-viewer',
@@ -17,7 +22,7 @@ export class MapViewerComponent implements OnInit, OnDestroy {
   @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
   view: any;
 
-  constructor(service: MapViewerService) { }
+  constructor(private service: MapViewerService) { }
 
   async initializeMap() {
     try {
@@ -56,8 +61,12 @@ export class MapViewerComponent implements OnInit, OnDestroy {
   }
 
   loadlayer() {
-    const geoJSONLayer = new GeoJSONLayer({
+    this.service.getJson('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson').subscribe(success => {
+      console.log(success);
+      const geoJSONLayer = new GeoJSONLayer({
+        data: success
+      });
+      this.map.add(geoJSONLayer);
     });
-    this.map.add(geoJSONLayer);
   }
 }
