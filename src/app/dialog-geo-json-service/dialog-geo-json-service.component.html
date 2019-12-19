@@ -1,0 +1,24 @@
+<form [formGroup]="serviceForm" (ngSubmit)="serviceForm.valid && sendUrl()">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <br>
+            <div class="ui-inputgroup">
+                <span class="ui-float-label">
+                    <input type="url" formControlName="urlservice" [(ngModel)]="urlservice" pInputText>
+                    <label for="clientId">URL del Servicio</label>
+                </span>
+                <span class="ui-inputgroup-addon"><i class="fa fa-globe"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <button pButton type="submit" [disabled]="!serviceForm.valid"
+                icon="pi pi-check" iconPos="left" class="ui-button-rounded ui-button-success" label="Guardar"></button>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <button pButton type="button" (click)="cancel()" label="Cancelar" icon="pi pi-times"
+                class="ui-button-rounded ui-button-warning"></button>
+        </div>
+    </div>
+</form>

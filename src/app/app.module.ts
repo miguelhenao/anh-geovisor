@@ -9,11 +9,16 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {ButtonModule} from 'primeng/button';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import {PanelMenuModule} from 'primeng/panelmenu';
+import { DialogGeoJsonServiceComponent } from './dialog-geo-json-service/dialog-geo-json-service.component';
+import {DynamicDialogModule} from 'primeng/dynamicdialog';
+import {InputTextModule} from 'primeng/inputtext';
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
   declarations: [
     AppComponent,
-    MapViewerComponent
+    MapViewerComponent,
+    DialogGeoJsonServiceComponent
   ],
   imports: [
     BrowserModule,
@@ -23,9 +28,15 @@ import {PanelMenuModule} from 'primeng/panelmenu';
     FormsModule,
     ReactiveFormsModule,
     ButtonModule,
-    PanelMenuModule
+    PanelMenuModule,
+    DynamicDialogModule,
+    InputTextModule,
+    HttpClientModule
   ],
   providers: [],
+  entryComponents: [
+    DialogGeoJsonServiceComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
