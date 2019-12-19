@@ -18,3 +18,13 @@
         display: none;
     }
 }
+
+#mainWindow {
+  padding: 0.5em;
+  background-color: #fff;
+}
+#mainWindow p,
+#uploadForm {
+  display: block;
+  padding: 0.1em;
+}

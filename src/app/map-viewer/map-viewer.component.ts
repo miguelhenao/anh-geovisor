@@ -35,6 +35,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 baseZIndex: 20,
                 header: 'Cargar un archivo'
               });
+              dialog.onClose.subscribe(res => {
+                if (res !== undefined) {
+                  console.log(res.data);
+                  if (res.data.indexOf('.zip') !== -1) {
+                    this.generateFeatureCollection(res.data, res.form);
+                  }
+                }
+              });
             }
           },
           {
@@ -225,10 +233,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   async initializeMap() {
     try {
       // Load the modules for the ArcGIS API for JavaScript
-      const [Map, MapView, FeatureLayer, GeoJSONLayer, LayerList, Print, arrayUtils, 
-        PrintTemplate, Search] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", 
-        "esri/layers/GeoJSONLayer", "esri/widgets/LayerList", "esri/widgets/Print", "dojo/_base/array", 
-        "esri/tasks/support/PrintTemplate", "esri/widgets/Search"]);
+      const [Map, MapView, FeatureLayer, GeoJSONLayer, LayerList, Print, arrayUtils,
+        PrintTemplate, Search] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
+          "esri/layers/GeoJSONLayer", "esri/widgets/LayerList", "esri/widgets/Print", "dojo/_base/array",
+          "esri/tasks/support/PrintTemplate", "esri/widgets/Search"]);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
       const agsHost = "anh-gisserver.anh.gov.co";
@@ -362,7 +370,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.view.ui.add(search, {
         position: 'top-right'
       });
-      this.view.ui.move([ "zoom" ], "top-right");
+      this.view.ui.move(["zoom"], "top-right");
       let print = new Print({
         view: this.view,
         printServiceUrl: "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
@@ -370,6 +378,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.view.ui.add(print, {
         position: 'bottom-left'
       });
+
       return this.view;
     } catch (error) {
       console.log("EsriLoader: ", error);
@@ -385,5 +394,73 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       // destroy the map view
       this.view.container = null;
     }
+  }
+
+  async generateFeatureCollection(fileName, form) {
+    var portalUrl = "https://www.arcgis.com";
+    const [FeatureLayer, Graphic, esriRequest] = await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/request']);
+    var name = fileName.split(".");
+    // Chrome and IE add c:\fakepath to the value - we need to remove it
+    // see this link for more info: http://davidwalsh.name/fakepath
+    name = name[0].replace("c:\\fakepath\\", "");
+
+    // define the input params for generate see the rest doc for details
+    // https://developers.arcgis.com/rest/users-groups-and-items/generate.htm
+    var params = {
+      name: name,
+      targetSR: this.view.spatialReference,
+      maxRecordCount: 1000,
+      enforceInputFileSizeLimit: true,
+      enforceOutputJsonSizeLimit: true,
+      generalize: true,
+      maxAllowableOffset: 10,
+      reducePrecision: true,
+      numberOfDigitsAfterDecimal: 0
+    };
+
+    var myContent = {
+      filetype: "shapefile",
+      publishParameters: JSON.stringify(params),
+      f: "json"
+    };
+    debugger;
+
+    esriRequest(portalUrl + "/sharing/rest/content/features/generate", {
+      query: myContent,
+      body: form,
+      responseType: "json"
+    }).then(function (response) {
+      debugger;
+      var layerName = response.data.featureCollection.layers[0].layerDefinition.name;
+      this.addShapefileToMap(response.data.featureCollection);
+    }, function (err) {
+      console.error(err);
+    });
+  }
+
+  async addShapefileToMap(featureCollection) {
+    console.log('addShapefileToMap');
+    const [FeatureLayer, Field, Graphic] = await loadModules(['esri/layers/FeatureLayer',
+      'esri/esri/layers/support/Field', 'esri/Graphic']);
+
+    var sourceGraphics = [];
+
+    var layers = featureCollection.layers.map(function (layer) {
+      var graphics = layer.featureSet.features.map(function (feature) {
+        return Graphic.fromJSON(feature);
+      });
+      sourceGraphics = sourceGraphics.concat(graphics);
+      var featureLayer = new FeatureLayer({
+        objectIdField: "FID",
+        source: graphics,
+        fields: layer.layerDefinition.fields.map(function (field) {
+          return Field.fromJSON(field);
+        })
+      });
+      return featureLayer;
+      // associate the feature with the popup on click to enable highlight and zoom to
+    });
+    this.map.addMany(layers);
+    this.view.goTo(sourceGraphics);
   }
 }

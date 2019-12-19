@@ -1,3 +1,7 @@
-<p-fileUpload #form name="file" customUpload="true"
-  [showCancelButton]="false" chooseLabel="Seleccionar" uploadLabel="Cargar" multiple="multiple" maxFileSize="10000000">
-</p-fileUpload>
+<form id="uploadForm" method="post" enctype="multipart/form-data" (ngSubmit)="onUpload($event)">
+  <!-- <p-fileUpload name="file" customUpload="true" (uploadHandler)="onUpload($event)"
+    [showCancelButton]="false" chooseLabel="Seleccionar" uploadLabel="Cargar" maxFileSize="10000000" method="post">
+  </p-fileUpload> -->
+  <input type="file" name="file" id="upload-file-input" />
+  <button type="submit">Cargar</button>
+</form>
