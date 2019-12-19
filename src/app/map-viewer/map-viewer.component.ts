@@ -4,6 +4,7 @@ import { MenuItem, DialogService } from 'primeng/api';
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked } from '@angular/core';
 import { loadModules } from "esri-loader";
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-map-viewer',
@@ -16,6 +17,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild("mapViewNode", { static: true }) private mapViewEl: ElementRef;
   view: any;
   latitude: number = 4.6486259;
+  loadLayers: boolean = false;
   longitude: number = -74.2478963;
   menu: Array<MenuItem> = [];
   map: any;
@@ -56,7 +58,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             command: () => {
               let dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
-                baseZIndex: 20,
+                baseZIndex: 100,
                 header: 'Cargar un servicio',
               });
               dialog.onClose.subscribe(res => {
@@ -75,7 +77,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             command: () => {
               let dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
-                baseZIndex: 20,
+                baseZIndex: 100,
                 header: 'Cargar un servicio',
               });
               dialog.onClose.subscribe(res => {
@@ -94,7 +96,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             command: () => {
               let dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
-                baseZIndex: 20,
+                baseZIndex: 100,
                 header: 'Cargar un servicio',
               });
               dialog.onClose.subscribe(res => {
@@ -216,6 +218,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   ngAfterViewChecked() {
     /* document.getElementsByClassName('esri-view')[0] != undefined ? document.getElementsByClassName('esri-view')[0].setAttribute('style', `height: ${window.innerHeight}`) : null;
     document.getElementsByClassName('esri-ui-inner-container esri-ui-corner-container')[0] != undefined ? document.getElementsByClassName('esri-ui-inner-container esri-ui-corner-container')[0].setAttribute('style', 'left: 97%; top: 15px;') : null; */
+    document.getElementById('controllers')
   }
 
   /**
@@ -234,9 +237,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, GeoJSONLayer, LayerList, Print, arrayUtils,
-        PrintTemplate, Search] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
+        PrintTemplate, Search, Expand] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/layers/GeoJSONLayer", "esri/widgets/LayerList", "esri/widgets/Print", "dojo/_base/array",
-          "esri/tasks/support/PrintTemplate", "esri/widgets/Search"]);
+          "esri/tasks/support/PrintTemplate", "esri/widgets/Search", "esri/widgets/Expand"]);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
       const agsHost = "anh-gisserver.anh.gov.co";
@@ -323,6 +326,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
+      /* ly_departamento.load().then(function() {
+        alert('Cargo')
+      }) */
       map.add(ly_departamento);
 
       const ly_cuencas = new FeatureLayer(mapRestUrl + "/6", {
@@ -353,17 +359,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-      map.add(ly_sensibilidad);
 
+      map.add(ly_sensibilidad);
       this.view = new MapView(mapViewProperties);
 
-      var layerList = new LayerList({
+      let layerList = new LayerList({
+        container: document.createElement("div"),
         view: this.view
       });
-      // Adds widget below other elements in the top left corner of the view
-      this.view.ui.add(layerList, {
-        position: "bottom-right"
-      });
+      let layerListExpand = new Expand({
+        expandIconClass: "esri-icon-layers",
+        view: this.view,
+        content: layerList.domNode,
+        group: 'bottom-right',
+      })
       let search = new Search({
         view: this.view
       });
@@ -375,10 +384,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         view: this.view,
         printServiceUrl: "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
       });
-      this.view.ui.add(print, {
-        position: 'bottom-left'
-      });
-
+      let expandPrint = new Expand({
+        expandIconClass: 'esri-icon-download',
+        view: this.view,
+        content: print,
+        group: 'bottom-right'
+      })
+      this.view.ui.add([expandPrint, layerListExpand], 'bottom-right');
       return this.view;
     } catch (error) {
       console.log("EsriLoader: ", error);

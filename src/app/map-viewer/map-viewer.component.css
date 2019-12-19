@@ -3,6 +3,16 @@
 #menu {
     z-index: 5;
     position: absolute;
+    background: #ffffff;
+    background-image: url("../../assets/logo-anh-p.png");
+    background-repeat: no-repeat;
+    width: 160px;
+    padding: 29px;
+    height: 54px;
+}
+
+#helps button {
+    margin-left: 25px;
 }
 
 @media print {

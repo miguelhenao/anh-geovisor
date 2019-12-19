@@ -1,32 +1,13 @@
 <p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10">
-  <br>
-  <p-panelMenu [model]="menu" [style]="{'width':'100%'}"></p-panelMenu>
-</p-sidebar>
-<button id="menu" pButton type="button" (click)="visibleMenu = true" icon="pi pi-arrow-right"></button>
-<!-- <div id="mainWindow">
-  <div>
-    <div style="padding-left:4px;">
-      <p>
-        Download shapefile from
-        <a href="https://bsvensson.github.io/various-tests/shp/drp_county_boundary.zip">here.</a>
-      </p>
-      <p>Add a zipped shapefile to the map.</p>
-      <p>
-        Visit the
-        <a target="_blank" href="https://doc.arcgis.com/en/arcgis-online/reference/shapefiles.htm">Shapefiles</a>
-        help topic for information and limitations.
-      </p>
-      <form enctype="multipart/form-data" method="post" id="uploadForm">
-        <div class="field">
-          <label class="file-upload">
-            <span><strong>Add File</strong></span>
-            <input type="file" name="file" id="inFile" />
-          </label>
-        </div>
-      </form>
-      <span class="file-upload-status" style="opacity:1;" id="upload-status"></span>
-      <div id="fileInfo"></div>
+    <br>
+    <img src="../../assets/logo-anh-p.png">
+    <div id="helps">
+        <button pButton type="button" icon="pi pi-spin pi-compass" class="ui-button-success" pTooltip="Navegación" tooltipPosition="bottom"></button>
+        <button pButton type="button" icon="fas fa-ruler" class="ui-button-info" pTooltip="Tomar Medidas" tooltipPosition="bottom"></button>
+        <button pButton type="button" icon="fas fa-hand-pointer" class="ui-button-warning" pTooltip="Seleccionar" tooltipPosition="bottom"></button>
+        <button pButton type="button" icon="pi pi-info-circle" class="ui-button-danger" pTooltip="Identificar" tooltipPosition="bottom"></button>
     </div>
-  </div>
-</div> -->
+    <p-panelMenu [model]="menu" [style]="{'width':'100%'}"></p-panelMenu>
+</p-sidebar>
+<button id="menu" type="button" (click)="visibleMenu = true"></button>
 <div #mapViewNode></div>
