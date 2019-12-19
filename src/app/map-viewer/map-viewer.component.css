@@ -8,3 +8,17 @@
     z-index: 5;
     position: absolute;
 }
+
+@media print {
+    .esri-ui-top-right, .esri-ui-corner{
+        display: none;
+    }
+
+    p-sidebar {
+        display: none;
+    }
+
+    #menu {
+        display: none;
+    }
+}

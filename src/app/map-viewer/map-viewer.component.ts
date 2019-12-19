@@ -123,7 +123,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       },
       {
         label: 'Impresión',
-        icon: 'fa fa-print'
+        icon: 'fa fa-print',
+        command: () => {
+          window.print();
+        }
       },
       {
         label: 'Mapa base',
@@ -214,7 +217,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   async initializeMap() {
     try {
       // Load the modules for the ArcGIS API for JavaScript
-      const [Map, MapView, FeatureLayer, GeoJSONLayer, LayerList] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/layers/GeoJSONLayer", "esri/widgets/LayerList"]);
+      const [Map, MapView, FeatureLayer, GeoJSONLayer, LayerList, Print] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/layers/GeoJSONLayer", "esri/widgets/LayerList", "esri/widgets/Print"]);
 
       // Configure the Map
       const mapProperties = {
@@ -262,6 +265,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         position: "bottom-right"
       });
       this.view.ui.move([ "zoom" ], "top-right");
+      let print = new Print({
+        view: this.view
+      });
+      this.view.ui.add(print, {
+        position: 'top-right'
+      });
       return this.view;
     } catch (error) {
       console.log("EsriLoader: ", error);
