@@ -15,7 +15,7 @@ import {DynamicDialogModule} from 'primeng/dynamicdialog';
 import {InputTextModule} from 'primeng/inputtext';
 import { DialogFileComponent } from './dialog-file/dialog-file.component';
 import {FileUploadModule} from 'primeng/fileupload';
-
+import {TooltipModule} from 'primeng/tooltip';
 
 @NgModule({
   declarations: [
@@ -36,7 +36,8 @@ import {FileUploadModule} from 'primeng/fileupload';
     DynamicDialogModule,
     InputTextModule,
     HttpClientModule,
-    FileUploadModule
+    FileUploadModule,
+    TooltipModule
   ],
   providers: [],
   entryComponents: [

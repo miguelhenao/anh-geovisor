@@ -1,6 +1,13 @@
 <p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10">
     <br>
+    <img src="../../assets/logo-anh-p.png">
+    <div id="helps">
+        <button pButton type="button" icon="pi pi-spin pi-compass" class="ui-button-success" pTooltip="Navegación" tooltipPosition="bottom"></button>
+        <button pButton type="button" icon="fas fa-ruler" class="ui-button-info" pTooltip="Tomar Medidas" tooltipPosition="bottom"></button>
+        <button pButton type="button" icon="fas fa-hand-pointer" class="ui-button-warning" pTooltip="Seleccionar" tooltipPosition="bottom"></button>
+        <button pButton type="button" icon="pi pi-info-circle" class="ui-button-danger" pTooltip="Identificar" tooltipPosition="bottom"></button>
+    </div>
     <p-panelMenu [model]="menu" [style]="{'width':'100%'}"></p-panelMenu>
 </p-sidebar>
-<button id="menu" pButton type="button" (click)="visibleMenu = true" icon="pi pi-arrow-right"></button>
+<button id="menu" type="button" (click)="visibleMenu = true"></button>
 <div #mapViewNode></div>
