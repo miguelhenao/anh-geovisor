@@ -131,7 +131,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       },
       {
         label: 'Impresión',
-        icon: 'fa fa-print'
+        icon: 'fa fa-print',
+        command: () => {
+          window.print();
+        }
       },
       {
         label: 'Mapa base',
@@ -222,7 +225,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   async initializeMap() {
     try {
       // Load the modules for the ArcGIS API for JavaScript
-      const [Map, MapView, FeatureLayer, GeoJSONLayer, LayerList] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/layers/GeoJSONLayer", "esri/widgets/LayerList"]);
+      const [Map, MapView, FeatureLayer, GeoJSONLayer, LayerList, Print, arrayUtils, 
+        PrintTemplate, Search] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", 
+        "esri/layers/GeoJSONLayer", "esri/widgets/LayerList", "esri/widgets/Print", "dojo/_base/array", 
+        "esri/tasks/support/PrintTemplate", "esri/widgets/Search"]);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
       const agsHost = "anh-gisserver.anh.gov.co";
@@ -350,7 +356,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.view.ui.add(layerList, {
         position: "bottom-right"
       });
-      this.view.ui.move(["zoom"], "top-right");
+      let search = new Search({
+        view: this.view
+      });
+      this.view.ui.add(search, {
+        position: 'top-right'
+      });
+      this.view.ui.move([ "zoom" ], "top-right");
+      let print = new Print({
+        view: this.view,
+        printServiceUrl: "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
+      });
+      this.view.ui.add(print, {
+        position: 'bottom-left'
+      });
       return this.view;
     } catch (error) {
       console.log("EsriLoader: ", error);
