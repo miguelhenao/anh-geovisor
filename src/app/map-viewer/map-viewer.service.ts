@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,6 @@ export class MapViewerService {
   constructor(private http: HttpClient) { }
 
   public getJson(url: string): Observable<any[]> {
-    return this.http.get<any[]>(url);
+    return this.http.get<any[]>('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson');
   }
 }

@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import Map from 'arcgis-js-api/Map';
 import MapView from 'arcgis-js-api/views/MapView';
-import { GeoJSONLayer } from "arcgis-js-api/layers/GeoJSONLayer";
-import { MenuItem } from 'primeng/api';
-import { DialogService } from 'primeng/api';
+import FeatureLayer from 'arcgis-js-api/layers/FeatureLayer';
+import GeoJSONLayer from 'arcgis-js-api/layers/GeoJSONLayer';
+import { risaralda } from './../../assets/municipiosRisaralda';
+import { MapViewerService } from './map-viewer.service';
+import { DialogService, MenuItem } from 'primeng/api';
 import { DialogGeoJsonServiceComponent } from '../dialog-geo-json-service/dialog-geo-json-service.component';
 
 @Component({
@@ -13,7 +15,6 @@ import { DialogGeoJsonServiceComponent } from '../dialog-geo-json-service/dialog
   providers: [DialogService]
 })
 export class MapViewerComponent implements OnInit, OnDestroy {
-
   // The <div> where we will place the map
   @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
   view: any;
@@ -21,8 +22,8 @@ export class MapViewerComponent implements OnInit, OnDestroy {
   longitude: number = -74.2478963;
   menu: Array<MenuItem> = [];
   map: Map;
-  
-  constructor(private dialogService: DialogService) { 
+
+  constructor(private dialogService: DialogService, private service: MapViewerService) {
     this.setCurrentPosition();
     this.menu = [
       {
@@ -52,13 +53,14 @@ export class MapViewerComponent implements OnInit, OnDestroy {
                 baseZIndex: 20,
                 header: 'Cargar un servicio'
               });
-              dialog.onClose.subscribe( res => {
+              dialog.onClose.subscribe(res => {
                 console.log(res);
-                let geoLayout = new GeoJSONLayer({
-                  url: res,
-                  copyright: "USGS Earthquakes"
+                this.service.getJson(res).subscribe(res => {
+                  let geoLayout = new GeoJSONLayer({
+                    data: res
+                  });
+                  this.map.add(geoLayout, 1);
                 });
-                this.map.add(geoLayout);
               })
             }
           }
@@ -187,20 +189,17 @@ export class MapViewerComponent implements OnInit, OnDestroy {
       const mapProperties = {
         basemap: 'topo'
       };
+
       this.map = new Map(mapProperties);
+
+      // Initialize the MapView
       const mapViewProperties = {
         container: this.mapViewEl.nativeElement,
         center: [this.longitude, this.latitude],
         zoom: 5,
-        map: this.map,
-        sliderPosition: "top-right",
+        map: this.map
       };
       this.view = new MapView(mapViewProperties);
-      let geoLayout = new GeoJSONLayer({
-        url: "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson",
-        copyright: "USGS Earthquakes"
-      });
-      this.map.add(geoLayout);
       return this.view;
     } catch (error) {
       console.log('Esri: ', error);
@@ -209,11 +208,18 @@ export class MapViewerComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initializeMap();
+    this.loadlayer();
   }
 
   ngOnDestroy() {
     if (this.view) {
       this.view.container = null;
     }
+  }
+
+  loadlayer() {
+    const geoJSONLayer = new GeoJSONLayer({
+    });
+    this.map.add(geoJSONLayer);
   }
 }
