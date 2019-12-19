@@ -3,3 +3,8 @@
 .esri-view {
     height: 600px;
 }
+
+#menu {
+    z-index: 5;
+    position: absolute;
+}

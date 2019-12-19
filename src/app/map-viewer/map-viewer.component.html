@@ -1,1 +1,6 @@
+<p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10">
+    <br>
+    <p-panelMenu [model]="menu" [style]="{'width':'100%'}"></p-panelMenu>
+</p-sidebar>
+<button id="menu" pButton type="button" (click)="visibleMenu = true" icon="pi pi-arrow-right"></button>
 <div #mapViewNode></div>
