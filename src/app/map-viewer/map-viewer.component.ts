@@ -3,6 +3,7 @@ import { DialogUrlServiceComponent } from '../dialog-urlservice/dialog-urlservic
 import { MenuItem, DialogService } from 'primeng/api';
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked } from '@angular/core';
 import { loadModules } from "esri-loader";
+import { DialogFileComponent } from '../dialog-file/dialog-file.component';
 
 @Component({
   selector: 'app-map-viewer',
@@ -217,7 +218,21 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   async initializeMap() {
     try {
       // Load the modules for the ArcGIS API for JavaScript
-      const [Map, MapView, FeatureLayer, GeoJSONLayer, LayerList, Print] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/layers/GeoJSONLayer", "esri/widgets/LayerList", "esri/widgets/Print"]);
+      const [Map, MapView, FeatureLayer, GeoJSONLayer, LayerList, Print, arrayUtils, 
+        PrintTemplate, Search] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", 
+        "esri/layers/GeoJSONLayer", "esri/widgets/LayerList", "esri/widgets/Print", "dojo/_base/array", 
+        "esri/tasks/support/PrintTemplate", "esri/widgets/Search"]);
+
+      // Servidor de AGS desde donde se cargan los servicios, capas, etc.
+      const agsHost = "anh-gisserver.anh.gov.co";
+      const agsProtocol = "https";
+      const mapRestUrl = agsProtocol + "://" + agsHost + "/arcgis/rest/services/Tierras/Mapa_ANH/MapServer";
+      const agsDir = "arcgis";
+      const agsUrlBase = agsProtocol + "://" + agsHost + "/" + agsDir + "/";
+      // Url servidor ArcGIS.com para servicios de conversión (sharing)
+      const sharingUrl = "https://www.arcgis.com"; // importante que sea https para evitar problemas de SSL
+      // Url del servicio de impresión
+      const printUrl = agsUrlBase + "rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task";
 
       // Configure the Map
       const mapProperties = {
@@ -235,25 +250,95 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         map: map
       };
 
-      let trailsLayer = new FeatureLayer({
-        url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0"
+      const ly_pozo = new FeatureLayer(mapRestUrl + "/1", {
+        id: "Pozo",
+        opacity: 1.0,
+        visible: true,
+        outFields: ["*"],
+        showAttribution: true,
+        mode: FeatureLayer.MODE_ONDEMAND
       });
+      map.add(ly_pozo);
 
-      map.add(trailsLayer, 0);
-
-      // Parks and open spaces (polygons)
-      let parksLayer = new FeatureLayer({
-        url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Parks_and_Open_Space/FeatureServer/0"
+      const ly_rezumadero = new FeatureLayer(mapRestUrl + "/0", {
+        id: "Rezumadero",
+        opacity: 1.0,
+        visible: true,
+        outFields: ["*"],
+        showAttribution: true,
+        mode: FeatureLayer.MODE_ONDEMAND
       });
+      map.add(ly_rezumadero);
 
-      map.add(parksLayer, 0);
-      let departamentos = new GeoJSONLayer({
-        url: "https://gist.githubusercontent.com/john-guerra/43c7656821069d00dcbc/raw/be6a6e239cd5b5b803c6e7c2ec405b793a9064dd/Colombia.geo.json",
-        copyright: "USGS Earthquakes",
-        title: 'Departamentos',
-        opacity: 0.5
+      const ly_sismica = new FeatureLayer(mapRestUrl + "/2", {
+        id: "Sismica 2D",
+        opacity: 1.0,
+        visible: true,
+        outFields: ["*"],
+        showAttribution: true,
+        mode: FeatureLayer.MODE_ONDEMAND
       });
-      map.add(departamentos);
+      map.add(ly_sismica);
+
+      const ly_sismica3d = new FeatureLayer(mapRestUrl + "/3", {
+        id: "Sismica 3D",
+        opacity: 1.0,
+        visible: true,
+        outFields: ["*"],
+        showAttribution: true,
+        mode: FeatureLayer.MODE_ONDEMAND
+      });
+      map.add(ly_sismica3d);
+
+      const ly_municipio = new FeatureLayer(mapRestUrl + "/5", {
+        id: "Municipio",
+        opacity: 1.0,
+        visible: true,
+        outFields: ["*"],
+        showAttribution: true,
+        mode: FeatureLayer.MODE_ONDEMAND
+      });
+      map.add(ly_municipio);
+
+      const ly_departamento = new FeatureLayer(mapRestUrl + "/4", {
+        id: "Departamento",
+        opacity: 1.0,
+        visible: true,
+        outFields: ["*"],
+        showAttribution: true,
+        mode: FeatureLayer.MODE_ONDEMAND
+      });
+      map.add(ly_departamento);
+
+      const ly_cuencas = new FeatureLayer(mapRestUrl + "/6", {
+        id: "Cuencas",
+        opacity: 1.0,
+        visible: true,
+        outFields: ["*"],
+        showAttribution: true,
+        mode: FeatureLayer.MODE_ONDEMAND
+      });
+      map.add(ly_cuencas);
+
+      const ly_tierras = new FeatureLayer(mapRestUrl + "/8", {
+        id: "Tierras",
+        opacity: 0.5,
+        visible: true,
+        outFields: ["*"],
+        showAttribution: true,
+        mode: FeatureLayer.MODE_ONDEMAND
+      });
+      map.add(ly_tierras);
+
+      const ly_sensibilidad = new FeatureLayer(mapRestUrl + "/7", {
+        id: "Sensibilidad",
+        opacity: 0.5,
+        visible: false,
+        outFields: ["*"],
+        showAttribution: true,
+        mode: FeatureLayer.MODE_ONDEMAND
+      });
+      map.add(ly_sensibilidad);
 
       this.view = new MapView(mapViewProperties);
 
@@ -264,12 +349,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.view.ui.add(layerList, {
         position: "bottom-right"
       });
-      this.view.ui.move([ "zoom" ], "top-right");
-      let print = new Print({
+      let search = new Search({
         view: this.view
       });
-      this.view.ui.add(print, {
+      this.view.ui.add(search, {
         position: 'top-right'
+      });
+      this.view.ui.move([ "zoom" ], "top-right");
+      let print = new Print({
+        view: this.view,
+        printServiceUrl: "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
+      });
+      this.view.ui.add(print, {
+        position: 'bottom-left'
       });
       return this.view;
     } catch (error) {

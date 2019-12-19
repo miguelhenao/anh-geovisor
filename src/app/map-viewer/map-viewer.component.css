@@ -1,17 +1,13 @@
 @import url('https://js.arcgis.com/4.12/esri/css/main.css');
 
-.esri-view {
-    height: 600px;
-}
-
 #menu {
     z-index: 5;
     position: absolute;
 }
 
 @media print {
-    .esri-ui-top-right, .esri-ui-corner{
-        display: none;
+    .esri-ui-corner {
+        display: none !important;
     }
 
     p-sidebar {

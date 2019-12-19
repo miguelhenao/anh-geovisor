@@ -13,12 +13,16 @@ import {PanelMenuModule} from 'primeng/panelmenu';
 import { DialogUrlServiceComponent } from './dialog-urlservice/dialog-urlservice.component';
 import {DynamicDialogModule} from 'primeng/dynamicdialog';
 import {InputTextModule} from 'primeng/inputtext';
+import { DialogFileComponent } from './dialog-file/dialog-file.component';
+import {FileUploadModule} from 'primeng/fileupload';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     MapViewerComponent,
-    DialogUrlServiceComponent
+    DialogUrlServiceComponent,
+    DialogFileComponent
   ],
   imports: [
     BrowserModule,
@@ -31,11 +35,13 @@ import {InputTextModule} from 'primeng/inputtext';
     PanelMenuModule,
     DynamicDialogModule,
     InputTextModule,
-    HttpClientModule
+    HttpClientModule,
+    FileUploadModule
   ],
   providers: [],
   entryComponents: [
-    DialogUrlServiceComponent
+    DialogUrlServiceComponent,
+    DialogFileComponent
   ],
   bootstrap: [AppComponent]
 })
