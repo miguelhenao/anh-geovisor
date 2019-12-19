@@ -3,11 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DynamicDialogRef } from 'primeng/api';
 
 @Component({
-  selector: 'app-dialog-geo-json-service',
-  templateUrl: './dialog-geo-json-service.component.html',
-  styleUrls: ['./dialog-geo-json-service.component.css']
+  selector: 'app-dialog-urlservice',
+  templateUrl: './dialog-urlservice.component.html',
+  styleUrls: ['./dialog-urlservice.component.css']
 })
-export class DialogGeoJsonServiceComponent implements OnInit {
+export class DialogUrlServiceComponent implements OnInit {
 
   serviceForm: FormGroup;
   urlservice: string;

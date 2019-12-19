@@ -10,7 +10,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {ButtonModule} from 'primeng/button';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import {PanelMenuModule} from 'primeng/panelmenu';
-import { DialogGeoJsonServiceComponent } from './dialog-geo-json-service/dialog-geo-json-service.component';
+import { DialogUrlServiceComponent } from './dialog-urlservice/dialog-urlservice.component';
 import {DynamicDialogModule} from 'primeng/dynamicdialog';
 import {InputTextModule} from 'primeng/inputtext';
 
@@ -18,7 +18,7 @@ import {InputTextModule} from 'primeng/inputtext';
   declarations: [
     AppComponent,
     MapViewerComponent,
-    DialogGeoJsonServiceComponent
+    DialogUrlServiceComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +35,7 @@ import {InputTextModule} from 'primeng/inputtext';
   ],
   providers: [],
   entryComponents: [
-    DialogGeoJsonServiceComponent
+    DialogUrlServiceComponent
   ],
   bootstrap: [AppComponent]
 })

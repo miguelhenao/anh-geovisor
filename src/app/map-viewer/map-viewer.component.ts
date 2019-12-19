@@ -1,5 +1,5 @@
 import { MapViewerService } from './map-viewer.service';
-import { DialogGeoJsonServiceComponent } from './../dialog-geo-json-service/dialog-geo-json-service.component';
+import { DialogUrlServiceComponent } from '../dialog-urlservice/dialog-urlservice.component';
 import { MenuItem, DialogService } from 'primeng/api';
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked } from '@angular/core';
 import { loadModules } from "esri-loader";
@@ -38,7 +38,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'Servicio KML',
             command: () => {
-              let dialog = this.dialogService.open(DialogGeoJsonServiceComponent, {
+              let dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
                 baseZIndex: 20,
                 header: 'Cargar un servicio',
@@ -57,7 +57,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'Servicio WMS',
             command: () => {
-              let dialog = this.dialogService.open(DialogGeoJsonServiceComponent, {
+              let dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
                 baseZIndex: 20,
                 header: 'Cargar un servicio',
@@ -76,7 +76,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'Servicio GEOJson',
             command: () => {
-              let dialog = this.dialogService.open(DialogGeoJsonServiceComponent, {
+              let dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
                 baseZIndex: 20,
                 header: 'Cargar un servicio',
