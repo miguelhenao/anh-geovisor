@@ -5,6 +5,7 @@ import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked }
 import { loadModules } from "esri-loader";
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.component';
 
 @Component({
   selector: 'app-map-viewer',
@@ -24,6 +25,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   constructor(private dialogService: DialogService, private service: MapViewerService) {
     this.setCurrentPosition();
+    if (localStorage.getItem('agreeTerms') == undefined) {
+      let dialog = this.dialogService.open(DialogTerminosComponent, {
+        width: '100vw',
+        height: '100vh',
+        showHeader: false
+      });
+    }
     this.menu = [
       {
         label: 'Mis capas',
@@ -216,9 +224,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-    /* document.getElementsByClassName('esri-view')[0] != undefined ? document.getElementsByClassName('esri-view')[0].setAttribute('style', `height: ${window.innerHeight}`) : null;
-    document.getElementsByClassName('esri-ui-inner-container esri-ui-corner-container')[0] != undefined ? document.getElementsByClassName('esri-ui-inner-container esri-ui-corner-container')[0].setAttribute('style', 'left: 97%; top: 15px;') : null; */
-    document.getElementById('controllers')
   }
 
   /**
@@ -237,9 +242,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, GeoJSONLayer, LayerList, Print, arrayUtils,
-        PrintTemplate, Search, Expand] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
+        PrintTemplate, Search, Expand, AreaMeasurement2D, DistanceMeasurement2D, TimeSlider] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/layers/GeoJSONLayer", "esri/widgets/LayerList", "esri/widgets/Print", "dojo/_base/array",
-          "esri/tasks/support/PrintTemplate", "esri/widgets/Search", "esri/widgets/Expand"]);
+          "esri/tasks/support/PrintTemplate", "esri/widgets/Search", "esri/widgets/Expand", "esri/widgets/AreaMeasurement2D", 
+          "esri/widgets/DistanceMeasurement2D", "esri/widgets/TimeSlider"]);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
       const agsHost = "anh-gisserver.anh.gov.co";
@@ -390,7 +396,26 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         content: print,
         group: 'bottom-right'
       })
-      this.view.ui.add([expandPrint, layerListExpand], 'bottom-right');
+
+      let areaMeasurement = new AreaMeasurement2D({
+        view: this.view
+      });
+      let expandAreaMeasure = new Expand({
+        expandIconClass: 'fas fa-ruler-combined',
+        view: this.view,
+        content: areaMeasurement,
+        group: 'bottom-right'
+      });
+      let linearMeasurement = new DistanceMeasurement2D({
+        view: this.view
+      });
+      let expandLinearMeasure = new Expand({
+        expandIconClass: 'fas fa-ruler',
+        view: this.view,
+        content: linearMeasurement,
+        group: 'bottom-right'
+      });
+      this.view.ui.add([expandPrint, layerListExpand, expandAreaMeasure, expandLinearMeasure], 'bottom-right');
       return this.view;
     } catch (error) {
       console.log("EsriLoader: ", error);

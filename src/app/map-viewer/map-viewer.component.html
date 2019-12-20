@@ -1,13 +1,19 @@
 <p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10">
     <br>
-    <img src="../../assets/logo-anh-p.png">
+    <img src="logo-anh-p.png" (click)="visibleMenu = false">
     <div id="helps">
-        <button pButton type="button" icon="pi pi-spin pi-compass" class="ui-button-success" pTooltip="Navegación" tooltipPosition="bottom"></button>
-        <button pButton type="button" icon="fas fa-ruler" class="ui-button-info" pTooltip="Tomar Medidas" tooltipPosition="bottom"></button>
-        <button pButton type="button" icon="fas fa-hand-pointer" class="ui-button-warning" pTooltip="Seleccionar" tooltipPosition="bottom"></button>
-        <button pButton type="button" icon="pi pi-info-circle" class="ui-button-danger" pTooltip="Identificar" tooltipPosition="bottom"></button>
+        <button pButton type="button" pTooltip="Navegación"
+        tooltipPosition="bottom" icon="pi pi-spin pi-compass" class="ui-button-success"></button>
+        <button pButton type="button" icon="fas fa-ruler" class="ui-button-info" pTooltip="Tomar Medidas"
+            tooltipPosition="bottom"></button>
+        <button pButton type="button" icon="fas fa-hand-pointer" class="ui-button-warning" pTooltip="Seleccionar"
+            tooltipPosition="bottom"></button>
+        <button pButton type="button" icon="pi pi-info-circle" class="ui-button-danger" pTooltip="Identificar"
+            tooltipPosition="bottom"></button>
     </div>
-    <p-panelMenu [model]="menu" [style]="{'width':'100%'}"></p-panelMenu>
+    <div style="overflow-y: auto;">
+        <p-panelMenu [model]="menu" [style]="{'width':'100%', 'height': '500px'}"></p-panelMenu>
+    </div>
 </p-sidebar>
 <button id="menu" type="button" (click)="visibleMenu = true"></button>
 <div #mapViewNode></div>

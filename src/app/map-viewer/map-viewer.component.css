@@ -1,5 +1,4 @@
 @import url('https://js.arcgis.com/4.12/esri/css/main.css');
-
 #menu {
     z-index: 5;
     position: absolute;
@@ -11,22 +10,58 @@
     height: 54px;
 }
 
+::ng-deep .ui-sidebar-active {
+    padding: 0 !important;
+}
+
+/* width */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+p-sidebar {
+    overflow-y: scroll;
+}
+
 #helps button {
     margin-left: 25px;
 }
 
+#helps {
+    margin: 5px 0px 5px 0px;
+}
+
 @media print {
-    .esri-ui-corner {
+    ::ng-deep .esri-component {
         display: none !important;
     }
-
     p-sidebar {
         display: none;
     }
-
     #menu {
         display: none;
     }
+<<<<<<< HEAD
 }
 
 #mainWindow {
@@ -38,3 +73,6 @@
   display: block;
   padding: 0.1em;
 }
+=======
+}
+>>>>>>> bdda1e82c717d57a135fc43b289feed043cac0f0
