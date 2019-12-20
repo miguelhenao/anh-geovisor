@@ -61,18 +61,4 @@ p-sidebar {
     #menu {
         display: none;
     }
-<<<<<<< HEAD
 }
-
-#mainWindow {
-  padding: 0.5em;
-  background-color: #fff;
-}
-#mainWindow p,
-#uploadForm {
-  display: block;
-  padding: 0.1em;
-}
-=======
-}
->>>>>>> bdda1e82c717d57a135fc43b289feed043cac0f0
