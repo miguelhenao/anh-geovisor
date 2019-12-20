@@ -1,1 +1,7 @@
-<p>dialog-file works!</p>
+<form id="uploadForm" method="post" enctype="multipart/form-data" (ngSubmit)="onUpload($event)">
+  <!-- <p-fileUpload name="file" customUpload="true" (uploadHandler)="onUpload($event)"
+    [showCancelButton]="false" chooseLabel="Seleccionar" uploadLabel="Cargar" maxFileSize="10000000" method="post">
+  </p-fileUpload> -->
+  <input type="file" name="file" id="upload-file-input" />
+  <button type="submit">Cargar</button>
+</form>
