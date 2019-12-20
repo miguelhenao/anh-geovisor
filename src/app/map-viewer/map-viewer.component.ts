@@ -52,7 +52,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               let dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
                 baseZIndex: 100,
-                header: 'Cargar un servicio',
+                header: 'Cargar servicio KML',
               });
               dialog.onClose.subscribe(res => {
                 console.log(res);
@@ -71,7 +71,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               let dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
                 baseZIndex: 100,
-                header: 'Cargar un servicio',
+                header: 'Cargar servicio WMS',
               });
               dialog.onClose.subscribe(res => {
                 console.log(res);
@@ -90,7 +90,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               let dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
                 baseZIndex: 100,
-                header: 'Cargar un servicio',
+                header: 'Cargar servicio GeoJSON',
               });
               dialog.onClose.subscribe(res => {
                 console.log(res);
@@ -227,10 +227,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, GeoJSONLayer, LayerList, Print, arrayUtils,
-        PrintTemplate, Search, Expand, AreaMeasurement2D, DistanceMeasurement2D, TimeSlider] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
+        PrintTemplate, Search, Expand, AreaMeasurement2D, DistanceMeasurement2D, Measurement] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/layers/GeoJSONLayer", "esri/widgets/LayerList", "esri/widgets/Print", "dojo/_base/array",
           "esri/tasks/support/PrintTemplate", "esri/widgets/Search", "esri/widgets/Expand", "esri/widgets/AreaMeasurement2D", 
-          "esri/widgets/DistanceMeasurement2D", "esri/widgets/TimeSlider"]);
+          "esri/widgets/DistanceMeasurement2D"]);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
       const agsHost = "anh-gisserver.anh.gov.co";
