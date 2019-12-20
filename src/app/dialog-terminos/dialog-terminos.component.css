@@ -1,0 +1,14 @@
+#body {
+    overflow-y: scroll; 
+    height: 450px;
+    clear: both;
+}
+
+#header div {
+    float: left;
+}
+
+#header img {
+    margin-top: 10px;
+    float: right;
+}

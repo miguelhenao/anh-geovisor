@@ -16,13 +16,15 @@ import {InputTextModule} from 'primeng/inputtext';
 import { DialogFileComponent } from './dialog-file/dialog-file.component';
 import {FileUploadModule} from 'primeng/fileupload';
 import {TooltipModule} from 'primeng/tooltip';
+import { DialogTerminosComponent } from './dialog-terminos/dialog-terminos.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapViewerComponent,
     DialogUrlServiceComponent,
-    DialogFileComponent
+    DialogFileComponent,
+    DialogTerminosComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +44,8 @@ import {TooltipModule} from 'primeng/tooltip';
   providers: [],
   entryComponents: [
     DialogUrlServiceComponent,
-    DialogFileComponent
+    DialogFileComponent,
+    DialogTerminosComponent
   ],
   bootstrap: [AppComponent]
 })
