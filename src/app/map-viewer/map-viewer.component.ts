@@ -76,7 +76,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               let dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
                 baseZIndex: 100,
-                header: 'Cargar un servicio',
+                header: 'Cargar servicio KML',
               });
               dialog.onClose.subscribe(res => {
                 console.log(res);
@@ -95,7 +95,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               let dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
                 baseZIndex: 100,
-                header: 'Cargar un servicio',
+                header: 'Cargar servicio WMS',
               });
               dialog.onClose.subscribe(res => {
                 console.log(res);
@@ -114,7 +114,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               let dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
                 baseZIndex: 100,
-                header: 'Cargar un servicio',
+                header: 'Cargar servicio GeoJSON',
               });
               dialog.onClose.subscribe(res => {
                 console.log(res);
@@ -251,7 +251,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, GeoJSONLayer, LayerList, Print, arrayUtils,
-        PrintTemplate, Search, Expand, AreaMeasurement2D, DistanceMeasurement2D, TimeSlider] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
+        PrintTemplate, Search, Expand, AreaMeasurement2D, DistanceMeasurement2D, Measurement] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/layers/GeoJSONLayer", "esri/widgets/LayerList", "esri/widgets/Print", "dojo/_base/array",
           "esri/tasks/support/PrintTemplate", "esri/widgets/Search", "esri/widgets/Expand", "esri/widgets/AreaMeasurement2D",
           "esri/widgets/DistanceMeasurement2D", "esri/widgets/TimeSlider"]);
@@ -461,7 +461,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       publishParameters: JSON.stringify(params),
       f: "json"
     };
-    debugger;
 
     esriRequest(portalUrl + "/sharing/rest/content/features/generate", {
       query: myContent,
@@ -469,7 +468,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       responseType: "json"
     }).then((response) => {
       var layerName = response.data.featureCollection.layers[0].layerDefinition.name;
-      debugger;
       var sourceGraphics = [];
 
       var layers = response.data.featureCollection.layers.map((layer) => {
@@ -486,12 +484,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           })
         });
         return featureLayer;
-        // associate the feature with the popup on click to enable highlight and zoom to
       });
-      debugger;
       this.map.addMany(layers);
       this.view.goTo(sourceGraphics);
-      console.log(this.map);
 
     }, (err) => {
       console.error(err);
