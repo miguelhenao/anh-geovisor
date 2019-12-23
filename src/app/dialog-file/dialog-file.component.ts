@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DynamicDialogRef } from 'primeng/api';
+import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/api';
 
 @Component({
   selector: 'app-dialog-file',
@@ -8,7 +8,11 @@ import { DynamicDialogRef } from 'primeng/api';
 })
 export class DialogFileComponent implements OnInit {
   uploadedFiles: any[] = [];
-  constructor(private dialogRef: DynamicDialogRef) { }
+  dataJSON: Array<any> = [];
+  type: string;
+  constructor(private dialogRef: DynamicDialogRef, private config: DynamicDialogConfig) {
+    this.type = config.data.type;
+  }
 
   ngOnInit() {
   }
@@ -28,6 +32,16 @@ export class DialogFileComponent implements OnInit {
         data: event.target.elements[0].value.toLowerCase(),
         form: document.getElementById('uploadForm')
       });
+    } else if (fileName.indexOf(".json") != -1) {
+      this.processJson(event.target.elements[0].files[0]);
     }
+  }
+
+  public processJson(file: File): void {
+    let reader = new FileReader();
+    reader.onload = (e) => {
+      this.dialogRef.close(JSON.parse(reader.result.toString()));
+    }
+    reader.readAsText(file);
   }
 }

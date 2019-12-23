@@ -43,7 +43,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               let dialog = this.dialogService.open(DialogFileComponent, {
                 width: '50%',
                 baseZIndex: 20,
-                header: 'Cargar un archivo'
+                header: 'Cargar un archivo',
+                data: { type: '.zip' }
               });
               dialog.onClose.subscribe(res => {
                 if (res !== undefined) {
@@ -60,6 +61,30 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           {
             label: 'Archivo GPZ'
+          },
+          {
+            label: 'Archivo GeoJSON',
+            command: () => {
+              let dialog = this.dialogService.open(DialogFileComponent, {
+                width: '50%',
+                baseZIndex: 20,
+                header: 'Cargar un archivo GeoJSON',
+                data: { type: 'json' }
+              });
+              dialog.onClose.subscribe(res => {
+                debugger;
+                console.log(res);
+                if (res) {
+                  loadModules(['esri/layers/GeoJSONLayer']).then(([GeoJSONLayer]) => {
+                    debugger;
+                    let geo = new GeoJSONLayer({
+                      data: res
+                    });
+                    this.map.add(geo);
+                  });
+                }
+              })
+            }
           },
           {
             label: 'Servicio KML',
@@ -105,13 +130,26 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               let dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
                 baseZIndex: 100,
-                header: 'Cargar servicio GeoJSON',
+                header: 'Cargar servicio GeoJSON'
               });
               dialog.onClose.subscribe(res => {
                 console.log(res);
                 loadModules(['esri/layers/GeoJSONLayer']).then(([GeoJSONLayer]) => {
+                  const template = {
+                    title: "Earthquake Info",
+                    content: "Magnitude {mag} {type} hit {place} on {time}",
+                    fieldInfos: [
+                      {
+                        fieldName: "time",
+                        format: {
+                          dateFormat: "short-date-short-time"
+                        }
+                      }
+                    ]
+                  };
                   let geo = new GeoJSONLayer({
-                    url: res
+                    url: res,
+                    popupTemplate: template
                   });
                   this.map.add(geo);
                 });
@@ -241,11 +279,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   async initializeMap() {
     try {
       // Load the modules for the ArcGIS API for JavaScript
-      const [Map, MapView, FeatureLayer, GeoJSONLayer, LayerList, Print, arrayUtils,
-        PrintTemplate, Search, Expand, AreaMeasurement2D, DistanceMeasurement2D, Measurement] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
-          "esri/layers/GeoJSONLayer", "esri/widgets/LayerList", "esri/widgets/Print", "dojo/_base/array",
-          "esri/tasks/support/PrintTemplate", "esri/widgets/Search", "esri/widgets/Expand", "esri/widgets/AreaMeasurement2D", 
-          "esri/widgets/DistanceMeasurement2D"]);
+      const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D, DistanceMeasurement2D,
+        Measurement] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
+          "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
+          "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D"]);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
       const agsHost = "anh-gisserver.anh.gov.co";
@@ -347,13 +384,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       map.add(ly_cuencas);
 
+      const templateTierras = {
+        title: "Info",
+        content: "<b>SHAPE:</b> {SHAPE.type}<br><b>CONTRATO ID:</b> {CONTRAT_ID}<br><b>NOMBRE CONTRATO:</b> {CONTRATO_N}<br><b>NOMBRE ÁREA:</b> {AREA_NOMBR}<br><b>CLASIFICACIÓN:</b> {CLASIFICAC}<br><b>TIPO DE CONTRATO:</b> {TIPO_CONTR}<br><b>ESTADO AREA:</b> {ESTAD_AREA}<br><b>OPERADOR:</b> {OPERADOR}<br><b>CUENCA SEDIMENTARIA:</b> {CUENCA_SED}<br><b>AREA__Ha_:</b> {AREA__Ha_}<br><b>SHAPE_Length:</b> {SHAPE_Length}<br><b>SHAPE_Area:</b> {SHAPE_Area}",
+        fieldInfos: []
+      };
+
       const ly_tierras = new FeatureLayer(mapRestUrl + "/8", {
         id: "Tierras",
         opacity: 0.5,
         visible: true,
         outFields: ["*"],
         showAttribution: true,
-        mode: FeatureLayer.MODE_ONDEMAND
+        mode: FeatureLayer.MODE_ONDEMAND,
+        popupTemplate: templateTierras
       });
       map.add(ly_tierras);
 
