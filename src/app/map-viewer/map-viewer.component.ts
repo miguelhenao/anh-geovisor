@@ -22,6 +22,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   longitude: number = -74.2478963;
   menu: Array<MenuItem> = [];
   map: any;
+  agsHost = "anh-gisserver.anh.gov.co";
+  agsProtocol = "https";
+  mapRestUrl = this.agsProtocol + "://" + this.agsHost + "/arcgis/rest/services/Tierras/Mapa_ANH/MapServer";
+  agsDir = "arcgis";
+  agsUrlBase = this.agsProtocol + "://" + this.agsHost + "/" + this.agsDir + "/";
+  // Url servidor ArcGIS.com para servicios de conversión (sharing)
+  sharingUrl = "https://www.arcgis.com"; // importante que sea https para evitar problemas de SSL
+  // Url del servicio de impresión
+  printUrl = this.agsUrlBase + "rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task";
 
   constructor(private dialogService: DialogService, private service: MapViewerService) {
     this.setCurrentPosition();
@@ -244,19 +253,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       const [Map, MapView, FeatureLayer, GeoJSONLayer, LayerList, Print, arrayUtils,
         PrintTemplate, Search, Expand, AreaMeasurement2D, DistanceMeasurement2D, TimeSlider] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/layers/GeoJSONLayer", "esri/widgets/LayerList", "esri/widgets/Print", "dojo/_base/array",
-          "esri/tasks/support/PrintTemplate", "esri/widgets/Search", "esri/widgets/Expand", "esri/widgets/AreaMeasurement2D", 
+          "esri/tasks/support/PrintTemplate", "esri/widgets/Search", "esri/widgets/Expand", "esri/widgets/AreaMeasurement2D",
           "esri/widgets/DistanceMeasurement2D", "esri/widgets/TimeSlider"]);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
-      const agsHost = "anh-gisserver.anh.gov.co";
-      const agsProtocol = "https";
-      const mapRestUrl = agsProtocol + "://" + agsHost + "/arcgis/rest/services/Tierras/Mapa_ANH/MapServer";
-      const agsDir = "arcgis";
-      const agsUrlBase = agsProtocol + "://" + agsHost + "/" + agsDir + "/";
-      // Url servidor ArcGIS.com para servicios de conversión (sharing)
-      const sharingUrl = "https://www.arcgis.com"; // importante que sea https para evitar problemas de SSL
-      // Url del servicio de impresión
-      const printUrl = agsUrlBase + "rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task";
 
       // Configure the Map
       const mapProperties = {
@@ -271,10 +271,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         container: this.mapViewEl.nativeElement,
         center: [this.longitude, this.latitude],
         zoom: 5,
-        map: map
+        map: this.map
       };
 
-      const ly_pozo = new FeatureLayer(mapRestUrl + "/1", {
+      const ly_pozo = new FeatureLayer(this.mapRestUrl + "/1", {
         id: "Pozo",
         opacity: 1.0,
         visible: true,
@@ -282,9 +282,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-      map.add(ly_pozo);
+      this.map.add(ly_pozo);
 
-      const ly_rezumadero = new FeatureLayer(mapRestUrl + "/0", {
+      const ly_rezumadero = new FeatureLayer(this.mapRestUrl + "/0", {
         id: "Rezumadero",
         opacity: 1.0,
         visible: true,
@@ -292,9 +292,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-      map.add(ly_rezumadero);
+      this.map.add(ly_rezumadero);
 
-      const ly_sismica = new FeatureLayer(mapRestUrl + "/2", {
+      const ly_sismica = new FeatureLayer(this.mapRestUrl + "/2", {
         id: "Sismica 2D",
         opacity: 1.0,
         visible: true,
@@ -302,9 +302,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-      map.add(ly_sismica);
+      this.map.add(ly_sismica);
 
-      const ly_sismica3d = new FeatureLayer(mapRestUrl + "/3", {
+      const ly_sismica3d = new FeatureLayer(this.mapRestUrl + "/3", {
         id: "Sismica 3D",
         opacity: 1.0,
         visible: true,
@@ -312,9 +312,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-      map.add(ly_sismica3d);
+      this.map.add(ly_sismica3d);
 
-      const ly_municipio = new FeatureLayer(mapRestUrl + "/5", {
+      const ly_municipio = new FeatureLayer(this.mapRestUrl + "/5", {
         id: "Municipio",
         opacity: 1.0,
         visible: true,
@@ -322,9 +322,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-      map.add(ly_municipio);
+      this.map.add(ly_municipio);
 
-      const ly_departamento = new FeatureLayer(mapRestUrl + "/4", {
+      const ly_departamento = new FeatureLayer(this.mapRestUrl + "/4", {
         id: "Departamento",
         opacity: 1.0,
         visible: true,
@@ -335,9 +335,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       /* ly_departamento.load().then(function() {
         alert('Cargo')
       }) */
-      map.add(ly_departamento);
+      this.map.add(ly_departamento);
 
-      const ly_cuencas = new FeatureLayer(mapRestUrl + "/6", {
+      const ly_cuencas = new FeatureLayer(this.mapRestUrl + "/6", {
         id: "Cuencas",
         opacity: 1.0,
         visible: true,
@@ -345,9 +345,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-      map.add(ly_cuencas);
+      this.map.add(ly_cuencas);
 
-      const ly_tierras = new FeatureLayer(mapRestUrl + "/8", {
+      const ly_tierras = new FeatureLayer(this.mapRestUrl + "/8", {
         id: "Tierras",
         opacity: 0.5,
         visible: true,
@@ -355,9 +355,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-      map.add(ly_tierras);
+      this.map.add(ly_tierras);
 
-      const ly_sensibilidad = new FeatureLayer(mapRestUrl + "/7", {
+      const ly_sensibilidad = new FeatureLayer(this.mapRestUrl + "/7", {
         id: "Sensibilidad",
         opacity: 0.5,
         visible: false,
@@ -365,8 +365,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
+      this.map.add(ly_sensibilidad);
 
-      map.add(ly_sensibilidad);
       this.view = new MapView(mapViewProperties);
 
       let layerList = new LayerList({
@@ -435,7 +435,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   async generateFeatureCollection(fileName, form) {
     var portalUrl = "https://www.arcgis.com";
-    const [FeatureLayer, Graphic, esriRequest] = await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/request']);
+    const [FeatureLayer, Graphic, esriRequest, Field] = await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/request',
+      'esri/layers/support/Field']);
     var name = fileName.split(".");
     // Chrome and IE add c:\fakepath to the value - we need to remove it
     // see this link for more info: http://davidwalsh.name/fakepath
@@ -466,38 +467,35 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       query: myContent,
       body: form,
       responseType: "json"
-    }).then(function (response) {
-      debugger;
+    }).then((response) => {
       var layerName = response.data.featureCollection.layers[0].layerDefinition.name;
-      this.addShapefileToMap(response.data.featureCollection);
-    }, function (err) {
+      debugger;
+      var sourceGraphics = [];
+
+      var layers = response.data.featureCollection.layers.map((layer) => {
+        var graphics = layer.featureSet.features.map((feature) => {
+          return Graphic.fromJSON(feature);
+        });
+        sourceGraphics = sourceGraphics.concat(graphics);
+        var featureLayer = new FeatureLayer({
+          title: layerName,
+          objectIdField: "FID",
+          source: graphics,
+          fields: layer.layerDefinition.fields.map((field) => {
+            return Field.fromJSON(field);
+          })
+        });
+        return featureLayer;
+        // associate the feature with the popup on click to enable highlight and zoom to
+      });
+      debugger;
+      this.map.addMany(layers);
+      this.view.goTo(sourceGraphics);
+      console.log(this.map);
+
+    }, (err) => {
       console.error(err);
     });
-  }
 
-  async addShapefileToMap(featureCollection) {
-    console.log('addShapefileToMap');
-    const [FeatureLayer, Field, Graphic] = await loadModules(['esri/layers/FeatureLayer',
-      'esri/esri/layers/support/Field', 'esri/Graphic']);
-
-    var sourceGraphics = [];
-
-    var layers = featureCollection.layers.map(function (layer) {
-      var graphics = layer.featureSet.features.map(function (feature) {
-        return Graphic.fromJSON(feature);
-      });
-      sourceGraphics = sourceGraphics.concat(graphics);
-      var featureLayer = new FeatureLayer({
-        objectIdField: "FID",
-        source: graphics,
-        fields: layer.layerDefinition.fields.map(function (field) {
-          return Field.fromJSON(field);
-        })
-      });
-      return featureLayer;
-      // associate the feature with the popup on click to enable highlight and zoom to
-    });
-    this.map.addMany(layers);
-    this.view.goTo(sourceGraphics);
   }
 }
