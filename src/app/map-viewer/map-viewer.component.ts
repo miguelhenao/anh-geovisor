@@ -56,19 +56,46 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               });
               dialog.onClose.subscribe(res => {
                 if (res !== undefined) {
-                  console.log(res.data);
                   if (res.data.indexOf('.zip') !== -1) {
-                    this.generateFeatureCollection(res.data, res.form);
+                    this.generateFeatureCollection(res.data, res.form, 'shapefile');
                   }
                 }
               });
             }
           },
           {
-            label: 'Archivo CSV'
+            label: 'Archivo CSV',
+            command: () => {
+              let dialog = this.dialogService.open(DialogFileComponent, {
+                width: '50%',
+                baseZIndex: 20,
+                header: 'Cargar un archivo'
+              });
+              dialog.onClose.subscribe(res => {
+                if (res !== undefined) {
+                  if (res.data.indexOf('.csv') !== -1) {
+                    this.generateFeatureCollection(res.data, res.form, 'csv');
+                  }
+                }
+              });
+            }
           },
           {
-            label: 'Archivo GPZ'
+            label: 'Archivo GPX',
+            command: () => {
+              let dialog = this.dialogService.open(DialogFileComponent, {
+                width: '50%',
+                baseZIndex: 20,
+                header: 'Cargar un archivo'
+              });
+              dialog.onClose.subscribe(res => {
+                if (res !== undefined) {
+                  if (res.data.indexOf('.gpx') !== -1) {
+                    this.generateFeatureCollection(res.data, res.form, 'gpx');
+                  }
+                }
+              });
+            }
           },
           {
             label: 'Servicio KML',
@@ -433,17 +460,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
-  async generateFeatureCollection(fileName, form) {
+  async generateFeatureCollection(fileName, form, fileType) {
     var portalUrl = "https://www.arcgis.com";
     const [FeatureLayer, Graphic, esriRequest, Field] = await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/request',
       'esri/layers/support/Field']);
     var name = fileName.split(".");
-    // Chrome and IE add c:\fakepath to the value - we need to remove it
-    // see this link for more info: http://davidwalsh.name/fakepath
     name = name[0].replace("c:\\fakepath\\", "");
-
-    // define the input params for generate see the rest doc for details
-    // https://developers.arcgis.com/rest/users-groups-and-items/generate.htm
     var params = {
       name: name,
       targetSR: this.view.spatialReference,
@@ -457,40 +479,107 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     };
 
     var myContent = {
-      filetype: "shapefile",
+      filetype: fileType,
       publishParameters: JSON.stringify(params),
       f: "json"
     };
-
     esriRequest(portalUrl + "/sharing/rest/content/features/generate", {
       query: myContent,
       body: form,
       responseType: "json"
     }).then((response) => {
-      var layerName = response.data.featureCollection.layers[0].layerDefinition.name;
-      var sourceGraphics = [];
-
-      var layers = response.data.featureCollection.layers.map((layer) => {
-        var graphics = layer.featureSet.features.map((feature) => {
-          return Graphic.fromJSON(feature);
-        });
-        sourceGraphics = sourceGraphics.concat(graphics);
-        var featureLayer = new FeatureLayer({
-          title: layerName,
-          objectIdField: "FID",
-          source: graphics,
-          fields: layer.layerDefinition.fields.map((field) => {
-            return Field.fromJSON(field);
-          })
-        });
-        return featureLayer;
-      });
-      this.map.addMany(layers);
-      this.view.goTo(sourceGraphics);
-
+      if (fileType === 'shapefile') {
+        this.addShapefileToMap(response);
+      } else if (fileType === 'gpx') {
+        this.addGpxToMap(response.data.featureCollection);
+      }
     }, (err) => {
       console.error(err);
     });
 
+  }
+
+  async addShapefileToMap(featureCollection) {
+    const [FeatureLayer, Graphic, Field] = await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/layers/support/Field']);
+    var layerName = featureCollection.data.featureCollection.layers[0].layerDefinition.name;
+    var sourceGraphics = [];
+
+    var layers = featureCollection.data.featureCollection.layers.map((layer) => {
+      var graphics = layer.featureSet.features.map((feature) => {
+        return Graphic.fromJSON(feature);
+      });
+      sourceGraphics = sourceGraphics.concat(graphics);
+      var featureLayer = new FeatureLayer({
+        title: layerName,
+        objectIdField: "FID",
+        source: graphics,
+        fields: layer.layerDefinition.fields.map((field) => {
+          return Field.fromJSON(field);
+        })
+      });
+      return featureLayer;
+    });
+    this.map.addMany(layers);
+    this.view.goTo(sourceGraphics);
+  }
+
+  async addGpxToMap(featureCollection) {
+    const [FeatureLayer, PopupTemplate, SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol, Color] = await loadModules([
+      'esri/layers/FeatureLayer', 'esri/PopupTemplate', 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
+      'esri/symbols/SimpleMarkerSymbol', 'esri/Color']);
+    var filename = featureCollection.layers[0].featureSet.features[0].attributes.name;
+
+    const symbolSelectPt = new SimpleMarkerSymbol({
+      style: 'square',
+      width: '8px',
+      color: [0, 50, 0, 1],
+      outline: {
+        color: [50, 50, 0],
+        width: 3
+      }
+    });
+
+    const symbolSelectPol = new SimpleFillSymbol({
+      color: [0, 0, 0, 0.5],
+      style: 'solid',
+      outline: {
+        color: [0, 0, 255],
+        width: 3,
+        style: 'solid'
+      }
+    });
+
+    const symbolSelectLn = new SimpleLineSymbol({
+      color: [20, 20, 0],
+      width: '4px',
+      style: 'dash'
+    });
+
+    featureCollection.layers.forEach(ly => {
+      var popupTemplate = new PopupTemplate({
+        title: 'Atributos GPX',
+        content: '${*}'
+      });
+      var layer = new FeatureLayer(ly, {
+        popupTemplate: popupTemplate
+      });
+
+      layer.name = filename;
+      layer.id = layer.name + Math.round(Math.random() * 4294967295).toString(16);
+      layer.fromFeatureCollection = true;
+      layer.title = filename;
+      switch (ly.geometryType) {
+        case 'esriGeometryPoint':
+          layer.setSelectionSymbol(symbolSelectPt);
+          break;
+        case 'esriGeometryPolygon':
+          layer.setSelectionSymbol(symbolSelectPol);
+          break;
+        case 'esriGeometryPolyline':
+          layer.setSelectionSymbol(symbolSelectLn);
+          break;
+      }
+      this.map.add(layer);
+    });
   }
 }

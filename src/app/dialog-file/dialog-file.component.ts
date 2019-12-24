@@ -28,6 +28,11 @@ export class DialogFileComponent implements OnInit {
         data: event.target.elements[0].value.toLowerCase(),
         form: document.getElementById('uploadForm')
       });
+    } else {
+      this.dialogRef.close({
+        data: event.target.elements[0].value.toLowerCase(),
+        form: document.getElementById('uploadForm')
+      });
     }
   }
 }
