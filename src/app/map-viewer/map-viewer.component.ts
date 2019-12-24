@@ -53,7 +53,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 width: '50%',
                 baseZIndex: 20,
                 header: 'Cargar un archivo',
-                data: { type: '.zip' }
+                data: { type: 'zip' }
               });
               dialog.onClose.subscribe(res => {
                 if (res !== undefined) {
@@ -70,7 +70,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               let dialog = this.dialogService.open(DialogFileComponent, {
                 width: '50%',
                 baseZIndex: 20,
-                header: 'Cargar un archivo'
+                header: 'Cargar un archivo',
+                data: { type: 'csv' }
               });
               dialog.onClose.subscribe(res => {
                 if (res !== undefined) {
@@ -87,7 +88,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               let dialog = this.dialogService.open(DialogFileComponent, {
                 width: '50%',
                 baseZIndex: 20,
-                header: 'Cargar un archivo'
+                header: 'Cargar un archivo',
+                data: { type: 'gpx' }
               });
               dialog.onClose.subscribe(res => {
                 if (res !== undefined) {
@@ -315,7 +317,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   async initializeMap() {
     try {
       // Load the modules for the ArcGIS API for JavaScript
-      const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D, 
+      const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D,
         DistanceMeasurement2D] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
           "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D"]);
@@ -416,7 +418,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         content: "<b>SHAPE:</b> {SHAPE.type}<br><b>CONTRATO ID:</b> {CONTRAT_ID}<br><b>NOMBRE CONTRATO:</b> {CONTRATO_N}<br><b>NOMBRE ÁREA:</b> {AREA_NOMBR}<br><b>CLASIFICACIÓN:</b> {CLASIFICAC}<br><b>TIPO DE CONTRATO:</b> {TIPO_CONTR}<br><b>ESTADO AREA:</b> {ESTAD_AREA}<br><b>OPERADOR:</b> {OPERADOR}<br><b>CUENCA SEDIMENTARIA:</b> {CUENCA_SED}<br><b>AREA__Ha_:</b> {AREA__Ha_}<br><b>SHAPE_Length:</b> {SHAPE_Length}<br><b>SHAPE_Area:</b> {SHAPE_Area}",
         fieldInfos: []
       };
-      
+
       const ly_tierras = new FeatureLayer(this.mapRestUrl + "/8", {
         id: "Tierras",
         opacity: 0.5,
@@ -575,7 +577,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     const symbolSelectPt = new SimpleMarkerSymbol({
       style: 'square',
-      width: '8px',
+      width: 8,
       color: [0, 50, 0, 1],
       outline: {
         color: [50, 50, 0],
@@ -595,16 +597,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     const symbolSelectLn = new SimpleLineSymbol({
       color: [20, 20, 0],
-      width: '4px',
+      width: 4,
       style: 'dash'
     });
 
-    featureCollection.layers.forEach(ly => {
+    featureCollection.layers.forEach((layer) => {
       var popupTemplate = new PopupTemplate({
         title: 'Atributos GPX',
         content: '${*}'
       });
-      var layer = new FeatureLayer(ly, {
+      var layer = new FeatureLayer(layer, {
         popupTemplate: popupTemplate
       });
 
@@ -612,7 +614,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       layer.id = layer.name + Math.round(Math.random() * 4294967295).toString(16);
       layer.fromFeatureCollection = true;
       layer.title = filename;
-      switch (ly.geometryType) {
+      switch (layer.geometryType) {
         case 'esriGeometryPoint':
           layer.setSelectionSymbol(symbolSelectPt);
           break;
@@ -623,6 +625,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           layer.setSelectionSymbol(symbolSelectLn);
           break;
       }
+      var fullExtent = fullExtent ? fullExtent.union(layer.fullExtent) : layer.fullExtent;
       this.map.add(layer);
     });
   }
