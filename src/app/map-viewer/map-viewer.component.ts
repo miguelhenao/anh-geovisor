@@ -4,7 +4,6 @@ import { MenuItem, DialogService } from 'primeng/api';
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked } from '@angular/core';
 import { loadModules } from "esri-loader";
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.component';
 
 @Component({
