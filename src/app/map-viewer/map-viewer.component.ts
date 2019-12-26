@@ -110,10 +110,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 debugger;
                 console.log(res);
                 if (res) {
-                  loadModules(['esri/layers/GeoJSONLayer']).then(([GeoJSONLayer]) => {
+                  loadModules(['esri/layers/GeoJSONLayer', 'esri/layers/FeatureLayer']).then(([GeoJSONLayer, FeatureLayer]) => {
                     debugger;
-                    let geo = new GeoJSONLayer({
-                      data: res
+                    let geo = new FeatureLayer({
+                      source: res
                     });
                     this.map.add(geo);
                   });
@@ -170,21 +170,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               dialog.onClose.subscribe(res => {
                 console.log(res);
                 loadModules(['esri/layers/GeoJSONLayer']).then(([GeoJSONLayer]) => {
-                  const template = {
-                    title: "Earthquake Info",
-                    content: "Magnitude {mag} {type} hit {place} on {time}",
-                    fieldInfos: [
-                      {
-                        fieldName: "time",
-                        format: {
-                          dateFormat: "short-date-short-time"
-                        }
-                      }
-                    ]
-                  };
                   let geo = new GeoJSONLayer({
-                    url: res,
-                    popupTemplate: template
+                    url: res
                   });
                   this.map.add(geo);
                 });
@@ -315,9 +302,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D, 
-        DistanceMeasurement2D] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
+        DistanceMeasurement2D, LabelClass] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
-          "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D"]);
+          "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D", "esri/layers/support/LabelClass"]);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
 
@@ -401,6 +388,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.map.add(ly_departamento);
 
       const ly_cuencas = new FeatureLayer(this.mapRestUrl + "/6", {
+        
         id: "Cuencas",
         opacity: 1.0,
         visible: true,
@@ -425,9 +413,22 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND,
         popupTemplate: templateTierras
       });
+
+      const statesLabelClass = new LabelClass({
+        labelExpressionInfo: { expression: "$feature.CONTRAT_ID" },
+        symbol: {
+          type: "text",  // autocasts as new TextSymbol()
+          color: "black",
+          haloSize: 1,
+          haloColor: "white"
+        }
+      });
+      
+      ly_tierras.labelingInfo = [ statesLabelClass ];
       this.map.add(ly_tierras);
 
       const ly_sensibilidad = new FeatureLayer(this.mapRestUrl + "/7", {
+        labelExpressionInfo: { expression: "$feature.CONTRAT_ID" },
         id: "Sensibilidad",
         opacity: 0.5,
         visible: false,
@@ -435,6 +436,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
+      ly_sensibilidad.labelingInfo = [statesLabelClass];
       this.map.add(ly_sensibilidad);
 
       this.view = new MapView(mapViewProperties);
