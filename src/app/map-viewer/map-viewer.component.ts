@@ -303,10 +303,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   async initializeMap() {
     try {
       // Load the modules for the ArcGIS API for JavaScript
-      const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D, 
-        DistanceMeasurement2D, LabelClass] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
+      const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D,
+        DistanceMeasurement2D, LabelClass,
+        BasemapGallery] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
-          "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D", "esri/layers/support/LabelClass"]);
+          "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D", "esri/layers/support/LabelClass",
+          'esri/widgets/BasemapGallery']);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
 
@@ -390,7 +392,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.map.add(ly_departamento);
 
       const ly_cuencas = new FeatureLayer(this.mapRestUrl + "/6", {
-        
+
         id: "Cuencas",
         opacity: 1.0,
         visible: true,
@@ -425,7 +427,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           haloColor: "white"
         }
       });
-      
+
       ly_tierras.labelingInfo = [ statesLabelClass ];
       this.map.add(ly_tierras);
 
@@ -449,6 +451,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       let layerListExpand = new Expand({
         expandIconClass: "esri-icon-layers",
+        expandTooltip: 'Tabla de contenido',
         view: this.view,
         content: layerList.domNode,
         group: 'bottom-right',
@@ -466,6 +469,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       let expandPrint = new Expand({
         expandIconClass: 'esri-icon-download',
+        expandTooltip: 'Exportar',
         view: this.view,
         content: print,
         group: 'bottom-right'
@@ -476,6 +480,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       let expandAreaMeasure = new Expand({
         expandIconClass: 'fas fa-ruler-combined',
+        expandTooltip: 'Tomar medidas - Área',
         view: this.view,
         content: areaMeasurement,
         group: 'bottom-right'
@@ -485,11 +490,24 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       let expandLinearMeasure = new Expand({
         expandIconClass: 'fas fa-ruler',
+        expandTooltip: 'Tomar medidas - Distancia',
         view: this.view,
         content: linearMeasurement,
         group: 'bottom-right'
       });
-      this.view.ui.add([expandPrint, layerListExpand, expandAreaMeasure, expandLinearMeasure], 'bottom-right');
+
+      var basemapGallery = new BasemapGallery({
+        view: this.view
+      });
+      let expandBaseMapGallery = new Expand({
+        expandIconClass: 'esri-icon-basemap',
+        expandTooltip: 'Mapa base',
+        view: this.view,
+        content: basemapGallery,
+        group: 'bottom-right'
+      });
+
+      this.view.ui.add([expandPrint, layerListExpand, expandAreaMeasure, expandLinearMeasure, expandBaseMapGallery], 'bottom-right');
       return this.view;
     } catch (error) {
       console.log("EsriLoader: ", error);
