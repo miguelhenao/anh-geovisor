@@ -496,7 +496,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         group: 'bottom-right'
       });
 
-      var basemapGallery = new BasemapGallery({
+      let basemapGallery = new BasemapGallery({
         view: this.view
       });
       let expandBaseMapGallery = new Expand({

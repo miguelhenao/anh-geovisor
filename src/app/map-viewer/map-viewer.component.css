@@ -62,3 +62,16 @@ p-sidebar {
         display: none;
     }
 }
+
+.loading-machin {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	width: 144px;
+	height: 144px;
+	background: url(../../assets/machin144_sombra-suave.png);
+	margin-top: -72px;
+	margin-left: -72px;
+	animation: play 1.5s steps(10) infinite;
+	z-index: 1001;
+}
