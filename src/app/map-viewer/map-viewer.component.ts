@@ -21,6 +21,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   longitude: number = -74.2478963;
   menu: Array<MenuItem> = [];
   map: any;
+  tsLayer: any;
   agsHost = "anh-gisserver.anh.gov.co";
   agsProtocol = "https";
   mapRestUrl = this.agsProtocol + "://" + this.agsHost + "/arcgis/rest/services/Tierras/Mapa_ANH/MapServer";
@@ -304,11 +305,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D,
-        DistanceMeasurement2D, LabelClass,
-        BasemapGallery] = await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
+        DistanceMeasurement2D, LabelClass, BasemapGallery, CoordinateConversion] =
+        await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
           "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D", "esri/layers/support/LabelClass",
-          'esri/widgets/BasemapGallery']);
+          'esri/widgets/BasemapGallery', 'esri/widgets/CoordinateConversion']);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
 
@@ -507,7 +508,22 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         group: 'bottom-right'
       });
 
-      this.view.ui.add([expandPrint, layerListExpand, expandAreaMeasure, expandLinearMeasure, expandBaseMapGallery], 'bottom-right');
+      var ccWidget = new CoordinateConversion({
+        view: this.view
+      });
+
+      let expandCcWidget = new Expand({
+        expandIconClass: 'esri-icon-sketch-rectangle',
+        expandTooltip: 'Ubicación',
+        view: this.view,
+        content: ccWidget,
+        group: 'bottom-right'
+      });
+
+      this.addSlider();
+
+      this.view.ui.add([expandPrint, layerListExpand, expandAreaMeasure, expandLinearMeasure, expandBaseMapGallery, expandCcWidget],
+        'bottom-right');
       return this.view;
     } catch (error) {
       console.log("EsriLoader: ", error);
@@ -647,5 +663,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       var fullExtent = fullExtent ? fullExtent.union(layer.fullExtent) : layer.fullExtent;
       this.map.add(layer);
     });
+  }
+
+  async addSlider() {
+    const [MapImageLayer, Map, MapView] = await loadModules(['esri/layers/MapImageLayer', 'esri/Map', 'esri/views/MapView']);
+    let m = new Map({
+      basemap: 'streets'
+    });
+    var view = new MapView({
+      map: m
+    });
+    let tsLayers = new MapImageLayer({
+      url: this.mapRestUrl
+    });
+    m.add(tsLayers);
+    console.log(tsLayers);
   }
 }
