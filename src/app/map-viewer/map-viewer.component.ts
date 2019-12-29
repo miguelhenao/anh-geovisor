@@ -5,6 +5,7 @@ import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked }
 import { loadModules } from "esri-loader";
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
 import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.component';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-map-viewer',
@@ -31,6 +32,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   sharingUrl = "https://www.arcgis.com"; // importante que sea https para evitar problemas de SSL
   // Url del servicio de impresión
   printUrl = this.agsUrlBase + "rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task";
+  nameLayer: string;
 
   constructor(private dialogService: DialogService, private service: MapViewerService) {
     this.setCurrentPosition();
@@ -305,11 +307,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D,
-        DistanceMeasurement2D, LabelClass, BasemapGallery, CoordinateConversion] =
+        DistanceMeasurement2D, LabelClass, BasemapGallery, CoordinateConversion, Slider] =
         await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
           "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D", "esri/layers/support/LabelClass",
-          'esri/widgets/BasemapGallery', 'esri/widgets/CoordinateConversion']);
+          'esri/widgets/BasemapGallery', 'esri/widgets/CoordinateConversion', 'esri/widgets/Slider']);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
 
@@ -328,6 +330,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         zoom: 5,
         map: this.map
       };
+
+      this.addSlider();
 
       const ly_pozo = new FeatureLayer(this.mapRestUrl + "/1", {
         id: "Pozo",
@@ -429,7 +433,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       });
 
-      ly_tierras.labelingInfo = [ statesLabelClass ];
+      ly_tierras.labelingInfo = [statesLabelClass];
       this.map.add(ly_tierras);
 
       const ly_sensibilidad = new FeatureLayer(this.mapRestUrl + "/7", {
@@ -519,8 +523,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         content: ccWidget,
         group: 'bottom-right'
       });
-
-      this.addSlider();
 
       this.view.ui.add([expandPrint, layerListExpand, expandAreaMeasure, expandLinearMeasure, expandBaseMapGallery, expandCcWidget],
         'bottom-right');
@@ -666,17 +668,82 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   async addSlider() {
-    const [MapImageLayer, Map, MapView] = await loadModules(['esri/layers/MapImageLayer', 'esri/Map', 'esri/views/MapView']);
-    let m = new Map({
-      basemap: 'streets'
+    const [Slider, FeatureLayer, LabelClass] =
+      await loadModules(['esri/widgets/Slider', 'esri/layers/FeatureLayer', 'esri/layers/support/LabelClass']);
+    this.service.getLayersOfServer(this.mapRestUrl, '?f=pjson').subscribe(success => {
+      let timeStops = [];
+      let layers = [];
+      layers = success.layers;
+      layers.forEach(layer => {
+        this.nameLayer = layer.name;
+        if (this.nameLayer.substr(0, 8).toUpperCase().startsWith('TIERRAS')) {
+          let tierrasDate = this.nameLayer.substr(this.nameLayer.length - 10);
+          let y = tierrasDate.substr(0, 4);
+          let m = tierrasDate.substr(5, 2);
+          let d = tierrasDate.substr(8, 2);
+          let fecha = new Date(y + '/' + m + '/' + d);
+          timeStops.unshift([layer.id, fecha]);
+        }
+      });
+      let monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+      console.log(timeStops);
+      let slider = new Slider({
+        container: 'ts-tierras',
+        min: 0,
+        max: timeStops.length - 1,
+        values: [timeStops.length - 1],
+        snapOnClickEnabled: false,
+        steps: 1,
+        labelsVisible: false
+      });
+      let d = timeStops[slider.values[0]][1];
+      this.nameLayer = monthNames[d.getMonth()] + ' ' + d.getFullYear();
+      let lyTierrasMdt;
+      slider.on(['thumb-change', 'thumb-drag'], () => {
+        const index = slider.values[0];
+        d = timeStops[index][1];
+        this.nameLayer = monthNames[d.getMonth()] + ' ' + d.getFullYear();
+        const layerTierras = this.map.layers.items.find(x => x.id === 'Tierras');
+        if (lyTierrasMdt !== undefined) {
+          this.map.remove(lyTierrasMdt);
+        }
+        if (slider.values[0] < timeStops.length - 1) {
+          layerTierras.visible = false;
+          const lyTierrasMdtd = timeStops[index][0];
+          const templateTierras = {
+            title: 'Información',
+            // tslint:disable-next-line:max-line-length
+            content: '<b>SHAPE:</b> {SHAPE}<br><b>CONTRATO ID:</b> {CONTRAT_ID}<br><b>NOMBRE CONTRATO:</b> {CONTRATO_N}<br><b>NOMBRE ÁREA:</b> {AREA_NOMBR}<br><b>CLASIFICACIÓN:</b> {CLASIFICAC}<br><b>TIPO DE CONTRATO:</b> {TIPO_CONTR}<br><b>ESTADO AREA:</b> {ESTAD_AREA}<br><b>OPERADOR:</b> {OPERADOR}<br><b>CUENCA SEDIMENTARIA:</b> {CUENCA_SED}<br><b>AREA__Ha_:</b> {AREA__Ha_}<br><b>SHAPE_Length:</b> {SHAPE_Length}<br><b>SHAPE_Area:</b> {SHAPE_Area}',
+            fieldInfos: []
+          };
+          lyTierrasMdt = new FeatureLayer(this.mapRestUrl + '/' + lyTierrasMdtd, {
+            id: 'Tierras_MDT',
+            opacity: 0.5,
+            visible: true,
+            outFields: ['*'],
+            showAttribution: true,
+            mode: FeatureLayer.MODE_ONDEMAND,
+            popupTemplate: templateTierras
+          });
+
+          const statesLabelClass = new LabelClass({
+            labelExpressionInfo: { expression: '$feature.CONTRAT_ID' },
+            symbol: {
+              type: 'text',  // autocasts as new TextSymbol()
+              color: 'black',
+              haloSize: 1,
+              haloColor: 'white'
+            }
+          });
+
+          // lyTierrasMdt.labelingInfo = [statesLabelClass];
+
+          this.map.add(lyTierrasMdt);
+        } else {
+          layerTierras.visible = true;
+        }
+      });
     });
-    var view = new MapView({
-      map: m
-    });
-    let tsLayers = new MapImageLayer({
-      url: this.mapRestUrl
-    });
-    m.add(tsLayers);
-    console.log(tsLayers);
   }
 }

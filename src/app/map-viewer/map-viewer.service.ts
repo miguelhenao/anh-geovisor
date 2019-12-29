@@ -22,4 +22,8 @@ export class MapViewerService {
   public getJson(url: string): Observable<any[]> {
     return this.http.get<any[]>(url);
   }
+
+  public getLayersOfServer(url: string, json: string): any {
+    return this.http.get(url + json);
+  }
 }

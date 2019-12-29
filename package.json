@@ -22,6 +22,7 @@
         "@types/arcgis-js-api": "^4.13.0",
         "esri-loader": "^2.12.0",
         "font-awesome": "^4.7.0",
+        "jquery": "^3.4.1",
         "primeicons": "^2.0.0",
         "primeng": "^8.1.1",
         "rxjs": "~6.4.0",

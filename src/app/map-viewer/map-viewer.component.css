@@ -81,29 +81,34 @@ p-sidebar {
 	position: absolute;
 	bottom: 25px;
 	top: auto;
-	width: 100%;
+  width: 40%;
+  align-items: center;
+  margin: 0 auto;
+  left: 26.8%;
 }
 #ts-tierras-wrapper .ts-bg {
 	position: relative;
-	max-width: 40%;
-	margin-left: 200px;
-	margin-right: 300px;
-	background-color: rgba(255,255,255,0.6);
-	height: 45px;
+	max-width: 100%;
+	background-color: white;
+  height: 45px;
+  padding: 0px 20px;
+  padding-top: 20px;
 }
 #ts-tierras {
 	position: relative;
 	opacity: 1.0;
-	text-align: center;
-	top: 29px;
-	margin-left: 20px;
-	margin-right: 20px;
+  text-align: center;
+  height: 20px;
 }
 #ts-tierras .ts-label {
-	bottom: 14px;
+	bottom: 20px;
 	display: block;
 	position: absolute;
 	width: 100%;
 	text-align: center;
 	font-weight: bold;
+}
+
+.ui-slider-orange .esri-slider .esri-widget .esri-slider--horizontal {
+	background-color: rgba(255,255,255,0.6);
 }
