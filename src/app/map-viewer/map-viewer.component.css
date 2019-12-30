@@ -51,6 +51,10 @@ p-sidebar {
     margin: 5px 0px 5px 0px;
 }
 
+#ts-tierras-wrapper {
+    background-color: rgba(255, 255, 255, 0.6) !important;
+}
+
 @media print {
     ::ng-deep .esri-component {
         display: none !important;
@@ -63,52 +67,74 @@ p-sidebar {
     }
 }
 
-/* .loading-machin {
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	width: 144px;
-	height: 144px;
-	background: url(../../assets/machin144_sombra-suave.png);
-	margin-top: -72px;
-	margin-left: -72px;
-	animation: play 1.5s steps(10) infinite;
-	z-index: 1001;
-} */
+.loading-machin {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 144px;
+    height: 144px;
+    background: url(../../assets/machin144_sombra-suave.png) -5px -20px;
+    margin-top: -72px;
+    margin-left: -72px;
+    animation: mymove 1.6s steps(30, end) infinite;
+    z-index: 1001;
+}
 
+/* Safari 4.0 - 8.0 */
+
+@-webkit-keyframes mymove {
+    from {
+        background-position: -4320px;
+    }
+    to {
+        background-position: 0px;
+    }
+}
+
+@keyframes mymove {
+    from {
+        background-position: -4320px;
+    }
+    to {
+        background-position: 0px;
+    }
+}
 
 #ts-tierras-wrapper {
-	position: absolute;
-	bottom: 25px;
-	top: auto;
-  width: 40%;
-  align-items: center;
-  margin: 0 auto;
-  left: 26.8%;
+    position: absolute;
+    bottom: 25px;
+    top: auto;
+    width: 40%;
+    align-items: center;
+    margin: 0 auto;
+    left: 26.8%;
 }
+
 #ts-tierras-wrapper .ts-bg {
-	position: relative;
-	max-width: 100%;
-	background-color: white;
-  height: 45px;
-  padding: 0px 20px;
-  padding-top: 20px;
+    position: relative;
+    max-width: 100%;
+    background-color: white;
+    height: 45px;
+    padding: 0px 20px;
+    padding-top: 20px;
 }
+
 #ts-tierras {
-	position: relative;
-	opacity: 1.0;
-  text-align: center;
-  height: 20px;
+    position: relative;
+    opacity: 1.0;
+    text-align: center;
+    height: 20px;
 }
+
 #ts-tierras .ts-label {
-	bottom: 20px;
-	display: block;
-	position: absolute;
-	width: 100%;
-	text-align: center;
-	font-weight: bold;
+    bottom: 20px;
+    display: block;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
 }
 
 .ui-slider-orange .esri-slider .esri-widget .esri-slider--horizontal {
-	background-color: rgba(255,255,255,0.6);
+    background-color: rgba(255, 255, 255, 0.6);
 }
