@@ -55,7 +55,7 @@ p-sidebar {
     ::ng-deep .esri-component {
         display: none !important;
     }
-    p-sidebar {
+    p-sidebar, p-dialog {
         display: none;
     }
     #menu {
@@ -111,4 +111,13 @@ p-sidebar {
 
 .ui-slider-orange .esri-slider .esri-widget .esri-slider--horizontal {
 	background-color: rgba(255,255,255,0.6);
+}
+
+#infoDiv {
+  padding: 5px;
+}
+
+.clearGraphics {
+  margin: 0px 5px;
+  padding-bottom: 0px;
 }

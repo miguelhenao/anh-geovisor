@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10">
     <br>
     <img src="logo-anh-p.png" (click)="visibleMenu = false">
@@ -25,7 +26,16 @@
     </div>
   </div>
 </div>
-<p-dialog header="Title" [(visible)]="display" [resizable]="false">
-  <div id="sketch"></div>
+<p-dialog header="Extracción de datos" [(visible)]="display" [resizable]="false" [positionLeft]="'200'">
+  <div id="infoDiv">
+    <p>1. Defina el área de interés</p>
+    <p-dropdown [options]="optionsPolygon" optionLabel="name" placeholder="Selección en la capa actual" (onChange)="onChangeSelect()" [(ngModel)]="selectedPolygon"></p-dropdown>
+    <p-button label="Limpiar área" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()"></p-button>
+    <p>2. Seleccione las capas a extraer</p>
+    <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados" [(ngModel)]="selectedLayers"></p-multiSelect>
+    <br>
+    <p-button label="Extraer" icon="pi pi-download" (onClick)="extratShape()"></p-button>
+  </div>
 </p-dialog>
+
 
