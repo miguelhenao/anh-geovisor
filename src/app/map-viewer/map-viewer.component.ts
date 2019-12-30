@@ -33,6 +33,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   // Url del servicio de impresión
   printUrl = this.agsUrlBase + "rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task";
   nameLayer: string;
+  display = false;
 
   constructor(private dialogService: DialogService, private service: MapViewerService) {
     this.setCurrentPosition();
@@ -190,7 +191,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         icon: 'pi pi-download',
         items: [
           {
-            label: 'A Shapefile'
+            label: 'A Shapefile',
+            command: () => {
+              this.display = true;
+            }
           }
         ]
       },
@@ -307,11 +311,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D,
-        DistanceMeasurement2D, LabelClass, BasemapGallery, CoordinateConversion, Slider] =
+        DistanceMeasurement2D, LabelClass, BasemapGallery, CoordinateConversion, Sketch, GraphicsLayer, Graphic] =
         await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
           "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D", "esri/layers/support/LabelClass",
-          'esri/widgets/BasemapGallery', 'esri/widgets/CoordinateConversion', 'esri/widgets/Slider']);
+          'esri/widgets/BasemapGallery', 'esri/widgets/CoordinateConversion', 'esri/widgets/Sketch', 'esri/layers/GraphicsLayer',
+          'esri/Graphic']);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
 
@@ -523,6 +528,39 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         content: ccWidget,
         group: 'bottom-right'
       });
+
+      const graphicsLayer = new GraphicsLayer();
+
+      const sketch = new Sketch({
+        layer: graphicsLayer,
+        view: this.view,
+        // graphic will be selected as soon as it is created
+        creationMode: 'single',
+        availableCreateTools: ['polyline', 'polygon']
+      });
+
+      sketch.on('create', (event) => {
+        if (event.state === 'complete') {
+          let symbolF = {
+            type: 'simple-fill',
+            color: [255, 255, 0, 0.25],
+            style: 'solid',
+            outline: {
+              color: [255, 0, 0],
+              width: 2,
+              style: 'dash-dot'
+            }
+          };
+          let graphic = new Graphic({
+            geometry: event.graphic.geometry,
+            symbol: symbolF
+          });
+          this.view.graphics.add(graphic);
+          console.log(event.graphic.geometry);
+        }
+      });
+
+      this.view.ui.add(sketch, 'bottom-left');
 
       this.view.ui.add([expandPrint, layerListExpand, expandAreaMeasure, expandLinearMeasure, expandBaseMapGallery, expandCcWidget],
         'bottom-right');

@@ -17,6 +17,7 @@ import { DialogFileComponent } from './dialog-file/dialog-file.component';
 import {FileUploadModule} from 'primeng/fileupload';
 import {TooltipModule} from 'primeng/tooltip';
 import { DialogTerminosComponent } from './dialog-terminos/dialog-terminos.component';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { DialogTerminosComponent } from './dialog-terminos/dialog-terminos.compo
     InputTextModule,
     HttpClientModule,
     FileUploadModule,
-    TooltipModule
+    TooltipModule,
+    DialogModule
   ],
   providers: [],
   entryComponents: [
