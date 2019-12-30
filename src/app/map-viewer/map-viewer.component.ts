@@ -18,9 +18,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild("mapViewNode", { static: true }) private mapViewEl: ElementRef;
   view: any;
   latitude: number = 4.6486259;
-  loadLayers: boolean = false;
   longitude: number = -74.2478963;
   menu: Array<MenuItem> = [];
+  loadLayers: number = 0;
   map: any;
   leftDialog: number = 200;
   tsLayer: any;
@@ -242,72 +242,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         command: () => {
           window.print();
         }
-      },
-      {
-        label: 'Mapa base',
-        icon: 'fa fa-globe',
-        items: [
-          {
-            label: 'Imagenes',
-            command: () => {
-              this.view.map.basemap = 'satellite';
-            }
-          },
-          {
-            label: 'Imagenes con etiquetas',
-            command: () => {
-              this.view.map.basemap = 'hybrid';
-            }
-          },
-          {
-            label: 'Calles',
-            command: () => {
-              this.view.map.basemap = 'streets';
-            }
-          },
-          {
-            label: 'Topográfico',
-            command: () => {
-              this.view.map.basemap = 'topo';
-            }
-          },
-          {
-            label: 'Lona gris oscuro',
-            command: () => {
-              this.view.map.basemap = 'dark-gray';
-            }
-          },
-          {
-            label: 'Lona gris claro',
-            command: () => {
-              this.view.map.basemap = 'gray';
-            }
-          },
-          {
-            label: 'National Geographic',
-            command: () => {
-              this.view.map.basemap = 'national-geographic';
-            }
-          },
-          {
-            label: 'Terreno con etiquetas',
-            command: () => {
-              this.view.map.basemap = 'terrain';
-            }
-          },
-          {
-            label: 'Océanos',
-            command: () => {
-              this.view.map.basemap = 'oceans';
-            }
-          },
-          {
-            label: 'OpenStreetMap',
-            command: () => {
-              this.view.map.basemap = 'osm';
-            }
-          }
-        ]
       }
     ]
   }
@@ -331,12 +265,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D,
-        DistanceMeasurement2D, LabelClass, BasemapGallery, CoordinateConversion, SketchViewModel, GraphicsLayer, Graphic] =
+        DistanceMeasurement2D, LabelClass, BasemapGallery, CoordinateConversion, SketchViewModel, GraphicsLayer, Graphic, Legend] =
         await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
           "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D", "esri/layers/support/LabelClass",
           'esri/widgets/BasemapGallery', 'esri/widgets/CoordinateConversion', 'esri/widgets/Sketch/SketchViewModel',
-          'esri/layers/GraphicsLayer', 'esri/Graphic']);
+          'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend']);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
 
@@ -366,6 +300,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
+
+      ly_pozo.on("layerview-create", () => {
+        this.loadLayers++;
+      });
+
       this.map.add(ly_pozo);
 
       const ly_rezumadero = new FeatureLayer(this.mapRestUrl + "/0", {
@@ -376,6 +315,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
+
+      ly_rezumadero.on("layerview-create", () => {
+        this.loadLayers++;
+      });
+
       this.map.add(ly_rezumadero);
 
       const ly_sismica = new FeatureLayer(this.mapRestUrl + "/2", {
@@ -386,6 +330,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
+
+      ly_sismica.on("layerview-create", () => {
+        this.loadLayers++;
+      });
+
       this.map.add(ly_sismica);
 
       const ly_sismica3d = new FeatureLayer(this.mapRestUrl + "/3", {
@@ -396,6 +345,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
+
+      ly_sismica3d.on("layerview-create", () => {
+        this.loadLayers++;
+      });
+
       this.map.add(ly_sismica3d);
 
       const ly_municipio = new FeatureLayer(this.mapRestUrl + "/5", {
@@ -406,6 +360,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
+
+      ly_municipio.on("layerview-create", () => {
+        this.loadLayers++;
+      });
+
       this.map.add(ly_municipio);
 
       const ly_departamento = new FeatureLayer(this.mapRestUrl + "/4", {
@@ -416,13 +375,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-      /* ly_departamento.load().then(function() {
-        alert('Cargo')
-      }) */
+
+      ly_departamento.on("layerview-create", () => {
+        this.loadLayers++;
+      });
+
       this.map.add(ly_departamento);
 
       const ly_cuencas = new FeatureLayer(this.mapRestUrl + "/6", {
-
         id: "Cuencas",
         opacity: 1.0,
         visible: true,
@@ -430,13 +390,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-      this.map.add(ly_cuencas);
 
-      const templateTierras = {
-        title: "Info",
-        content: "<b>SHAPE:</b> {SHAPE.type}<br><b>CONTRATO ID:</b> {CONTRAT_ID}<br><b>NOMBRE CONTRATO:</b> {CONTRATO_N}<br><b>NOMBRE ÁREA:</b> {AREA_NOMBR}<br><b>CLASIFICACIÓN:</b> {CLASIFICAC}<br><b>TIPO DE CONTRATO:</b> {TIPO_CONTR}<br><b>ESTADO AREA:</b> {ESTAD_AREA}<br><b>OPERADOR:</b> {OPERADOR}<br><b>CUENCA SEDIMENTARIA:</b> {CUENCA_SED}<br><b>AREA__Ha_:</b> {AREA__Ha_}<br><b>SHAPE_Length:</b> {SHAPE_Length}<br><b>SHAPE_Area:</b> {SHAPE_Area}",
-        fieldInfos: []
-      };
+      ly_cuencas.on("layerview-create", () => {
+        this.loadLayers++;
+      });
+
+      this.map.add(ly_cuencas);
 
       const ly_tierras = new FeatureLayer(this.mapRestUrl + "/8", {
         id: "Tierras",
@@ -444,9 +403,25 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         visible: true,
         outFields: ["*"],
         showAttribution: true,
-        mode: FeatureLayer.MODE_ONDEMAND,
-        popupTemplate: templateTierras
+        mode: FeatureLayer.MODE_ONDEMAND
       });
+
+      ly_tierras.load().then(() => {
+        let text: string = "";
+        for (const field of ly_tierras.fields) {
+          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
+        }
+        let templateTierras = {
+          title: "Info",
+          content: text,
+          fieldInfos: []
+        };
+        ly_tierras.popupTemplate = templateTierras;
+      });
+
+      ly_tierras.on("layerview-create", () => {
+        this.loadLayers++;
+      })
 
       const statesLabelClass = new LabelClass({
         labelExpressionInfo: { expression: "$feature.CONTRAT_ID" },
@@ -526,6 +501,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         group: 'bottom-right'
       });
 
+      let legend = new Legend({
+        view: this.view,
+      });
+
+      let expandLegend = new Expand({
+        expandIconClass: 'esri-icon-layer-list',
+        expandTooltip: 'Convenciones',
+        view: this.view,
+        content: legend,
+        group: 'bottom-right'
+      });
+
       let basemapGallery = new BasemapGallery({
         view: this.view
       });
@@ -582,7 +569,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       this.sketch = sketchVM;
 
-      this.view.ui.add([expandPrint, layerListExpand, expandAreaMeasure, expandLinearMeasure, expandBaseMapGallery, expandCcWidget],
+      this.view.ui.add([expandLegend, expandPrint, layerListExpand, expandAreaMeasure, expandLinearMeasure, expandBaseMapGallery, expandCcWidget],
         'bottom-right');
       return this.view;
     } catch (error) {
@@ -772,12 +759,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         if (slider.values[0] < timeStops.length - 1) {
           layerTierras.visible = false;
           const lyTierrasMdtd = timeStops[index][0];
-          const templateTierras = {
-            title: 'Información',
-            // tslint:disable-next-line:max-line-length
-            content: '<b>SHAPE:</b> {SHAPE}<br><b>CONTRATO ID:</b> {CONTRAT_ID}<br><b>NOMBRE CONTRATO:</b> {CONTRATO_N}<br><b>NOMBRE ÁREA:</b> {AREA_NOMBR}<br><b>CLASIFICACIÓN:</b> {CLASIFICAC}<br><b>TIPO DE CONTRATO:</b> {TIPO_CONTR}<br><b>ESTADO AREA:</b> {ESTAD_AREA}<br><b>OPERADOR:</b> {OPERADOR}<br><b>CUENCA SEDIMENTARIA:</b> {CUENCA_SED}<br><b>AREA__Ha_:</b> {AREA__Ha_}<br><b>SHAPE_Length:</b> {SHAPE_Length}<br><b>SHAPE_Area:</b> {SHAPE_Area}',
-            fieldInfos: []
-          };
           lyTierrasMdt = new FeatureLayer(this.mapRestUrl + '/' + lyTierrasMdtd, {
             id: 'Tierras_MDT',
             opacity: 0.5,
@@ -785,11 +766,25 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             outFields: ['*'],
             showAttribution: true,
             mode: FeatureLayer.MODE_ONDEMAND,
-            popupTemplate: templateTierras
           });
 
+          lyTierrasMdt.load().then(() => {
+            console.log(lyTierrasMdt.fields);
+            let text: string = '';
+            for (const field of lyTierrasMdt.fields) {
+              text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
+            }
+            let templateTierras = {
+              title: 'Información',
+              // tslint:disable-next-line:max-line-length
+              content: text,
+              fieldInfos: []
+            };
+            lyTierrasMdt.popupTemplate = templateTierras;
+            console.log(text);
+          });
           const statesLabelClass = new LabelClass({
-            labelExpressionInfo: { expression: '$feature.CONTRAT_ID' },
+            labelExpressionInfo: { expression: '$feature.TIERRAS_ID' },
             symbol: {
               type: 'text',  // autocasts as new TextSymbol()
               color: 'black',
@@ -798,7 +793,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             }
           });
 
-          // lyTierrasMdt.labelingInfo = [statesLabelClass];
+          lyTierrasMdt.labelingInfo = [statesLabelClass];
 
           this.map.add(lyTierrasMdt);
         } else {
