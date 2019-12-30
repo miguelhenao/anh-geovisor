@@ -16,7 +16,6 @@
         <p-panelMenu [model]="menu" [style]="{'width':'100%', 'height': '500px'}"></p-panelMenu>
     </div>
 </p-sidebar>
-{{loadLayers}}
 <button id="menu" type="button" (click)="visibleMenu = true"></button>
 <div *ngIf="loadLayers != 8" id="loading" class="loading-machin"></div>
 <div #mapViewNode></div>
