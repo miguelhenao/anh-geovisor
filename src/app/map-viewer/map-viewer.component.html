@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10">
     <br>
     <img src="logo-anh-p.png" (click)="visibleMenu = false">
@@ -12,10 +13,9 @@
             tooltipPosition="bottom"></button>
     </div>
     <div style="overflow-y: auto;">
-        <p-panelMenu [model]="menu" [style]="{'width':'100%', 'height': '500px'}"></p-panelMenu>
+        <p-panelMenu [model]="menu" [style]="{'width':'100%', 'height': '500px'}" [multiple]="false"></p-panelMenu>
     </div>
 </p-sidebar>
-{{loadLayers}}
 <button id="menu" type="button" (click)="visibleMenu = true"></button>
 <div *ngIf="loadLayers != 8" id="loading" class="loading-machin"></div>
 <div #mapViewNode></div>
@@ -26,7 +26,17 @@
     </div>
   </div>
 </div>
-<p-dialog header="Title" [(visible)]="display" [resizable]="false">
-  <div id="sketch"></div>
+<p-dialog header="Extracción de datos" [(visible)]="display" [resizable]="false" (onHide)="onHideDialogExtract()" [positionTop]="0">
+  <div id="infoDiv">
+    <p>1. Defina el área de interés</p>
+    <p-dropdown [options]="optionsPolygon" optionLabel="name" placeholder="Selección en la capa actual" (onChange)="onChangeSelect()" [(ngModel)]="selectedPolygon"></p-dropdown>
+    <p-button label="Limpiar área" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()"></p-button>
+    <p-button class="clearGraphics" [disabled]="selectedPolygon === undefined" icon="pi pi-undo" (onClick)="onChangeSelect()" pTooltip="Volver a dibujar" tooltipPosition="bottom"></p-button>
+    <p>2. Seleccione las capas a extraer</p>
+    <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados" [(ngModel)]="selectedLayers"></p-multiSelect>
+    <br>
+    <p-button label="Extraer" icon="pi pi-download" (onClick)="extratShape()"></p-button>
+  </div>
 </p-dialog>
+
 

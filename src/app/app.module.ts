@@ -18,6 +18,9 @@ import {FileUploadModule} from 'primeng/fileupload';
 import {TooltipModule} from 'primeng/tooltip';
 import { DialogTerminosComponent } from './dialog-terminos/dialog-terminos.component';
 import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -41,7 +44,10 @@ import { DialogModule } from 'primeng/dialog';
     HttpClientModule,
     FileUploadModule,
     TooltipModule,
-    DialogModule
+    DialogModule,
+    DropdownModule,
+    MultiSelectModule,
+    ToastModule
   ],
   providers: [],
   entryComponents: [

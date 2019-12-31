@@ -1,6 +1,6 @@
 import { MapViewerService } from './map-viewer.service';
 import { DialogUrlServiceComponent } from '../dialog-urlservice/dialog-urlservice.component';
-import { MenuItem, DialogService } from 'primeng/api';
+import { MenuItem, DialogService, SelectItem, MessageService } from 'primeng/api';
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked } from '@angular/core';
 import { loadModules } from "esri-loader";
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
@@ -11,7 +11,7 @@ import * as $ from 'jquery';
   selector: 'app-map-viewer',
   templateUrl: './map-viewer.component.html',
   styleUrls: ['./map-viewer.component.css'],
-  providers: [DialogService]
+  providers: [DialogService, MessageService]
 })
 export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
@@ -24,6 +24,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   map: any;
   search: any;
   sourceSearch: Array<any> = [];
+  leftDialog: number = 200;
   tsLayer: any;
   agsHost = "anh-gisserver.anh.gov.co";
   agsProtocol = "https";
@@ -36,8 +37,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   printUrl = this.agsUrlBase + "rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task";
   nameLayer: string;
   display = false;
+  optionsPolygon = [
+    { name: 'Polígono', value: 'pol' },
+    { name: 'Polígono Libre', value: 'free-pol' }
+  ];
 
-  constructor(private dialogService: DialogService, private service: MapViewerService) {
+  optionsLayers: SelectItem[] = [];
+  sketch;
+  selectedPolygon: SelectItem;
+  selectedLayers: SelectItem[] = [];
+  clearGraphic = false;
+  visibleMenu = false;
+
+  constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService) {
     this.setCurrentPosition();
     if (localStorage.getItem('agreeTerms') == undefined) {
       let dialog = this.dialogService.open(DialogTerminosComponent, {
@@ -185,6 +197,25 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 });
               })
             }
+          },
+          {
+            label: 'Servicio CSV',
+            command: () => {
+              let dialog = this.dialogService.open(DialogUrlServiceComponent, {
+                width: '50%',
+                baseZIndex: 100,
+                header: 'Cargar servicio CSV'
+              });
+              dialog.onClose.subscribe(res => {
+                console.log(res);
+                loadModules(['esri/layers/CSVLayer']).then(([CSVLayer]) => {
+                  const csv = new CSVLayer({
+                    url: res
+                  });
+                  this.map.add(csv);
+                });
+              });
+            }
           }
         ]
       },
@@ -195,6 +226,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'A Shapefile',
             command: () => {
+              this.visibleMenu = false;
+              this.optionsLayers = [];
+              this.map.layers.items.forEach((layer) => {
+                if (layer.title !== null) {
+                  this.optionsLayers.push({
+                    label: layer.title.substr(11),
+                    value: layer.title.substr(11)
+                  });
+                }
+              });
               this.display = true;
             }
           }
@@ -247,13 +288,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D,
-        DistanceMeasurement2D, LabelClass, BasemapGallery, CoordinateConversion, Sketch, GraphicsLayer, Graphic,
-        Legend] =
+        DistanceMeasurement2D, LabelClass, BasemapGallery, CoordinateConversion, SketchViewModel, GraphicsLayer, Graphic, Legend] =
         await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
           "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D", "esri/layers/support/LabelClass",
-          'esri/widgets/BasemapGallery', 'esri/widgets/CoordinateConversion', 'esri/widgets/Sketch', 'esri/layers/GraphicsLayer',
-          'esri/Graphic', 'esri/widgets/Legend']);
+          'esri/widgets/BasemapGallery', 'esri/widgets/CoordinateConversion', 'esri/widgets/Sketch/SketchViewModel',
+          'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend']);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
 
@@ -594,16 +634,17 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       const graphicsLayer = new GraphicsLayer();
 
-      const sketch = new Sketch({
+      let sketchVM = new SketchViewModel({
         layer: graphicsLayer,
-        view: this.view,
-        // graphic will be selected as soon as it is created
-        creationMode: 'single',
-        availableCreateTools: ['polyline', 'polygon']
+        view: this.view
       });
 
-      sketch.on('create', (event) => {
+      sketchVM.on('create', (event) => {
+        if (this.view.graphics.length === 1) {
+          this.clearGraphics();
+        }
         if (event.state === 'complete') {
+          this.clearGraphic = true;
           let symbolF = {
             type: 'simple-fill',
             color: [255, 255, 0, 0.25],
@@ -619,11 +660,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             symbol: symbolF
           });
           this.view.graphics.add(graphic);
-          console.log(event.graphic.geometry);
         }
       });
 
-      this.view.ui.add(sketch, 'bottom-left');
+      this.sketch = sketchVM;
 
       this.view.ui.add([expandLegend, expandPrint, layerListExpand, expandAreaMeasure, expandLinearMeasure, expandBaseMapGallery, expandCcWidget],
         'bottom-right');
@@ -631,6 +671,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     } catch (error) {
       console.log("EsriLoader: ", error);
     }
+  }
+  clearGraphics() {
+    this.view.graphics.removeAll();
+    this.clearGraphic = false;
   }
 
   ngOnInit() {
@@ -645,11 +689,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   async generateFeatureCollection(fileName, form, fileType) {
-    var portalUrl = "https://www.arcgis.com";
+    var portalUrl = 'https://www.arcgis.com';
     const [FeatureLayer, Graphic, esriRequest, Field] = await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/request',
       'esri/layers/support/Field']);
-    var name = fileName.split(".");
-    name = name[0].replace("c:\\fakepath\\", "");
+    var name = fileName.split('.');
+    name = name[0].replace('c:\\fakepath\\', '');
     var params = {
       name: name,
       targetSR: this.view.spatialReference,
@@ -661,20 +705,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       reducePrecision: true,
       numberOfDigitsAfterDecimal: 0
     };
-
-    var myContent = {
+    const myContent = {
       filetype: fileType,
       publishParameters: JSON.stringify(params),
-      f: "json"
+      f: 'json'
     };
-    esriRequest(portalUrl + "/sharing/rest/content/features/generate", {
+    esriRequest(portalUrl + '/sharing/rest/content/features/generate', {
       query: myContent,
       body: form,
-      responseType: "json"
+      responseType: 'json'
     }).then((response) => {
       if (fileType === 'shapefile') {
         this.addShapefileToMap(response);
       } else if (fileType === 'gpx') {
+        debugger;
         this.addGpxToMap(response.data.featureCollection);
       }
     }, (err) => {
@@ -712,7 +756,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       'esri/layers/FeatureLayer', 'esri/PopupTemplate', 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
       'esri/symbols/SimpleMarkerSymbol', 'esri/Color']);
     var filename = featureCollection.layers[0].featureSet.features[0].attributes.name;
-
     const symbolSelectPt = new SimpleMarkerSymbol({
       style: 'square',
       width: 8,
@@ -739,32 +782,23 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       style: 'dash'
     });
 
-    featureCollection.layers.forEach((layer) => {
+    featureCollection.layers.forEach((layerDefinition) => {
+      debugger;
+      var layer = layerDefinition.layerDefinition;
       var popupTemplate = new PopupTemplate({
         title: 'Atributos GPX',
         content: '${*}'
       });
-      var layer = new FeatureLayer(layer, {
-        popupTemplate: popupTemplate
-      });
-
-      layer.name = filename;
+      layer.popupTemplate = popupTemplate;
+      debugger;
+      layer.name = filename + ' -' + layer.name;
       layer.id = layer.name + Math.round(Math.random() * 4294967295).toString(16);
       layer.fromFeatureCollection = true;
       layer.title = filename;
-      switch (layer.geometryType) {
-        case 'esriGeometryPoint':
-          layer.setSelectionSymbol(symbolSelectPt);
-          break;
-        case 'esriGeometryPolygon':
-          layer.setSelectionSymbol(symbolSelectPol);
-          break;
-        case 'esriGeometryPolyline':
-          layer.setSelectionSymbol(symbolSelectLn);
-          break;
-      }
-      var fullExtent = fullExtent ? fullExtent.union(layer.fullExtent) : layer.fullExtent;
+      layer.source = layerDefinition.featureSet.features;
+      debugger;
       this.map.add(layer);
+      debugger;
     });
   }
 
@@ -788,13 +822,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       let monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-      console.log(timeStops);
       let slider = new Slider({
         container: 'ts-tierras',
         min: 0,
         max: timeStops.length - 1,
         values: [timeStops.length - 1],
-        snapOnClickEnabled: false,
         steps: 1,
         labelsVisible: false
       });
@@ -854,5 +886,88 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       });
     });
+  }
+
+  onChangeSelect() {
+    if (this.selectedPolygon.value === 'free-pol') {
+      this.sketch.create('polygon', { mode: 'freehand' });
+    } else if (this.selectedPolygon.value === 'pol') {
+      this.sketch.create('polygon', { mode: 'click' });
+    }
+  }
+
+  async extratShape() {
+    const [FeatureSet, Geoprocessor] = await loadModules(['esri/tasks/support/FeatureSet', 'esri/tasks/Geoprocessor']);
+    const gpExtract = new Geoprocessor({
+      url: this.agsUrlBase + 'rest/services/ExtractShape/GPServer/ExtractShape',
+      outSpatialReference: {
+        wkid: 4326
+      }
+    });
+    if (this.selectedLayers.length === 0 || this.selectedPolygon === undefined || this.view.graphics.length === 0) {
+      if (this.selectedLayers.length === 0) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: '',
+          detail: 'Debe seleccionar las capas que desea extraer.'
+        });
+      }
+      if (this.selectedPolygon === undefined) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: '',
+          detail: 'Debe seleccionar elementos de la capa actual para poder extraer datos.'
+        });
+      }
+      if (this.view.graphics.length === 0) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: '',
+          detail: 'Debe dibujar el área de interes para poder extraer datos.'
+        });
+      }
+    } else {
+      const features = this.view.graphics.items[0]
+      const featureSet = new FeatureSet();
+      featureSet.features = features;
+      const params = {
+        Layers_to_Clip: this.selectedLayers,
+        Area_of_Interest: featureSet,
+        Feature_Format: 'Shapefile - SHP - .shp'
+      };
+      console.log(params);
+      gpExtract.submitJob(params).then((jobInfo) => {
+        let options = {
+          statusCallback: (jobInfo1) => {
+            console.log(jobInfo1.jobStatus);
+          }
+        };
+        gpExtract.waitForJobCompletion(jobInfo.jobId, options).then((jobInfo2) => {
+          console.log(jobInfo2);
+          if (!jobInfo2.jobStatus.includes('fail')) {
+            gpExtract.getResultData(jobInfo.jobId, 'Output_Zip_File').then((outputFile) => {
+              var theurl = outputFile.value.url;
+              window.location = theurl;
+            });
+          } else {
+            this.messageService.add({
+              severity: 'error',
+              summary: '',
+              detail: 'Error al descargar la capa.'
+            });
+          }
+          this.selectedLayers = [];
+          this.selectedPolygon = undefined;
+          this.clearGraphics();
+        });
+      });
+    }
+  }
+
+  onHideDialogExtract() {
+    this.clearGraphics();
+    this.selectedLayers = [];
+    this.selectedPolygon = undefined;
+    this.sketch.cancel();
   }
 }
