@@ -195,6 +195,25 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 });
               })
             }
+          },
+          {
+            label: 'Servicio CSV',
+            command: () => {
+              let dialog = this.dialogService.open(DialogUrlServiceComponent, {
+                width: '50%',
+                baseZIndex: 100,
+                header: 'Cargar servicio CSV'
+              });
+              dialog.onClose.subscribe(res => {
+                console.log(res);
+                loadModules(['esri/layers/CSVLayer']).then(([CSVLayer]) => {
+                  const csv = new CSVLayer({
+                    url: res
+                  });
+                  this.map.add(csv);
+                });
+              });
+            }
           }
         ]
       },
