@@ -45,6 +45,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   selectedPolygon: SelectItem;
   selectedLayers: SelectItem[] = [];
   clearGraphic = false;
+  visibleMenu = false;
 
   constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService) {
     this.setCurrentPosition();
@@ -204,6 +205,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'A Shapefile',
             command: () => {
+              this.visibleMenu = false;
               this.optionsLayers = [];
               this.map.layers.items.forEach((layer) => {
                 if (layer.title !== null) {
@@ -877,5 +879,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
       });
     }
+  }
+
+  onHideDialogExtract() {
+    this.clearGraphics();
+    this.selectedLayers = [];
+    this.selectedPolygon = undefined;
+    this.sketch.cancel();
   }
 }

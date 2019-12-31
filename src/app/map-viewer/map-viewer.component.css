@@ -65,6 +65,9 @@ p-sidebar {
     #menu {
         display: none;
     }
+    #ts-tierras-wrapper {
+      display: none;
+    }
 }
 
 .loading-machin {
