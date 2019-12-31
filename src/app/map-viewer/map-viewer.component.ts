@@ -614,11 +614,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   async generateFeatureCollection(fileName, form, fileType) {
-    var portalUrl = "https://www.arcgis.com";
+    var portalUrl = 'https://www.arcgis.com';
     const [FeatureLayer, Graphic, esriRequest, Field] = await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/request',
       'esri/layers/support/Field']);
-    var name = fileName.split(".");
-    name = name[0].replace("c:\\fakepath\\", "");
+    var name = fileName.split('.');
+    name = name[0].replace('c:\\fakepath\\', '');
     var params = {
       name: name,
       targetSR: this.view.spatialReference,
@@ -630,20 +630,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       reducePrecision: true,
       numberOfDigitsAfterDecimal: 0
     };
-
-    var myContent = {
+    const myContent = {
       filetype: fileType,
       publishParameters: JSON.stringify(params),
-      f: "json"
+      f: 'json'
     };
-    esriRequest(portalUrl + "/sharing/rest/content/features/generate", {
+    esriRequest(portalUrl + '/sharing/rest/content/features/generate', {
       query: myContent,
       body: form,
-      responseType: "json"
+      responseType: 'json'
     }).then((response) => {
       if (fileType === 'shapefile') {
         this.addShapefileToMap(response);
       } else if (fileType === 'gpx') {
+        debugger;
         this.addGpxToMap(response.data.featureCollection);
       }
     }, (err) => {
@@ -681,7 +681,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       'esri/layers/FeatureLayer', 'esri/PopupTemplate', 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
       'esri/symbols/SimpleMarkerSymbol', 'esri/Color']);
     var filename = featureCollection.layers[0].featureSet.features[0].attributes.name;
-
     const symbolSelectPt = new SimpleMarkerSymbol({
       style: 'square',
       width: 8,
@@ -708,32 +707,23 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       style: 'dash'
     });
 
-    featureCollection.layers.forEach((layer) => {
+    featureCollection.layers.forEach((layerDefinition) => {
+      debugger;
+      var layer = layerDefinition.layerDefinition;
       var popupTemplate = new PopupTemplate({
         title: 'Atributos GPX',
         content: '${*}'
       });
-      var layer = new FeatureLayer(layer, {
-        popupTemplate: popupTemplate
-      });
-
-      layer.name = filename;
+      layer.popupTemplate = popupTemplate;
+      debugger;
+      layer.name = filename + ' -' + layer.name;
       layer.id = layer.name + Math.round(Math.random() * 4294967295).toString(16);
       layer.fromFeatureCollection = true;
       layer.title = filename;
-      switch (layer.geometryType) {
-        case 'esriGeometryPoint':
-          layer.setSelectionSymbol(symbolSelectPt);
-          break;
-        case 'esriGeometryPolygon':
-          layer.setSelectionSymbol(symbolSelectPol);
-          break;
-        case 'esriGeometryPolyline':
-          layer.setSelectionSymbol(symbolSelectLn);
-          break;
-      }
-      var fullExtent = fullExtent ? fullExtent.union(layer.fullExtent) : layer.fullExtent;
+      layer.source = layerDefinition.featureSet.features;
+      debugger;
       this.map.add(layer);
+      debugger;
     });
   }
 

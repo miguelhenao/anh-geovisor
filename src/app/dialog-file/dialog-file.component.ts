@@ -26,17 +26,17 @@ export class DialogFileComponent implements OnInit {
     //     form: document.getElementById('uploadForm')
     //   });
     // }
-    let fileName = event.target.elements[0].value.toLowerCase();
+    let fileName = event.target.elements[0].files[0].name;
     if (fileName.indexOf(".zip") !== -1) {
       this.dialogRef.close({
-        data: event.target.elements[0].value.toLowerCase(),
+        data: fileName,
         form: document.getElementById('uploadForm')
       });
     } else if (fileName.indexOf(".json") != -1) {
       this.processJson(event.target.elements[0].files[0]);
     } else {
       this.dialogRef.close({
-        data: event.target.elements[0].value.toLowerCase(),
+        data: fileName,
         form: document.getElementById('uploadForm')
       });
     }
