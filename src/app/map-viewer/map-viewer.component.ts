@@ -22,6 +22,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   menu: Array<MenuItem> = [];
   loadLayers: number = 0;
   map: any;
+  search: any;
+  sourceSearch: Array<any> = [];
   tsLayer: any;
   agsHost = "anh-gisserver.anh.gov.co";
   agsProtocol = "https";
@@ -245,7 +247,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D,
-        DistanceMeasurement2D, LabelClass, BasemapGallery, CoordinateConversion, Sketch, GraphicsLayer, Graphic, 
+        DistanceMeasurement2D, LabelClass, BasemapGallery, CoordinateConversion, Sketch, GraphicsLayer, Graphic,
         Legend] =
         await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
@@ -342,6 +344,32 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
 
+      ly_municipio.load().then(() => {
+        let text: string = "";
+        for (const field of ly_municipio.fields) {
+          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
+        }
+        let templateMunicipio = {
+          title: "Info",
+          content: text,
+          fieldInfos: []
+        };
+        console.log(ly_municipio.fields);
+        let sourceSearch: Array<any> = this.sourceSearch.slice();
+        sourceSearch.push({
+          layer: ly_municipio,
+          searchFields: ["NOMBRE_ENT"],
+          displayField: "NOMBRE_ENT",
+          exactMatch: false,
+          outFields: ["*"],
+          name: ly_municipio.title
+        });
+        this.sourceSearch = null;
+        this.sourceSearch = sourceSearch;
+        this.search.sources = this.sourceSearch;
+        ly_municipio.popupTemplate = templateMunicipio;
+      })
+
       ly_municipio.on("layerview-create", () => {
         this.loadLayers++;
       });
@@ -365,12 +393,40 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       const ly_cuencas = new FeatureLayer(this.mapRestUrl + "/6", {
         id: "Cuencas",
-        opacity: 1.0, 
+        opacity: 1.0,
         visible: true,
         outFields: ["*"],
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
+
+      ly_cuencas.load().then(() => {
+        let text: string = "";
+        for (const field of ly_cuencas.fields) {
+          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
+        }
+        let templateCuencas = {
+          title: "Info",
+          content: text,
+          fieldInfos: []
+        };
+        console.log(ly_cuencas.fields);
+        let sourceSearch: Array<any> = this.sourceSearch.slice();
+        sourceSearch.push({
+          layer: ly_cuencas,
+          searchFields: ["NOMBRE", "FID_CUENCA"],
+          displayField: "NOMBRE",
+          exactMatch: false,
+          outFields: ["*"],
+          name: ly_cuencas.title,
+          suggestionsEnabled: true,
+        });
+        this.sourceSearch = null;
+        this.sourceSearch = sourceSearch;
+        this.search.sources = this.sourceSearch;
+        console.log(this.search);
+        ly_cuencas.popupTemplate = templateCuencas;
+      })
 
       ly_cuencas.on("layerview-create", () => {
         this.loadLayers++;
@@ -388,8 +444,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
 
       ly_tierras.load().then(() => {
+        let searchField: Array<any> = [];
         let text: string = "";
         for (const field of ly_tierras.fields) {
+          searchField.push(field.name);
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         let templateTierras = {
@@ -397,7 +455,22 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           content: text,
           fieldInfos: []
         };
+        console.log(searchField);
+        let sourceSearch: Array<any> = this.sourceSearch.slice();
+        sourceSearch.push({
+          layer: ly_tierras,
+          searchFields: ["CONTRAT_ID"],
+          displayField: "CONTRAT_ID",
+          exactMatch: false,
+          outFields: ["*"],
+          name: ly_tierras.title,
+          suggestionsEnabled: true,
+        });
+        this.sourceSearch = null;
+        this.sourceSearch = sourceSearch;
+        this.search.sources = this.sourceSearch;
         ly_tierras.popupTemplate = templateTierras;
+        console.log(this.search);
       });
 
       ly_tierras.on("layerview-create", () => {
@@ -442,10 +515,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         content: layerList.domNode,
         group: 'bottom-right',
       })
-      let search = new Search({
-        view: this.view
+      this.search = new Search({
+        view: this.view,
+        sources: this.sourceSearch,
+        includeDefaultSources: false
       });
-      this.view.ui.add(search, {
+      this.view.ui.add(this.search, {
         position: 'top-right'
       });
       this.view.ui.move(["zoom"], "top-right");
