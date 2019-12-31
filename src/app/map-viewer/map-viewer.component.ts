@@ -743,7 +743,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         min: 0,
         max: timeStops.length - 1,
         values: [timeStops.length - 1],
-        snapOnClickEnabled: false,
         steps: 1,
         labelsVisible: false
       });
