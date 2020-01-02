@@ -854,7 +854,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           });
 
           lyTierrasMdt.load().then(() => {
-            console.log(lyTierrasMdt.fields);
             let text: string = '';
             for (const field of lyTierrasMdt.fields) {
               text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
@@ -866,7 +865,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               fieldInfos: []
             };
             lyTierrasMdt.popupTemplate = templateTierras;
-            console.log(text);
           });
           const statesLabelClass = new LabelClass({
             labelExpressionInfo: { expression: '$feature.TIERRAS_ID' },
@@ -935,15 +933,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         Area_of_Interest: featureSet,
         Feature_Format: 'Shapefile - SHP - .shp'
       };
-      console.log(params);
       gpExtract.submitJob(params).then((jobInfo) => {
         let options = {
           statusCallback: (jobInfo1) => {
-            console.log(jobInfo1.jobStatus);
           }
         };
         gpExtract.waitForJobCompletion(jobInfo.jobId, options).then((jobInfo2) => {
-          console.log(jobInfo2);
           if (!jobInfo2.jobStatus.includes('fail')) {
             gpExtract.getResultData(jobInfo.jobId, 'Output_Zip_File').then((outputFile) => {
               var theurl = outputFile.value.url;
