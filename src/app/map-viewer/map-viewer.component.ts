@@ -287,13 +287,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   async initializeMap() {
     try {
       // Load the modules for the ArcGIS API for JavaScript
-      const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D,
-        DistanceMeasurement2D, LabelClass, BasemapGallery, CoordinateConversion, SketchViewModel, GraphicsLayer, Graphic, Legend] =
+      const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D, DistanceMeasurement2D, LabelClass,
+        BasemapGallery, CoordinateConversion, SketchViewModel, GraphicsLayer, Graphic, Legend, ScaleBar] =
         await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
           "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D", "esri/layers/support/LabelClass",
           'esri/widgets/BasemapGallery', 'esri/widgets/CoordinateConversion', 'esri/widgets/Sketch/SketchViewModel',
-          'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend']);
+          'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend', 'esri/widgets/ScaleBar']);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
 
@@ -519,6 +519,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
 
       this.map.add(ly_municipio);
+      console.log(ly_municipio);
 
       const ly_departamento = new FeatureLayer(this.mapRestUrl + "/4", {
         id: "Departamento",
@@ -822,6 +823,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       this.sketch = sketchVM;
 
+      let scaleBar = new ScaleBar({
+        style: 'line',
+        view: this.view,
+        unit: 'dual'
+      });
+
+      this.view.ui.add(scaleBar, {
+        position: 'bottom-left',
+      });
+
       this.view.ui.add([expandLegend, expandPrint, layerListExpand, expandAreaMeasure, expandLinearMeasure, expandBaseMapGallery, expandCcWidget],
         'bottom-right');
       return this.view;
@@ -875,7 +886,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       if (fileType === 'shapefile') {
         this.addShapefileToMap(response);
       } else if (fileType === 'gpx') {
-        debugger;
         this.addGpxToMap(response.data.featureCollection);
       }
     }, (err) => {
@@ -888,7 +898,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     const [FeatureLayer, Graphic, Field] = await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/layers/support/Field']);
     var layerName = featureCollection.data.featureCollection.layers[0].layerDefinition.name;
     var sourceGraphics = [];
-
+    console.log(featureCollection)
     var layers = featureCollection.data.featureCollection.layers.map((layer) => {
       var graphics = layer.featureSet.features.map((feature) => {
         return Graphic.fromJSON(feature);
@@ -909,54 +919,34 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   async addGpxToMap(featureCollection) {
-    const [FeatureLayer, PopupTemplate, SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol, Color] = await loadModules([
-      'esri/layers/FeatureLayer', 'esri/PopupTemplate', 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
-      'esri/symbols/SimpleMarkerSymbol', 'esri/Color']);
+    const [FeatureLayer, PopupTemplate, Graphic, Field, SimpleRenderer] =
+      await loadModules([
+        'esri/layers/FeatureLayer', 'esri/PopupTemplate', 'esri/Graphic', 'esri/layers/support/Field', 'esri/renderers/SimpleRenderer']);
     var filename = featureCollection.layers[0].featureSet.features[0].attributes.name;
-    const symbolSelectPt = new SimpleMarkerSymbol({
-      style: 'square',
-      width: 8,
-      color: [0, 50, 0, 1],
-      outline: {
-        color: [50, 50, 0],
-        width: 3
-      }
-    });
-
-    const symbolSelectPol = new SimpleFillSymbol({
-      color: [0, 0, 0, 0.5],
-      style: 'solid',
-      outline: {
-        color: [0, 0, 255],
-        width: 3,
-        style: 'solid'
-      }
-    });
-
-    const symbolSelectLn = new SimpleLineSymbol({
-      color: [20, 20, 0],
-      width: 4,
-      style: 'dash'
-    });
-
-    featureCollection.layers.forEach((layerDefinition) => {
-      debugger;
-      var layer = layerDefinition.layerDefinition;
-      var popupTemplate = new PopupTemplate({
+    var sourceGraphics = [];
+    var layers = featureCollection.layers.map((layer) => {
+      var graphics = layer.featureSet.features.map((feature) => {
+        return Graphic.fromJSON(feature);
+      });
+      sourceGraphics = sourceGraphics.concat(graphics);
+      var popup = new PopupTemplate({
         title: 'Atributos GPX',
         content: '${*}'
       });
-      layer.popupTemplate = popupTemplate;
-      debugger;
-      layer.name = filename + ' -' + layer.name;
-      layer.id = layer.name + Math.round(Math.random() * 4294967295).toString(16);
-      layer.fromFeatureCollection = true;
-      layer.title = filename;
-      layer.source = layerDefinition.featureSet.features;
-      debugger;
-      this.map.add(layer);
-      debugger;
+      var featureLayer = new FeatureLayer({
+        title: filename,
+        objectIdField: "FID",
+        source: graphics,
+        popupTemplate: popup,
+        renderer: SimpleRenderer.fromJSON(layer.layerDefinition.drawingInfo.renderer),
+        fields: layer.layerDefinition.fields.map((field) => {
+          return Field.fromJSON(field);
+        })
+      });
+      return featureLayer;
     });
+    this.map.addMany(layers);
+    this.view.goTo(sourceGraphics);
   }
 
   async addSlider() {
@@ -1037,7 +1027,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               fieldInfos: []
             };
             lyTierrasMdt.popupTemplate = templateTierras;
-            console.log(text);
           });
           const statesLabelClass = new LabelClass({
             labelExpressionInfo: { expression: '$feature.TIERRAS_ID' },
@@ -1106,15 +1095,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         Area_of_Interest: featureSet,
         Feature_Format: 'Shapefile - SHP - .shp'
       };
-      console.log(params);
       gpExtract.submitJob(params).then((jobInfo) => {
         let options = {
           statusCallback: (jobInfo1) => {
-            console.log(jobInfo1.jobStatus);
           }
         };
         gpExtract.waitForJobCompletion(jobInfo.jobId, options).then((jobInfo2) => {
-          console.log(jobInfo2);
           if (!jobInfo2.jobStatus.includes('fail')) {
             gpExtract.getResultData(jobInfo.jobId, 'Output_Zip_File').then((outputFile) => {
               var theurl = outputFile.value.url;
