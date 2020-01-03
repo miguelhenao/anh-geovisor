@@ -6,6 +6,7 @@ import { loadModules } from "esri-loader";
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
 import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.component';
 import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
+import { ImportCSV } from "./importCSV";
 @Component({
   selector: 'app-map-viewer',
   templateUrl: './map-viewer.component.html',
@@ -47,6 +48,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   selectedLayers: SelectItem[] = [];
   clearGraphic = false;
   visibleMenu = false;
+  importCsv = new ImportCSV();
 
   constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService) {
     this.setCurrentPosition();
@@ -92,7 +94,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               dialog.onClose.subscribe(res => {
                 if (res !== undefined) {
                   if (res.data.indexOf('.csv') !== -1) {
-                    this.generateFeatureCollection(res.data, res.form, 'csv');
+                    this.importCsv.uploadFileCsv(res.form.elements[0].files);
                   }
                 }
               });
@@ -790,7 +792,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         alias: "ObjectID",
         type: "oid"
       })
-     ];
+    ];
     var featureLayer = new FeatureLayer({
       title: 'GeoJSON',
       source: graphics,
