@@ -385,7 +385,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           content: text,
           fieldInfos: []
         };
-        console.log(ly_municipio.fields);
         let sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
           layer: ly_municipio,
@@ -406,7 +405,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
 
       this.map.add(ly_municipio);
-      console.log(ly_municipio);
 
       const ly_departamento = new FeatureLayer(this.mapRestUrl + "/4", {
         id: "Departamento",
@@ -442,7 +440,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           content: text,
           fieldInfos: []
         };
-        console.log(ly_cuencas.fields);
         let sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
           layer: ly_cuencas,
@@ -456,7 +453,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
         this.search.sources = this.sourceSearch;
-        console.log(this.search);
         ly_cuencas.popupTemplate = templateCuencas;
       })
 
@@ -487,7 +483,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           content: text,
           fieldInfos: []
         };
-        console.log(searchField);
         let sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
           layer: ly_tierras,
@@ -502,7 +497,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.sourceSearch = sourceSearch;
         this.search.sources = this.sourceSearch;
         ly_tierras.popupTemplate = templateTierras;
-        console.log(this.search);
       });
 
       ly_tierras.on("layerview-create", () => {
