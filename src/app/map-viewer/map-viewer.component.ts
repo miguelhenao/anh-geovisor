@@ -287,13 +287,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   async initializeMap() {
     try {
       // Load the modules for the ArcGIS API for JavaScript
-      const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D,
-        DistanceMeasurement2D, LabelClass, BasemapGallery, CoordinateConversion, SketchViewModel, GraphicsLayer, Graphic, Legend] =
+      const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D, DistanceMeasurement2D, LabelClass,
+        BasemapGallery, CoordinateConversion, SketchViewModel, GraphicsLayer, Graphic, Legend, ScaleBar] =
         await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
           "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D", "esri/layers/support/LabelClass",
           'esri/widgets/BasemapGallery', 'esri/widgets/CoordinateConversion', 'esri/widgets/Sketch/SketchViewModel',
-          'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend']);
+          'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend', 'esri/widgets/ScaleBar']);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
 
@@ -665,6 +665,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
 
       this.sketch = sketchVM;
+
+      let scaleBar = new ScaleBar({
+        style: 'line',
+        view: this.view,
+        unit: 'dual'
+      });
+
+      this.view.ui.add(scaleBar, {
+        position: 'bottom-left',
+      });
 
       this.view.ui.add([expandLegend, expandPrint, layerListExpand, expandAreaMeasure, expandLinearMeasure, expandBaseMapGallery, expandCcWidget],
         'bottom-right');
