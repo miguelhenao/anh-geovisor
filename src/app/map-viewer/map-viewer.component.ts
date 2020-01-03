@@ -729,7 +729,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       if (fileType === 'shapefile') {
         this.addShapefileToMap(response);
       } else if (fileType === 'gpx') {
-        debugger;
         this.addGpxToMap(response.data.featureCollection);
       }
     }, (err) => {
@@ -742,7 +741,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     const [FeatureLayer, Graphic, Field] = await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/layers/support/Field']);
     var layerName = featureCollection.data.featureCollection.layers[0].layerDefinition.name;
     var sourceGraphics = [];
-
+    console.log(featureCollection)
     var layers = featureCollection.data.featureCollection.layers.map((layer) => {
       var graphics = layer.featureSet.features.map((feature) => {
         return Graphic.fromJSON(feature);
@@ -763,113 +762,34 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   async addGpxToMap(featureCollection) {
-    const [FeatureLayer, PopupTemplate, SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol, Collection, Graphic] = await loadModules([
-      'esri/layers/FeatureLayer', 'esri/PopupTemplate', 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
-      'esri/symbols/SimpleMarkerSymbol', 'esri/core/Collection', 'esri/Graphic']);
+    const [FeatureLayer, PopupTemplate, Graphic, Field, SimpleRenderer] =
+      await loadModules([
+        'esri/layers/FeatureLayer', 'esri/PopupTemplate', 'esri/Graphic', 'esri/layers/support/Field', 'esri/renderers/SimpleRenderer']);
     var filename = featureCollection.layers[0].featureSet.features[0].attributes.name;
-    const symbolSelectPt = new SimpleMarkerSymbol({
-      style: 'square',
-      width: 8,
-      color: [0, 50, 0, 1],
-      outline: {
-        color: [50, 50, 0],
-        width: 3
-      }
-    });
-
-    const symbolSelectPol = new SimpleFillSymbol({
-      color: [0, 0, 0, 0.5],
-      style: 'solid',
-      outline: {
-        color: [0, 0, 255],
-        width: 3,
-        style: 'solid'
-      }
-    });
-
-    const symbolSelectLn = new SimpleLineSymbol({
-      color: [20, 20, 0],
-      width: 4,
-      style: 'dash'
-    });
-
-    featureCollection.layers.forEach((layerDefinition) => {
-      debugger;
-      var layerF = layerDefinition.layerDefinition;
+    var sourceGraphics = [];
+    var layers = featureCollection.layers.map((layer) => {
+      var graphics = layer.featureSet.features.map((feature) => {
+        return Graphic.fromJSON(feature);
+      });
+      sourceGraphics = sourceGraphics.concat(graphics);
       var popup = new PopupTemplate({
         title: 'Atributos GPX',
         content: '${*}'
       });
-
-      var layer = new FeatureLayer({
-        popupTemplate: popup
+      var featureLayer = new FeatureLayer({
+        title: filename,
+        objectIdField: "FID",
+        source: graphics,
+        popupTemplate: popup,
+        renderer: SimpleRenderer.fromJSON(layer.layerDefinition.drawingInfo.renderer),
+        fields: layer.layerDefinition.fields.map((field) => {
+          return Field.fromJSON(field);
+        })
       });
-      layer.title = filename + ' - ' + layerF.name;
-      layer.id = layer.title + Math.round(Math.random() * 4294967295).toString(16);
-      layer.objectIdField = layerF.objectIdField;
-      switch (layerF.geometryType) {
-        case 'esriGeometryPoint':
-          layer.geometryType = "point";
-          layer.renderer = {
-            type: "simple",
-            symbol: symbolSelectPt
-          };
-          break;
-        case 'esriGeometryPolygon':
-          layer.geometryType = "polygon";
-          layer.renderer = {
-            type: "simple",
-            symbol: symbolSelectPol
-          };
-          break;
-        case 'esriGeometryPolyline':
-          layer.geometryType = "polyline";
-          layer.renderer = {
-            type: "simple",
-            symbol: symbolSelectLn
-          };
-          break;
-      }
-      var source = new Collection();
-      layerDefinition.featureSet.features.forEach(feature => {
-        var geometry;
-        switch (layer.geometryType) {
-          case 'point':
-            geometry = {
-              type: layer.geometryType
-            };
-            break;
-          case 'polygon':
-            geometry = {
-              type: layer.geometryType,
-              rings: feature.greometry.rings
-            };
-            break;
-          case 'polyline':
-            geometry = {
-              type: layer.geometryType,
-              paths: feature.geometry.paths
-            };
-            break;
-        }
-        var graphic = new Graphic({
-          attributes: feature.attributes,
-          geometry: geometry,
-          symbol: layer.renderer.symbol
-        });
-        source.add(graphic);
-      });
-      layer.source = source;
-      layerF.fields.forEach(field => {
-        field.type = field.type.substr(13).toLowerCase();
-      });
-      layer.fields = layerF.fields;
-      debugger;
-      console.log(this.map);
-      this.map.add(layer);
-      console.log(this.map);
-      debugger;
+      return featureLayer;
     });
+    this.map.addMany(layers);
+    this.view.goTo(sourceGraphics);
   }
 
   async addSlider() {
