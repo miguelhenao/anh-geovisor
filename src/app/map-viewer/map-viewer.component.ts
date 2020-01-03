@@ -19,6 +19,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   view: any;
   latitude: number = 4.6486259;
   longitude: number = -74.2478963;
+  featureDptos: Array<any> = [];
   menu: Array<MenuItem> = [];
   loadLayers: number = 0;
   map: any;
@@ -281,12 +282,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D, DistanceMeasurement2D, LabelClass,
-        BasemapGallery, CoordinateConversion, SketchViewModel, GraphicsLayer, Graphic, Legend, ScaleBar] =
+        BasemapGallery, CoordinateConversion, SketchViewModel, GraphicsLayer, Graphic, Legend, ScaleBar, esriRequest] =
         await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
           "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D", "esri/layers/support/LabelClass",
           'esri/widgets/BasemapGallery', 'esri/widgets/CoordinateConversion', 'esri/widgets/Sketch/SketchViewModel',
-          'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend', 'esri/widgets/ScaleBar']);
+          'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend', 'esri/widgets/ScaleBar', 'esri/request']);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
 
@@ -415,6 +416,41 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         outFields: ["*"],
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
+      });
+
+      ly_departamento.load().then(() => {
+        let url: string = "https://anh-gisserver.anh.gov.co/arcgis/rest/services/Tierras/Mapa_ANH/MapServer/4/query?where=1%3D1&returnGeometry=false&&outfields=*&f=pjson";
+        esriRequest(url, {
+          responseType: "json"
+        }).then((res) => {
+          console.log(res);
+          this.featureDptos = res.data.features;
+        }, (err) => {
+          console.error(err);
+        });
+        let sourceSearch: Array<any> = this.sourceSearch.slice();
+        sourceSearch.push({
+          layer: ly_departamento,
+          searchFields: ["DEPARTAMEN"],
+          displayField: "DEPARTAMEN",
+          exactMatch: false,
+          outFields: ["*"],
+          name: ly_departamento.title,
+          suggestionsEnabled: true,
+        });
+        this.sourceSearch = null;
+        this.sourceSearch = sourceSearch;
+        this.search.sources = this.sourceSearch;
+        let text: string = "";
+        for (const field of ly_departamento.fields) {
+          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
+        }
+        let templateDepartamento = {
+          title: "Info",
+          content: text,
+          fieldInfos: []
+        };
+        ly_departamento.popupTemplate = templateDepartamento;
       });
 
       ly_departamento.on("layerview-create", () => {
