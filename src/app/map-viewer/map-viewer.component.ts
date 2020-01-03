@@ -5,8 +5,7 @@ import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked }
 import { loadModules } from "esri-loader";
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
 import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.component';
-import * as $ from 'jquery';
-
+import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
 @Component({
   selector: 'app-map-viewer',
   templateUrl: './map-viewer.component.html',
@@ -127,18 +126,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 data: { type: 'json' }
               });
               dialog.onClose.subscribe(res => {
-                debugger;
-                console.log(res);
-                if (res) {
-                  loadModules(['esri/layers/GeoJSONLayer', 'esri/layers/FeatureLayer']).then(([GeoJSONLayer, FeatureLayer]) => {
-                    debugger;
-                    let geo = new FeatureLayer({
-                      source: res
-                    });
-                    this.map.add(geo);
-                  });
+                if (res !== undefined) {
+                  this.addGeoJSONToMap(res);
                 }
-              })
+              });
             }
           },
           {
@@ -324,32 +315,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
 
-      ly_pozo.load().then(() => {
-        let sourceSearch: Array<any> = this.sourceSearch.slice();
-        sourceSearch.push({
-          layer: ly_pozo,
-          searchFields: ["well_name"],
-          displayField: "well_name",
-          exactMatch: false,
-          outFields: ["*"],
-          name: ly_pozo.title,
-          suggestionsEnabled: true,
-        });
-        this.sourceSearch = null;
-        this.sourceSearch = sourceSearch;
-        this.search.sources = this.sourceSearch;
-        let text: string = "";
-        for (const field of ly_pozo.fields) {
-          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
-        }
-        let templatePozo = {
-          title: "Info",
-          content: text,
-          fieldInfos: []
-        };
-        ly_pozo.popupTemplate = templatePozo;
-      })
-
       ly_pozo.on("layerview-create", () => {
         this.loadLayers++;
       });
@@ -364,32 +329,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-
-      ly_rezumadero.load().then(() => {
-        let sourceSearch: Array<any> = this.sourceSearch.slice();
-        sourceSearch.push({
-          layer: ly_rezumadero,
-          searchFields: ["Rezumadero"],
-          displayField: "Rezumadero",
-          exactMatch: false,
-          outFields: ["*"],
-          name: ly_rezumadero.title,
-          suggestionsEnabled: true,
-        });
-        this.sourceSearch = null;
-        this.sourceSearch = sourceSearch;
-        this.search.sources = this.sourceSearch;
-        let text: string = "";
-        for (const field of ly_rezumadero.fields) {
-          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
-        }
-        let templateRezumadero = {
-          title: "Info",
-          content: text,
-          fieldInfos: []
-        };
-        ly_rezumadero.popupTemplate = templateRezumadero;
-      })
 
       ly_rezumadero.on("layerview-create", () => {
         this.loadLayers++;
@@ -406,32 +345,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
 
-      ly_sismica.load().then(() => {
-        let sourceSearch: Array<any> = this.sourceSearch.slice();
-        sourceSearch.push({
-          layer: ly_sismica,
-          searchFields: ["SURVEY_NAM, LINE_NAME, COMPANY_NA"],
-          displayField: "SURVEY_NAM",
-          exactMatch: false,
-          outFields: ["*"],
-          name: ly_sismica.title,
-          suggestionsEnabled: true,
-        });
-        this.sourceSearch = null;
-        this.sourceSearch = sourceSearch;
-        this.search.sources = this.sourceSearch;
-        let text: string = "";
-        for (const field of ly_sismica.fields) {
-          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
-        }
-        let templateSismica = {
-          title: "Info",
-          content: text,
-          fieldInfos: []
-        };
-        ly_sismica.popupTemplate = templateSismica;
-      });
-
       ly_sismica.on("layerview-create", () => {
         this.loadLayers++;
       });
@@ -445,32 +358,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         outFields: ["*"],
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
-      });
-
-      ly_sismica3d.load().then(() => {
-        let sourceSearch: Array<any> = this.sourceSearch.slice();
-        sourceSearch.push({
-          layer: ly_sismica3d,
-          searchFields: ["NOMBRE"],
-          displayField: "NOMBRE",
-          exactMatch: false,
-          outFields: ["*"],
-          name: ly_sismica3d.title,
-          suggestionsEnabled: true,
-        });
-        this.sourceSearch = null;
-        this.sourceSearch = sourceSearch;
-        this.search.sources = this.sourceSearch;
-        let text: string = "";
-        for (const field of ly_sismica3d.fields) {
-          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
-        }
-        let templateSismica3d = {
-          title: "Info",
-          content: text,
-          fieldInfos: []
-        };
-        ly_sismica3d.popupTemplate = templateSismica3d;
       });
 
       ly_sismica3d.on("layerview-create", () => {
@@ -528,32 +415,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         outFields: ["*"],
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
-      });
-
-      ly_departamento.load().then(() => {
-        let sourceSearch: Array<any> = this.sourceSearch.slice();
-        sourceSearch.push({
-          layer: ly_departamento,
-          searchFields: ["DEPARTAMEN"],
-          displayField: "DEPARTAMEN",
-          exactMatch: false,
-          outFields: ["*"],
-          name: ly_departamento.title,
-          suggestionsEnabled: true,
-        });
-        this.sourceSearch = null;
-        this.sourceSearch = sourceSearch;
-        this.search.sources = this.sourceSearch;
-        let text: string = "";
-        for (const field of ly_departamento.fields) {
-          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
-        }
-        let templateDepartamento = {
-          title: "Info",
-          content: text,
-          fieldInfos: []
-        };
-        ly_departamento.popupTemplate = templateDepartamento;
       });
 
       ly_departamento.on("layerview-create", () => {
@@ -671,33 +532,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
       ly_sensibilidad.labelingInfo = [statesLabelClass];
-
-      ly_sensibilidad.load().then(() => {
-        let sourceSearch: Array<any> = this.sourceSearch.slice();
-        sourceSearch.push({
-          layer: ly_sensibilidad,
-          searchFields: ["LEYENDA", "CAL_TOTAL"],
-          displayField: "LEYENDA",
-          exactMatch: false,
-          outFields: ["*"],
-          name: ly_sensibilidad.title,
-          suggestionsEnabled: true,
-        });
-        this.sourceSearch = null;
-        this.sourceSearch = sourceSearch;
-        this.search.sources = this.sourceSearch;
-        let text: string = "";
-        for (const field of ly_sensibilidad.fields) {
-          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
-        }
-        let templateSensibilidad = {
-          title: "Info",
-          content: text,
-          fieldInfos: []
-        };
-        ly_sensibilidad.popupTemplate = templateSensibilidad;
-      });
-
       this.map.add(ly_sensibilidad);
 
       this.view = new MapView(mapViewProperties);
@@ -949,6 +783,29 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.view.goTo(sourceGraphics);
   }
 
+  async addGeoJSONToMap(featureCollection) {
+    const [Graphic, FeatureLayer, Field] = await loadModules(['esri/Graphic', 'esri/layers/FeatureLayer', 'esri/layers/support/Field']);
+    var sourceGraphics = [];
+    var graphics = featureCollection.features.map((feature) => {
+      return Graphic.fromJSON(geojsonToArcGIS(feature));
+    });
+    sourceGraphics = sourceGraphics.concat(graphics);
+    const fields = [
+      new Field({
+        name: "ObjectID",
+        alias: "ObjectID",
+        type: "oid"
+      })
+     ];
+    var featureLayer = new FeatureLayer({
+      title: 'GeoJSON',
+      source: graphics,
+      fields: fields
+    });
+    this.map.add(featureLayer);
+    this.view.goTo(sourceGraphics);
+  }
+
   async addSlider() {
     const [Slider, FeatureLayer, LabelClass] =
       await loadModules(['esri/widgets/Slider', 'esri/layers/FeatureLayer', 'esri/layers/support/LabelClass']);
@@ -1001,21 +858,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           });
 
           lyTierrasMdt.load().then(() => {
-            let sourceSearch: Array<any> = this.sourceSearch.splice(0, 9);
-            console.log(sourceSearch);
-            sourceSearch.push({
-              layer: lyTierrasMdt,
-              searchFields: ["TIERRAS_ID"],
-              displayField: "TIERRAS_ID",
-              exactMatch: false,
-              outFields: ["*"],
-              name: lyTierrasMdt.title,
-              suggestionsEnabled: true,
-            });
-            this.sourceSearch = null;
-            this.sourceSearch = sourceSearch;
-            this.search.sources = this.sourceSearch;
-            console.log(lyTierrasMdt.fields);
             let text: string = '';
             for (const field of lyTierrasMdt.fields) {
               text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
@@ -1121,14 +963,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
-  public validateExistentSource(sources: Array<any>, nameLayer: any): boolean {
-    for (const s of sources) {
-      if (s.layer.title == nameLayer) {
-        return true;
-      }
-    }
-    return false;
-  }
   onHideDialogExtract() {
     this.clearGraphics();
     this.selectedLayers = [];
