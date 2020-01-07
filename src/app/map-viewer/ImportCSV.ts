@@ -1,5 +1,6 @@
 import { loadModules } from 'esri-loader';
-
+var latFieldStrings = ['lat', 'latitude', 'y', 'ycenter'];
+var longFieldStrings = ['lon', 'long', 'longitude', 'x', 'xcenter'];
 export class ImportCSV {
   public uploadFileCsv(files: Array<any>): void {
     let filename;
@@ -10,11 +11,9 @@ export class ImportCSV {
   }
   private handleCsv(file: any): void {
     if (file.data) {
-      debugger;
       // var decoded = bytesToString(dojox.encoding.base64.decode(file.data));
       // processCsvData(decoded);
     } else {
-      debugger;
       let reader = new FileReader();
       reader.onload = () => {
         console.log('Finalizando lectura de archivo CSV');
@@ -25,7 +24,8 @@ export class ImportCSV {
   }
 
   private processCsvData(data: any): void {
-    loadModules(['dojox/data/CsvStore', 'dojo/_base/lang']).then(([CsvStore, lang]) => {
+    loadModules(['dojox/data/CsvStore', 'dojo/_base/lang', 'esri/PopupTemplate', 'esri/geometry/SpatialReference']).then((
+      [CsvStore, lang, PopupTemplate, SpatialReference]) => {
       let newLineIdx = data.indexOf('\n');
       let firtsLine = lang.trim(data.substr(0, newLineIdx));
       let separator = this.getSeparator(firtsLine);
@@ -38,10 +38,124 @@ export class ImportCSV {
         onComplete: (items, request) => {
           let objectId = 0;
           var featureCollection = this.generateFeatureCollectionTemplateCsv(csvStore, items);
+          var popupInfo = this.generateDefaultPopupInfo(featureCollection);
+          var infoTemplate = new PopupTemplate({
+            title: 'Atributos GPX',
+            content: '${*}'
+          });
+          var latField, longField;
+          var fieldNames = csvStore.getAttributes(items[0]);
+          // var coorGeoPlanas = $('input[name=coor-geo-planas]:checked').val();
+          var coorGeoPlanas = 'P';
+          fieldNames.forEach((fieldName) => {
+            var matchId;
+            matchId = latFieldStrings.indexOf(fieldName.toLowerCase());
+            if (matchId !== -1) {
+              latField = fieldName;
+            }
+            matchId = longFieldStrings.indexOf(fieldName.toLowerCase());
+            if (matchId !== -1) {
+              longField = fieldName;
+            }
+          });
+          var wkid;
+          var arrAttrib = [];
+          var arrGeom = [];
+          var arrGeomProj = [];
+          if (coorGeoPlanas === 'P') {
+            wkid = 3116; // MAGNA-SIRGAS / Colombia Bogota zone
+          } else {
+            wkid = 4326; // WGS84
+          }
+          var sisRef = new SpatialReference({
+            wkid: wkid
+          });
+          items.forEach((item, index) => {
+            var attrs = csvStore.getAttributes(item);
+            var attributes = {};
+            attrs.forEach((attr) => {
+              var value = Number(csvStore.getValue(item, attr));
+              if (isNaN(value)) {
+                attributes[attr] = csvStore.getValue(item, attr);
+              } else {
+                attributes[attr] = value;
+              }
+            });
+            attributes["__OBJECTID"] = objectId;
+            objectId++;
+            var latitude = parseFloat(attributes[latField]);
+            var longitude = parseFloat(attributes[longField]);
+            if (isNaN(latitude) || isNaN(longitude)) {
+              return;
+            }
+          });
+          debugger;
         }
-      })
-      debugger;
+      });
     });
+  }
+  generateDefaultPopupInfo(featureCollection: any) {
+    var fields = featureCollection.layerDefinition.fields;
+    var decimal = {
+      esriFieldTypeDouble: 1,
+      esriFieldTypeSingle: 1
+    };
+    var integer = {
+      esriFieldTypeInteger: 1,
+      esriFieldTypeSmallInteger: 1
+    };
+    var dt = {
+      esriFieldTypeDate: 1
+    };
+    var displayField = null;
+    var fieldInfos = fields.map((item, index) => {
+      if (item.name.toUpperCase() === 'NAME' || item.name.toUpperCase() === 'NOMBRE') {
+        displayField = item.name;
+      }
+      var visible = (item.type !== 'esriFieldTypeOID' && item.type !== 'esriFieldTypeGlobalID' && item.type !== 'esriFieldTypeGeometry');
+      var format = null;
+      if (visible) {
+        var f = item.name.toLowerCase();
+        var hideFieldsStr = ',stretched value,fnode_,tnode_,lpoly_,rpoly_,poly_,subclass,subclass_,rings_ok,rings_nok,';
+        if (hideFieldsStr.indexOf(',' + f + ',') > -1 || f.indexOf('area') > -1 || f.indexOf('length') > -1 || f.indexOf('shape') > -1 ||
+          f.indexOf('perimeter') > -1 || f.indexOf('objectid') > -1 || f.indexOf('_') === f.length - 1 ||
+          f.indexOf('_i') === f.length - 2) {
+          visible = false;
+        }
+        if (item.type in integer) {
+          format = {
+            places: 0,
+            digitSeparator: true
+          };
+        } else if (item.type in decimal) {
+          format = {
+            places: 2,
+            digitSeparator: true
+          };
+        } else if (item.type in dt) {
+          format = {
+            dateFormat: 'shortDateShortTime'
+          };
+        }
+      }
+      return {
+        fieldName: item.name,
+        label: item.alias,
+        isEditable: false,
+        tooltip: "",
+        visible: visible,
+        format: format,
+        stringFieldOption: 'textbox'
+      };
+    });
+    var popupInfo = {
+      title: displayField ? '{' + displayField + '}' : '',
+      fieldInfos: fieldInfos,
+      description: null,
+      showAttachments: false,
+      mediaInfos: []
+    };
+    return popupInfo;
   }
   generateFeatureCollectionTemplateCsv(store: any, items: any): any {
     var featureCollection = {
