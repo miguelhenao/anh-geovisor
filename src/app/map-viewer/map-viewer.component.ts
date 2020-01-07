@@ -6,7 +6,8 @@ import { loadModules } from "esri-loader";
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
 import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.component';
 import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
-import { ImportCSV } from "./importCSV";
+import { ImportCSV } from "./ImportCSV";
+
 @Component({
   selector: 'app-map-viewer',
   templateUrl: './map-viewer.component.html',
@@ -322,6 +323,31 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.loadLayers++;
       });
 
+      ly_pozo.load().then(() => {
+        let text: string = "";
+        for (const field of ly_pozo.fields) {
+          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
+        }
+        let templatePozo = {
+          title: "Información Pozo",
+          content: text,
+          fieldInfos: []
+        };
+        let sourceSearch: Array<any> = this.sourceSearch.slice();
+        sourceSearch.push({
+          layer: ly_pozo,
+          searchFields: ["well_name"],
+          displayField: "well_name",
+          exactMatch: false,
+          outFields: ["*"],
+          name: ly_pozo.title
+        });
+        this.sourceSearch = null;
+        this.sourceSearch = sourceSearch;
+        this.search.sources = this.sourceSearch;
+        ly_pozo.popupTemplate = templatePozo;
+      })
+
       this.map.add(ly_pozo);
 
       const ly_rezumadero = new FeatureLayer(this.mapRestUrl + "/0", {
@@ -335,6 +361,31 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       ly_rezumadero.on("layerview-create", () => {
         this.loadLayers++;
+      });
+
+      ly_rezumadero.load().then(() => {
+        let text: string = "";
+        for (const field of ly_rezumadero.fields) {
+          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
+        }
+        let templateRezumadero = {
+          title: "Información Rezumadero",
+          content: text,
+          fieldInfos: []
+        };
+        let sourceSearch: Array<any> = this.sourceSearch.slice();
+        sourceSearch.push({
+          layer: ly_rezumadero,
+          searchFields: ["Rezumadero"],
+          displayField: "Rezumadero",
+          exactMatch: false,
+          outFields: ["*"],
+          name: ly_rezumadero.title
+        });
+        this.sourceSearch = null;
+        this.sourceSearch = sourceSearch;
+        this.search.sources = this.sourceSearch;
+        ly_rezumadero.popupTemplate = templateRezumadero;
       });
 
       this.map.add(ly_rezumadero);
@@ -352,6 +403,31 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.loadLayers++;
       });
 
+      ly_sismica.load().then(() => {
+        let text: string = "";
+        for (const field of ly_sismica.fields) {
+          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
+        }
+        let templateSismica = {
+          title: "Información Sismica",
+          content: text,
+          fieldInfos: []
+        };
+        let sourceSearch: Array<any> = this.sourceSearch.slice();
+        sourceSearch.push({
+          layer: ly_sismica,
+          searchFields: ["SURVEY_NAM"],
+          displayField: "SURVEY_NAM",
+          exactMatch: false,
+          outFields: ["*"],
+          name: ly_sismica.title
+        });
+        this.sourceSearch = null;
+        this.sourceSearch = sourceSearch;
+        this.search.sources = this.sourceSearch;
+        ly_sismica.popupTemplate = templateSismica;
+      });
+
       this.map.add(ly_sismica);
 
       const ly_sismica3d = new FeatureLayer(this.mapRestUrl + "/3", {
@@ -365,6 +441,31 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       ly_sismica3d.on("layerview-create", () => {
         this.loadLayers++;
+      });
+
+      ly_sismica3d.load().then(() => {
+        let text: string = "";
+        for (const field of ly_sismica3d.fields) {
+          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
+        }
+        let templateSismica3d = {
+          title: "Información Sismica 3D",
+          content: text,
+          fieldInfos: []
+        };
+        let sourceSearch: Array<any> = this.sourceSearch.slice();
+        sourceSearch.push({
+          layer: ly_sismica3d,
+          searchFields: ["NOMBRE"],
+          displayField: "NOMBRE",
+          exactMatch: false,
+          outFields: ["*"],
+          name: ly_sismica3d.title
+        });
+        this.sourceSearch = null;
+        this.sourceSearch = sourceSearch;
+        this.search.sources = this.sourceSearch;
+        ly_sismica3d.popupTemplate = templateSismica3d;
       });
 
       this.map.add(ly_sismica3d);
@@ -699,7 +800,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         position: 'bottom-left',
       });
 
-      this.view.ui.add([expandLegend, expandPrint, layerListExpand, expandAreaMeasure, expandLinearMeasure, expandBaseMapGallery, expandCcWidget],
+      let attributeTable = new Expand({
+        expandIconClass: "esri-icon-table",
+        view: this.view,
+        content: '<b>Hello</b>'
+      });
+
+      this.view.ui.add([expandLegend, expandPrint, layerListExpand, expandAreaMeasure, 
+        expandLinearMeasure, expandBaseMapGallery, expandCcWidget, attributeTable],
         'bottom-right');
       return this.view;
     } catch (error) {
@@ -901,6 +1009,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               fieldInfos: []
             };
             lyTierrasMdt.popupTemplate = templateTierras;
+            let sourceSearch = this.sourceSearch.splice(0, 8);
+            sourceSearch.push({
+              layer: lyTierrasMdt,
+              searchFields: ["DEPARTAMEN"],
+              displayField: "DEPARTAMEN",
+              exactMatch: false,
+              outFields: ["*"],
+              name: lyTierrasMdt.title,
+              suggestionsEnabled: true,
+            });
+            this.sourceSearch = null;
+            this.sourceSearch = sourceSearch;
+            this.search.sources = this.sourceSearch;
           });
           const statesLabelClass = new LabelClass({
             labelExpressionInfo: { expression: '$feature.TIERRAS_ID' },
