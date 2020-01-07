@@ -21,6 +21,8 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ToastModule } from 'primeng/toast';
+import {TableModule} from 'primeng/table';
+import { AttributesTableComponent } from './attributes-table/attributes-table.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,8 @@ import { ToastModule } from 'primeng/toast';
     MapViewerComponent,
     DialogUrlServiceComponent,
     DialogFileComponent,
-    DialogTerminosComponent
+    DialogTerminosComponent,
+    AttributesTableComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +50,8 @@ import { ToastModule } from 'primeng/toast';
     DialogModule,
     DropdownModule,
     MultiSelectModule,
-    ToastModule
+    ToastModule,
+    TableModule
   ],
   providers: [],
   entryComponents: [

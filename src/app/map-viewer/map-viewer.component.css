@@ -66,7 +66,7 @@ p-sidebar {
         display: none;
     }
     #ts-tierras-wrapper {
-      display: none;
+        display: none;
     }
 }
 
@@ -81,6 +81,11 @@ p-sidebar {
     margin-left: -72px;
     animation: mymove 1.6s steps(30, end) infinite;
     z-index: 1001;
+}
+
+#attributeTable {
+    padding: 0.5em;
+    background-color: #fff;
 }
 
 /* Safari 4.0 - 8.0 */
@@ -139,14 +144,14 @@ p-sidebar {
 }
 
 .ui-slider-orange .esri-slider .esri-widget .esri-slider--horizontal {
-	background-color: rgba(255,255,255,0.6);
+    background-color: rgba(255, 255, 255, 0.6);
 }
 
 #infoDiv {
-  padding: 5px;
+    padding: 5px;
 }
 
 .clearGraphics {
-  margin: 0px 5px;
-  padding-bottom: 0px;
+    margin: 0px 5px;
+    padding-bottom: 0px;
 }

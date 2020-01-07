@@ -20,12 +20,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   view: any;
   latitude: number = 4.6486259;
   longitude: number = -74.2478963;
+  dptosSelected: Array<any> = [];
   featureDptos: Array<any> = [];
   menu: Array<MenuItem> = [];
   loadLayers: number = 0;
+  departmentLayer: any;
   map: any;
   search: any;
   sourceSearch: Array<any> = [];
+  attributeTable: any;
   leftDialog: number = 200;
   tsLayer: any;
   agsHost = "anh-gisserver.anh.gov.co";
@@ -39,6 +42,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   printUrl = this.agsUrlBase + "rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task";
   nameLayer: string;
   display = false;
+  displayAnalisis: boolean = false;
   optionsPolygon = [
     { name: 'Polígono', value: 'pol' },
     { name: 'Polígono Libre', value: 'free-pol' }
@@ -241,7 +245,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         icon: 'fa fa-gear',
         items: [
           {
-            label: 'Analisis de Cobertura'
+            label: 'Analisis de Cobertura',
+            command: () => {
+              this.displayAnalisis = true;
+              this.attributeTable.expand();
+            }
           },
           {
             label: 'Zona de Influencia (Buffer)'
@@ -283,12 +291,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D, DistanceMeasurement2D, LabelClass,
-        BasemapGallery, CoordinateConversion, SketchViewModel, GraphicsLayer, Graphic, Legend, ScaleBar, esriRequest] =
+        BasemapGallery, CoordinateConversion, SketchViewModel, GraphicsLayer, Graphic, Legend, ScaleBar, esriRequest,
+        SimpleFillSymbol, SimpleLineSymbol, Color] =
         await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
           "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D", "esri/layers/support/LabelClass",
           'esri/widgets/BasemapGallery', 'esri/widgets/CoordinateConversion', 'esri/widgets/Sketch/SketchViewModel',
-          'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend', 'esri/widgets/ScaleBar', 'esri/request']);
+          'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend', 'esri/widgets/ScaleBar', 'esri/request'
+          , 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/Color']);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
 
@@ -520,7 +530,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
 
       ly_departamento.load().then(() => {
-        let url: string = "https://anh-gisserver.anh.gov.co/arcgis/rest/services/Tierras/Mapa_ANH/MapServer/4/query?where=1%3D1&returnGeometry=false&&outfields=*&f=pjson";
+        debugger;
+        let url: string = "https://anh-gisserver.anh.gov.co/arcgis/rest/services/Tierras/Mapa_ANH/MapServer/4/query?where=1%3D1&returnGeometry=false&outfields=*&f=pjson";
         esriRequest(url, {
           responseType: "json"
         }).then((res) => {
@@ -559,6 +570,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
 
       this.map.add(ly_departamento);
+
+      this.departmentLayer = ly_departamento;
 
       const ly_cuencas = new FeatureLayer(this.mapRestUrl + "/6", {
         id: "Cuencas",
@@ -803,10 +816,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       let attributeTable = new Expand({
         expandIconClass: "esri-icon-table",
         view: this.view,
-        content: '<b>Hello</b>'
+        mode: 'drawer',
+        iconNumber: this.featureDptos.length,
+        content: document.getElementById("attributeTable")
       });
 
-      this.view.ui.add([expandLegend, expandPrint, layerListExpand, expandAreaMeasure, 
+      this.attributeTable = attributeTable;
+
+      this.view.ui.add([expandLegend, expandPrint, layerListExpand, expandAreaMeasure,
         expandLinearMeasure, expandBaseMapGallery, expandCcWidget, attributeTable],
         'bottom-right');
       return this.view;
@@ -1116,10 +1133,49 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  public onRowSelect(event: any): void {
+    loadModules(['esri/tasks/support/Query', 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
+      'esri/Color', 'dojo/_base/array', 'esri/Graphic']).then(([Query, SimpleFillSymbol, SimpleLineSymbol, Color,
+        dojo, Graphic]) => {
+        let query = this.departmentLayer.createQuery();
+        query.where = `DEPARTAMEN = '${event.data.attributes.DEPARTAMEN}'`;
+        query.returnGeometry = true;
+        query.outFields = ["*"];
+        this.departmentLayer.queryFeatures(query).then((res) => {
+          console.log(res);
+          let symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
+            new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 255, 1.0]), 2),
+            new Color([0, 0, 0, 0.5]));
+
+          dojo.forEach(res.features, (key) => {
+            let graphic = new Graphic({
+              geometry: key.geometry,
+              symbol: symbol
+            });
+            this.view.graphics.add(graphic);
+          });
+        }, (err) => {
+          console.error(err);
+        });
+      });
+  }
+
+  public nameDptoSelected(): string {
+    let nameDptos = "";
+    for (const dpto of this.dptosSelected) {
+      nameDptos = `${nameDptos} ${dpto.attributes.DEPARTAMEN}`;
+    }
+    return nameDptos;
+  }
+
   onHideDialogExtract() {
     this.clearGraphics();
     this.selectedLayers = [];
     this.selectedPolygon = undefined;
     this.sketch.cancel();
+  }
+
+  onHideDialogAnalisis() {
+
   }
 }
