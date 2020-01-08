@@ -24,6 +24,8 @@ import { ToastModule } from 'primeng/toast';
 import {TableModule} from 'primeng/table';
 import {MessageModule} from 'primeng/message';
 import { AttributesTableComponent } from './attributes-table/attributes-table.component';
+import {ColorPickerModule} from 'primeng/colorpicker';
+import { DialogSymbologyChangeComponent } from './dialog-symbology-change/dialog-symbology-change.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,8 @@ import { AttributesTableComponent } from './attributes-table/attributes-table.co
     DialogUrlServiceComponent,
     DialogFileComponent,
     DialogTerminosComponent,
-    AttributesTableComponent
+    AttributesTableComponent,
+    DialogSymbologyChangeComponent
   ],
   imports: [
     BrowserModule,
@@ -53,13 +56,15 @@ import { AttributesTableComponent } from './attributes-table/attributes-table.co
     MultiSelectModule,
     ToastModule,
     TableModule,
-    MessageModule
+    MessageModule,
+    ColorPickerModule
   ],
   providers: [],
   entryComponents: [
     DialogUrlServiceComponent,
     DialogFileComponent,
-    DialogTerminosComponent
+    DialogTerminosComponent,
+    DialogSymbologyChangeComponent
   ],
   bootstrap: [AppComponent]
 })
