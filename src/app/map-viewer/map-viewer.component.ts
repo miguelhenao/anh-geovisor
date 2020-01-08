@@ -44,18 +44,41 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   nameLayer: string;
   display = false;
   displayAnalisis: boolean = false;
+  displayBuffer: boolean = false;
   optionsPolygon = [
     { name: 'Polígono', value: 'pol' },
     { name: 'Polígono Libre', value: 'free-pol' }
   ];
+  optionsBuffer = [
+    { name: 'Kilómetros', value: 9036 },
+    { name: 'Millas', value: 9093 },
+    { name: 'Millas náuticas', value: 9030 },
+    { name: 'Millas nauticas (US)', value: 109012 },
+    { name: 'Metros', value: 9001 },
+    { name: 'Pies', value: 9002 },
+  ];
 
   optionsLayers: SelectItem[] = [];
   sketch;
+  sketchBuffer;
   selectedPolygon: SelectItem;
+  selectedBufferSketch: any;
+  selectedBuffer: SelectItem = {
+    value: 9036
+  };
   selectedLayers: SelectItem[] = [];
   clearGraphic = false;
   visibleMenu = false;
   importCsv = new ImportCSV();
+  bufDistance: string;
+
+  modes: SelectItem[] = [
+    { value: 'point', title: 'Punto', icon: 'fa fa-fw fa-circle' },
+    { value: 'line', title: 'Línea', icon: 'esri-icon-minus' },
+    { value: 'polyline', title: 'Polilínea', icon: 'esri-icon-polyline' },
+    { value: 'rectangle', title: 'Rectángulo', icon: 'esri-icon-sketch-rectangle' },
+    { value: 'polygon', title: 'Polígono', icon: 'esri-icon-polygon' }
+  ];
 
   constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService) {
     this.setCurrentPosition();
@@ -253,7 +276,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             }
           },
           {
-            label: 'Zona de Influencia (Buffer)'
+            label: 'Zona de Influencia (Buffer)',
+            command: () => {
+              this.visibleMenu = false;
+              this.displayBuffer = true;
+            }
           },
           {
             label: 'Ubicar coordenada'
@@ -293,13 +320,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D, DistanceMeasurement2D, LabelClass,
         BasemapGallery, CoordinateConversion, SketchViewModel, GraphicsLayer, Graphic, Legend, ScaleBar, esriRequest,
-        SimpleFillSymbol, SimpleLineSymbol, Color] =
+        SimpleFillSymbol, SimpleLineSymbol, Color, geometryEngine] =
         await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
           "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D", "esri/layers/support/LabelClass",
           'esri/widgets/BasemapGallery', 'esri/widgets/CoordinateConversion', 'esri/widgets/Sketch/SketchViewModel',
           'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend', 'esri/widgets/ScaleBar', 'esri/request'
-          , 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/Color']);
+          , 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/Color', 'esri/geometry/geometryEngine']);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
 
@@ -801,7 +828,56 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       });
 
+      let sketchVMBuffer = new SketchViewModel({
+        layer: graphicsLayer,
+        view: this.view
+      });
+
+      sketchVMBuffer.on('create', (event) => {
+        if (event.state === 'complete') {
+          this.clearGraphic = true;
+          let symbolGeo;
+          let geometry = event.graphic.geometry;
+          switch (geometry.type) {
+            case 'point':
+              symbolGeo = { type: 'simple-marker', color: [226, 0, 0] };
+              break;
+            default:
+              symbolGeo = {
+                type: 'simple-fill',
+                color: [255, 0, 0, 0.25],
+                style: 'solid',
+                outline: { color: [255, 0, 0], width: 1, style: 'solid' }
+              };
+              break;
+          }
+          let symbolBuffer = {
+            type: 'simple-fill',
+            color: [255, 0, 0, 0.35],
+            style: 'solid',
+            outline: {
+              color: [255, 0, 0, 0.65], width: 2, style: 'solid'
+            }
+          };
+          let graphic = new Graphic({
+            geometry: geometry,
+            symbol: symbolGeo
+          });
+          this.view.graphics.add(graphic);
+          if (this.bufDistance !== undefined) {
+            var buffer = geometryEngine.geodesicBuffer(geometry, this.bufDistance, this.selectedBuffer.value);
+            this.view.graphics.add(
+              new Graphic({
+                geometry: buffer,
+                symbol: symbolBuffer
+              })
+            );
+          }
+        }
+      });
+
       this.sketch = sketchVM;
+      this.sketchBuffer = sketchVMBuffer;
 
       let scaleBar = new ScaleBar({
         style: 'line',
@@ -1177,5 +1253,24 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   onHideDialogAnalisis() {
 
+  }
+
+  onChangeSelectSketchBuffer() {
+    switch (this.selectedBufferSketch) {
+      case 'line':
+        this.sketchBuffer.create('polyline', { mode: 'freehand' });
+        break;
+      default:
+        this.sketchBuffer.create(this.selectedBufferSketch);
+        break;
+    }
+  }
+
+  onHideDialogBuffer() {
+    this.clearGraphics();
+    this.selectedBuffer = undefined;
+    this.selectedBufferSketch = undefined;
+    this.bufDistance = undefined;
+    this.sketchBuffer.cancel();
   }
 }
