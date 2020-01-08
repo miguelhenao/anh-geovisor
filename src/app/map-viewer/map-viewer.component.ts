@@ -21,6 +21,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   latitude: number = 4.6486259;
   longitude: number = -74.2478963;
   dptosSelected: Array<any> = [];
+  makingWork: boolean = false;
   featureDptos: Array<any> = [];
   menu: Array<MenuItem> = [];
   loadLayers: number = 0;
@@ -99,9 +100,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               });
               dialog.onClose.subscribe(res => {
                 if (res !== undefined) {
-                  if (res.data.indexOf('.csv') !== -1) {
-                    this.importCsv.uploadFileCsv(res.form.elements[0].files, this.agsUrlBase, this.map, this.view);
-                  }
+                  this.makingWork = true;
+                  this.importCsv.uploadFileCsv(res.form.elements[0].files, res.data, this.agsUrlBase, this.map, this.view);
+                  this.makingWork = false;
                 }
               });
             }
@@ -530,7 +531,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
 
       ly_departamento.load().then(() => {
-        debugger;
         let url: string = "https://anh-gisserver.anh.gov.co/arcgis/rest/services/Tierras/Mapa_ANH/MapServer/4/query?where=1%3D1&returnGeometry=false&outfields=*&f=pjson";
         esriRequest(url, {
           responseType: "json"

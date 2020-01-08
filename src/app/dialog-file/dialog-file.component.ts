@@ -10,26 +10,20 @@ export class DialogFileComponent implements OnInit {
   uploadedFiles: any[] = [];
   dataJSON: Array<any> = [];
   type: string;
+  val1: string;
   constructor(private dialogRef: DynamicDialogRef, private config: DynamicDialogConfig) {
     this.type = config.data.type;
   }
 
   ngOnInit() {
+    this.val1 = undefined;
   }
 
   onUpload(event) {
-    // for (let file of event.files) {
-    //   this.uploadedFiles.push(file);
-    //   console.log(document.getElementById("uploadForm"));
-    //   this.dialogRef.close({
-    //     data: this.uploadedFiles[0],
-    //     form: document.getElementById('uploadForm')
-    //   });
-    // }
     let fileName = event.target.elements[0].files[0].name;
-    if (fileName.indexOf(".zip") !== -1) {
+    if (fileName.indexOf(".csv") !== -1) {
       this.dialogRef.close({
-        data: fileName,
+        data: this.val1,
         form: document.getElementById('uploadForm')
       });
     } else if (fileName.indexOf(".json") != -1) {

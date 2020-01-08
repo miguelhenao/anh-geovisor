@@ -23,6 +23,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { ToastModule } from 'primeng/toast';
 import {TableModule} from 'primeng/table';
 import { AttributesTableComponent } from './attributes-table/attributes-table.component';
+import {RadioButtonModule} from 'primeng/radiobutton';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { AttributesTableComponent } from './attributes-table/attributes-table.co
     DropdownModule,
     MultiSelectModule,
     ToastModule,
-    TableModule
+    TableModule,
+    RadioButtonModule
   ],
   providers: [],
   entryComponents: [
