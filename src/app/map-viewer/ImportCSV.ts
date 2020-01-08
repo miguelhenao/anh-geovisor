@@ -1,122 +1,174 @@
 import { loadModules } from 'esri-loader';
-var latFieldStrings = ['lat', 'latitude', 'y', 'ycenter'];
-var longFieldStrings = ['lon', 'long', 'longitude', 'x', 'xcenter'];
+import { Observable } from 'rxjs';
+const latFieldStrings = ['lat', 'latitude', 'y', 'ycenter'];
+const longFieldStrings = ['lon', 'long', 'longitude', 'x', 'xcenter'];
 export class ImportCSV {
-  public uploadFileCsv(files: Array<any>): void {
-    let filename;
+  agsUrlBase: String;
+  map;
+  view;
+  filename: string;
+  public uploadFileCsv(files: Array<any>, url: string, map: any, view: any): void {
+    this.agsUrlBase = url;
+    this.map = map;
+    this.view = view;
     if (files && files.length === 1) {
-      filename = files[0].name.split('.')[0];
+      this.filename = files[0].name.split('.')[0];
       this.handleCsv(files[0]);
     }
+    return null;
   }
   private handleCsv(file: any): void {
     if (file.data) {
       // var decoded = bytesToString(dojox.encoding.base64.decode(file.data));
       // processCsvData(decoded);
     } else {
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.onload = () => {
-        console.log('Finalizando lectura de archivo CSV');
         this.processCsvData(reader.result);
       };
       reader.readAsText(file);
     }
+    return null;
   }
 
   private processCsvData(data: any): void {
-    loadModules(['dojox/data/CsvStore', 'dojo/_base/lang', 'esri/PopupTemplate', 'esri/geometry/SpatialReference']).then((
-      [CsvStore, lang, PopupTemplate, SpatialReference]) => {
-      let newLineIdx = data.indexOf('\n');
-      let firtsLine = lang.trim(data.substr(0, newLineIdx));
-      let separator = this.getSeparator(firtsLine);
-      console.log(separator);
-      let csvStore = new CsvStore({
-        data: data,
-        separator: separator
-      });
-      csvStore.fetch({
-        onComplete: (items, request) => {
-          let objectId = 0;
-          var featureCollection = this.generateFeatureCollectionTemplateCsv(csvStore, items);
-          var popupInfo = this.generateDefaultPopupInfo(featureCollection);
-          var infoTemplate = new PopupTemplate({
-            title: 'Atributos GPX',
-            content: '${*}'
-          });
-          var latField, longField;
-          var fieldNames = csvStore.getAttributes(items[0]);
-          // var coorGeoPlanas = $('input[name=coor-geo-planas]:checked').val();
-          var coorGeoPlanas = 'P';
-          fieldNames.forEach((fieldName) => {
-            var matchId;
-            matchId = latFieldStrings.indexOf(fieldName.toLowerCase());
-            if (matchId !== -1) {
-              latField = fieldName;
-            }
-            matchId = longFieldStrings.indexOf(fieldName.toLowerCase());
-            if (matchId !== -1) {
-              longField = fieldName;
-            }
-          });
-          var wkid;
-          var arrAttrib = [];
-          var arrGeom = [];
-          var arrGeomProj = [];
-          if (coorGeoPlanas === 'P') {
-            wkid = 3116; // MAGNA-SIRGAS / Colombia Bogota zone
-          } else {
-            wkid = 4326; // WGS84
-          }
-          var sisRef = new SpatialReference({
-            wkid: wkid
-          });
-          items.forEach((item, index) => {
-            var attrs = csvStore.getAttributes(item);
-            var attributes = {};
-            attrs.forEach((attr) => {
-              var value = Number(csvStore.getValue(item, attr));
-              if (isNaN(value)) {
-                attributes[attr] = csvStore.getValue(item, attr);
-              } else {
-                attributes[attr] = value;
+    loadModules(['dojox/data/CsvStore', 'dojo/_base/lang', 'esri/PopupTemplate', 'esri/geometry/SpatialReference',
+      'esri/geometry/Point', 'esri/tasks/GeometryService', 'esri/tasks/support/ProjectParameters', 'esri/layers/FeatureLayer',
+      'esri/renderers/SimpleRenderer', 'esri/Graphic', 'esri/layers/support/Field']).then((
+        [CsvStore, lang, PopupTemplate, SpatialReference, Point, GeometryService, ProjectParameters, FeatureLayer, SimpleRenderer,
+          Graphic, Field]) => {
+        const newLineIdx = data.indexOf('\n');
+        const firtsLine = lang.trim(data.substr(0, newLineIdx));
+        const separator = this.getSeparator(firtsLine);
+        const csvStore = new CsvStore({
+          data,
+          separator
+        });
+        csvStore.fetch({
+          onComplete: (items, request) => {
+            let objectId = 0;
+            const featureCollection = this.generateFeatureCollectionTemplateCsv(csvStore, items);
+            const popupInfo = this.generateDefaultPopupInfo(featureCollection);
+            const infoTemplate = new PopupTemplate({
+              title: 'Atributos CSV',
+              content: '${*}'
+            });
+            let latField, longField;
+            const fieldNames = csvStore.getAttributes(items[0]);
+            // var coorGeoPlanas = $('input[name=coor-geo-planas]:checked').val();
+            const coorGeoPlanas = 'P';
+            fieldNames.forEach((fieldName) => {
+              let matchId;
+              matchId = latFieldStrings.indexOf(fieldName.toLowerCase());
+              if (matchId !== -1) {
+                latField = fieldName;
+              }
+              matchId = longFieldStrings.indexOf(fieldName.toLowerCase());
+              if (matchId !== -1) {
+                longField = fieldName;
               }
             });
-            attributes["__OBJECTID"] = objectId;
-            objectId++;
-            var latitude = parseFloat(attributes[latField]);
-            var longitude = parseFloat(attributes[longField]);
-            if (isNaN(latitude) || isNaN(longitude)) {
-              return;
+            let wkid;
+            const arrAttrib = [];
+            const arrGeom = [];
+            const arrGeomProj = [];
+            if (coorGeoPlanas === 'P') {
+              wkid = 3116; // MAGNA-SIRGAS / Colombia Bogota zone
+            } else {
+              wkid = 4326; // WGS84
             }
-          });
-          debugger;
-        }
+            const sisRef = new SpatialReference({
+              wkid
+            });
+            items.forEach((item, index) => {
+              const attrs = csvStore.getAttributes(item);
+              const attributes = {};
+              attrs.forEach((attr) => {
+                const value = Number(csvStore.getValue(item, attr));
+                if (isNaN(value)) {
+                  attributes[attr] = csvStore.getValue(item, attr);
+                } else {
+                  attributes[attr] = value;
+                }
+              });
+              attributes['__OBJECTID'] = objectId;
+              objectId++;
+              const latitude = parseFloat(attributes[latField]);
+              const longitude = parseFloat(attributes[longField]);
+              if (isNaN(latitude) || isNaN(longitude)) {
+                return;
+              }
+              const geom = new Point(longitude, latitude, sisRef);
+              arrAttrib.push(attributes);
+              arrGeom.push(geom);
+            });
+            const outSR = new SpatialReference({ wkid: 102100 }); // ESRI Web Mercator
+            const geomSvc = new GeometryService({
+              url: this.agsUrlBase + 'rest/services/Utilities/Geometry/GeometryServer'
+            });
+            const params = new ProjectParameters({
+              geometries: arrGeom,
+              outSpatialReference: outSR
+            });
+            let error = false;
+            var sourceGraphics = [];
+            geomSvc.project(params).then((arrGeomProj) => {
+              arrGeomProj.forEach((geomProj, index) => {
+                var geometry = new Point(geomProj.x, geomProj.y, outSR);
+                if (isNaN(geometry.x) || isNaN(geometry.y)) {
+                  error = true;
+                  return;
+                }
+                var feature = {
+                  geometry: geometry.toJSON(),
+                  attributes: arrAttrib[index]
+                };
+                featureCollection.featureSet.features.push(feature);
+              });
+              var graphics = featureCollection.featureSet.features.map((feature) => {
+                return Graphic.fromJSON(feature);
+              });
+              sourceGraphics = sourceGraphics.concat(graphics);
+              var featureLayer = new FeatureLayer({
+                title: this.filename,
+                objectIdField: "__OBJECTID",
+                source: graphics,
+                renderer: SimpleRenderer.fromJSON(featureCollection.layerDefinition.drawingInfo.renderer),
+                fields: featureCollection.layerDefinition.fields.map((field) => {
+                  return Field.fromJSON(field);
+                })
+              });
+              this.map.add(featureLayer);
+              this.view.goTo(sourceGraphics);
+            });
+          }
+        });
       });
-    });
+    return null;
   }
-  generateDefaultPopupInfo(featureCollection: any) {
-    var fields = featureCollection.layerDefinition.fields;
-    var decimal = {
+  generateDefaultPopupInfo(featureCollection: any): any {
+    const fields = featureCollection.layerDefinition.fields;
+    const decimal = {
       esriFieldTypeDouble: 1,
       esriFieldTypeSingle: 1
     };
-    var integer = {
+    const integer = {
       esriFieldTypeInteger: 1,
       esriFieldTypeSmallInteger: 1
     };
-    var dt = {
+    const dt = {
       esriFieldTypeDate: 1
     };
-    var displayField = null;
-    var fieldInfos = fields.map((item, index) => {
+    let displayField = null;
+    const fieldInfos = fields.map((item, index) => {
       if (item.name.toUpperCase() === 'NAME' || item.name.toUpperCase() === 'NOMBRE') {
         displayField = item.name;
       }
-      var visible = (item.type !== 'esriFieldTypeOID' && item.type !== 'esriFieldTypeGlobalID' && item.type !== 'esriFieldTypeGeometry');
-      var format = null;
+      let visible = (item.type !== 'esriFieldTypeOID' && item.type !== 'esriFieldTypeGlobalID' && item.type !== 'esriFieldTypeGeometry');
+      let format = null;
       if (visible) {
-        var f = item.name.toLowerCase();
-        var hideFieldsStr = ',stretched value,fnode_,tnode_,lpoly_,rpoly_,poly_,subclass,subclass_,rings_ok,rings_nok,';
+        const f = item.name.toLowerCase();
+        const hideFieldsStr = ',stretched value,fnode_,tnode_,lpoly_,rpoly_,poly_,subclass,subclass_,rings_ok,rings_nok,';
         if (hideFieldsStr.indexOf(',' + f + ',') > -1 || f.indexOf('area') > -1 || f.indexOf('length') > -1 || f.indexOf('shape') > -1 ||
           f.indexOf('perimeter') > -1 || f.indexOf('objectid') > -1 || f.indexOf('_') === f.length - 1 ||
           f.indexOf('_i') === f.length - 2) {
@@ -142,15 +194,15 @@ export class ImportCSV {
         fieldName: item.name,
         label: item.alias,
         isEditable: false,
-        tooltip: "",
-        visible: visible,
-        format: format,
+        tooltip: '',
+        visible,
+        format,
         stringFieldOption: 'textbox'
       };
     });
-    var popupInfo = {
+    const popupInfo = {
       title: displayField ? '{' + displayField + '}' : '',
-      fieldInfos: fieldInfos,
+      fieldInfos,
       description: null,
       showAttachments: false,
       mediaInfos: []
@@ -158,7 +210,7 @@ export class ImportCSV {
     return popupInfo;
   }
   generateFeatureCollectionTemplateCsv(store: any, items: any): any {
-    var featureCollection = {
+    const featureCollection = {
       layerDefinition: null,
       featureSet: {
         features: [],
@@ -197,10 +249,10 @@ export class ImportCSV {
       capabilities: 'Query'
     };
 
-    var fields = store.getAttributes(items[0]);
+    const fields = store.getAttributes(items[0]);
     fields.forEach((field) => {
-      var value = store.getValue(items[0], field);
-      var parsedValue = Number(value);
+      const value = store.getValue(items[0], field);
+      const parsedValue = Number(value);
       if (isNaN(parsedValue)) { // check first value and see if it is a number
         featureCollection.layerDefinition.fields.push({
           name: field,
@@ -223,11 +275,11 @@ export class ImportCSV {
   }
 
   private getSeparator(string: any): any {
-    let separators = [',', '      ', ';', '|'];
+    const separators = [',', '      ', ';', '|'];
     let maxSeparatorLength = 0;
     let maxSeparatorValue = '';
     separators.forEach((separator) => {
-      let length = string.split(separator).length;
+      const length = string.split(separator).length;
       if (length > maxSeparatorLength) {
         maxSeparatorLength = length;
         maxSeparatorValue = separator;

@@ -96,7 +96,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               dialog.onClose.subscribe(res => {
                 if (res !== undefined) {
                   if (res.data.indexOf('.csv') !== -1) {
-                    this.importCsv.uploadFileCsv(res.form.elements[0].files);
+                    this.importCsv.uploadFileCsv(res.form.elements[0].files, this.agsUrlBase, this.map, this.view);
                   }
                 }
               });
@@ -806,7 +806,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         content: '<b>Hello</b>'
       });
 
-      this.view.ui.add([expandLegend, expandPrint, layerListExpand, expandAreaMeasure, 
+      this.view.ui.add([expandLegend, expandPrint, layerListExpand, expandAreaMeasure,
         expandLinearMeasure, expandBaseMapGallery, expandCcWidget, attributeTable],
         'bottom-right');
       return this.view;
