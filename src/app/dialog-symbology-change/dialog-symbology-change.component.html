@@ -1,0 +1,33 @@
+<form [formGroup]="changeForm" (ngSubmit)="changeForm.valid && setupChange()">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <p>Color para el borde: </p>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <p-colorPicker format="rgb" formControlName="borderColor"
+                [(ngModel)]="changeObject.borderColor"></p-colorPicker>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <p>Grosor del borde: </p>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <input type="number" formControlName="borderSize" [(ngModel)]="changeObject.borderSize" pInputText>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <p>Color para el relleno: </p>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <p-colorPicker format="rgb" formControlName="fillColor"
+                [(ngModel)]="changeObject.fillColor"></p-colorPicker>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <button pButton type="submit" [disabled]="!changeForm.valid" icon="pi pi-check" iconPos="left"
+                class="ui-button-rounded ui-button-info" label="Aplicar colores"></button>
+        </div>
+    </div>
+</form>
+<br>
+<p-message id="infoMedicion" severity="info"
+  text="El color seleccionado se aplica a la capa actual. Si la capa actual es de poligonos el color se aplica al relleno de capa."></p-message>

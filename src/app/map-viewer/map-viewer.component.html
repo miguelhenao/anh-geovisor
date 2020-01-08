@@ -5,8 +5,8 @@
   <div id="helps">
     <button pButton type="button" icon="pi pi-spin pi-compass" class="ui-button-success" pTooltip="Navegación"
       tooltipPosition="bottom"></button>
-    <button pButton type="button" icon="fas fa-ruler" class="ui-button-info" pTooltip="Tomar Medidas"
-      tooltipPosition="bottom"></button>
+    <button pButton type="button" icon="fas fa-ruler" (click)="displayMedicion = !displayMedicion"
+      class="ui-button-info" pTooltip="Tomar Medidas" tooltipPosition="bottom"></button>
     <button pButton type="button" icon="fas fa-hand-pointer" class="ui-button-warning" pTooltip="Seleccionar"
       tooltipPosition="bottom"></button>
     <button pButton type="button" icon="pi pi-info-circle" class="ui-button-danger" pTooltip="Identificar"
@@ -42,6 +42,10 @@
     <br>
     <p-button label="Extraer" icon="pi pi-download" (onClick)="extratShape()"></p-button>
   </div>
+  <br>
+  <p-message id="infoMedicion" severity="info"
+    text="Proceda con los poligonos ya <b>seleccionados en la capa actual</b>. Si no<br> hay una selección en la capa actual debe usar las <b>Herramientas de</b><br><b>Selección.</b><br><b>Seleccione las capas</b> que se incluirán en la extracción">
+  </p-message>
 </p-dialog>
 
 <p-dialog header="Analisis de Cobertura de Entidades Terrritoriales" [(visible)]="displayAnalisis" [resizable]="false"
@@ -50,7 +54,14 @@
     Departamentos seleccionados para el analisis:
   </p>
   <p>{{nameDptoSelected()}}</p>
-  <p-button icon="pi pi-globe" [disabled]="dptosSelected.length == 0" label="Iniciar Analisis de Cobertura"></p-button>
+  <br>
+  <p-button icon="pi pi-globe" [disabled]="dptosSelected.length == 0" (click)="generateAnalisisCobertura()"
+    label="Iniciar Analisis de Cobertura"></p-button>
+  <br>
+  <br>
+  <p-message id="infoMedicion" severity="info"
+    text="Con este análisis se obtienen los <b>Bloques Explorativos que se <br> encuentran en la jurisdicción del Departamento</b> seleccionado,<br>indicando el porcentaje de cobertura de cada bloque. <br>Use las <b>herramientas de selección</b> o la <b>tabla de atributos</b> para indicar<br>cuales departamentos desea usar para este análisis.">
+  </p-message>
 </p-dialog>
 
 <p-dialog header="Zona de Influencia (Buffer)" [(visible)]="displayBuffer" [resizable]="false" (onHide)="onHideDialogBuffer()">
@@ -68,11 +79,32 @@
   </div>
 </p-dialog>
 
+<p-dialog header="Herramientas de Medición" [(visible)]="displayMedicion" [resizable]="false"
+  (onHide)="onHideDialogMedicion()">
+  <div id="topbar">
+    <button class="action-button fas fa-ruler esri-widget--button" (click)="setActiveWidget('distance')"
+      id="distanceButton" type="button" title="Measure distance between two or more points"></button>
+    <button class="action-button fas fa-ruler-combined esri-widget--button" (click)="setActiveWidget('area')"
+      id="areaButton" type="button" title="Measure area"></button>
+  </div>
+  <div id="widgetMeasure">
+    <h3 style="text-align: center;">Resultado de la Medición</h3>
+    <hr>
+  </div>
+  <p-message id="infoMedicion" severity="info"
+    text="Seleccione una herramienta y haga <b>clic</b><br> sobre el mapa para agregar puntos.
+    <br>
+    <b>Doble clic</b> para terminar la medición.
+    <br>
+    Pulse <b>Ctrl</b> para activar la alineación<br> automática (snapping) con la geometría del<br> mapa mientras agrega puntos."></p-message>
+</p-dialog>
+
 <div id="attributeTable">
-  <p-table #dt *ngIf="loadLayers == 8" [value]="featureDptos" [(selection)]="dptosSelected" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)">
+  <p-table #dt *ngIf="loadLayers == 8" [value]="featureDptos" [(selection)]="dptosSelected"
+    (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)">
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 3em">
+        <th style="width: 3em" *ngIf="displayAnalisis">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
         <th>
@@ -85,7 +117,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-dpto>
       <tr [pSelectableRow]="dpto">
-        <td>
+        <td *ngIf="displayAnalisis">
           <p-tableCheckbox [value]="dpto"></p-tableCheckbox>
         </td>
         <td>{{dpto.attributes.DEPARTAMEN}}</td>

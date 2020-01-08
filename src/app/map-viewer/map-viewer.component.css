@@ -55,6 +55,24 @@ p-sidebar {
     background-color: rgba(255, 255, 255, 0.6) !important;
 }
 
+::ng-deep #infoMedicion .ui-message {
+    font-size: smaller;
+    width: 100%;
+}
+
+::ng-deep .esri-widget--panel {
+    z-index: 3000;
+    padding: 10px;
+}
+
+#topbar button {
+    float: left;
+}
+
+#widgetMeasure {
+    clear: both;
+}
+
 @media print {
     ::ng-deep .esri-component {
         display: none !important;

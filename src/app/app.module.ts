@@ -22,9 +22,12 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ToastModule } from 'primeng/toast';
 import {TableModule} from 'primeng/table';
+import {MessageModule} from 'primeng/message';
 import { AttributesTableComponent } from './attributes-table/attributes-table.component';
 import {RadioButtonModule} from 'primeng/radiobutton';
 import {SelectButtonModule} from 'primeng/selectbutton';
+import {ColorPickerModule} from 'primeng/colorpicker';
+import { DialogSymbologyChangeComponent } from './dialog-symbology-change/dialog-symbology-change.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +36,8 @@ import {SelectButtonModule} from 'primeng/selectbutton';
     DialogUrlServiceComponent,
     DialogFileComponent,
     DialogTerminosComponent,
-    AttributesTableComponent
+    AttributesTableComponent,
+    DialogSymbologyChangeComponent
   ],
   imports: [
     BrowserModule,
@@ -55,13 +59,16 @@ import {SelectButtonModule} from 'primeng/selectbutton';
     ToastModule,
     TableModule,
     RadioButtonModule,
-    SelectButtonModule
+    SelectButtonModule,
+    MessageModule,
+    ColorPickerModule
   ],
   providers: [],
   entryComponents: [
     DialogUrlServiceComponent,
     DialogFileComponent,
-    DialogTerminosComponent
+    DialogTerminosComponent,
+    DialogSymbologyChangeComponent
   ],
   bootstrap: [AppComponent]
 })

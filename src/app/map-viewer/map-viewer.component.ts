@@ -7,6 +7,7 @@ import { DialogFileComponent } from '../dialog-file/dialog-file.component';
 import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.component';
 import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
 import { ImportCSV } from "./ImportCSV";
+import { DialogSymbologyChangeComponent } from '../dialog-symbology-change/dialog-symbology-change.component';
 
 @Component({
   selector: 'app-map-viewer',
@@ -20,18 +21,23 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   view: any;
   latitude: number = 4.6486259;
   longitude: number = -74.2478963;
+  displayMedicion: boolean = false;
   dptosSelected: Array<any> = [];
   makingWork: boolean = false;
   featureDptos: Array<any> = [];
   menu: Array<MenuItem> = [];
   loadLayers: number = 0;
   departmentLayer: any;
+  graphics: Array<any> = [];
   map: any;
   search: any;
   sourceSearch: Array<any> = [];
   attributeTable: any;
   leftDialog: number = 200;
+  layerSelected: Array<any> = [];
+  activeWidget: any;
   tsLayer: any;
+  legend: any;
   agsHost = "anh-gisserver.anh.gov.co";
   agsProtocol = "https";
   mapRestUrl = this.agsProtocol + "://" + this.agsHost + "/arcgis/rest/services/Tierras/Mapa_ANH/MapServer";
@@ -283,10 +289,36 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             }
           },
           {
-            label: 'Ubicar coordenada'
-          },
-          {
-            label: 'Cambiar simbologia'
+            label: 'Cambiar simbologia',
+            command: () => {
+              let dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
+                width: '25%',
+                header: 'Cambio de Simbología'
+              });
+              dialog.onClose.subscribe(res => {
+                if (res != undefined) {
+                  loadModules(['esri/symbols/SimpleMarkerSymbol', 'esri/symbols/SimpleFillSymbol',
+                    'esri/symbols/SimpleLineSymbol', 'esri/Color', 'esri/renderers/SimpleRenderer']).then(([
+                      SimpleMarkerSymbol, SimpleFillSymbol, SimpleLineSymbol, Color, SimpleRenderer]) => {
+                      let defaultSymbol: any;
+                      switch (this.departmentLayer.geometryType) {
+                        case 'point':
+                          defaultSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 8, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), 1), new Color(res.fillColor));
+                          break;
+                        case 'polygon':
+                          defaultSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), res.borderSize), new Color(res.fillColor));
+                          break;
+                        case 'polyline':
+                          defaultSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), res.borderSize);
+                          break;
+                      }
+                      let renderer = new SimpleRenderer();
+                      renderer.symbol = defaultSymbol;
+                      this.departmentLayer.renderer = renderer;
+                    })
+                }
+              })
+            }
           }
         ]
       },
@@ -710,14 +742,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.view = new MapView(mapViewProperties);
 
       let layerList = new LayerList({
-        container: document.createElement("div"),
+        selectionEnabled: true,
+        multipleSelectionEnabled: true,
         view: this.view
       });
       let layerListExpand = new Expand({
         expandIconClass: "esri-icon-layers",
         expandTooltip: 'Tabla de contenido',
         view: this.view,
-        content: layerList.domNode,
+        content: layerList,
         group: 'bottom-right',
       })
       this.search = new Search({
@@ -741,7 +774,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         group: 'bottom-right'
       })
 
-      let areaMeasurement = new AreaMeasurement2D({
+      /* let areaMeasurement = new AreaMeasurement2D({
         view: this.view
       });
       let expandAreaMeasure = new Expand({
@@ -760,12 +793,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         view: this.view,
         content: linearMeasurement,
         group: 'bottom-right'
-      });
+      }); */
 
       let legend = new Legend({
         view: this.view,
       });
 
+      this.legend = legend;
       let expandLegend = new Expand({
         expandIconClass: 'esri-icon-layer-list',
         expandTooltip: 'Convenciones',
@@ -896,11 +930,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         iconNumber: this.featureDptos.length,
         content: document.getElementById("attributeTable")
       });
-
       this.attributeTable = attributeTable;
-
-      this.view.ui.add([expandLegend, expandPrint, layerListExpand, expandAreaMeasure,
-        expandLinearMeasure, expandBaseMapGallery, expandCcWidget, attributeTable],
+      this.view.ui.add([expandLegend, expandPrint, layerListExpand, expandBaseMapGallery, expandCcWidget, attributeTable],
         'bottom-right');
       return this.view;
     } catch (error) {
@@ -915,6 +946,59 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   ngOnInit() {
     this.initializeMap();
   }
+
+  public onHideDialogMedicion(): void {
+    this.setActiveButton(null);
+    this.setActiveWidget(null);
+  }
+
+  public setActiveWidget(type) {
+    loadModules(["esri/widgets/DistanceMeasurement2D",
+      "esri/widgets/AreaMeasurement2D"]).then(([DistanceMeasurement2D, AreaMeasurement2D]) => {
+        this.activeWidget != null ? this.activeWidget.destroy() : null;
+        this.activeWidget = null;
+        let container = document.createElement("div");
+        container.id = "divWidget";
+        document.getElementById("widgetMeasure").appendChild(container);
+        switch (type) {
+          case "distance":
+            this.activeWidget = new DistanceMeasurement2D({
+              view: this.view,
+              container: document.getElementById("divWidget")
+            });
+            this.activeWidget.viewModel.newMeasurement();
+            this.setActiveButton(document.getElementById("distanceButton"));
+            break;
+          case "area":
+            this.activeWidget = new AreaMeasurement2D({
+              view: this.view,
+              container: document.getElementById("divWidget")
+            });
+            this.activeWidget.viewModel.newMeasurement();
+            this.setActiveButton(document.getElementById("areaButton"));
+            break;
+          case null:
+            if (this.activeWidget) {
+              this.activeWidget.destroy();
+              this.activeWidget = null;
+            }
+            break;
+        }
+      })
+  }
+
+  public setActiveButton(selectedButton) {
+    // focus the view to activate keyboard shortcuts for sketching
+    this.view.focus();
+    var elements = document.getElementsByClassName("active");
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].classList.remove("active");
+    }
+    if (selectedButton) {
+      selectedButton.classList.add("active");
+    }
+  }
+
 
   ngOnDestroy() {
     if (this.view) {
@@ -1229,9 +1313,65 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               symbol: symbol
             });
             this.view.graphics.add(graphic);
+            let objectGraphic = {
+              dpto: event.data.attributes.DEPARTAMEN,
+              graphic: graphic
+            }
+            this.graphics.push(objectGraphic);
           });
         }, (err) => {
           console.error(err);
+        });
+      });
+  }
+
+  public onRowUnselect(event: any): void {
+    for (const object of this.graphics) {
+      debugger;
+      if (object.dpto != undefined && object.dpto == event.data.attributes.DEPARTAMEN) {
+        this.view.graphics.remove(object.graphic);
+        this.graphics.splice(this.graphics.indexOf(object), 1);
+        debugger;
+        break;
+      }
+    }
+  }
+
+  public generateAnalisisCobertura(): void {
+    loadModules(['esri/tasks/support/FeatureSet', 'esri/tasks/Geoprocessor']).
+      then(([FeatureSet, Geoprocessor]) => {
+        let gpIntersect = new Geoprocessor(this.agsUrlBase + "rest/services/AnalisisCobertura/GPServer/AnalisisCobertura");
+        gpIntersect.outSpatialReference = { wkid: 4326 };
+        let nameDptos: string = "";
+        for (const dpto of this.dptosSelected) {
+          nameDptos = `${nameDptos}'${dpto.attributes.DEPARTAMEN}',`;
+        }
+        nameDptos = nameDptos.substr(0, nameDptos.length - 1);
+        let params = {
+          Nombres_Departamentos: nameDptos
+        };
+        gpIntersect.submitJob(params).then((jobInfo) => {
+          let options = {
+            statusCallback: (jobInfo1) => {
+            }
+          };
+          gpIntersect.waitForJobCompletion(jobInfo.jobId, options).then((jobInfo2) => {
+            if (!jobInfo2.jobStatus.includes('fail')) {
+              gpIntersect.getResultData(jobInfo.jobId, 'Output_Zip_File').then((outputFile) => {
+                var theurl = outputFile.value.url;
+                window.location = theurl;
+              });
+            } else {
+              this.messageService.add({
+                severity: 'error',
+                summary: '',
+                detail: 'Error al generar analisis.'
+              });
+            }
+            this.layerSelected = [];
+            this.clearGraphics();
+            this.displayAnalisis = false;
+          });
         });
       });
   }
@@ -1252,7 +1392,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   onHideDialogAnalisis() {
-
+    this.layerSelected = [];
+    this.displayAnalisis = false;
   }
 
   onChangeSelectSketchBuffer() {
