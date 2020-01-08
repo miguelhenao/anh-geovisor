@@ -1,20 +1,20 @@
 <p-toast></p-toast>
 <p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10">
-    <br>
-    <img src="logo-anh-p.png" (click)="visibleMenu = false">
-    <div id="helps">
-        <button pButton type="button" icon="pi pi-spin pi-compass" class="ui-button-success" pTooltip="Navegación"
-            tooltipPosition="bottom"></button>
-        <button pButton type="button" icon="fas fa-ruler" class="ui-button-info" pTooltip="Tomar Medidas"
-            tooltipPosition="bottom"></button>
-        <button pButton type="button" icon="fas fa-hand-pointer" class="ui-button-warning" pTooltip="Seleccionar"
-            tooltipPosition="bottom"></button>
-        <button pButton type="button" icon="pi pi-info-circle" class="ui-button-danger" pTooltip="Identificar"
-            tooltipPosition="bottom"></button>
-    </div>
-    <div style="overflow-y: auto;">
-        <p-panelMenu [model]="menu" [style]="{'width':'100%', 'height': '550px'}" [multiple]="false"></p-panelMenu>
-    </div>
+  <br>
+  <img src="logo-anh-p.png" (click)="visibleMenu = false">
+  <div id="helps">
+    <button pButton type="button" icon="pi pi-spin pi-compass" class="ui-button-success" pTooltip="Navegación"
+      tooltipPosition="bottom"></button>
+    <button pButton type="button" icon="fas fa-ruler" class="ui-button-info" pTooltip="Tomar Medidas"
+      tooltipPosition="bottom"></button>
+    <button pButton type="button" icon="fas fa-hand-pointer" class="ui-button-warning" pTooltip="Seleccionar"
+      tooltipPosition="bottom"></button>
+    <button pButton type="button" icon="pi pi-info-circle" class="ui-button-danger" pTooltip="Identificar"
+      tooltipPosition="bottom"></button>
+  </div>
+  <div style="overflow-y: auto;">
+    <p-panelMenu [model]="menu" [style]="{'width':'100%', 'height': '550px'}" [multiple]="false"></p-panelMenu>
+  </div>
 </p-sidebar>
 <button id="menu" type="button" (click)="visibleMenu = true"></button>
 <div *ngIf="loadLayers != 8" id="loading" class="loading-machin"></div>
@@ -26,17 +26,58 @@
     </div>
   </div>
 </div>
-<p-dialog header="Extracción de datos" [(visible)]="display" [resizable]="false" (onHide)="onHideDialogExtract()" [positionTop]="0">
+<p-dialog header="Extracción de datos" [(visible)]="display" [resizable]="false" (onHide)="onHideDialogExtract()"
+  [positionTop]="0">
   <div id="infoDiv">
     <p>1. Defina el área de interés</p>
-    <p-dropdown [options]="optionsPolygon" optionLabel="name" placeholder="Selección en la capa actual" (onChange)="onChangeSelect()" [(ngModel)]="selectedPolygon"></p-dropdown>
-    <p-button label="Limpiar área" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()"></p-button>
-    <p-button class="clearGraphics" [disabled]="selectedPolygon === undefined" icon="pi pi-undo" (onClick)="onChangeSelect()" pTooltip="Volver a dibujar" tooltipPosition="bottom"></p-button>
+    <p-dropdown [options]="optionsPolygon" optionLabel="name" placeholder="Selección en la capa actual"
+      (onChange)="onChangeSelect()" [(ngModel)]="selectedPolygon"></p-dropdown>
+    <p-button label="Limpiar área" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
+    </p-button>
+    <p-button class="clearGraphics" [disabled]="selectedPolygon === undefined" icon="pi pi-undo"
+      (onClick)="onChangeSelect()" pTooltip="Volver a dibujar" tooltipPosition="bottom"></p-button>
     <p>2. Seleccione las capas a extraer</p>
-    <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados" [(ngModel)]="selectedLayers"></p-multiSelect>
+    <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados"
+      [(ngModel)]="selectedLayers"></p-multiSelect>
     <br>
     <p-button label="Extraer" icon="pi pi-download" (onClick)="extratShape()"></p-button>
   </div>
 </p-dialog>
 
+<p-dialog header="Analisis de Cobertura de Entidades Terrritoriales" [(visible)]="displayAnalisis" [resizable]="false"
+  (onHide)="onHideDialogAnalisis()">
+  <p>
+    Departamentos seleccionados para el analisis:
+  </p>
+  <p>{{nameDptoSelected()}}</p>
+  <p-button icon="pi pi-globe" [disabled]="dptosSelected.length == 0" label="Iniciar Analisis de Cobertura"></p-button>
+</p-dialog>
 
+
+<div id="attributeTable">
+  <p-table #dt *ngIf="loadLayers == 8" [value]="featureDptos" [(selection)]="dptosSelected" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 3em">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th>
+          Departamento
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'attributes.DEPARTAMEN', 'contains')">
+        </th>
+        <!-- <th>Shape_Leng</th> -->
+        <!-- <th>Shape_Leng</th> -->
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-dpto>
+      <tr [pSelectableRow]="dpto">
+        <td>
+          <p-tableCheckbox [value]="dpto"></p-tableCheckbox>
+        </td>
+        <td>{{dpto.attributes.DEPARTAMEN}}</td>
+        <!-- <td>{{dpto.attributes.Shape_Leng}}</td> -->
+        <!-- <td>{{dpto.attributes.Shape_Area}}</td> -->
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
