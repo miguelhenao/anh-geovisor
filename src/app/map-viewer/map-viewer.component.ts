@@ -112,6 +112,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               dialog.onClose.subscribe(res => {
                 if (res !== undefined) {
                   if (res.data.indexOf('.zip') !== -1) {
+                    this.makingWork = true;
                     this.generateFeatureCollection(res.data, res.form, 'shapefile');
                   }
                 }
@@ -148,6 +149,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               dialog.onClose.subscribe(res => {
                 if (res !== undefined) {
                   if (res.data.indexOf('.gpx') !== -1) {
+                    this.makingWork = true;
                     this.generateFeatureCollection(res.data, res.form, 'gpx');
                   }
                 }
@@ -165,6 +167,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               });
               dialog.onClose.subscribe(res => {
                 if (res !== undefined) {
+                  this.makingWork = true;
                   this.addGeoJSONToMap(res);
                 }
               });
@@ -180,10 +183,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               });
               dialog.onClose.subscribe(res => {
                 console.log(res);
+                this.makingWork = true;
                 loadModules(['esri/layers/KMLLayer']).then(([KMLLayer]) => {
                   let geo = new KMLLayer({
                     url: res
                   });
+                  this.makingWork = false;
                   this.map.add(geo);
                 });
               })
@@ -199,29 +204,33 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               });
               dialog.onClose.subscribe(res => {
                 console.log(res);
+                this.makingWork = true;
                 loadModules(['esri/layers/WMSLayer']).then(([WMSLayer]) => {
                   let geo = new WMSLayer({
                     url: res
                   });
+                  this.makingWork = false;
                   this.map.add(geo);
                 });
               })
             }
           },
           {
-            label: 'Servicio GEOJson',
+            label: 'Servicio geoJSON',
             command: () => {
               let dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
                 baseZIndex: 100,
-                header: 'Cargar servicio GeoJSON'
+                header: 'Cargar servicio geoJSON'
               });
               dialog.onClose.subscribe(res => {
                 console.log(res);
+                this.makingWork = true;
                 loadModules(['esri/layers/GeoJSONLayer']).then(([GeoJSONLayer]) => {
                   let geo = new GeoJSONLayer({
                     url: res
                   });
+                  this.makingWork = false;
                   this.map.add(geo);
                 });
               })
@@ -237,10 +246,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               });
               dialog.onClose.subscribe(res => {
                 console.log(res);
+                this.makingWork = true;
                 loadModules(['esri/layers/CSVLayer']).then(([CSVLayer]) => {
                   const csv = new CSVLayer({
                     url: res
                   });
+                  this.makingWork = false;
                   this.map.add(csv);
                 });
               });
@@ -297,6 +308,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               });
               dialog.onClose.subscribe(res => {
                 if (res != undefined) {
+                  this.makingWork = true;
                   loadModules(['esri/symbols/SimpleMarkerSymbol', 'esri/symbols/SimpleFillSymbol',
                     'esri/symbols/SimpleLineSymbol', 'esri/Color', 'esri/renderers/SimpleRenderer']).then(([
                       SimpleMarkerSymbol, SimpleFillSymbol, SimpleLineSymbol, Color, SimpleRenderer]) => {
@@ -315,7 +327,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                       let renderer = new SimpleRenderer();
                       renderer.symbol = defaultSymbol;
                       this.departmentLayer.renderer = renderer;
-                    })
+                    });
+                    this.makingWork = false;
                 }
               })
             }
@@ -1039,6 +1052,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       } else if (fileType === 'gpx') {
         this.addGpxToMap(response.data.featureCollection);
       }
+      this.makingWork = false;
     }, (err) => {
       console.error(err);
     });
@@ -1120,6 +1134,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       fields: fields
     });
     this.map.add(featureLayer);
+    this.makingWork = false;
     this.view.goTo(sourceGraphics);
   }
 
@@ -1229,6 +1244,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   async extratShape() {
+    this.makingWork = true;
     const [FeatureSet, Geoprocessor] = await loadModules(['esri/tasks/support/FeatureSet', 'esri/tasks/Geoprocessor']);
     const gpExtract = new Geoprocessor({
       url: this.agsUrlBase + 'rest/services/ExtractShape/GPServer/ExtractShape',
@@ -1291,6 +1307,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
       });
     }
+    this.makingWork = false;
   }
 
   public onRowSelect(event: any): void {
@@ -1338,6 +1355,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public generateAnalisisCobertura(): void {
+    this.makingWork = true;
     loadModules(['esri/tasks/support/FeatureSet', 'esri/tasks/Geoprocessor']).
       then(([FeatureSet, Geoprocessor]) => {
         let gpIntersect = new Geoprocessor(this.agsUrlBase + "rest/services/AnalisisCobertura/GPServer/AnalisisCobertura");
@@ -1374,6 +1392,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           });
         });
       });
+      this.makingWork = false;
   }
 
   public nameDptoSelected(): string {
