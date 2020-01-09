@@ -1285,6 +1285,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     loadModules(['esri/tasks/support/FeatureSet', 'esri/tasks/Geoprocessor']).
       then(([FeatureSet, Geoprocessor]) => {
         this.makingWork = true;
+        this.displayAnalisis = false;
+        this.attributeTable.collapse();
         let gpIntersect = new Geoprocessor(this.agsUrlBase + "rest/services/AnalisisCobertura/GPServer/AnalisisCobertura");
         gpIntersect.outSpatialReference = { wkid: 4326 };
         let nameDptos: string = "";
@@ -1315,7 +1317,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             }
             this.layerSelected = [];
             this.clearGraphics();
-            this.displayAnalisis = false;
             this.makingWork = false;
           });
         });
