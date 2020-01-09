@@ -16,7 +16,12 @@
     <p-panelMenu [model]="menu" [style]="{'width':'100%', 'height': '550px'}" [multiple]="false"></p-panelMenu>
   </div>
 </p-sidebar>
-<button id="menu" type="button" (click)="visibleMenu = true"></button>
+<div id="menu-info">
+  <button id="menu" type="button" (click)="visibleMenu = true"></button>
+  <div id="panel-selected-layer" class="esri-widget" *ngIf="layerList != undefined">
+    {{nameLayerSelected()}}
+  </div>
+</div>
 <div *ngIf="loadLayers != 8 || makingWork" id="loading" class="loading-machin"></div>
 <div #mapViewNode></div>
 <div id="ts-tierras-wrapper" align="center">
@@ -113,3 +118,4 @@
     </ng-template>
   </p-table>
 </div>
+

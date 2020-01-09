@@ -19,6 +19,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   @ViewChild("mapViewNode", { static: true }) private mapViewEl: ElementRef;
   view: any;
+  layerSelected: any;
   latitude: number = 4.6486259;
   longitude: number = -74.2478963;
   displayMedicion: boolean = false;
@@ -34,7 +35,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   sourceSearch: Array<any> = [];
   attributeTable: any;
   leftDialog: number = 200;
-  layerSelected: Array<any> = [];
+  /* layerSelected: Array<any> = []; */
   activeWidget: any;
   tsLayer: any;
   legend: any;
@@ -299,7 +300,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                       }
                       let renderer = new SimpleRenderer();
                       renderer.symbol = defaultSymbol;
-                      this.departmentLayer.renderer = renderer;
+                      this.layerList.selectedItems.items[0].layer.renderer = renderer;
                     });
                   this.makingWork = false;
                 }
@@ -338,13 +339,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D, DistanceMeasurement2D, LabelClass,
         BasemapGallery, CoordinateConversion, SketchViewModel, GraphicsLayer, Graphic, Legend, ScaleBar, esriRequest,
-        SimpleFillSymbol, SimpleLineSymbol, Color] =
+        SimpleFillSymbol, SimpleLineSymbol, Color, ListItem] =
         await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
           "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D", "esri/layers/support/LabelClass",
           'esri/widgets/BasemapGallery', 'esri/widgets/CoordinateConversion', 'esri/widgets/Sketch/SketchViewModel',
           'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend', 'esri/widgets/ScaleBar', 'esri/request'
-          , 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/Color']);
+          , 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/Color', 
+          'esri/widgets/LayerList/ListItem']);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
 
@@ -672,6 +674,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       ly_tierras.load().then(() => {
         let searchField: Array<any> = [];
         let text: string = "";
+        this.layerSelected = ly_tierras;
         for (const field of ly_tierras.fields) {
           searchField.push(field.name);
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
@@ -733,6 +736,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         multipleSelectionEnabled: true,
         view: this.view
       });
+      let item = new ListItem({layer: ly_tierras});
+      layerList.selectedItems.add(item);
       this.layerList = layerList;
       console.log(this.layerList);
       let layerListExpand = new Expand({
@@ -1340,6 +1345,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   onHideDialogAnalisis() {
     this.layerSelected = [];
+    this.attributeTable.collapse();
+    console.log(this.layerList);
     this.displayAnalisis = false;
+  }
+
+  public nameLayerSelected(): string {
+    return this.layerList.selectedItems.items[0].layer.title.substr(this.layerList.selectedItems.items[0].layer.title.indexOf('-') + 1, this.layerList.selectedItems.items[0].layer.title.length -1 );
   }
 }
