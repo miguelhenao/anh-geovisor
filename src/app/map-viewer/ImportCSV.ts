@@ -5,15 +5,18 @@ const longFieldStrings = ['lon', 'long', 'longitude', 'x', 'xcenter'];
 export class ImportCSV {
   agsUrlBase: String;
   map;
+  makingWork;
   view;
   filename: string;
   coorGeoPlanas: string;
 
-  public uploadFileCsv(files: Array<any>, coor: string, url: string, map: any, view: any): void {
+  public uploadFileCsv(files: Array<any>, coor: string, url: string, map: any, view: any,  makingWork: any): void {
     this.agsUrlBase = url;
     this.coorGeoPlanas = coor;
     this.map = map;
     this.view = view;
+    makingWork = true;
+    this.makingWork = makingWork;
     if (files && files.length === 1) {
       this.filename = files[0].name.split('.')[0];
       this.handleCsv(files[0]);
@@ -38,6 +41,7 @@ export class ImportCSV {
       'esri/renderers/SimpleRenderer', 'esri/Graphic', 'esri/layers/support/Field']).then((
         [CsvStore, lang, PopupTemplate, SpatialReference, Point, GeometryService, ProjectParameters, FeatureLayer, SimpleRenderer,
           Graphic, Field]) => {
+        this.makingWork = true;
         const newLineIdx = data.indexOf('\n');
         const firtsLine = lang.trim(data.substr(0, newLineIdx));
         const separator = this.getSeparator(firtsLine);
@@ -142,6 +146,7 @@ export class ImportCSV {
                  if (featureLayer.loadStatus === 'loaded') {
                   console.log('loaded');
                   this.map.add(featureLayer);
+                  this.makingWork = false;
                   this.view.goTo(sourceGraphics);
                 }
               });
