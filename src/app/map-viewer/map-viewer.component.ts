@@ -1,7 +1,7 @@
 import { MapViewerService } from './map-viewer.service';
 import { DialogUrlServiceComponent } from '../dialog-urlservice/dialog-urlservice.component';
 import { MenuItem, DialogService, SelectItem, MessageService } from 'primeng/api';
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked, SimpleChange, OnChanges } from '@angular/core';
 import { loadModules } from "esri-loader";
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
 import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.component';
@@ -15,11 +15,12 @@ import { DialogSymbologyChangeComponent } from '../dialog-symbology-change/dialo
   styleUrls: ['./map-viewer.component.css'],
   providers: [DialogService, MessageService]
 })
-export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, OnChanges {
 
   @ViewChild("mapViewNode", { static: true }) private mapViewEl: ElementRef;
   view: any;
   layerSelected: any;
+  columnsTable: Array<any> = [];
   latitude: number = 4.6486259;
   longitude: number = -74.2478963;
   displayMedicion: boolean = false;
@@ -606,15 +607,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
 
       ly_departamento.load().then(() => {
-        let url: string = "https://anh-gisserver.anh.gov.co/arcgis/rest/services/Tierras/Mapa_ANH/MapServer/4/query?where=1%3D1&returnGeometry=false&outfields=*&f=pjson";
-        esriRequest(url, {
-          responseType: "json"
-        }).then((res) => {
-          console.log(res);
-          this.featureDptos = res.data.features;
+        let query = {
+          outFields: ["*"],
+          returnGeometry: false,
+          where: ""
+        }
+        ly_departamento.queryFeatures(query).then((result) => {
+          this.featureDptos = result.features;
+          this.columnsTable = Object.keys(this.featureDptos[0].attributes);
         }, (err) => {
-          console.error(err);
+          console.log(err);
         });
+
         let sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
           layer: ly_departamento,
@@ -966,6 +970,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   ngOnInit() {
     this.initializeMap();
+  }
+
+  ngOnChanges() {
+    console.log("cambio");
   }
 
   public onHideDialogMedicion(): void {
@@ -1429,7 +1437,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public nameLayerSelected(): string {
     return this.layerList.selectedItems.items[0].layer.title.substr(this.layerList.selectedItems.items[0].layer.title.indexOf('-') + 1, this.layerList.selectedItems.items[0].layer.title.length -1 );
   }
-  
+
   onChangeSelectSketchBuffer() {
     switch (this.selectedBufferSketch) {
       case 'line':
