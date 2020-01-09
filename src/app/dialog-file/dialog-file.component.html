@@ -3,8 +3,12 @@
     [showCancelButton]="false" chooseLabel="Seleccionar" uploadLabel="Cargar" maxFileSize="10000000" method="post">
   </p-fileUpload> -->
   <input type="file" name="file" id="upload-file-input" />
-  <button type="submit">Cargar</button>
+  <button type="submit" [disabled]="type === 'csv' && val1 === undefined">Cargar</button>
 </form>
+<div class="ui-g" style="width:250px;margin-bottom:10px" *ngIf="type === 'csv'">
+  <div class="ui-g-12"><p-radioButton name="group1" value="G" label="Geográficas (grados decimales)" [(ngModel)]="val1" inputId="opt1"></p-radioButton></div>
+  <div class="ui-g-12"><p-radioButton name="group1" value="P" label="Planas (MAGNA-SIRGAS Origen Bogotá)" [(ngModel)]="val1" inputId="opt2"></p-radioButton></div>
+</div>
 <br>
 <p-message id="infoMedicion" severity="info"
   text="Seleccione un <b>archivo local</b> para cargarlo como una capa sobre el mapa"></p-message>

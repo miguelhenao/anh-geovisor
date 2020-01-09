@@ -8,8 +8,11 @@ export class ImportCSV {
   makingWork;
   view;
   filename: string;
-  public uploadFileCsv(files: Array<any>, url: string, map: any, view: any, makingWork: any): void {
+  coorGeoPlanas: string;
+
+  public uploadFileCsv(files: Array<any>, coor: string, url: string, map: any, view: any,  makingWork: any): void {
     this.agsUrlBase = url;
+    this.coorGeoPlanas = coor;
     this.map = map;
     this.view = view;
     makingWork = true;
@@ -18,7 +21,6 @@ export class ImportCSV {
       this.filename = files[0].name.split('.')[0];
       this.handleCsv(files[0]);
     }
-    return null;
   }
   private handleCsv(file: any): void {
     if (file.data) {
@@ -31,7 +33,6 @@ export class ImportCSV {
       };
       reader.readAsText(file);
     }
-    return null;
   }
 
   private processCsvData(data: any): void {
@@ -60,7 +61,6 @@ export class ImportCSV {
             let latField, longField;
             const fieldNames = csvStore.getAttributes(items[0]);
             // var coorGeoPlanas = $('input[name=coor-geo-planas]:checked').val();
-            const coorGeoPlanas = 'P';
             fieldNames.forEach((fieldName) => {
               let matchId;
               matchId = latFieldStrings.indexOf(fieldName.toLowerCase());
@@ -76,7 +76,7 @@ export class ImportCSV {
             const arrAttrib = [];
             const arrGeom = [];
             const arrGeomProj = [];
-            if (coorGeoPlanas === 'P') {
+            if (this.coorGeoPlanas === 'P') {
               wkid = 3116; // MAGNA-SIRGAS / Colombia Bogota zone
             } else {
               wkid = 4326; // WGS84
@@ -142,14 +142,18 @@ export class ImportCSV {
                   return Field.fromJSON(field);
                 })
               });
-              this.map.add(featureLayer);
-              this.makingWork = false;
-              this.view.goTo(sourceGraphics);
+              featureLayer.load().then(() => {
+                 if (featureLayer.loadStatus === 'loaded') {
+                  console.log('loaded');
+                  this.map.add(featureLayer);
+                  this.makingWork = false;
+                  this.view.goTo(sourceGraphics);
+                }
+              });
             });
           }
         });
       });
-    return null;
   }
   generateDefaultPopupInfo(featureCollection: any): any {
     const fields = featureCollection.layerDefinition.fields;

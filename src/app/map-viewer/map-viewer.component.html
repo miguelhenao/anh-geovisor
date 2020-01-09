@@ -69,6 +69,20 @@
   </p-message>
 </p-dialog>
 
+<p-dialog header="Zona de Influencia (Buffer)" [(visible)]="displayBuffer" [resizable]="false" (onHide)="onHideDialogBuffer()">
+  <div id="div">
+    <p>1. Defina la anchura deseada</p>
+    <input id="input" type="text" size="18" pInputText [(ngModel)]="bufDistance" placeholder="Ingrese un número">
+    &nbsp;
+    <p-dropdown [options]="optionsBuffer" optionLabel="name" [(ngModel)]="selectedBuffer">
+    </p-dropdown>
+    <p>2. Dibuje la geometría para la Zona de Influencia</p>
+    <p-selectButton [options]="modes" [(ngModel)]="selectedBufferSketch" (onChange)="onChangeSelectSketchBuffer()"></p-selectButton>
+    <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
+    </p-button>
+    <br>
+  </div>
+</p-dialog>
 
 <p-dialog header="Herramientas de Medición" [(visible)]="displayMedicion" [resizable]="false"
   (onHide)="onHideDialogMedicion()">
@@ -118,4 +132,3 @@
     </ng-template>
   </p-table>
 </div>
-
