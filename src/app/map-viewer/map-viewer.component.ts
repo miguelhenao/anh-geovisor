@@ -54,7 +54,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     { name: 'Polígono', value: 'pol' },
     { name: 'Polígono Libre', value: 'free-pol' }
   ];
-
+  layerList: any;
   optionsLayers: SelectItem[] = [];
   sketch;
   selectedPolygon: SelectItem;
@@ -162,8 +162,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               });
               dialog.onClose.subscribe(res => {
                 console.log(res);
-                this.makingWork = true;
                 loadModules(['esri/layers/KMLLayer']).then(([KMLLayer]) => {
+                  this.makingWork = true;
                   let geo = new KMLLayer({
                     url: res
                   });
@@ -183,8 +183,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               });
               dialog.onClose.subscribe(res => {
                 console.log(res);
-                this.makingWork = true;
                 loadModules(['esri/layers/WMSLayer']).then(([WMSLayer]) => {
+                  this.makingWork = true;
                   let geo = new WMSLayer({
                     url: res
                   });
@@ -204,8 +204,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               });
               dialog.onClose.subscribe(res => {
                 console.log(res);
-                this.makingWork = true;
                 loadModules(['esri/layers/GeoJSONLayer']).then(([GeoJSONLayer]) => {
+                  this.makingWork = true;
                   let geo = new GeoJSONLayer({
                     url: res
                   });
@@ -225,8 +225,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               });
               dialog.onClose.subscribe(res => {
                 console.log(res);
-                this.makingWork = true;
                 loadModules(['esri/layers/CSVLayer']).then(([CSVLayer]) => {
+                  this.makingWork = true;
                   const csv = new CSVLayer({
                     url: res
                   });
@@ -263,7 +263,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       {
         label: 'Herramientas',
         icon: 'fa fa-gear',
-        items: [  
+        items: [
           {
             label: 'Analisis de Cobertura',
             command: () => {
@@ -303,7 +303,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                       renderer.symbol = defaultSymbol;
                       this.departmentLayer.renderer = renderer;
                     });
-                    this.makingWork = false;
+                  this.makingWork = false;
                 }
               })
             }
@@ -735,6 +735,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         multipleSelectionEnabled: true,
         view: this.view
       });
+      this.layerList = layerList;
+      console.log(this.layerList);
       let layerListExpand = new Expand({
         expandIconClass: "esri-icon-layers",
         expandTooltip: 'Tabla de contenido',
@@ -1282,9 +1284,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public generateAnalisisCobertura(): void {
-    this.makingWork = true;
     loadModules(['esri/tasks/support/FeatureSet', 'esri/tasks/Geoprocessor']).
       then(([FeatureSet, Geoprocessor]) => {
+        this.makingWork = true;
         let gpIntersect = new Geoprocessor(this.agsUrlBase + "rest/services/AnalisisCobertura/GPServer/AnalisisCobertura");
         gpIntersect.outSpatialReference = { wkid: 4326 };
         let nameDptos: string = "";
@@ -1316,10 +1318,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             this.layerSelected = [];
             this.clearGraphics();
             this.displayAnalisis = false;
+            this.makingWork = false;
           });
         });
       });
-      this.makingWork = false;
   }
 
   public nameDptoSelected(): string {
