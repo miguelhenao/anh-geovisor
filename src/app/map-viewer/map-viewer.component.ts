@@ -108,9 +108,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               dialog.onClose.subscribe(res => {
                 if (res !== undefined) {
                   if (res.data.indexOf('.csv') !== -1) {
-                    this.makingWork = true;
-                    this.importCsv.uploadFileCsv(res.form.elements[0].files, this.agsUrlBase, this.map, this.view);
-                    this.makingWork = false;
+                    this.importCsv.uploadFileCsv(res.form.elements[0].files, this.agsUrlBase, this.map, this.view, this.makingWork);
                   }
                 }
               });
