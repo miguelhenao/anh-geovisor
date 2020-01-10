@@ -771,6 +771,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       this.map.add(ly_sensibilidad);
 
       this.view = new MapView(mapViewProperties);
+      this.view.on('click', () => {
+        (<any>window).ga('send', 'event', 'MAP-CONTROL', 'click', 'overviewMap');
+      })
 
       let layerList = new LayerList({
         selectionEnabled: true,
