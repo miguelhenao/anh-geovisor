@@ -2,6 +2,10 @@
 <p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10">
   <br>
   <img src="logo-anh-p.png" (click)="visibleMenu = false">
+  <div id="panel-selected-layer" class="esri-widget"
+    *ngIf="layerList != undefined && layerList.selectedItems.items[0] != undefined">
+    {{nameLayerSelected()}}
+  </div>
   <div id="helps">
     <button pButton type="button" icon="pi pi-spin pi-compass" class="ui-button-success" pTooltip="Navegación"
       tooltipPosition="bottom"></button>
@@ -18,7 +22,8 @@
 </p-sidebar>
 <div id="menu-info">
   <button id="menu" type="button" (click)="visibleMenu = true"></button>
-  <div id="panel-selected-layer" class="esri-widget" *ngIf="layerList != undefined">
+  <div id="panel-selected-layer" class="esri-widget"
+    *ngIf="layerList != undefined && layerList.selectedItems.items[0] != undefined">
     {{nameLayerSelected()}}
   </div>
 </div>
@@ -69,7 +74,8 @@
   </p-message>
 </p-dialog>
 
-<p-dialog header="Zona de Influencia (Buffer)" [(visible)]="displayBuffer" [resizable]="false" (onHide)="onHideDialogBuffer()">
+<p-dialog header="Zona de Influencia (Buffer)" [(visible)]="displayBuffer" [resizable]="false"
+  (onHide)="onHideDialogBuffer()">
   <div id="div">
     <p>1. Defina la anchura deseada</p>
     <input id="input" type="text" size="18" pInputText [(ngModel)]="bufDistance" placeholder="Ingrese un número">
@@ -77,7 +83,8 @@
     <p-dropdown [options]="optionsBuffer" optionLabel="name" [(ngModel)]="selectedBuffer">
     </p-dropdown>
     <p>2. Dibuje la geometría para la Zona de Influencia</p>
-    <p-selectButton [options]="modes" [(ngModel)]="selectedBufferSketch" (onChange)="onChangeSelectSketchBuffer()"></p-selectButton>
+    <p-selectButton [options]="modes" [(ngModel)]="selectedBufferSketch" (onChange)="onChangeSelectSketchBuffer()">
+    </p-selectButton>
     <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
     </p-button>
     <br>
@@ -105,27 +112,27 @@
 </p-dialog>
 
 <div id="attributeTable">
-  <p-table #dt *ngIf="loadLayers == 8" [value]="featureDptos" [(selection)]="dptosSelected"
+  <p-table #dt [columns]="columnsTable" *ngIf="loadLayers == 8" [value]="featureDptos" [(selection)]="dptosSelected"
     (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)">
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 3em" *ngIf="displayAnalisis">
+        <th style="width: 3em">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th>
-          Departamento
-          <input pInputText type="text" (input)="dt.filter($event.target.value, 'attributes.DEPARTAMEN', 'contains')">
+        <th *ngFor="let col of columns">
+          {{col}}
+          <!-- <input pInputText type="text" (input)="dt.filter($event.target.value, col, 'contains')"> -->
         </th>
         <!-- <th>Shape_Leng</th> -->
         <!-- <th>Shape_Leng</th> -->
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-dpto>
+    <ng-template pTemplate="body" let-dpto let-columns="columns">
       <tr [pSelectableRow]="dpto">
-        <td *ngIf="displayAnalisis">
+        <td>
           <p-tableCheckbox [value]="dpto"></p-tableCheckbox>
         </td>
-        <td>{{dpto.attributes.DEPARTAMEN}}</td>
+        <td *ngFor="let col of columns">{{dpto.attributes[col]}}</td>
         <!-- <td>{{dpto.attributes.Shape_Leng}}</td> -->
         <!-- <td>{{dpto.attributes.Shape_Area}}</td> -->
       </tr>
