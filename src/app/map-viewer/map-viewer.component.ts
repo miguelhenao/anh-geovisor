@@ -351,6 +351,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         label: 'Impresión',
         icon: 'fa fa-print',
         command: () => {
+          (<any>window).ga('send', 'event', 'BUTTON', 'click', 'print');
           window.print();
         }
       }
