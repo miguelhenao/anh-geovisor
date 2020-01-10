@@ -1,4 +1,6 @@
 <p-toast></p-toast>
+<input type="hidden" [(ngModel)]="layerList.selectedItems.items[0].layer.title" (ngModelChange)="changeAttrTable($event)"
+  *ngIf="layerList != undefined && layerList.selectedItems.items[0] != undefined">
 <p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10">
   <br>
   <img src="logo-anh-p.png" (click)="visibleMenu = false">

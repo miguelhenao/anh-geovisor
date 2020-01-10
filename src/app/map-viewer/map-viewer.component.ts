@@ -358,8 +358,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
   }
 
   ngAfterViewChecked() {
+    let layerList: HTMLCollection = document.getElementsByClassName("esri-layer-list__item--selectable");
+    for (let index = 0; index < layerList.length; index++) {
+      const element = layerList[index];
+      element.addEventListener("click", this.clickItemLayer);
+    }
   }
 
+  public clickItemLayer(): void {
+    console.log("Hola");
+  }
   /**
    * Consigue la ubicación del computador
    */
@@ -774,7 +782,35 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       let layerList = new LayerList({
         selectionEnabled: true,
         multipleSelectionEnabled: true,
-        view: this.view
+        view: this.view,
+        listItemCreatedFunction: (event) => {
+          var item = event.item;
+          item.actionsSections = [
+            [{
+              title: "Go to full extent",
+              className: "esri-icon-zoom-out-fixed",
+              id: "full-extent"
+            }, {
+              title: "Layer information",
+              className: "esri-icon-description",
+              id: "information"
+            }], [{
+              title: "Increase opacity",
+              className: "esri-icon-up",
+              id: "increase-opacity"
+            }, {
+              title: "Decrease opacity",
+              className: "esri-icon-down",
+              id: "decrease-opacity"
+            }]
+          ];
+        }
+      });
+      this.view.when(() => {
+        layerList.on("trigger-action", function (event) {
+          console.log("ok");
+          console.log(event);
+        });
       });
       let item = new ListItem({ layer: ly_tierras });
       layerList.selectedItems.add(item);
@@ -1439,6 +1475,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
     this.sketch.cancel();
   }
 
+  changeAttrTable(event: any) {
+    console.log("Hola");
+  }
+
   onHideDialogAnalisis() {
     this.layerSelected = [];
     this.attributeTable.collapse();
@@ -1469,4 +1509,5 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
     this.bufDistance = undefined;
     this.sketchBuffer.cancel();
   }
+
 }
