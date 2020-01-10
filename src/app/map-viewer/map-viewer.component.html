@@ -1,5 +1,6 @@
 <p-toast></p-toast>
-<input type="hidden" [(ngModel)]="layerList.selectedItems.items[0].layer.title" (ngModelChange)="changeAttrTable($event)"
+<input type="hidden" [(ngModel)]="layerList.selectedItems.items[0].layer.title"
+  (ngModelChange)="changeAttrTable($event)"
   *ngIf="layerList != undefined && layerList.selectedItems.items[0] != undefined">
 <p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10">
   <br>
@@ -113,43 +114,45 @@
     Pulse <b>Ctrl</b> para activar la alineación<br> automática (snapping) con la geometría del<br> mapa mientras agrega puntos."></p-message>
 </p-dialog>
 
-<div id="attributeTable">
-  <p-table #dt [columns]="columnsTable" *ngIf="loadLayers == 8" [value]="featureDptos" [(selection)]="dptosSelected"
-    (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)">
-    <ng-template pTemplate="header">
+<p-dialog header="Tabla de Atributos" [(visible)]="displayTable" [resizable]="true" (onHide)="onHideDialogMedicion()">
+  <p-table [style]="{width: '500px'}" selectionMode="multiple" #dt [columns]="columnsTable" *ngIf="loadLayers == 8"
+    [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true" [(selection)]="featuresSelected"
+    (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollHeight="200px">
+    <ng-template pTemplate="colgroup" let-columns>
+      <colgroup>
+        <col *ngFor="let col of columns" style="width:250px">
+      </colgroup>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
       <tr>
-        <th style="width: 3em">
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-        </th>
         <th *ngFor="let col of columns">
           {{col}}
           <!-- <input pInputText type="text" (input)="dt.filter($event.target.value, col, 'contains')"> -->
         </th>
-        <!-- <th>Shape_Leng</th> -->
-        <!-- <th>Shape_Leng</th> -->
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-dpto let-columns="columns">
       <tr [pSelectableRow]="dpto">
-        <td>
-          <p-tableCheckbox [value]="dpto"></p-tableCheckbox>
-        </td>
         <td *ngFor="let col of columns">{{dpto.attributes[col]}}</td>
-        <!-- <td>{{dpto.attributes.Shape_Leng}}</td> -->
-        <!-- <td>{{dpto.attributes.Shape_Area}}</td> -->
       </tr>
     </ng-template>
   </p-table>
+</p-dialog>
+
+<div id="attributeTable" style="width: 1500px;">
+
 </div>
 
 <div id="help">
-  <li id="help-button" data-rel="popover" data-placement="top"
-    data-original-title="&lt;i class='icon-comment bigger-120'&gt;&lt;/i&gt; &nbsp;<b>Bienvenido al Geovisor ANH</b>"
-    data-content="<b>Haga clic</b> sobre los elementos de su interés en el mapa o... <ul> <li> <b>Encuentre arriba</b> lo que busca.</li> <li> <b>Use las herramientas</b> del menú de la izquierda.</li><li> Seleccione a la derecha <b>la capa de trabajo</b> y vea las <b>convenciones del mapa</b> y <b>atributos de los elementos</b> seleccionados.</li><ul>"
-    data-container="body">
-  <li id="help-button">
-    <a class="png-icon-help">
-      <i></i>
-    </a>
-  </li>
+  <div *ngIf="loadLayers == 8">
+    <li id="help-button" data-rel="popover" data-placement="top"
+      data-original-title="&lt;i class='icon-comment bigger-120'&gt;&lt;/i&gt; &nbsp;<b>Bienvenido al Geovisor ANH</b>"
+      data-content="<b>Haga clic</b> sobre los elementos de su interés en el mapa o... <ul> <li> <b>Encuentre arriba</b> lo que busca.</li> <li> <b>Use las herramientas</b> del menú de la izquierda.</li><li> Seleccione a la derecha <b>la capa de trabajo</b> y vea las <b>convenciones del mapa</b> y <b>atributos de los elementos</b> seleccionados.</li><ul>"
+      data-container="body">
+    <li id="help-button">
+      <a class="png-icon-help">
+        <i></i>
+      </a>
+    </li>
+  </div>
 </div>

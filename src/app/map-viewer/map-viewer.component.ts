@@ -19,6 +19,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
 
   @ViewChild("mapViewNode", { static: true }) private mapViewEl: ElementRef;
   view: any;
+  eventLayer: any;
+  displayTable: boolean = false;
   layerSelected: any;
   columnsTable: Array<any> = [];
   latitude: number = 4.6486259;
@@ -362,12 +364,26 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
     let layerList: HTMLCollection = document.getElementsByClassName("esri-layer-list__item--selectable");
     for (let index = 0; index < layerList.length; index++) {
       const element = layerList[index];
-      element.addEventListener("click", this.clickItemLayer);
+      element.addEventListener('click', this.clickItemLayer);
     }
   }
 
-  public clickItemLayer(): void {
-    console.log("Hola");
+
+  clickItemLayer: (any) => void = (event: any): void => {
+    if (this.layerList.selectedItems.items[0].layer != undefined) {
+      let layer = this.layerList.selectedItems.items[0].layer;
+      let query = {
+        outFields: ["*"],
+        returnGeometry: false,
+        where: ""
+      }
+      layer.queryFeatures(query).then((result) => {
+        this.featureDptos = result.features;
+        this.columnsTable = Object.keys(this.featureDptos[0].attributes);
+      }, (err) => {
+        console.log(err);
+      });
+    }
   }
   /**
    * Consigue la ubicación del computador
@@ -625,17 +641,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       });
 
       ly_departamento.load().then(() => {
-        let query = {
-          outFields: ["*"],
-          returnGeometry: false,
-          where: ""
-        }
-        ly_departamento.queryFeatures(query).then((result) => {
-          this.featureDptos = result.features;
-          this.columnsTable = Object.keys(this.featureDptos[0].attributes);
-        }, (err) => {
-          console.log(err);
-        });
 
         let sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
@@ -721,6 +726,17 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       });
 
       ly_tierras.load().then(() => {
+        let query = {
+          outFields: ["*"],
+          returnGeometry: false,
+          where: ""
+        }
+        ly_tierras.queryFeatures(query).then((result) => {
+          this.featureDptos = result.features;
+          this.columnsTable = Object.keys(this.featureDptos[0].attributes);
+        }, (err) => {
+          console.log(err);
+        });
         let searchField: Array<any> = [];
         let text: string = "";
         this.layerSelected = ly_tierras;
@@ -788,19 +804,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
           var item = event.item;
           item.actionsSections = [
             [{
-              title: "Go to full extent",
-              className: "esri-icon-zoom-out-fixed",
-              id: "full-extent"
+              title: "Tabla de Atributos",
+              className: "esri-icon-table",
+              id: "attr-table"
             }, {
-              title: "Layer information",
+              title: "Analisis de Cobertura",
               className: "esri-icon-description",
-              id: "information"
+              id: "analisis"
             }], [{
-              title: "Increase opacity",
+              title: "Aumentar opacidad",
               className: "esri-icon-up",
               id: "increase-opacity"
             }, {
-              title: "Decrease opacity",
+              title: "Reducir opacidad",
               className: "esri-icon-down",
               id: "decrease-opacity"
             }]
@@ -808,9 +824,26 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         }
       });
       this.view.when(() => {
-        layerList.on("trigger-action", function (event) {
+        layerList.on("trigger-action", (event) => {
           console.log("ok");
           console.log(event);
+          debugger;
+          if (event.action.id == "attr-table") {
+            let layer = event.item.layer;
+            let query = {
+              outFields: ["*"],
+              returnGeometry: false,
+              where: ""
+            }
+            layer.queryFeatures(query).then((result) => {
+              this.featureDptos = result.features;
+              this.columnsTable = Object.keys(this.featureDptos[0].attributes);
+            }, (err) => {
+              console.log(err);
+            });
+            debugger;
+            this.displayTable = true;
+          }
         });
       });
       let item = new ListItem({ layer: ly_tierras });
@@ -1005,7 +1038,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       let help = new Expand({
         expandIconClass: 'esri-icon-question',
         view: this.view,
-        contend: document.getElementById("help")
+        content: document.getElementById("help")
       });
       this.attributeTable = attributeTable;
       this.view.ui.add([expandLegend, expandPrint, layerListExpand, expandBaseMapGallery, expandCcWidget, attributeTable, help],
@@ -1384,11 +1417,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
     loadModules(['esri/tasks/support/Query', 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
       'esri/Color', 'dojo/_base/array', 'esri/Graphic']).then(([Query, SimpleFillSymbol, SimpleLineSymbol, Color,
         dojo, Graphic]) => {
-        let query = this.departmentLayer.createQuery();
-        query.where = `DEPARTAMEN = '${event.data.attributes.DEPARTAMEN}'`;
+        let layer = this.layerList.selectedItems.items[0].layer;
+        debugger;
+        let query = layer.createQuery();
+        debugger;
+        query.where = `${this.columnsTable[0]} = ${event.data.attributes[this.columnsTable[0]]}`;
         query.returnGeometry = true;
         query.outFields = ["*"];
-        this.departmentLayer.queryFeatures(query).then((res) => {
+        debugger;
+        layer.queryFeatures(query).then((res) => {
+          debugger;
           console.log(res);
           let symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
             new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 255, 1.0]), 2),
@@ -1401,7 +1439,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
             });
             this.view.graphics.add(graphic);
             let objectGraphic = {
-              dpto: event.data.attributes.DEPARTAMEN,
+              attr: event.data.attributes,
               graphic: graphic
             }
             this.graphics.push(objectGraphic);
@@ -1412,10 +1450,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       });
   }
 
+  public dataKey(): string {
+    return `attributes.${this.columnsTable[0]}`;
+  }
+
   public onRowUnselect(event: any): void {
+    debugger;
     for (const object of this.graphics) {
       debugger;
-      if (object.dpto != undefined && object.dpto == event.data.attributes.DEPARTAMEN) {
+      if (object.attr != undefined && object.attr == event.data.attributes) {
         this.view.graphics.remove(object.graphic);
         this.graphics.splice(this.graphics.indexOf(object), 1);
         debugger;
