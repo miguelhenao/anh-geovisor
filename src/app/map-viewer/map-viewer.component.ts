@@ -115,6 +115,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 if (res !== undefined) {
                   if (res.data.indexOf('.zip') !== -1) {
                     this.makingWork = true;
+                    (<any>window).ga('send', 'event', 'FORM', 'submit', 'upload-form-shp');
                     this.generateFeatureCollection(res.data, res.form, 'shapefile');
                   }
                 }
@@ -133,6 +134,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               dialog.onClose.subscribe(res => {
                 if (res !== undefined) {
                   this.makingWork = true;
+                  (<any>window).ga('send', 'event', 'FORM', 'submit', 'upload-form-csv');
                   this.importCsv.uploadFileCsv(res.form.elements[0].files, res.data, this.agsUrlBase, this.map, this.view, this.makingWork);
                   this.makingWork = false;
                 }
@@ -152,6 +154,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 if (res !== undefined) {
                   if (res.data.indexOf('.gpx') !== -1) {
                     this.makingWork = true;
+                    (<any>window).ga('send', 'event', 'FORM', 'submit', 'upload-form-gpx');
                     this.generateFeatureCollection(res.data, res.form, 'gpx');
                   }
                 }
@@ -170,6 +173,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               dialog.onClose.subscribe(res => {
                 if (res !== undefined) {
                   this.makingWork = true;
+                  (<any>window).ga('send', 'event', 'FORM', 'submit', 'upload-form-geojson');
                   this.addGeoJSONToMap(res);
                 }
               });
@@ -187,6 +191,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 console.log(res);
                 loadModules(['esri/layers/KMLLayer']).then(([KMLLayer]) => {
                   this.makingWork = true;
+                  (<any>window).ga('send', 'event', 'FORM', 'submit', 'services-form-kml');
                   let geo = new KMLLayer({
                     url: res
                   });
@@ -208,6 +213,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 console.log(res);
                 loadModules(['esri/layers/WMSLayer']).then(([WMSLayer]) => {
                   this.makingWork = true;
+                  (<any>window).ga('send', 'event', 'FORM', 'submit', 'services-form-wms');
                   let geo = new WMSLayer({
                     url: res
                   });
@@ -218,7 +224,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             }
           },
           {
-            label: 'Servicio geoJSON',
+            label: 'Servicio GeoJSON',
             command: () => {
               let dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
@@ -229,6 +235,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 console.log(res);
                 loadModules(['esri/layers/GeoJSONLayer']).then(([GeoJSONLayer]) => {
                   this.makingWork = true;
+                  (<any>window).ga('send', 'event', 'FORM', 'submit', 'services-form-geojson');
                   let geo = new GeoJSONLayer({
                     url: res
                   });
@@ -250,6 +257,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 console.log(res);
                 loadModules(['esri/layers/CSVLayer']).then(([CSVLayer]) => {
                   this.makingWork = true;
+                  (<any>window).ga('send', 'event', 'FORM', 'submit', 'services-form-csv');
                   const csv = new CSVLayer({
                     url: res
                   });
@@ -310,6 +318,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               });
               dialog.onClose.subscribe(res => {
                 if (res != undefined) {
+                  (<any>window).ga('send', 'event', 'BUTTON', 'click', 'symbol-start');
                   this.makingWork = true;
                   loadModules(['esri/symbols/SimpleMarkerSymbol', 'esri/symbols/SimpleFillSymbol',
                     'esri/symbols/SimpleLineSymbol', 'esri/Color', 'esri/renderers/SimpleRenderer']).then(([
@@ -373,7 +382,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D", "esri/layers/support/LabelClass",
           'esri/widgets/BasemapGallery', 'esri/widgets/CoordinateConversion', 'esri/widgets/Sketch/SketchViewModel',
           'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend', 'esri/widgets/ScaleBar', 'esri/request'
-          , 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/Color', 
+          , 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/Color',
           'esri/widgets/LayerList/ListItem', 'esri/geometry/geometryEngine']);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
@@ -763,7 +772,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         multipleSelectionEnabled: true,
         view: this.view
       });
-      let item = new ListItem({layer: ly_tierras});
+      let item = new ListItem({ layer: ly_tierras });
       layerList.selectedItems.add(item);
       this.layerList = layerList;
       console.log(this.layerList);
@@ -1236,6 +1245,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           lyTierrasMdt.labelingInfo = [statesLabelClass];
 
           this.map.add(lyTierrasMdt);
+          (<any>window).ga('send', 'event', 'TOOL', 'slide', 'ts-tierras');
         } else {
           layerTierras.visible = true;
         }
@@ -1314,6 +1324,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.clearGraphics();
         });
       });
+      (<any>window).ga('send', 'event', 'FORM', 'submit', 'extract');
     }
     this.makingWork = false;
   }
@@ -1371,6 +1382,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         let gpIntersect = new Geoprocessor(this.agsUrlBase + "rest/services/AnalisisCobertura/GPServer/AnalisisCobertura");
         gpIntersect.outSpatialReference = { wkid: 4326 };
         let nameDptos: string = "";
+        (<any>window).ga('send', 'event', 'BUTTON', 'click', 'intersect-start');
         for (const dpto of this.dptosSelected) {
           nameDptos = `${nameDptos}'${dpto.attributes.DEPARTAMEN}',`;
         }
@@ -1427,10 +1439,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public nameLayerSelected(): string {
-    return this.layerList.selectedItems.items[0].layer.title.substr(this.layerList.selectedItems.items[0].layer.title.indexOf('-') + 1, this.layerList.selectedItems.items[0].layer.title.length -1 );
+    return this.layerList.selectedItems.items[0].layer.title.substr(this.layerList.selectedItems.items[0].layer.title.indexOf('-') + 1, this.layerList.selectedItems.items[0].layer.title.length - 1);
   }
-  
+
   onChangeSelectSketchBuffer() {
+    (<any>window).ga('send', 'event', 'BUTTON', 'click', 'buffer');
     switch (this.selectedBufferSketch) {
       case 'line':
         this.sketchBuffer.create('polyline', { mode: 'freehand' });
