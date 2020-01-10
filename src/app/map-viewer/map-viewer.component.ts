@@ -795,6 +795,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       this.map.add(ly_sensibilidad);
 
       this.view = new MapView(mapViewProperties);
+      this.view.on('click', () => {
+        (<any>window).ga('send', 'event', 'MAP-CONTROL', 'click', 'overviewMap');
+      })
 
       let layerList = new LayerList({
         selectionEnabled: true,
@@ -1040,6 +1043,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         view: this.view,
         content: document.getElementById("help")
       });
+      help.expand();
       this.attributeTable = attributeTable;
       this.view.ui.add([expandLegend, expandPrint, layerListExpand, expandBaseMapGallery, expandCcWidget, attributeTable, help],
         'bottom-right');
