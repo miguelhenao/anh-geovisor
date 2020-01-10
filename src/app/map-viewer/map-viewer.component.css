@@ -184,3 +184,21 @@ p-sidebar {
     margin: 0px 5px;
     padding-bottom: 0px;
 }
+
+#help {
+  background-color: white;
+}
+
+.title-help {
+  background-color: #3F79B6;
+  border-bottom-color: #D5DDE8;
+  color: #FFFFFF;
+  text-shadow: none;
+  width: 274px;
+}
+
+.body-help {
+  padding: 9px 14px;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12.5px;
+}

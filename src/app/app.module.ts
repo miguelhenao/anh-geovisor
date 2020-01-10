@@ -28,6 +28,7 @@ import {RadioButtonModule} from 'primeng/radiobutton';
 import {SelectButtonModule} from 'primeng/selectbutton';
 import {ColorPickerModule} from 'primeng/colorpicker';
 import { DialogSymbologyChangeComponent } from './dialog-symbology-change/dialog-symbology-change.component';
+import {OverlayPanelModule} from 'primeng/overlaypanel';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { DialogSymbologyChangeComponent } from './dialog-symbology-change/dialog
     RadioButtonModule,
     SelectButtonModule,
     MessageModule,
-    ColorPickerModule
+    ColorPickerModule,
+    OverlayPanelModule
   ],
   providers: [],
   entryComponents: [

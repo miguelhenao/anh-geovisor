@@ -972,8 +972,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       let help = new Expand({
         expandIconClass: 'esri-icon-question',
         view: this.view,
-        contend: document.getElementById("help")
+        content: document.getElementById("help")
       });
+      help.expand();
       this.attributeTable = attributeTable;
       this.view.ui.add([expandLegend, expandPrint, layerListExpand, expandBaseMapGallery, expandCcWidget, attributeTable, help],
         'bottom-right');
