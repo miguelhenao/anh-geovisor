@@ -29,6 +29,7 @@ import {SelectButtonModule} from 'primeng/selectbutton';
 import {ColorPickerModule} from 'primeng/colorpicker';
 import { DialogSymbologyChangeComponent } from './dialog-symbology-change/dialog-symbology-change.component';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
+import { DialogAboutComponent } from './dialog-about/dialog-about.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import {OverlayPanelModule} from 'primeng/overlaypanel';
     DialogFileComponent,
     DialogTerminosComponent,
     AttributesTableComponent,
-    DialogSymbologyChangeComponent
+    DialogSymbologyChangeComponent,
+    DialogAboutComponent
   ],
   imports: [
     BrowserModule,

@@ -38,6 +38,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
   sourceSearch: Array<any> = [];
   attributeTable: any;
   leftDialog: number = 200;
+  about: boolean = false;
   /* layerSelected: Array<any> = []; */
   activeWidget: any;
   tsLayer: any;
@@ -878,7 +879,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         expandTooltip: 'Exportar',
         view: this.view,
         content: print,
-        group: 'bottom-right'
+        group: 'top-right'
       })
 
       /* let areaMeasurement = new AreaMeasurement2D({
@@ -923,7 +924,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         expandTooltip: 'Mapa base',
         view: this.view,
         content: basemapGallery,
-        group: 'bottom-right'
+        group: 'top-right'
       });
 
       var ccWidget = new CoordinateConversion({
@@ -935,7 +936,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         expandTooltip: 'Ubicación',
         view: this.view,
         content: ccWidget,
-        group: 'bottom-right'
+        group: 'top-right'
       });
 
       const graphicsLayer = new GraphicsLayer();
@@ -1045,8 +1046,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       });
       help.expand();
       this.attributeTable = attributeTable;
-      this.view.ui.add([expandLegend, expandPrint, layerListExpand, expandBaseMapGallery, expandCcWidget, attributeTable, help],
+      this.view.ui.add([expandLegend, layerListExpand, attributeTable, help],
         'bottom-right');
+      this.view.ui.add([expandPrint, expandBaseMapGallery, expandCcWidget], {
+        position: 'top-right'
+      });
       return this.view;
     } catch (error) {
       console.log("EsriLoader: ", error);
@@ -1562,6 +1566,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
     this.selectedBufferSketch = undefined;
     this.bufDistance = undefined;
     this.sketchBuffer.cancel();
+  }
+
+  onShowAbout() {
+    this.about = true;
   }
 
 }

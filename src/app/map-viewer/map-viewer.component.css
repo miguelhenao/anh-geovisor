@@ -202,3 +202,7 @@ p-sidebar {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 12.5px;
 }
+
+.p-col {
+  margin: 0 auto;
+}
