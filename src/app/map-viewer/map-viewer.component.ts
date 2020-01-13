@@ -1047,7 +1047,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       });
       help.expand();
       this.attributeTable = attributeTable;
-      this.view.ui.add([expandLegend, layerListExpand, attributeTable, help],
+      this.view.ui.add([expandLegend, layerListExpand, help],
         'bottom-right');
       this.view.ui.add([expandPrint, expandBaseMapGallery, expandCcWidget], {
         position: 'top-right'
