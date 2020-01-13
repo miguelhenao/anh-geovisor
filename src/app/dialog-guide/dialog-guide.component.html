@@ -1,0 +1,863 @@
+<div class="guide">
+  <div class="p-grid">
+    <div class="p-col-3">
+      <div class="help-nav">
+
+      </div>
+    </div>
+    <div class="p-col-9">
+      <div class="help-content">
+        <div class="bs-docs-section">
+          <h1 id="h-introduccion" class="page-header">Introducción</h1>
+          <!--<h3 id="h-intro2">Intro 2</h3>-->
+          <p>El Geovisor ANH es una aplicación SIG-Web que te permite consultar la información geográfica generada
+            por la ANH y que conforma en su mayoría el Mapa de Tierras que es actualizado continuamente. En él
+            se muestran las áreas que se encuentran en exploración y explotación y las áreas disponibles para la
+            celebración de contratos en las diferentes cuencas sedimentarias del país. </p>
+          <p>Con el Geovisor también podrás consultar servicios de mapas expuestos por otras entidades y
+            correlacionarlos con las capas del Mapa de Tierras. Este Geovisor lo puedes usar utilizando los
+            navegadores web más comunes del mercado y en dispositivos móviles con sistemas operativos Android e
+            iOS.​​</p>
+          <p>En esta ayuda encontrarás las guías de operación y funcionamiento de las funciones de consulta
+            espacial y tabular, búsquedas, análisis, impresión y otras del Geovisor ANH. </p>
+        </div>
+        <div class="bs-docs-section">
+          <h1 id="h-acerca-de" class="page-header">Acerca del Geovisor ANH</h1>
+          <h3 id="h-geovisor">¿Qué puedes hacer con el Geovisor ANH?</h3>
+          <p>El Geovisor fué desarrollado con el fin de que puedas visualizar la cartografía básica y temática del
+            Mapa de Tierras de la Agencia Nacional de Hidrocarburos ANH.</p>
+          <p>Sus funciones principales son:</p>
+
+          <i class="esri-icon-radio-checked" style="color: green;"></i>
+          <strong> Navegación y Visualización: </strong>
+          El Geovisor ANH incluye información cartográfica básica y temática, en donde a partir de
+          herramientas básicas de navegación puedes explorarlos
+          <br>
+          <i class="fa fa-ruler-combined" style="color: blue;"></i>
+          <strong> Herramientas de Medición: </strong>
+          En el Geovisor ANH puedes realizar mediciones de área, distancia y coordenadas.
+          <br>
+          <i class="fa fa-hand-point-up" style="color: orange;"></i>
+          <strong> Herramientas de Seleción y Extracción: </strong>
+          Con el Geovisor ANH puedes extraer datos en formato Shape (.shp) de la zona solicitada y en
+          formato XLS se los atributos de los elementos seleccionados.
+          <br>
+          <i class="pi pi-info-circle" style="color: red;"></i>
+          <strong> Herramientas de Información: </strong>
+          Además el Geovisor AHN te brinda información detallada de atributos de cada capa presente en el
+          Geovisor.
+          <br>
+          <strong>Herramientas de Análisis</strong> y otras.
+
+
+          <!-- Terminos y Condiciones de Uso================================================== -->
+          <h3 id="h-terminos">Términos y Condiciones de Uso</h3>
+
+          <p>Los términos y condiciones de uso se encuentran detallados al inicio del Geovisor ANH. Al aceptar los
+            términos y condiciones de uso, puedes acceder a la aplicación, de lo contrario te retornara a la
+            página inicial de la Agencia Nacional de Hidrocarburos (ANH) y no podrás acceder al Geovisor.</p>
+
+
+          <!-- Puntos de Contacto================================================== -->
+          <h3 id="h-contacto">Puntos de Contacto</h3>
+          <p>Si deseas obtener información adicional sobre el Geovisor ANH puedes contactar al Área de Geomática
+            de la Agencia Nacional de Hidrocarburos (ANH) <a href="http://www.anh.gov.co/Paginas/Contactenos.aspx"
+              target="_blank">aqui</a>.</p>
+
+        </div>
+        <!-- Navegadores ================================================== -->
+        <div class="bs-docs-section">
+          <h1 id="h-navegadores" class="page-header">Navegadores Compatibles</h1>
+          <p>Para obtener un buen rendimiento del Geovisor ANH, debes contar con la combinación de navegadores y
+            sistemas operativos mostrados en la tabla de abajo. </p>
+
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th style="width: 250px;">Navegador Web</th>
+                  <th style="width: 200px;">Windows</th>
+                  <th style="width: 250px;">Android 4.0 y superior</th>
+                  <th>iOS</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Última Versión de Firefox</td>
+                  <td>X</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Última Versión de Google Chrome</td>
+                  <td>X</td>
+                  <td>X</td>
+                  <td>X</td>
+                </tr>
+                <tr>
+                  <td>Última versión de Safari</td>
+                  <td></td>
+                  <td></td>
+                  <td>X</td>
+                </tr>
+                <tr>
+                  <td>Internet Explorer 9, 10, 11</td>
+                  <td>X</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p> Adicionalmente debes contar con una resolución para dispositivos móviles de 1024*768 y una conexión
+            a internet mínimo de 1MB.</p>
+        </div>
+
+        <!--  Primeros pasos================================================== -->
+        <div class="bs-docs-section">
+          <h1 id="h-pasos" class="page-header">Primeros Pasos</h1>
+          <p> Lo que debes saber para poder ingresar al Geovisor ANH.</p>
+
+          <h3 id="h-ejecucion">Ejecucion del Geovisor</h3>
+          <p> Para la ejecución del Geovisor debes contar con un navegador web (browser) según los requisitos
+            mínimos de ejecución y acceder al portal web de la ANH
+            <code> <a href="http://www.anh.gov.co" target="_blank">(http://www.anh.gov.co)</a></code> en la sección
+            Geoportal.
+          </p>
+
+          <img src="assets/PortalANH.png" alt="" title="" style="width: 100%;" />
+          <h3 id="h-acceso">Acceso al Geovisor</h3>
+          <p> Al acceder al enlace del Geoportal
+            <code><a href="http://geovisor.anh.gov.co" target="_blank">(https://geovisor.anh.gov.co)</a></code> se
+            cargan
+            inicialmente los Términos y Condiciones de Uso. Al aceptar lo términos y condiciones, puedes acceder
+            al Geovisor ANH. El Geovisor inicia cargando el mapa base Topográfico de Arcgis Online por defecto y
+            los servicios de mapas: Cuencas, Departamentos, Municipios, Tierras, Sísmica, Pozos y Rezumaderos.
+          </p>
+          <img src="assets/GeovisorANH.png" alt="" title="" style="width: 100%;" />
+        </div>
+
+        <!--  Descripcion ================================================== -->
+        <div class="bs-docs-section">
+          <h1 id="h-descripcion" class="page-header">Descripción del Geovisor ANH</h1>
+          <p> En esta parte vas a encontrar un recorrido general a través del Geovisor, la ejecución de cada una
+            de sus funciones y configuración de parámetros para comprender con mayor detalle el funcionamiento
+            de la herramienta y su utilidad en la visualización de cartografía básica y temática expuesta por la
+            ANH.</p>
+
+          <p>Inicialmente encontraras la bienvenida al Geovisor ANH la cual se despliega del menú inferior del
+            Geovisor. En esta encontraras un indicio del uso de las herramientas de una forma general.</p>
+
+          <img src="assets/images/help/3GeovisorANH_1.jpg" alt="" title="" />
+
+          <p>El Geovisor ANH proporciona herramientas que permiten visualizar, explorar y analizar la cartografía
+            básica y temática de la Agencia Nacional de Hidrocarburos (ANH) para la asignación de tierras.
+            Además tiene herramientas de navegación que permiten ver con mayor detalle las zonas de preferencia
+            y asi mismo tener una referencia con ayuda del mapa de referencia ubicado en la parte superior
+            derecha del Geovisor. A continuación se detalla su ejecución.</p>
+
+          <h2 id="h-encuentre">Encuentre lo que busca</h2>
+          <p> En la parte superior derecha encontraras la herramienta de búsqueda en donde podrás encontrar a
+            partir de una o más palabras claves lo que buscas con respecto a las capas cargadas inicialmente que
+            son Municipio, Departamento, Tierras, Cuencas, Pozo, Rezumadero y Líneas de sísmica. Los pasos a
+            seguir se ilustran a continuación </p>
+
+          <h3>Pasos</h3>
+
+
+          <i class="icon-edit bigger-150 purple"></i>
+          <strong> Digite la palabra Clave: </strong>
+          El primer paso para encontrar lo que buscas es digitar en el cuadro de texto una palabra clave
+          de lo que deseas buscar.
+          <br>
+          <i class="icon-search-o bigger-150 purple"></i>
+          <strong>Selección de sugerencia: </strong>
+          De la lista de sugerencias que se despliega mietras digitas tu palabra clave puedes, si lo
+          deseas, seleccionar la que más se ajuste a tu búsqueda y hacer clic el botón buscar, ubicado a
+          lado derecho.
+          <br>
+          <i class="icon-table-o bigger-150 purple"></i>
+          <strong> Resultado: </strong>
+          Se despliega de la parte inferior la tabla de atributos con los resultados encontrados.
+
+
+          <h3>Ejecución</h3>
+
+          <ol>
+            <li>Digita la palabra clave de tu búsqueda </li>
+            <img src="assets/images/help/1.jpg" alt="" title="" />
+            <p></p>
+            <li>Selecciona en la lista de sugerencias lo que estás buscando (esto es opcional)</li>
+            <img src="assets/images/help/2.jpg" alt="" title="" />
+            <p></p>
+            <li>Selecciona el botón buscar </li>
+            <img src="assets/images/help/3.jpg" alt="" title="" />
+          </ol>
+
+          <h3>Resultado</h3>
+
+          <p> Como resultado obtendrás la información del número de elementos encontrados, el nombre con la que se
+            está realizando la búsqueda.</p>
+
+          <img src="assets/images/help/4.jpg" alt="" title="" />
+          <p></p>
+          <p> Además se cargan los atributos en la tabla de atributos que se despliega en la parte inferior del
+            Geovisor. En la tabla de atributos puedes acercar cada elemento encontrado en tu búsqueda, además de
+            exportar la información en formato XLS.</p>
+
+          <img src="assets/images/help/5_1.jpg" alt="" title="" />
+          <p> </p>
+          <ul class="list-unstyled spaced">
+            <li>
+              <img src="assets/images/help/5_2.jpg" alt="" title="" />
+              A partir de este botón los resultados obtenidos en la tabla de atributos pueden ser filtrados,
+              como se muestra a continuación:
+            </li>
+          </ul>
+
+          <ol>
+            <li>Selecciona de la lista el campo por el cual se va a filtrar la búsqueda.</li>
+            <img src="assets/images/help/5_3.jpg" alt="" title="" />
+            <p></p>
+            <li>Selecciona la operacion a realizar.</li>
+            <img src="assets/images/help/5_4.jpg" alt="" title="" />
+            <p></p>
+            <li>Finalmente digita el atributo. </li>
+            <p></p>
+          </ol>
+
+          <h2 id="h-seleccion">Selección de Capa de Trabajo</h2>
+          <p> La selección de la capa de trabajo se debe hacer para la ejecución de las herramientas del panel
+            ubicado en la parte izquierda del Geovisor. En el panel inferior puedes encontrar las convenciones
+            de las capas visualizadas en el Geovisor, la tabla de contenido y la tabla de atributos. A
+            continuacion se explican los pasos a seguir para la selección de la capa de trabajo.</p>
+
+          <h3>Pasos</h3>
+
+          <ul class="list-unstyled spaced">
+            <li>
+              <img src="assets/images/help/6.jpg" alt="" title="" />
+              <strong> Tabla de Atributos: </strong>
+              Desplegando este botón puedes explorar los datos de la consulta realizada.
+            </li>
+
+            <li>
+              <img src="assets/images/help/7.JPG" alt="" title="" />
+              <strong> Tabla de Contenido: </strong>
+              Seleccionando este botón puedes elegir la capa de trabajo, las capas que quieres visualizar,
+              además de graduar el nivel de opacidad.
+            </li>
+
+            <li>
+              <img src="assets/images/help/8.JPG" alt="" title="" />
+              <strong> Convenciones: </strong>
+              Desplegando este botón puedes visualizar las convenciones de las capas cargadas en el Geovisor
+              ANH.
+            </li>
+          </ul>
+
+          <h3>Ejecución</h3>
+
+          <ol>
+            <li>Despliega la tabla de contenido y selecciona la capa que desees</li>
+            <img src="assets/images/help/9.jpg" alt="" title="" />
+
+          </ol>
+          <p> Además de seleccionar la capa de trabajo, en la Tabla de Contenido puedes seleccionar que capas
+            deseas visualizar y graduar el nivel de opacidad. Esto lo puedes realizar ubicando el raton en el
+            numero que se encunetra en parte derecha de cada capa y puedes digitar el valor de opacidad o usar
+            la rueda del raton para cambiar este nivel. </p>
+
+          <h3>Resultado</h3>
+          <p>Como resultado obtienes la confirmación de cuál fue la capa escogida y el número de elementos que
+            conforman la capa</p>
+          <img src="assets/images/help/10.JPG" alt="" title="" />
+          <p>Ademas puedes accedar a la tabla de atributos la cual contiene información de la capa de trabajo.</p>
+          <img src="assets/images/help/11.jpg" alt="" title="" />
+
+          <h1 id="h-uso" class="page-header">Uso de Herramientas</h1>
+          <p>A partir de las herramientas ubicadas en el panel izquierdo puedes realizar las siguientes funciones:
+          </p>
+
+          <img src="assets/images/help/12.JPG" alt="" border="0">
+
+          <h2 id="h-navegar">Herramientas de Navegación</h2>
+
+
+          <ul class="list-unstyled spaced">
+            <li>
+              <img src="assets/images/help/13.jpg" alt="" title="" />
+
+              Al seleccionar este botón se despliegan las herramientas con las cuales puedes navegar sobre el
+              mapa, tales como: Acercar, Alejar, Desplazar, extension Completa o Ver todo, Vista Atras y Vista
+              Adelante.
+            </li>
+            <img src="assets/images/help/14.JPG" alt="" title="" />
+
+            <li>
+              <strong> Acercar (Zoom+): </strong>
+              Realizar un acercamiento al mapa o disminuir la escala.
+            </li>
+            <li>
+              <strong> Alejar (Zoom-): </strong>
+              Realizar un alejamiento del mapa o aumentar la escala.
+            </li>
+            <li>
+              <strong> Desplazar (pan): </strong>
+              Mover o desplazar el mapa sin afectar la escala.
+            </li>
+
+            <li>
+              <strong> Extensión completa: </strong>
+              Visualizar el mapa en su extensión original.
+            </li>
+            <li>
+              <strong> Atrás: </strong>
+              Devolverse a una visualización anterior.
+            </li>
+            <li>
+              <strong> Adelante: </strong>
+              Adelantarse a una visualización ya realizada.
+            </li>
+          </ul>
+
+          <h2 id="h-medir">Herramientas de Medición</h2>
+
+          <ul class="list-unstyled spaced">
+            <li>
+              <img src="assets/images/help/15.jpg" alt="" title="" />
+
+              Al seleccionar el botón se despliega las herramientas de medición con las cuales puedes realizar
+              mediciones de área, distancia y coordenadas, además de visualizar su resultado el espacio de
+              titulado "Resultado de la Medición".
+            </li>
+          </ul>
+          <h3>Pasos</h3>
+
+          <ul class="list-unstyled spaced">
+            <li>
+              <i class="icon-hand-up bigger-150 purple"></i>
+              <strong> Selección de tipo de Medición: </strong>
+              Al seleccionar el botón aparece una lista de selección que permite escoger las unidades de
+              medida. Para Iniciar la medición se debe empezar con un clic y doble-clic para terminar la
+              medición
+            </li>
+
+            <li>
+              <i class="icon-resize-horizontal bigger-150 purple"></i>
+              <strong> Selección Unidades de Medida: </strong>
+              Posteriormente debes seleccionar las unidades de medida, que deseas el resultado, dependiendo
+              del tipo de medición que realices.
+            </li>
+
+            <li>
+              <i class="icon-location-arrow bigger-150 purple"></i>
+              <strong> Dibujar Geometría: </strong>
+              Finalmente para realizar la medición debes iniciar con clic para dibujar la geometría y para
+              terminar la edición debes dar doble-clic.
+            </li>
+
+          </ul>
+          <h3>Ejecución</h3>
+
+          <ul class="list-unstyled spaced">
+            <li>
+              <img src="assets/images/help/16.jpg" alt="" title="" />
+              <strong> Medición de Área: </strong>
+              Al seleccionar el botón aparece una lista de selección que permite escoger las unidades de
+              medida. Para Iniciar la medición se debe empezar con un clic y doble-clic para terminar la
+              medición.
+            </li>
+            <img src="assets/images/help/19.JPG" alt="" title="" />
+
+            <li>
+              <img src="assets/images/help/17.JPG" alt="" title="" />
+              <strong> Medición de Distancia: </strong>
+              Al seleccionar el botón aparece una lista de medición para que puedas escoger las unidades de
+              medida en la cual se dará el resultado.
+            </li>
+            <img src="assets/images/help/20.JPG" alt="" title="" />
+
+            <li>
+              <img src="assets/images/help/18.JPG" alt="" title="" />
+              <strong> Medición de Coordenadas: </strong>
+              Al seleccionar el botón aparece una lista para arrojar el resultado de las coordenadas que puede
+              ser en Grados o DMS.
+            </li>
+            <img src="assets/images/help/21.JPG" alt="" title="" />
+
+          </ul>
+
+          <h2 id="h-seleccionar">Herramientas de Selección</h2>
+
+          <ul class="list-unstyled spaced">
+            <li>
+              <img src="assets/images/help/22.jpg" alt="" title="" />
+
+              Al seleccionar el botón puedes seleccionar capas a partir de una geometría. Las Geometrías para
+              seleccionar las capas son: Punto, Línea, Línea Libre, Polígono y Polígono Libre.
+            </li>
+            <img src="assets/images/help/23.jpg" alt="" title="" />
+          </ul>
+          <h3>Pasos</h3>
+
+          <ul class="list-unstyled spaced">
+            <li>
+              <i class="icon-hand-up bigger-150 purple"></i>
+              <strong> Selección de Geometría: </strong>
+              Inicialmente debe seleccionar la Geometría con la cual quiere seleccionar. Al seleccionar la
+              geometria en el cursor se mostrarn las instrucciones para dibujarla.
+            </li>
+
+            <li>
+              <i class="icon-location-arrow bigger-150 purple"></i>
+              <strong> Dibuje Geometría: </strong>
+              Dibuje geometría seleccionada a partir de un clic para puntos y para las demás herramientas
+              como: línea, línea libre, polígono y polígono libre haga clic y sostenga mientras mueve el mouse
+              hasta terminar.
+            </li>
+          </ul>
+
+          <h3>Resultados</h3>
+          <p>Como Resultado se obtendrá el número de elementos seleccionador de la capa de trabajo con su
+            respectiva la tabla de atributos</p>
+
+          <h2 id="h-informacion">Herramientas de Información</h2>
+
+          <ul class="list-unstyled spaced">
+            <li>
+              <img src="assets/images/help/24.jpg" alt="" title="" />
+
+              Con esta herramienta puedes obtener información detallada de atributos de cada capa de trabajo a
+              partir de un clic.
+            </li>
+
+            <h3>Pasos</h3>
+
+            <li>
+              <i class="icon-hand-up bigger-150 purple"></i>
+              <strong> Selección sobre Mapa: </strong>
+              A partir de la seleccion de la herramieeta, dar clic sobre el mapa en el punto donde se desea
+              extraer la informacion puntual.
+            </li>
+            <h3>Resultado</h3>
+            <p>Como resultado se obtiene un cuadro que contiene información de las capas del punto seleccionado.
+            </p>
+            <p>Abajo se muestra a modo de ejemplo el resultado de un determinado punto, en el cual existe
+              información de cinco elementos. La informacion de cada elemento se puede visualizar al rotar el
+              cuadro de informacion a partir de la flecha en la parte superior derecha. En este caso se tiene
+              5 elementos enre los que estan: tres elementos de tierreas, una cuenca sedimentaria y un
+              departamento.</p>
+            <img src="assets/images/help/25.jpg" alt="" title="" />
+            <p> Adicionalmente si mueves el cuadro de informacion simpre tendar el punto de informacion
+              señalado, ya que si el cuadro se desplaza conserva una line que te guia al punto de seleccion
+              para extracción de la información. como se muestra abajo.</p>
+
+            <img src="assets/images/help/25_1.JPG" alt="" title="" />
+
+
+          </ul>
+
+          <h2 id="h-importar">Importar Capas</h2>
+          <p>En el Geovisor ANH se puede incluir capas de diferentes formatos o servicios, con el fin que trabaje
+            sobre sus propias capas y puedan ser visualizadas sobre la información cartográfica establecida por
+            la Agencia Nacional de Hidrocarburos (ANH). Los formatos y servicios en que puedes la información
+            son: Shapefile, Archivo CSV, Archivo GPX, Servicio KML y Servicio WMS.</p>
+
+          <p>Para importar una capa debes desplegar del menú de herramientas "Mis Capas", donde se encuentran los
+            formatos y los servicios.</p>
+          <img src="assets/images/help/26.jpg" alt="" title="" />
+          <p>Para cargar una capa, es necesario seguir los siguientes pasos en cualquiera de los formatos (Shp,
+            CSV o GPX).</p>
+
+          <ul class="list-unstyled spaced">
+            <h3>Pasos</h3>
+
+            <li>
+              <i class="icon-hand-up bigger-150 purple"></i>
+              <strong> Selección: </strong>
+              Debes seleccionar que tipo de archivo deseas cargar (ShapeFile, CSV, o GPX).
+            </li>
+
+            <li>
+              <i class="icon-folder-open-o bigger-150 purple"></i>
+              <strong> Abrir </strong>
+              un archivo local
+            </li>
+
+            <li>
+              <i class="icon-upload bigger-150 purple"></i>
+              <strong> Cargar </strong>
+              Seleccionar el botón "Cargar" para incluir información sobre el mapa
+            </li>
+            <h3>Ejecución</h3>
+          </ul>
+          <p> A continuacion se detalla la ejecucion de importar una capa en formato Shapefile (shp). Para los
+            archivod CSV y GPX se sigue el mismos procedimiento</p>
+          <ol>
+            <li>A partir de un clic selecciona un archivo local</li>
+            <img src="assets/images/help/27.jpg" alt="" title="" />
+            <p></p>
+            <li>Posteriormente carga el archivo sobre el mapa, este será visualizado sobre el mapa y está
+              incluido en las convenciones</li>
+            <p></p>
+            <img src="assets/images/help/28.jpg" alt="" title="" />
+            <p></p>
+            Al cargar a el archivo tipo Shapefile comprimido en ZIP, tienes las opciones de cambiar el archivo
+            por otro a partir del botón "Cambiar", o borrar el archivo a aprtir del botón "Borrar" o la "X"
+            presente en el cuadro.
+            <li>A partir de un clic selecciona un archivo local</li>
+          </ol>
+
+          <p>Para cargar un servicio es necesario seguir los siguientes pasos:</p>
+          <ul class="list-unstyled spaced">
+            <h3>Pasos</h3>
+            <li>
+              <i class="icon-hand-up bigger-150 purple"></i>
+              <strong> Selección: </strong>
+              Debes seleccionar que tipo de servicio deseas cargar (KML o WMS).
+            </li>
+
+            <li>
+              <i class="icon-terminal bigger-150 purple"></i>
+              <strong> Direccion URL: </strong>
+              Digite la Direccion URL del servicio
+            </li>
+
+            <li>
+              <i class="icon-upload bigger-150 purple"></i>
+              <strong> Cargar: </strong>
+              Seleccionar el botón "Cargar" para acceder al servicio
+            </li>
+            <h3>Ejecución</h3>
+          </ul>
+          <p> A continuación se detalla el procedimiento de Carga un Servicio KML, y se sigue el mismo
+            procedimiento para WMS.</p>
+          <ol>
+            <li>Escribe la dirección URL donde se encuentra alojado el Servicio, tenga en cuenta las siguientes
+              recomendaciones:</li>
+
+            <ul class="list-unstyled">
+              <li>
+                <i class="icon-caret-right blue"></i>
+                Si es un servicio WMS, debe estar bien escrita la dirección, algunos parámetros no son
+                permitidos.
+              </li>
+
+
+              <li>
+                <i class="icon-caret-right blue"></i>
+                Si es un servicio cifrado por contraseña debe seguir ciertos requisitos para su carga.
+              </li>
+            </ul>
+
+            <img src="assets/images/help/29.jpg" alt="" title="" />
+            <p></p>
+
+          </ol>
+
+          <h3>Resultado</h3>
+          <p>Como resultado se adiciona el Geoservicio con todas las capas que contenga, en la posición geográfica
+            que corresponda, como una nueva capa del mapa. La nueva capa se puede activar/desactivar desde la
+            tabla de contenidos y aparece en la leyenda. Sin embargo la capas adicionadas por estos servicios
+            (KML o WMS), no pueden ser seleccionadas como capas de trabajo y en consecuencia tampoco se puede
+            acceder a sus atributos.</p>
+
+          <h2 id="h-extraer">Extraer Datos</h2>
+          <p>Esta función te permite la exportación de datos de una zona determinada de las capas funcionales del
+            Geovisor, en Shapefile.</p>
+          <img src="assets/images/help/30.jpg" alt="" title="" />
+
+          <ul class="list-unstyled spaced">
+            <h3>Pasos</h3>
+
+            <li>
+              <i class="icon-hand-up bigger-150 purple"></i>
+              <strong> Área de Interés </strong>
+              Inicialmente debes definir el área de interés a partir de polígono o polígono libre, a partir de
+              la lista de selección.
+            </li>
+
+            <li>
+              <i class="icon-location-arrow bigger-150 purple"></i>
+              <strong> Dibuje Geometría </strong>
+              Dibuja geometría seleccionada a partir de clic y sostenga mientras mueve el mouse hasta
+              terminar.
+            </li>
+
+            <li>
+              <i class="icon-square-o bigger-150 purple"></i>
+              <strong> Seleccione Capas </strong>
+              Debes seleccionar las capas que deseas extraer.
+            </li>
+          </ul>
+          <h3>Ejecución</h3>
+          <ol>
+            <li>Para la extracción de datos es necesario definir el área de interés, la selección se hará en la
+              capa de trabajo.</li>
+            <p></p>
+            <li>Posteriormente puedes seleccionar las capas a extraer a partir de la lista de selección</li>
+            <p></p>
+            <img src="assets/images/help/31.JPG" alt="" title="" />
+            <p></p>
+          </ol>
+
+          <p>Como resultado se descarga en un zip los datos seleccionados para la extracción.</p>
+
+          <h2 id="h-espacial">Herramientas de Análisis Espacial</h2>
+          <p>La herramientas contenidas en este menú, brindan una opción de análisis espacial a partir de la
+            ubicación de Coordenadas, Análisis de Cobertura, Zonas de Influencia y Cambio de Simbología, como se
+            detalla a continuación.</p>
+          <img src="assets/images/help/32.jpg" title="" />
+          <h3>Ubicar Coordenada</h3>
+          <p>En el Geovisor ANH puedes realizar la ubicación de un punto a partir de su coordenada en Unidades de
+            Coordenadas y sistemas de referencia establecidos por el administrador.</p>
+          <img src="assets/images/help/33.jpg" alt="" title="" />
+          <ul class="list-unstyled spaced">
+            <h3>Pasos</h3>
+
+            <li>
+              <i class="icon-thumb-tack bigger-150 purple"></i>
+              <strong> Unidades de Coordenada: </strong>
+              Debes seleccionar las unidades de coordenada.
+            </li>
+
+            <li>
+              <i class="icon-globe bigger-150 purple"></i>
+              <strong> Sistema de Referencia: </strong>
+              Selecciona el sistema de referencia.
+            </li>
+
+            <li>
+              <i class="icon-pencil-square-o bigger-150 purple"></i>
+              <strong> Ingrese Coordenada: </strong>
+              Digita las Coordenadas dependiendo de las selecciones anteriores.
+            </li>
+
+            <li>
+              <i class="icon-dot-circle-o bigger-150 purple"></i>
+              <strong> Ubicar: </strong>
+              Selecciona el botón ubicar para crear punto sobre el mapa.
+            </li>
+            <h3>Ejecución</h3>
+          </ul>
+
+          <ol>
+            <li>Selecciona las Unidades de Coordenadas, a partir de lista de selección:</li>
+            <ul class="list-unstyled">
+              <li><i class="icon-caret-right blue"></i>
+                Grados Minutos y segundos.</li>
+
+              <li><i class="icon-caret-right blue"></i>
+                Grados y Minutos Decimales</li>
+              <li><i class="icon-caret-right blue"></i>
+                Grados Decimales</li>
+              <li><i class="icon-caret-right blue"></i>
+                Metros</li>
+            </ul>
+            <img src="assets/images/help/34.jpg" alt="" title="" />
+            <p></p>
+            <li>Selecciona de Sistema de Referencia a partir de lista de selección. Para la opción de Grados,
+              Minutos y segundos, Grados y Minutos Decimales y, Grados Decimales, el sistema de referencia es
+              MAGNA SIRGAS WGS84.<p>Y para la las unidades de Coordenadas en metros los sistemas de referencia
+                pueden ser: MAGNA-SIRGAS, Origen Bogotá, Este Central, Este Este, Oeste y Oeste Oeste.</p>
+            </li>
+            <p></p>
+            <img src="assets/images/help/35.jpg" alt="" title="" />
+            <p></p>
+
+            <li>Debes ingresar las coordenadas teniendo en cuenta que se debe llenar cada espacio subrayados con
+              dígitos de 0 y 9. Si se desea utilizar un solo dígitos use un cero al inicio. A continuación se
+              ilustra a modo de ejemplo las coordenadas para cada Unidad de coordenada.
+            </li>
+            <p></p>
+            <ul class="list-unstyled">
+              <li><i class="icon-caret-right blue"></i>
+                Grados Minutos y segundos.</li>
+              <img src="assets/images/help/36.JPG" alt="" title="" />
+
+              <li><i class="icon-caret-right blue"></i>
+                Grados y Minutos Decimales</li>
+              <img src="assets/images/help/37.JPG" alt="" title="" />
+              <li><i class="icon-caret-right blue"></i>
+                Grados Decimales</li>
+              <img src="assets/images/help/38.JPG" alt="" title="" />
+              <li><i class="icon-caret-right blue"></i>
+                Metros</li>
+              <img src="assets/images/help/39.JPG" alt="" title="" />
+            </ul>
+
+            <p></p>
+            <li>Finalmente selecciona el botón ubicar para crear el punto en la coordenada digitada. </li>
+          </ol>
+
+          <h3>Análisis de Cobertura</h3>
+          <p>Con este análisis se obtiene los Bloques Exploratorios que se encuentran en la jurisdicción del
+            Departamento. Para la ejecución de esta Herramienta debes seguir los siguientes pasos.</p>
+
+          <img src="assets/images/help/40.jpg" alt="" title="" />
+          <ul class="list-unstyled spaced">
+            <h3>Pasos</h3>
+
+            <li>
+              <i class="icon-square-o bigger-150 purple"></i>
+              <strong> Selección de Departamentos: </strong>
+              Debes seleccionar los departamentos con los cuales quieres trabajar, esto se puede hacer a
+              partir de la tabla de atributos o la selección directa sobre el mapa a partir de la herramienta
+              de selección .
+            </li>
+
+            <li>
+              <i class="icon-hand-up bigger-150 purple"></i>
+              <strong> Análisis de Cobertura: </strong>
+              Selecciona el botón "Iniciar Análisis de Cobertura".
+            </li>
+
+            <h3>Ejecución</h3>
+          </ul>
+          <ol>
+            <li>Selecciona Departamentos para el análisis a partir de la tabla de atributos o la herramienta de
+              selección.</li>
+
+            <li>Con los departamentos seleccionados haz clic en el botón Iniciar Análisis de Cobertura.</li>
+            <p></p>
+            <img src="assets/images/help/41.jpg" alt="" title="" />
+            <p></p>
+          </ol>
+          <h3>Resultado</h3>
+          <p>Como resultado obtienes un archivo zip, que contiene el Shapefile con la información del porcentaje
+            de cobertura de cada bloque.</p>
+
+          <h3>Zona de Influencia (Buffer)</h3>
+          <p>Esta función permite dibujar un gráfico y aplicarle una simetría (buffer) alrededor a partir de una
+            distancia determinada.</p>
+          <img src="assets/images/help/42.jpg" alt="" title="" />
+
+
+          <ul class="list-unstyled spaced">
+            <h3>Pasos</h3>
+
+            <li>
+              <i class="icon-resize-full bigger-150 purple"></i>
+              <strong> Defina Anchura: </strong>
+              Ingresa número de Anchura
+            </li>
+
+            <li>
+              <i class="icon-resize-horizontal  bigger-150 purple"></i>
+              <strong> Unidades de Medida: </strong>
+              Escoge las unidades de medida que desees.
+            </li>
+
+            <li>
+              <i class="icon-square-o bigger-150 purple"></i>
+              <strong> Geometría: </strong>
+              Escoge Geometría y dibuje sobre el mapa
+            </li>
+
+            <h3>Ejecución</h3>
+          </ul>
+          <ol>
+            <li>Digita un valor de distancia teniendo en cuenta la unidad de medida del paso siguiente</li>
+
+            <li>Elige de la lista la unidad de medida correspondiente (Km, Metros, Millas, Pies, Grados).</li>
+            <p></p>
+            <img src="assets/images/help/43.jpg" alt="" title="" />
+            <p></p>
+            <li>Da clic en el botón que corresponda con el tipo de gráfico o geometría que deseas utilizar
+              (Línea, Polilínea libre, Polígono, Polígono libre).</li>
+            <img src="assets/images/help/44.JPG" alt="" title="" />
+
+            <li>Dibuja sobre el mapa una línea o polígono según el tipo de geometría elegido del paso anterior.
+              Al seleccionar le Geometría el cursor tendrá una guia</li>
+            <ul class="list-unstyled">
+              <li><i class="icon-caret-right blue"></i>
+                <strong>Línea: </strong>Clic sobre el mapa para añadir un vértice, doble clic para finalizar
+              </li>
+              <li><i class="icon-caret-right blue"></i>
+                <strong>Polilínea libre: </strong>Clic sostenido sobre el mapa para dibujar una polilínea,
+                soltar clic para finalizar.</li>
+              <li><i class="icon-caret-right blue"></i>
+                <strong>Polígono: </strong>Clic sobre el mapa para añadir un vértice, doble clic para cerrar
+              </li>
+              <li><i class="icon-caret-right blue"></i>
+                <strong>Polígono libre: </strong>Clic sostenido sobre el mapa para dibujar un polígono,
+                soltar clic para finalizar.</li>
+            </ul>
+            <li>Se genera un gráfico según la figura geométrica dibujada sobre el mapa y se muestra una simetría
+              (buffer) alrededor con otra tonalidad de color y según la distancia o radio elegido.</li>
+          </ol>
+
+          <h3>Cambiar Simbología</h3>
+          <p>Esta función permite modificar la simbología de las capas a partir del cambio del color del borde, el
+            relleno y grosor del borde de la capa actual de trabajo .</p>
+          <img src="assets/images/help/45.jpg" alt="" title="" />
+
+          <h3>Ejecución</h3>
+
+          <ol>
+            <li>Selecciona color a partir de cuadro de colores tanto para el borde como para el relleno</li>
+            <p></p>
+            <img src="assets/images/help/46.jpg" alt="" title="" />
+            <p></p>
+
+            <li>Digita o escoje el grosor del borde en un intervalo de 0 a 10</li>
+            <li>Selecciona el botón Aplicar Colores</li>
+
+          </ol>
+          <h3>Resultados</h3>
+          <p>Se cambia la simbología del borde y relleno de capa actual que en este caso es Departamentos
+            ilustrados abajo.</p>
+          <img src="assets/images/help/47.jpg" alt="" title="" />
+
+          <h3>Impresión</h3>
+          <p>Esta función te permite realizar una impresión del mapa en la extensión y escala actual .Para
+            realizar la impresión puedes elegir una plantilla y formato de PDF y PNG (Imagen).</p>
+
+          <p>Además de forma predeterminada se cuenta con una serie de plantillas que puedes seleccionar. Cada
+            plantilla se conforma de un rótulo, tamaño y elementos particulares como norte, leyenda, etc.</p>
+          <img src="assets/images/help/48.jpg" alt="" title="" />
+
+          <p>Previamente debes seleccionar la escala del mapa utilizando la herramienta de navegación "Escala" o
+            con las herramientas acercar/alejar o realizando una consulta, búsqueda o selección.</p>
+
+
+          <ul class="list-unstyled spaced">
+            <h3>Pasos</h3>
+
+            <li>
+              <i class="icon-hand-up bigger-150 purple"></i>
+              <strong> Elija Formato de Impresión: </strong>
+              El formato puede ser PDF o Imagen
+            </li>
+
+            <li>
+              <i class="icon-file-alt  bigger-150 purple"></i>
+              <strong> Elija Plantilla: </strong>
+              Escoja plantillas predeterminadas.
+            </li>
+
+          </ul>
+          <p>Para descargarla al disco el usuario debe dar clic derecho en la página y elegir la opción "guardar
+            imagen como…", en caso de PNG, o "Guardar como…" en caso de PDF.</p>
+
+
+          <h3>Resultados</h3>
+          <p>Se abre un aviso reportando que el archivo de impresión ya está creado, con las características
+            seleccionadas.</p>
+          <img src="assets/images/help/49.jpg" alt="" title="" />
+          <p>El mapa obtenido contiene valor de escala, rotulo, leyenda y otros elementos según la plantilla
+            preestablecida utilizada.</p>
+
+          <img src="assets/images/help/50.jpg" alt="" title="" />
+
+          <h3>Mapa Base</h3>
+          <p>Esta herramienta te permite cambiar al mapa base, haciendo clic sobre la imagen que corresponda al
+            nuevo mapa.</p>
+          <img src="assets/images/help/51.jpg" alt="" title="" />
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

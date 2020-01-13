@@ -39,6 +39,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
   attributeTable: any;
   leftDialog: number = 200;
   about: boolean = false;
+  guide: boolean = false;
   /* layerSelected: Array<any> = []; */
   activeWidget: any;
   tsLayer: any;
@@ -1570,6 +1571,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
 
   onShowAbout() {
     this.about = true;
+  }
+
+  onShowGuide() {
+    this.guide = true;
   }
 
 }

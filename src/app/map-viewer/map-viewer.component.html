@@ -160,7 +160,7 @@
     <div class="p-grid p-dir-col">
       <div class="p-col">
         <button pButton type="button" label="Abrir Guía del Usuario" class="ui-button-raised"
-          icon="fa fa-book-open"></button>
+          icon="fa fa-book-open" (click)="onShowGuide()"></button>
       </div>
       <div class="p-col">
         <button pButton type="button" label="Acerca de Geovisor ANH" class="ui-button-raised ui-button-secondary"
@@ -174,3 +174,6 @@
   <app-dialog-about></app-dialog-about>
 </p-dialog>
 
+<p-dialog header="Ayuda del Geovisor ANH v3" [(visible)]="guide" [resizable]="false">
+  <app-dialog-guide></app-dialog-guide>
+</p-dialog>

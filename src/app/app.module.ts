@@ -30,6 +30,7 @@ import {ColorPickerModule} from 'primeng/colorpicker';
 import { DialogSymbologyChangeComponent } from './dialog-symbology-change/dialog-symbology-change.component';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import { DialogAboutComponent } from './dialog-about/dialog-about.component';
+import { DialogGuideComponent } from './dialog-guide/dialog-guide.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { DialogAboutComponent } from './dialog-about/dialog-about.component';
     DialogTerminosComponent,
     AttributesTableComponent,
     DialogSymbologyChangeComponent,
-    DialogAboutComponent
+    DialogAboutComponent,
+    DialogGuideComponent
   ],
   imports: [
     BrowserModule,
