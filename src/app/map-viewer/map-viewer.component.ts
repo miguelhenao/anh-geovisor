@@ -15,7 +15,7 @@ import { DialogSymbologyChangeComponent } from '../dialog-symbology-change/dialo
   styleUrls: ['./map-viewer.component.css'],
   providers: [DialogService, MessageService]
 })
-export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, OnChanges {
+export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
   view: any;
@@ -198,7 +198,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
                 header: 'Cargar servicio KML',
               });
               dialog.onClose.subscribe(res => {
-                console.log(res);
                 loadModules(['esri/layers/KMLLayer']).then(([KMLLayer]) => {
                   this.makingWork = true;
                   (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-kml');
@@ -220,7 +219,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
                 header: 'Cargar servicio WMS',
               });
               dialog.onClose.subscribe(res => {
-                console.log(res);
                 loadModules(['esri/layers/WMSLayer']).then(([WMSLayer]) => {
                   this.makingWork = true;
                   (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-wms');
@@ -242,7 +240,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
                 header: 'Cargar servicio geoJSON'
               });
               dialog.onClose.subscribe(res => {
-                console.log(res);
                 loadModules(['esri/layers/GeoJSONLayer']).then(([GeoJSONLayer]) => {
                   this.makingWork = true;
                   (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-geojson');
@@ -264,7 +261,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
                 header: 'Cargar servicio CSV'
               });
               dialog.onClose.subscribe(res => {
-                console.log(res);
                 loadModules(['esri/layers/CSVLayer']).then(([CSVLayer]) => {
                   this.makingWork = true;
                   (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-csv');
@@ -305,53 +301,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         label: 'Herramientas',
         icon: 'fa fa-gear',
         items: [
-          /* {
-            label: 'Analisis de Cobertura',
-            command: () => {
-              this.displayAnalisis = true;
-              this.attributeTable.expand();
-            }
-          }, */
           {
             label: 'Zona de Influencia (Buffer)',
             command: () => {
               this.visibleMenu = false;
               this.displayBuffer = true;
-            }
-          },
-          {
-            label: 'Cambiar simbologia',
-            command: () => {
-              const dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
-                width: '25%',
-                header: 'Cambio de Simbología'
-              });
-              dialog.onClose.subscribe(res => {
-                if (res != undefined) {
-                  (window as any).ga('send', 'event', 'BUTTON', 'click', 'symbol-start');
-                  this.makingWork = true;
-                  loadModules(['esri/symbols/SimpleMarkerSymbol', 'esri/symbols/SimpleFillSymbol',
-                    'esri/symbols/SimpleLineSymbol', 'esri/Color', 'esri/renderers/SimpleRenderer']).then(([
-                      SimpleMarkerSymbol, SimpleFillSymbol, SimpleLineSymbol, Color, SimpleRenderer]) => {
-                      let defaultSymbol: any;
-                      switch (this.departmentLayer.geometryType) {
-                        case 'point':
-                          defaultSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 8, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), 1), new Color(res.fillColor));
-                          break;
-                        case 'polygon':
-                          defaultSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), res.borderSize), new Color(res.fillColor));
-                          break;
-                        case 'polyline':
-                          defaultSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), res.borderSize);
-                          break;
-                      }
-                      const renderer = new SimpleRenderer();
-                      renderer.symbol = defaultSymbol;
-                      this.layerList.selectedItems.items[0].layer.renderer = renderer;
-                    });
-                  this.makingWork = false;
-                }
-              });
             }
           }
         ]
@@ -368,7 +322,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
   }
 
   ngAfterViewChecked() {
-    /* let layerList: HTMLCollection = document.getElementsByClassName("esri-layer-list__item--selectable");
+    /* let layerList: HTMLCollection = document.getElementsByClassName('esri-layer-list__item--selectable');
     for (let index = 0; index < layerList.length; index++) {
       const element = layerList[index];
       element.addEventListener('click', this.clickItemLayer);
@@ -380,9 +334,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
     if (this.layerList.selectedItems.items[0].layer != undefined) {
       let layer = this.layerList.selectedItems.items[0].layer;
       let query = {
-        outFields: ["*"],
+        outFields: ['*'],
         returnGeometry: false,
-        where: ""
+        where: ''
       }
       layer.queryFeatures(query).then((result) => {
         this.featureDptos = result.features;
@@ -839,8 +793,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       });
       this.view.when(() => {
         layerList.on('trigger-action', (event) => {
+          const layer = event.item.layer;
           if (event.action.id === 'attr-table') {
-            const layer = event.item.layer;
             const query = {
               outFields: ['*'],
               returnGeometry: false,
@@ -855,7 +809,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
               console.log(err);
             });
           } else if (event.action.id === 'analisis') {
-            const layer = event.item.layer;
             const query = {
               outFields: ['*'],
               returnGeometry: false,
@@ -870,21 +823,50 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
                 dptos.push(dpto);
               }
               this.featureDptos = dptos;
-              console.log(this.featureDptos);
               this.dptosSelected = [];
               this.layerSelected = layer;
               this.displayAnalisis = true;
             }, (err) => {
               console.log(err);
             });
+          } else if (event.action.id == 'simbologia') {
+            let dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
+              width: '25%',
+              header: `Cambio de Simbología ${layer.title}`
+            });
+            dialog.onClose.subscribe(res => {
+              if (res != undefined) {
+                (<any>window).ga('send', 'event', 'BUTTON', 'click', 'symbol-start');
+                this.makingWork = true;
+                loadModules(['esri/symbols/SimpleMarkerSymbol', 'esri/symbols/SimpleFillSymbol',
+                  'esri/symbols/SimpleLineSymbol', 'esri/Color', 'esri/renderers/SimpleRenderer']).then(([
+                    SimpleMarkerSymbol, SimpleFillSymbol, SimpleLineSymbol, Color, SimpleRenderer]) => {
+                    let defaultSymbol: any;
+                    switch (layer.geometryType) {
+                      case 'point':
+                        defaultSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 8, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), 1), new Color(res.fillColor));
+                        break;
+                      case 'polygon':
+                        defaultSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), res.borderSize), new Color(res.fillColor));
+                        break;
+                      case 'polyline':
+                        defaultSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), res.borderSize);
+                        break;
+                    }
+                    let renderer = new SimpleRenderer();
+                    renderer.symbol = defaultSymbol;
+                    layer.renderer = renderer;
+                  });
+                this.makingWork = false;
+              }
+            })
           }
         });
       });
       const item = new ListItem({ layer: lyTierras });
       layerList.selectedItems.add(item);
       this.layerList = layerList;
-      console.log(this.layerList);
-      const layerListExpand = new Expand({
+      let layerListExpand = new Expand({
         expandIconClass: 'esri-icon-layers',
         expandTooltip: 'Tabla de contenido',
         view: this.view,
@@ -1063,14 +1045,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
     this.initializeMap();
   }
 
-  ngOnChanges() {
-    console.log('cambio');
-  }
-
-  onClickItem(event: any): void {
-    console.log(event);
-  }
-
   public onHideDialogMedicion(): void {
     this.setActiveButton(null);
     this.setActiveWidget(null);
@@ -1179,15 +1153,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
 
   async addShapefileToMap(featureCollection) {
     const [FeatureLayer, Graphic, Field] = await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/layers/support/Field']);
-    var layerName = featureCollection.data.featureCollection.layers[0].layerDefinition.name;
-    var sourceGraphics = [];
-    console.log(featureCollection);
-    var layers = featureCollection.data.featureCollection.layers.map((layer) => {
-      var graphics = layer.featureSet.features.map((feature) => {
+    let layerName = featureCollection.data.featureCollection.layers[0].layerDefinition.name;
+    let sourceGraphics = [];
+    let layers = featureCollection.data.featureCollection.layers.map((layer) => {
+      let graphics = layer.featureSet.features.map((feature) => {
         return Graphic.fromJSON(feature);
       });
       sourceGraphics = sourceGraphics.concat(graphics);
-      var featureLayer = new FeatureLayer({
+      let featureLayer = new FeatureLayer({
         title: layerName,
         objectIdField: 'FID',
         source: graphics,
@@ -1205,18 +1178,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
     const [FeatureLayer, PopupTemplate, Graphic, Field, SimpleRenderer] =
       await loadModules([
         'esri/layers/FeatureLayer', 'esri/PopupTemplate', 'esri/Graphic', 'esri/layers/support/Field', 'esri/renderers/SimpleRenderer']);
-    var filename = featureCollection.layers[0].featureSet.features[0].attributes.name;
-    var sourceGraphics = [];
-    var layers = featureCollection.layers.map((layer) => {
-      var graphics = layer.featureSet.features.map((feature) => {
+    let filename = featureCollection.layers[0].featureSet.features[0].attributes.name;
+    let sourceGraphics = [];
+    let layers = featureCollection.layers.map((layer) => {
+      let graphics = layer.featureSet.features.map((feature) => {
         return Graphic.fromJSON(feature);
       });
       sourceGraphics = sourceGraphics.concat(graphics);
-      var popup = new PopupTemplate({
+      let popup = new PopupTemplate({
         title: 'Atributos GPX',
         content: '${*}'
       });
-      var featureLayer = new FeatureLayer({
+      let featureLayer = new FeatureLayer({
         title: filename,
         objectIdField: 'FID',
         source: graphics,
@@ -1234,8 +1207,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
 
   async addGeoJSONToMap(featureCollection) {
     const [Graphic, FeatureLayer, Field] = await loadModules(['esri/Graphic', 'esri/layers/FeatureLayer', 'esri/layers/support/Field']);
-    var sourceGraphics = [];
-    var graphics = featureCollection.features.map((feature) => {
+    let sourceGraphics = [];
+    let graphics = featureCollection.features.map((feature) => {
       return Graphic.fromJSON(geojsonToArcGIS(feature));
     });
     sourceGraphics = sourceGraphics.concat(graphics);
@@ -1246,7 +1219,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         type: 'oid'
       })
     ];
-    var featureLayer = new FeatureLayer({
+    let featureLayer = new FeatureLayer({
       title: 'GeoJSON',
       source: graphics,
       fields: fields
@@ -1321,8 +1294,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
             const sourceSearch = this.sourceSearch.splice(0, 8);
             sourceSearch.push({
               layer: lyTierrasMdt,
-              searchFields: ['DEPARTAMEN'],
-              displayField: 'DEPARTAMEN',
+              searchFields: ['TIERRAS_ID'],
+              displayField: 'TIERRAS_ID',
               exactMatch: false,
               outFields: ['*'],
               name: lyTierrasMdt.title,
@@ -1409,7 +1382,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         gpExtract.waitForJobCompletion(jobInfo.jobId, options).then((jobInfo2) => {
           if (!jobInfo2.jobStatus.includes('fail')) {
             gpExtract.getResultData(jobInfo.jobId, 'Output_Zip_File').then((outputFile) => {
-              var theurl = outputFile.value.url;
+              let theurl = outputFile.value.url;
               window.location = theurl;
             });
           } else {
@@ -1544,7 +1517,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
   onHideDialogAnalisis() {
     this.layerSelected = [];
     this.attributeTable.collapse();
-    console.log(this.layerList);
     this.displayAnalisis = false;
   }
 
@@ -1574,6 +1546,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
 
   onShowGuide() {
     this.guide = true;
+  }
+
+  public attrFilter(col: string): string {
+    return `attributes.${col}`;
   }
 
 }
