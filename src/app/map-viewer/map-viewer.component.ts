@@ -84,6 +84,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
   visibleMenu = false;
   importCsv = new ImportCSV();
   bufDistance: string;
+  magnaSirgas = {
+    x: null,
+    y: null
+  };
+  magnaSirgasFlag = false;
 
   modes: SelectItem[] = [
     { value: 'point', title: 'Punto', icon: 'fa fa-fw fa-circle' },
@@ -811,7 +816,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
             params.geometries = [e.mapPoint];
             params.outSR = outSR;
             geomSvc.project(params).then((response) => {
-              console.log(response[0]);
+              this.magnaSirgas.x = response[0].x.toFixed(4);
+              this.magnaSirgas.y = response[0].y.toFixed(4);
+              this.magnaSirgasFlag = true;
             });
           }
         }
@@ -1112,6 +1119,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       let container = document.createElement("div");
       container.id = "divWidget";
       document.getElementById("widgetMeasure").appendChild(container);
+      this.magnaSirgasFlag = false;
       switch (type) {
         case "distance":
           this.activeWidget = new DistanceMeasurement2D({

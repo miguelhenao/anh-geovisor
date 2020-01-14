@@ -96,11 +96,11 @@
     <h3 style="text-align: center;">Resultado de la Medición</h3>
     <hr>
   </div>
-  <div class="magna" style="background-color: #DEF0D8;">
+  <div class="magna" style="background-color: #DEF0D8;" *ngIf="magnaSirgasFlag">
     <div>
       <p>MAGNA-SIRGAS Origen Central</p>
-      <p>X(Este):</p>
-      <p>Y(Norte):</p>
+      <p>X(Este): {{magnaSirgas.x || ''}}</p>
+      <p>Y(Norte): {{magnaSirgas.y || ''}}</p>
     </div>
   </div>
   <p-message id="infoMedicion" severity="info"
