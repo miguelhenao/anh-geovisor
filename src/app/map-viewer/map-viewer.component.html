@@ -33,7 +33,7 @@
 <!-- Fin del tierra slider del mapa -->
 
 <!-- Modal de extracción de datos -->
-<p-dialog header="Extracción de datos" [(visible)]="display" [resizable]="false" (onHide)="onHideDialogExtract()"
+<p-dialog header="Extracción de datos" [(visible)]="displayExtract" [resizable]="false" (onHide)="onHideDialogExtract()"
   [positionTop]="0">
   <div id="infoDiv">
     <p>1. Defina el área de interés</p>
@@ -165,16 +165,6 @@
 <!-- Div contenedor del widget de ayuda -->
 <div id="help" class="esri-widget">
   <div *ngIf="loadLayers == 10">
-    <!-- <h3>
-      <div class="title-help p-grid">
-        <div class="p-col-1">
-          <i class="pi pi-comment" style="font-size: 1.5em"></i>
-        </div>
-        <div class="p-col-11">
-          <span>Bienvenido al Geovisor ANH</span>
-        </div>
-      </div>
-    </h3> -->
     <div class="title-help">
       <div class="icon">
         <i class="pi pi-comment" style="font-size: 2em"></i>

@@ -405,7 +405,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       lyPozo.load().then(() => {
         let text = '';
+        let searchField: Array<any> = [];
         for (const field of lyPozo.fields) {
+          field.type == "string" || field.type == "double" ? searchField.push(field.name) : null;
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templatePozo = {
@@ -416,8 +418,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         const sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
           layer: lyPozo,
-          searchFields: ['well_name'],
-          displayField: 'well_name',
+          searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
           name: lyPozo.title
@@ -439,7 +440,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       lyRezumadero.load().then(() => {
         let text = '';
+        let searchField: Array<any> = [];
         for (const field of lyRezumadero.fields) {
+          field.type == "string" || field.type == "double" ? searchField.push(field.name) : null;
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateRezumadero = {
@@ -450,8 +453,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         const sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
           layer: lyRezumadero,
-          searchFields: ['Rezumadero'],
-          displayField: 'Rezumadero',
+          searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
           name: lyRezumadero.title
@@ -473,7 +475,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       lySismica.load().then(() => {
         let text = '';
+        let searchField: Array<any> = [];
         for (const field of lySismica.fields) {
+          field.type == "string" || field.type == "double" ? searchField.push(field.name) : null;
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateSismica = {
@@ -484,8 +488,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         const sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
           layer: lySismica,
-          searchFields: ['SURVEY_NAM'],
-          displayField: 'SURVEY_NAM',
+          searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
           name: lySismica.title
@@ -507,7 +510,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       lySismica3d.load().then(() => {
         let text = '';
+        let searchField: Array<any> = [];
         for (const field of lySismica3d.fields) {
+          field.type == "string" || field.type == "double" ? searchField.push(field.name) : null;
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateSismica3d = {
@@ -518,8 +523,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         const sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
           layer: lySismica3d,
-          searchFields: ['NOMBRE'],
-          displayField: 'NOMBRE',
+          searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
           name: lySismica3d.title
@@ -541,7 +545,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       lyMunicipio.load().then(() => {
         let text = '';
+        let searchField: Array<any> = [];
         for (const field of lyMunicipio.fields) {
+          field.type == "string" || field.type == "double" ? searchField.push(field.name) : null;
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateMunicipio = {
@@ -552,8 +558,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         const sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
           layer: lyMunicipio,
-          searchFields: ['NOMBRE_ENT'],
-          displayField: 'NOMBRE_ENT',
+          searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
           name: lyMunicipio.title
@@ -574,11 +579,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
       lyDepartamento.load().then(() => {
+        let text = '';
+        let searchField: Array<any> = [];
+        for (const field of lyDepartamento.fields) {
+          field.type == "string" || field.type == "double" ? searchField.push(field.name) : null;
+          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
+        }
         const sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
           layer: lyDepartamento,
-          searchFields: ['DEPARTAMEN'],
-          displayField: 'DEPARTAMEN',
+          searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
           name: lyDepartamento.title,
@@ -587,10 +597,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
         this.search.sources = this.sourceSearch;
-        let text = '';
-        for (const field of lyDepartamento.fields) {
-          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
-        }
         const templateDepartamento = {
           title: 'Info',
           content: text,
@@ -610,7 +616,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       lyCuencas.load().then(() => {
         let text = '';
+        let searchField: Array<any> = [];
         for (const field of lyCuencas.fields) {
+          field.type == "string" || field.type == "double" ? searchField.push(field.name) : null;
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateCuencas = {
@@ -621,8 +629,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         const sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
           layer: lyCuencas,
-          searchFields: ['NOMBRE', 'FID_CUENCA'],
-          displayField: 'NOMBRE',
+          searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
           name: lyCuencas.title,
@@ -644,24 +651,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
       lyTierras.load().then(() => {
-        const query = {
-          outFields: ['*'],
-          returnGeometry: false,
-          where: ''
-        };
-        lyTierras.queryFeatures(query).then((result) => {
-          this.featureDptos = result.features;
-          this.columnsTable = Object.keys(this.featureDptos[0].attributes);
-        }, (err) => {
-          console.log(err);
-        });
         const searchField: Array<any> = [];
         let text = '';
         this.layerSelected = lyTierras;
         for (const field of lyTierras.fields) {
-          searchField.push(field.name);
+          field.type == "string" || field.type == "double" ? searchField.push(field.name) : null;
+          console.log(field.type);
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
+        console.log(searchField);
         const templateTierras = {
           title: 'Info',
           content: text,
@@ -670,8 +668,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         const sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
           layer: lyTierras,
-          searchFields: ['CONTRAT_ID'],
-          displayField: 'CONTRAT_ID',
+          searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
           name: lyTierras.title,
@@ -702,6 +699,33 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         outFields: ['*'],
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
+      });
+      lySensibilidad.load().then(() => {
+        const searchField: Array<any> = [];
+        let text = '';
+        this.layerSelected = lyTierras;
+        for (const field of lySensibilidad.fields) {
+          searchField.push(field.name);
+          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
+        }
+        const templateSensibilidad = {
+          title: 'Info',
+          content: text,
+          fieldInfos: []
+        };
+        const sourceSearch: Array<any> = this.sourceSearch.slice();
+        sourceSearch.push({
+          layer: lySensibilidad,
+          searchFields: searchField,
+          exactMatch: false,
+          outFields: ['*'],
+          name: lySensibilidad.title,
+          suggestionsEnabled: true,
+        });
+        this.sourceSearch = null;
+        this.sourceSearch = sourceSearch;
+        this.search.sources = this.sourceSearch;
+        lySensibilidad.popupTemplate = templateSensibilidad;
       });
       lySensibilidad.labelingInfo = [statesLabelClass];
       this.map.add(lySensibilidad);
