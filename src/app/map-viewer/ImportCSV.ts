@@ -2,7 +2,7 @@ import { loadModules } from 'esri-loader';
 const latFieldStrings = ['lat', 'latitude', 'y', 'ycenter'];
 const longFieldStrings = ['lon', 'long', 'longitude', 'x', 'xcenter'];
 export class ImportCSV {
-  agsUrlBase: string;
+  urlGeometryService: string;
   map;
   makingWork;
   view;
@@ -10,7 +10,7 @@ export class ImportCSV {
   coorGeoPlanas: string;
 
   public uploadFileCsv(files: Array<any>, coor: string, url: string, map: any, view: any,  makingWork: any): void {
-    this.agsUrlBase = url;
+    this.urlGeometryService = url;
     this.coorGeoPlanas = coor;
     this.map = map;
     this.view = view;
@@ -101,7 +101,7 @@ export class ImportCSV {
             });
             const outSR = new SpatialReference({ wkid: 102100 }); // ESRI Web Mercator
             const geomSvc = new GeometryService({
-              url: this.agsUrlBase + 'rest/services/Utilities/Geometry/GeometryServer'
+              url: this.urlGeometryService
             });
             const params = new ProjectParameters({
               geometries: arrGeom,

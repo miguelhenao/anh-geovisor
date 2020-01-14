@@ -52,8 +52,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   agsUrlBase = this.agsProtocol + '://' + this.agsHost + '/' + this.agsDir + '/';
   // Url servidor ArcGIS.com para servicios de conversión (sharing)
   sharingUrl = 'https://www.arcgis.com'; // importante que sea https para evitar problemas de SSL
-  // Url del servicio de impresión
-  printUrl = this.agsUrlBase + 'rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task';
+  // Url del servicio de impresión, por el momento no funciona
+  // printUrl = this.agsUrlBase + 'rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task';
+  // Url del servicio de impresión por defecto de Arcgis. Comentar o eliminar cuando funcione el servicio de ANH
+  printUrl = 'https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task';
+  // Geometry Service
+  urlGeometryService = this.agsUrlBase + 'rest/services/Utilities/Geometry/GeometryServer';
+  // Url del servicio rest para generar un feature collection
+  urlGenerateFeatureCollection = this.sharingUrl + '/sharing/rest/content/features/generate';
+  // Url del servicio para extraer capa
+  urlExtractShape = this.agsUrlBase + 'rest/services/ExtractShape/GPServer/ExtractShape';
+  // Url del servicio para realizar el análisis de cobertura
+  urlAnalisisCobertura = this.agsUrlBase + 'rest/services/AnalisisCobertura/GPServer/AnalisisCobertura';
   nameLayer: string;
   displayExtract = false;
   displayAnalisis = false;
@@ -147,7 +157,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 if (res !== undefined) {
                   this.makingWork = true;
                   (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-csv');
-                  this.importCsv.uploadFileCsv(res.form.elements[0].files, res.data, this.agsUrlBase, this.map, this.view, this.makingWork);
+                  this.importCsv.uploadFileCsv(res.form.elements[0].files, res.data, this.urlGeometryService, this.map, this.view,
+                    this.makingWork);
                 }
               });
             }
@@ -377,7 +388,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService']);
 
       // Geometry Service
-      const geomSvc = new GeometryService(this.agsUrlBase + 'rest/services/Utilities/Geometry/GeometryServer');
+      const geomSvc = new GeometryService(this.urlGeometryService);
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
 
       // Configure the Map
@@ -896,7 +907,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       const print = new Print({
         view: this.view,
-        printServiceUrl: 'https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task'
+        printServiceUrl: this.printUrl
       });
       const expandPrint = new Expand({
         expandIconClass: 'esri-icon-download',
@@ -1146,7 +1157,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       publishParameters: JSON.stringify(params),
       f: 'json'
     };
-    esriRequest(this.sharingUrl + '/sharing/rest/content/features/generate', {
+    esriRequest(this.urlGenerateFeatureCollection, {
       query: myContent,
       body: form,
       responseType: 'json'
@@ -1365,7 +1376,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.makingWork = true;
     const [FeatureSet, Geoprocessor] = await loadModules(['esri/tasks/support/FeatureSet', 'esri/tasks/Geoprocessor']);
     const gpExtract = new Geoprocessor({
-      url: this.agsUrlBase + 'rest/services/ExtractShape/GPServer/ExtractShape',
+      url: this.urlExtractShape,
       outSpatialReference: {
         wkid: 4326
       }
@@ -1516,7 +1527,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.makingWork = true;
         this.displayAnalisis = false;
         this.attributeTable.collapse();
-        const gpIntersect = new Geoprocessor(this.agsUrlBase + 'rest/services/AnalisisCobertura/GPServer/AnalisisCobertura');
+        const gpIntersect = new Geoprocessor(this.urlAnalisisCobertura);
         gpIntersect.outSpatialReference = { wkid: 4326 };
         let nameDptos = '';
         (window as any).ga('send', 'event', 'BUTTON', 'click', 'intersect-start');
