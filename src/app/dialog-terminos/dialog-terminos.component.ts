@@ -20,6 +20,6 @@ export class DialogTerminosComponent implements OnInit {
   }
 
   public deagreeTerms(): void {
-    window.location.href ="http://www.anh.gov.co/";
+    window.location.href = 'http://www.anh.gov.co/';
   }
 }

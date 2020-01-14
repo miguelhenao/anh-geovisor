@@ -1,9 +1,8 @@
 import { loadModules } from 'esri-loader';
-import { Observable } from 'rxjs';
 const latFieldStrings = ['lat', 'latitude', 'y', 'ycenter'];
 const longFieldStrings = ['lon', 'long', 'longitude', 'x', 'xcenter'];
 export class ImportCSV {
-  agsUrlBase: String;
+  agsUrlBase: string;
   map;
   makingWork;
   view;
@@ -36,10 +35,10 @@ export class ImportCSV {
   }
 
   private processCsvData(data: any): void {
-    loadModules(['dojox/data/CsvStore', 'dojo/_base/lang', 'esri/PopupTemplate', 'esri/geometry/SpatialReference',
+    loadModules(['dojox/data/CsvStore', 'dojo/_base/lang', 'esri/geometry/SpatialReference',
       'esri/geometry/Point', 'esri/tasks/GeometryService', 'esri/tasks/support/ProjectParameters', 'esri/layers/FeatureLayer',
       'esri/renderers/SimpleRenderer', 'esri/Graphic', 'esri/layers/support/Field']).then((
-        [CsvStore, lang, PopupTemplate, SpatialReference, Point, GeometryService, ProjectParameters, FeatureLayer, SimpleRenderer,
+        [CsvStore, lang, SpatialReference, Point, GeometryService, ProjectParameters, FeatureLayer, SimpleRenderer,
           Graphic, Field]) => {
         this.makingWork = true;
         const newLineIdx = data.indexOf('\n');
@@ -50,17 +49,12 @@ export class ImportCSV {
           separator
         });
         csvStore.fetch({
-          onComplete: (items, request) => {
+          onComplete: (items) => {
             let objectId = 0;
             const featureCollection = this.generateFeatureCollectionTemplateCsv(csvStore, items);
-            const popupInfo = this.generateDefaultPopupInfo(featureCollection);
-            const infoTemplate = new PopupTemplate({
-              title: 'Atributos CSV',
-              content: '${*}'
-            });
-            let latField, longField;
+            let latField;
+            let longField;
             const fieldNames = csvStore.getAttributes(items[0]);
-            // var coorGeoPlanas = $('input[name=coor-geo-planas]:checked').val();
             fieldNames.forEach((fieldName) => {
               let matchId;
               matchId = latFieldStrings.indexOf(fieldName.toLowerCase());
@@ -75,7 +69,6 @@ export class ImportCSV {
             let wkid;
             const arrAttrib = [];
             const arrGeom = [];
-            const arrGeomProj = [];
             if (this.coorGeoPlanas === 'P') {
               wkid = 3116; // MAGNA-SIRGAS / Colombia Bogota zone
             } else {
@@ -84,7 +77,7 @@ export class ImportCSV {
             const sisRef = new SpatialReference({
               wkid
             });
-            items.forEach((item, index) => {
+            items.forEach((item) => {
               const attrs = csvStore.getAttributes(item);
               const attributes = {};
               attrs.forEach((attr) => {
@@ -115,27 +108,27 @@ export class ImportCSV {
               outSpatialReference: outSR
             });
             let error = false;
-            var sourceGraphics = [];
+            let sourceGraphics = [];
             geomSvc.project(params).then((arrGeomProj) => {
               arrGeomProj.forEach((geomProj, index) => {
-                var geometry = new Point(geomProj.x, geomProj.y, outSR);
+                const geometry = new Point(geomProj.x, geomProj.y, outSR);
                 if (isNaN(geometry.x) || isNaN(geometry.y)) {
                   error = true;
                   return;
                 }
-                var feature = {
+                const feature = {
                   geometry: geometry.toJSON(),
                   attributes: arrAttrib[index]
                 };
                 featureCollection.featureSet.features.push(feature);
               });
-              var graphics = featureCollection.featureSet.features.map((feature) => {
+              const graphics = featureCollection.featureSet.features.map((feature) => {
                 return Graphic.fromJSON(feature);
               });
               sourceGraphics = sourceGraphics.concat(graphics);
-              var featureLayer = new FeatureLayer({
+              const featureLayer = new FeatureLayer({
                 title: this.filename,
-                objectIdField: "__OBJECTID",
+                objectIdField: '__OBJECTID',
                 source: graphics,
                 renderer: SimpleRenderer.fromJSON(featureCollection.layerDefinition.drawingInfo.renderer),
                 fields: featureCollection.layerDefinition.fields.map((field) => {
@@ -144,7 +137,6 @@ export class ImportCSV {
               });
               featureLayer.load().then(() => {
                  if (featureLayer.loadStatus === 'loaded') {
-                  console.log('loaded');
                   this.map.add(featureLayer);
                   this.makingWork = false;
                   this.view.goTo(sourceGraphics);
@@ -169,7 +161,7 @@ export class ImportCSV {
       esriFieldTypeDate: 1
     };
     let displayField = null;
-    const fieldInfos = fields.map((item, index) => {
+    const fieldInfos = fields.map((item) => {
       if (item.name.toUpperCase() === 'NAME' || item.name.toUpperCase() === 'NOMBRE') {
         displayField = item.name;
       }
@@ -283,12 +275,12 @@ export class ImportCSV {
     return featureCollection;
   }
 
-  private getSeparator(string: any): any {
+  private getSeparator(str: any): any {
     const separators = [',', '      ', ';', '|'];
     let maxSeparatorLength = 0;
     let maxSeparatorValue = '';
     separators.forEach((separator) => {
-      const length = string.split(separator).length;
+      const length = str.split(separator).length;
       if (length > maxSeparatorLength) {
         maxSeparatorLength = length;
         maxSeparatorValue = separator;

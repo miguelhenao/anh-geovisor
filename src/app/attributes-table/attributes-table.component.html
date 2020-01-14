@@ -1,23 +1,23 @@
 <p-table [style]="{'width': 'inherit'}" #dt [columns]="columnsTable" *ngIf="loadLayers == 8" [dataKey]="dataKey()"
-    [value]="features" [(selection)]="featuresSelected" (onRowSelect)="onRowSelect($event)"
-    (onRowUnselect)="onRowUnselect($event)">
-    <ng-template pTemplate="header" let-columns>
-        <tr>
-            <th style="width: 3em">
-                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-            </th>
-            <th *ngFor="let col of columns">
-                {{col}}
-                <!-- <input pInputText type="text" (input)="dt.filter($event.target.value, col, 'contains')"> -->
-            </th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-dpto let-columns="columns">
-        <tr>
-            <td>
-                <p-tableCheckbox [value]="dpto"></p-tableCheckbox>
-            </td>
-            <td *ngFor="let col of columns">{{dpto.attributes[col]}}</td>
-        </tr>
-    </ng-template>
+  [value]="features" [(selection)]="featuresSelected" (onRowSelect)="onRowSelect($event)"
+  (onRowUnselect)="onRowUnselect($event)">
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th style="width: 3em">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      </th>
+      <th *ngFor="let col of columns">
+        {{col}}
+        <!-- <input pInputText type="text" (input)="dt.filter($event.target.value, col, 'contains')"> -->
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-dpto let-columns="columns">
+    <tr>
+      <td>
+        <p-tableCheckbox [value]="dpto"></p-tableCheckbox>
+      </td>
+      <td *ngFor="let col of columns">{{dpto.attributes[col]}}</td>
+    </tr>
+  </ng-template>
 </p-table>

@@ -1,7 +1,7 @@
 import { MapViewerService } from './map-viewer.service';
 import { DialogUrlServiceComponent } from '../dialog-urlservice/dialog-urlservice.component';
 import { MenuItem, DialogService, SelectItem, MessageService } from 'primeng/api';
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked, SimpleChange, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked } from '@angular/core';
 import { loadModules } from 'esri-loader';
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
 import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.component';
@@ -53,7 +53,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   // Url del servicio de impresión
   printUrl = this.agsUrlBase + 'rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task';
   nameLayer: string;
-  display = false;
+  displayExtract = false;
   displayAnalisis = false;
   displayBuffer = false;
   optionsPolygon = [
@@ -100,7 +100,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService) {
     this.setCurrentPosition();
-    if (localStorage.getItem('agreeTerms') == undefined) {
+    if (localStorage.getItem('agreeTerms') === undefined) {
       this.dialogService.open(DialogTerminosComponent, {
         width: '100vw',
         height: '100vh',
@@ -222,11 +222,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 loadModules(['esri/layers/WMSLayer']).then(([WMSLayer]) => {
                   this.makingWork = true;
                   (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-wms');
-                  const geo = new WMSLayer({
+                  const wms = new WMSLayer({
                     url: res
                   });
                   this.makingWork = false;
-                  this.map.add(geo);
+                  this.map.add(wms);
                 });
               });
             }
@@ -292,7 +292,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   });
                 }
               });
-              this.display = true;
+              this.displayExtract = true;
             }
           }
         ]
@@ -370,15 +370,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           'esri/widgets/ScaleBar', 'esri/widgets/LayerList/ListItem', 'esri/geometry/geometryEngine', 'esri/geometry/SpatialReference',
           'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService']);
 
+      // Geometry Service
+      const geomSvc = new GeometryService(this.agsUrlBase + 'rest/services/Utilities/Geometry/GeometryServer');
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
 
       // Configure the Map
       const mapProperties = {
         basemap: 'streets'
       };
-
-      const geomSvc = new GeometryService(this.agsUrlBase + 'rest/services/Utilities/Geometry/GeometryServer');
-
 
       const map = new Map(mapProperties);
 
@@ -829,14 +828,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             }, (err) => {
               console.log(err);
             });
-          } else if (event.action.id == 'simbologia') {
-            let dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
+          } else if (event.action.id === 'simbologia') {
+            const dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
               width: '25%',
               header: `Cambio de Simbología ${layer.title}`
             });
             dialog.onClose.subscribe(res => {
-              if (res != undefined) {
-                (<any>window).ga('send', 'event', 'BUTTON', 'click', 'symbol-start');
+              if (res !== undefined) {
+                (window as any).ga('send', 'event', 'BUTTON', 'click', 'symbol-start');
                 this.makingWork = true;
                 loadModules(['esri/symbols/SimpleMarkerSymbol', 'esri/symbols/SimpleFillSymbol',
                   'esri/symbols/SimpleLineSymbol', 'esri/Color', 'esri/renderers/SimpleRenderer']).then(([
@@ -853,26 +852,28 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                         defaultSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), res.borderSize);
                         break;
                     }
-                    let renderer = new SimpleRenderer();
+                    const renderer = new SimpleRenderer();
                     renderer.symbol = defaultSymbol;
                     layer.renderer = renderer;
                   });
                 this.makingWork = false;
               }
-            })
+            });
           }
         });
       });
+
       const item = new ListItem({ layer: lyTierras });
       layerList.selectedItems.add(item);
       this.layerList = layerList;
-      let layerListExpand = new Expand({
+      const layerListExpand = new Expand({
         expandIconClass: 'esri-icon-layers',
         expandTooltip: 'Tabla de contenido',
         view: this.view,
         content: layerList,
         group: 'bottom-right',
       });
+
       this.search = new Search({
         view: this.view,
         sources: this.sourceSearch,
@@ -881,7 +882,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.view.ui.add(this.search, {
         position: 'top-right'
       });
+
       this.view.ui.move(['zoom'], 'top-right');
+
       const print = new Print({
         view: this.view,
         printServiceUrl: 'https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task'
@@ -897,7 +900,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       const legend = new Legend({
         view: this.view,
       });
-
       this.legend = legend;
       const expandLegend = new Expand({
         expandIconClass: 'esri-icon-layer-list',
@@ -1026,11 +1028,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       help.expand();
       this.attributeTable = attributeTable;
-      this.view.ui.add([expandLegend, layerListExpand, help],
-        'bottom-right');
-      this.view.ui.add([expandPrint, expandBaseMapGallery], {
-        position: 'top-right'
-      });
+      this.view.ui.add([expandLegend, layerListExpand, help], 'bottom-right');
+      this.view.ui.add([expandPrint, expandBaseMapGallery], 'top-right');
       return this.view;
     } catch (error) {
       console.log('EsriLoader: ', error);
@@ -1113,13 +1112,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   async generateFeatureCollection(fileName, form, fileType) {
-    var portalUrl = 'https://www.arcgis.com';
-    const [FeatureLayer, Graphic, esriRequest, Field] = await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/request',
-      'esri/layers/support/Field']);
-    var name = fileName.split('.');
+    const [esriRequest] = await loadModules(['esri/request']);
+    let name = fileName.split('.');
     name = name[0].replace('c:\\fakepath\\', '');
-    var params = {
-      name: name,
+    const params = {
+      name,
       targetSR: this.view.spatialReference,
       maxRecordCount: 1000,
       enforceInputFileSizeLimit: true,
@@ -1134,7 +1131,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       publishParameters: JSON.stringify(params),
       f: 'json'
     };
-    esriRequest(portalUrl + '/sharing/rest/content/features/generate', {
+    esriRequest(this.sharingUrl + '/sharing/rest/content/features/generate', {
       query: myContent,
       body: form,
       responseType: 'json'
@@ -1153,14 +1150,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   async addShapefileToMap(featureCollection) {
     const [FeatureLayer, Graphic, Field] = await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/layers/support/Field']);
-    let layerName = featureCollection.data.featureCollection.layers[0].layerDefinition.name;
+    const layerName = featureCollection.data.featureCollection.layers[0].layerDefinition.name;
     let sourceGraphics = [];
-    let layers = featureCollection.data.featureCollection.layers.map((layer) => {
-      let graphics = layer.featureSet.features.map((feature) => {
+    const layers = featureCollection.data.featureCollection.layers.map((layer) => {
+      const graphics = layer.featureSet.features.map((feature) => {
         return Graphic.fromJSON(feature);
       });
       sourceGraphics = sourceGraphics.concat(graphics);
-      let featureLayer = new FeatureLayer({
+      const featureLayer = new FeatureLayer({
         title: layerName,
         objectIdField: 'FID',
         source: graphics,
@@ -1178,18 +1175,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     const [FeatureLayer, PopupTemplate, Graphic, Field, SimpleRenderer] =
       await loadModules([
         'esri/layers/FeatureLayer', 'esri/PopupTemplate', 'esri/Graphic', 'esri/layers/support/Field', 'esri/renderers/SimpleRenderer']);
-    let filename = featureCollection.layers[0].featureSet.features[0].attributes.name;
+    const filename = featureCollection.layers[0].featureSet.features[0].attributes.name;
     let sourceGraphics = [];
-    let layers = featureCollection.layers.map((layer) => {
-      let graphics = layer.featureSet.features.map((feature) => {
+    const layers = featureCollection.layers.map((layer) => {
+      const graphics = layer.featureSet.features.map((feature) => {
         return Graphic.fromJSON(feature);
       });
       sourceGraphics = sourceGraphics.concat(graphics);
-      let popup = new PopupTemplate({
+      const popup = new PopupTemplate({
         title: 'Atributos GPX',
         content: '${*}'
       });
-      let featureLayer = new FeatureLayer({
+      const featureLayer = new FeatureLayer({
         title: filename,
         objectIdField: 'FID',
         source: graphics,
@@ -1208,7 +1205,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   async addGeoJSONToMap(featureCollection) {
     const [Graphic, FeatureLayer, Field] = await loadModules(['esri/Graphic', 'esri/layers/FeatureLayer', 'esri/layers/support/Field']);
     let sourceGraphics = [];
-    let graphics = featureCollection.features.map((feature) => {
+    const graphics = featureCollection.features.map((feature) => {
       return Graphic.fromJSON(geojsonToArcGIS(feature));
     });
     sourceGraphics = sourceGraphics.concat(graphics);
@@ -1219,10 +1216,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         type: 'oid'
       })
     ];
-    let featureLayer = new FeatureLayer({
+    const featureLayer = new FeatureLayer({
       title: 'GeoJSON',
       source: graphics,
-      fields: fields
+      fields
     });
     this.map.add(featureLayer);
     this.makingWork = false;
@@ -1376,13 +1373,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       };
       gpExtract.submitJob(params).then((jobInfo) => {
         const options = {
-          statusCallback: (jobInfo1) => {
+          statusCallback: () => {
           }
         };
         gpExtract.waitForJobCompletion(jobInfo.jobId, options).then((jobInfo2) => {
           if (!jobInfo2.jobStatus.includes('fail')) {
             gpExtract.getResultData(jobInfo.jobId, 'Output_Zip_File').then((outputFile) => {
-              let theurl = outputFile.value.url;
+              const theurl = outputFile.value.url;
               window.location = theurl;
             });
           } else {
@@ -1403,8 +1400,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public onRowSelect(event: any): void {
-    loadModules(['esri/tasks/support/Query', 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
-      'esri/Color', 'dojo/_base/array', 'esri/Graphic']).then(([Query, SimpleFillSymbol, SimpleLineSymbol, Color,
+    loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
+      'esri/Color', 'dojo/_base/array', 'esri/Graphic']).then(([SimpleFillSymbol, SimpleLineSymbol, Color,
         dojo, Graphic]) => {
         const layer = this.layerSelected;
         const query = layer.createQuery();
@@ -1418,12 +1415,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           dojo.forEach(res.features, (key) => {
             const graphic = new Graphic({
               geometry: key.geometry,
-              symbol: symbol
+              symbol
             });
             this.view.graphics.add(graphic);
             const objectGraphic = {
               attr: event.data.attributes,
-              graphic: graphic
+              graphic
             };
             this.graphics.push(objectGraphic);
           });
@@ -1444,7 +1441,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   public onRowUnselect(event: any): void {
     for (const object of this.graphics) {
-      if (object.attr != undefined && object.attr == event.data.attributes) {
+      if (object.attr !== undefined && object.attr === event.data.attributes) {
         this.view.graphics.remove(object.graphic);
         this.graphics.splice(this.graphics.indexOf(object), 1);
         break;
@@ -1454,7 +1451,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   public generateAnalisisCobertura(): void {
     loadModules(['esri/tasks/support/FeatureSet', 'esri/tasks/Geoprocessor']).
-      then(([FeatureSet, Geoprocessor]) => {
+      then(([, Geoprocessor]) => {
         this.makingWork = true;
         this.displayAnalisis = false;
         this.attributeTable.collapse();
@@ -1471,13 +1468,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         };
         gpIntersect.submitJob(params).then((jobInfo) => {
           const options = {
-            statusCallback: (jobInfo1) => {
+            statusCallback: () => {
             }
           };
           gpIntersect.waitForJobCompletion(jobInfo.jobId, options).then((jobInfo2) => {
             if (!jobInfo2.jobStatus.includes('fail')) {
               gpIntersect.getResultData(jobInfo.jobId, 'Output_Zip_File').then((outputFile) => {
-                var theurl = outputFile.value.url;
+                const theurl = outputFile.value.url;
                 window.location = theurl;
               });
             } else {
@@ -1510,7 +1507,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.sketch.cancel();
   }
 
-  changeAttrTable(event: any) {
+  changeAttrTable() {
     console.log('Hola');
   }
 
