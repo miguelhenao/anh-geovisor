@@ -416,9 +416,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       lyPozo.load().then(() => {
         let text = '';
-        let searchField: Array<any> = [];
+        const searchField: Array<any> = [];
         for (const field of lyPozo.fields) {
-          field.type == "string" || field.type == "double" ? searchField.push(field.name) : null;
+          field.type === 'string' || field.type === 'double' ? searchField.push(field.name) : null;
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templatePozo = {
@@ -451,9 +451,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       lyRezumadero.load().then(() => {
         let text = '';
-        let searchField: Array<any> = [];
+        const searchField: Array<any> = [];
         for (const field of lyRezumadero.fields) {
-          field.type == "string" || field.type == "double" ? searchField.push(field.name) : null;
+          field.type === 'string' || field.type === 'double' ? searchField.push(field.name) : null;
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateRezumadero = {
@@ -486,9 +486,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       lySismica.load().then(() => {
         let text = '';
-        let searchField: Array<any> = [];
+        const searchField: Array<any> = [];
         for (const field of lySismica.fields) {
-          field.type == "string" || field.type == "double" ? searchField.push(field.name) : null;
+          field.type === 'string' || field.type === 'double' ? searchField.push(field.name) : null;
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateSismica = {
@@ -521,9 +521,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       lySismica3d.load().then(() => {
         let text = '';
-        let searchField: Array<any> = [];
+        const searchField: Array<any> = [];
         for (const field of lySismica3d.fields) {
-          field.type == "string" || field.type == "double" ? searchField.push(field.name) : null;
+          field.type === 'string' || field.type === 'double' ? searchField.push(field.name) : null;
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateSismica3d = {
@@ -556,9 +556,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       lyMunicipio.load().then(() => {
         let text = '';
-        let searchField: Array<any> = [];
+        const searchField: Array<any> = [];
         for (const field of lyMunicipio.fields) {
-          field.type == "string" || field.type == "double" ? searchField.push(field.name) : null;
+          field.type === 'string' || field.type === 'double' ? searchField.push(field.name) : null;
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateMunicipio = {
@@ -591,9 +591,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       lyDepartamento.load().then(() => {
         let text = '';
-        let searchField: Array<any> = [];
+        const searchField: Array<any> = [];
         for (const field of lyDepartamento.fields) {
-          field.type == "string" || field.type == "double" ? searchField.push(field.name) : null;
+          field.type === 'string' || field.type === 'double' ? searchField.push(field.name) : null;
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const sourceSearch: Array<any> = this.sourceSearch.slice();
@@ -627,9 +627,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       lyCuencas.load().then(() => {
         let text = '';
-        let searchField: Array<any> = [];
+        const searchField: Array<any> = [];
         for (const field of lyCuencas.fields) {
-          field.type == "string" || field.type == "double" ? searchField.push(field.name) : null;
+          field.type === 'string' || field.type === 'double' ? searchField.push(field.name) : null;
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateCuencas = {
@@ -666,11 +666,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         let text = '';
         this.layerSelected = lyTierras;
         for (const field of lyTierras.fields) {
-          field.type == "string" || field.type == "double" ? searchField.push(field.name) : null;
-          console.log(field.type);
+          field.type === 'string' || field.type === 'double' ? searchField.push(field.name) : null;
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
-        console.log(searchField);
         const templateTierras = {
           title: 'Info',
           content: text,
