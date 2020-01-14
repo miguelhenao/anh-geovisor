@@ -81,7 +81,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   };
   selectedLayers: SelectItem[] = [];
   clearGraphic = false;
-  visibleMenu = false;
+  visibleMenu = true;
   importCsv = new ImportCSV();
   bufDistance: string;
   magnaSirgas = {
@@ -306,6 +306,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             command: () => {
               this.visibleMenu = false;
               this.displayBuffer = true;
+            }
+          },
+          {
+            label: 'Herramientas de Medición',
+            command: () => {
+              this.displayMedicion = true;
             }
           }
         ]
