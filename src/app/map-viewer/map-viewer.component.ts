@@ -40,7 +40,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
   leftDialog: number = 200;
   about: boolean = false;
   guide: boolean = false;
-  /* layerSelected: Array<any> = []; */
   activeWidget: any;
   tsLayer: any;
   legend: any;
@@ -72,6 +71,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
 
   layerList: any;
   optionsLayers: SelectItem[] = [];
+  optionsDepartment: SelectItem[] = [];
   sketch;
   sketchBuffer;
   selectedPolygon: SelectItem;
@@ -300,13 +300,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         label: 'Herramientas',
         icon: 'fa fa-gear',
         items: [
-          {
+          /* {
             label: 'Analisis de Cobertura',
             command: () => {
               this.displayAnalisis = true;
               this.attributeTable.expand();
             }
-          },
+          }, */
           {
             label: 'Zona de Influencia (Buffer)',
             command: () => {
@@ -363,15 +363,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
   }
 
   ngAfterViewChecked() {
-    let layerList: HTMLCollection = document.getElementsByClassName("esri-layer-list__item--selectable");
+    /* let layerList: HTMLCollection = document.getElementsByClassName("esri-layer-list__item--selectable");
     for (let index = 0; index < layerList.length; index++) {
       const element = layerList[index];
       element.addEventListener('click', this.clickItemLayer);
-    }
+    } */
   }
 
 
-  clickItemLayer: (any) => void = (event: any): void => {
+  /* clickItemLayer: (any) => void = (event: any): void => {
     if (this.layerList.selectedItems.items[0].layer != undefined) {
       let layer = this.layerList.selectedItems.items[0].layer;
       let query = {
@@ -386,7 +386,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         console.log(err);
       });
     }
-  }
+  } */
+
   /**
    * Consigue la ubicación del computador
    */
@@ -822,25 +823,43 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         view: this.view,
         listItemCreatedFunction: (event) => {
           var item = event.item;
-          item.actionsSections = [
-            [{
-              title: "Tabla de Atributos",
-              className: "esri-icon-table",
-              id: "attr-table"
-            }, {
-              title: "Analisis de Cobertura",
-              className: "esri-icon-description",
-              id: "analisis"
-            }], [{
-              title: "Aumentar opacidad",
-              className: "esri-icon-up",
-              id: "increase-opacity"
-            }, {
-              title: "Reducir opacidad",
-              className: "esri-icon-down",
-              id: "decrease-opacity"
-            }]
-          ];
+          if (event.item.layer == ly_departamento) {
+            item.actionsSections = [
+              [{
+                title: "Tabla de Atributos",
+                className: "esri-icon-table",
+                id: "attr-table"
+              }, {
+                title: "Analisis de Cobertura",
+                className: "esri-icon-description",
+                id: "analisis"
+              }], [{
+                title: "Aumentar opacidad",
+                className: "esri-icon-up",
+                id: "increase-opacity"
+              }, {
+                title: "Reducir opacidad",
+                className: "esri-icon-down",
+                id: "decrease-opacity"
+              }]
+            ];
+          } else {
+            item.actionsSections = [
+              [{
+                title: "Tabla de Atributos",
+                className: "esri-icon-table",
+                id: "attr-table"
+              }], [{
+                title: "Aumentar opacidad",
+                className: "esri-icon-up",
+                id: "increase-opacity"
+              }, {
+                title: "Reducir opacidad",
+                className: "esri-icon-down",
+                id: "decrease-opacity"
+              }]
+            ];
+          }
         }
       });
       this.view.when(() => {
@@ -858,11 +877,34 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
             layer.queryFeatures(query).then((result) => {
               this.featureDptos = result.features;
               this.columnsTable = Object.keys(this.featureDptos[0].attributes);
+              this.layerSelected = layer;
+              this.displayTable = true;
             }, (err) => {
               console.log(err);
             });
-            debugger;
-            this.displayTable = true;
+          } else if (event.action.id == "analisis") {
+            let layer = event.item.layer;
+            let query = {
+              outFields: ["*"],
+              returnGeometry: false,
+              where: ""
+            }
+            layer.queryFeatures(query).then((result) => {
+              let dptos: Array<any> = [];
+              for (const r of result.features) {
+                let dpto = {
+                  attributes: Object.assign({}, r.attributes)
+                }
+                dptos.push(dpto);
+              }
+              this.featureDptos = dptos;
+              console.log(this.featureDptos);
+              this.dptosSelected = [];
+              this.layerSelected = layer;
+              this.displayAnalisis = true;
+            }, (err) => {
+              console.log(err);
+            });
           }
         });
       });
@@ -897,27 +939,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         content: print,
         group: 'top-right'
       })
-
-      /* let areaMeasurement = new AreaMeasurement2D({
-        view: this.view
-      });
-      let expandAreaMeasure = new Expand({
-        expandIconClass: 'fas fa-ruler-combined',
-        expandTooltip: 'Tomar medidas - Área',
-        view: this.view,
-        content: areaMeasurement,
-        group: 'bottom-right'
-      });
-      let linearMeasurement = new DistanceMeasurement2D({
-        view: this.view
-      });
-      let expandLinearMeasure = new Expand({
-        expandIconClass: 'fas fa-ruler',
-        expandTooltip: 'Tomar medidas - Distancia',
-        view: this.view,
-        content: linearMeasurement,
-        group: 'bottom-right'
-      }); */
 
       let legend = new Legend({
         view: this.view,
@@ -1074,6 +1095,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
     console.log("cambio");
   }
 
+  onClickItem(event: any): void {
+    console.log(event);
+  }
+
   public onHideDialogMedicion(): void {
     this.setActiveButton(null);
     this.setActiveWidget(null);
@@ -1122,7 +1147,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
   }
 
   public setActiveButton(selectedButton) {
-    // focus the view to activate keyboard shortcuts for sketching
     this.view.focus();
     var elements = document.getElementsByClassName("active");
     for (var i = 0; i < elements.length; i++) {
@@ -1317,7 +1341,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
             }
             let templateTierras = {
               title: 'Información',
-              // tslint:disable-next-line:max-line-length
               content: text,
               fieldInfos: []
             };
@@ -1437,21 +1460,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
     loadModules(['esri/tasks/support/Query', 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
       'esri/Color', 'dojo/_base/array', 'esri/Graphic']).then(([Query, SimpleFillSymbol, SimpleLineSymbol, Color,
         dojo, Graphic]) => {
-        let layer = this.layerList.selectedItems.items[0].layer;
-        debugger;
+        let layer = this.layerSelected;
         let query = layer.createQuery();
-        debugger;
         query.where = `${this.columnsTable[0]} = ${event.data.attributes[this.columnsTable[0]]}`;
         query.returnGeometry = true;
         query.outFields = ["*"];
-        debugger;
         layer.queryFeatures(query).then((res) => {
-          debugger;
-          console.log(res);
           let symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
             new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 255, 1.0]), 2),
             new Color([0, 0, 0, 0.5]));
-
           dojo.forEach(res.features, (key) => {
             let graphic = new Graphic({
               geometry: key.geometry,
@@ -1470,18 +1487,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       });
   }
 
+  public onHideDialogAtributos(): void {
+    this.graphics = [];
+    this.view.graphics.removeAll();
+  }
+
   public dataKey(): string {
     return `attributes.${this.columnsTable[0]}`;
   }
 
   public onRowUnselect(event: any): void {
-    debugger;
     for (const object of this.graphics) {
-      debugger;
       if (object.attr != undefined && object.attr == event.data.attributes) {
         this.view.graphics.remove(object.graphic);
         this.graphics.splice(this.graphics.indexOf(object), 1);
-        debugger;
         break;
       }
     }
@@ -1554,10 +1573,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
     this.attributeTable.collapse();
     console.log(this.layerList);
     this.displayAnalisis = false;
-  }
-
-  public nameLayerSelected(): string {
-    return this.layerList.selectedItems.items[0].layer.title.substr(this.layerList.selectedItems.items[0].layer.title.indexOf('-') + 1, this.layerList.selectedItems.items[0].layer.title.length - 1);
   }
 
   onChangeSelectSketchBuffer() {
