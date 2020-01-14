@@ -300,13 +300,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         label: 'Herramientas',
         icon: 'fa fa-gear',
         items: [
-          {
+          /* {
             label: 'Analisis de Cobertura',
             command: () => {
               this.displayAnalisis = true;
               this.attributeTable.expand();
             }
-          },
+          }, */
           {
             label: 'Zona de Influencia (Buffer)',
             command: () => {
