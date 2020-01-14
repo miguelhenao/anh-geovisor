@@ -751,7 +751,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.makingWork = false;
         } else if (this.loadLayers < 10) {
           this.loadLayers++;
-          console.log('holi');
         }
       });
       // Widget de LayerList
