@@ -138,7 +138,6 @@ export class ImportCSV {
               featureLayer.load().then(() => {
                  if (featureLayer.loadStatus === 'loaded') {
                   this.map.add(featureLayer);
-                  this.makingWork = false;
                   this.view.goTo(sourceGraphics);
                 }
               });

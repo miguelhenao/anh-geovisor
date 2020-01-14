@@ -148,7 +148,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   this.makingWork = true;
                   (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-csv');
                   this.importCsv.uploadFileCsv(res.form.elements[0].files, res.data, this.agsUrlBase, this.map, this.view, this.makingWork);
-                  this.makingWork = false;
                 }
               });
             }
@@ -206,7 +205,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   const geo = new KMLLayer({
                     url: res
                   });
-                  this.makingWork = false;
                   this.map.add(geo);
                 });
               });
@@ -227,7 +225,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   const wms = new WMSLayer({
                     url: res
                   });
-                  this.makingWork = false;
                   this.map.add(wms);
                 });
               });
@@ -248,7 +245,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   const geo = new GeoJSONLayer({
                     url: res
                   });
-                  this.makingWork = false;
                   this.map.add(geo);
                 });
               });
@@ -269,7 +265,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   const csv = new CSVLayer({
                     url: res
                   });
-                  this.makingWork = false;
                   this.map.add(csv);
                 });
               });
@@ -734,7 +729,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.view = new MapView(mapViewProperties);
       this.view.on('click', (e) => {
         (window as any).ga('send', 'event', 'MAP-CONTROL', 'click', 'overviewMap');
-        if (this.activeWidget.viewModel.mode !== undefined) {
+        if (this.activeWidget !== undefined && this.activeWidget.viewModel.mode !== undefined) {
           if (this.activeWidget.viewModel.mode === 'capture') {
             const outSR = new SpatialReference({ wkid: 3116 }); // MAGNA-SIRGAS / Colombia Bogota zone
             const params = new ProjectParameters();
@@ -750,7 +745,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
 
       this.view.on('layerview-create', () => {
-        this.loadLayers++;
+        if (this.makingWork) {
+          this.makingWork = false;
+        } else if (this.loadLayers < 10) {
+          this.loadLayers++;
+          console.log('holi');
+        }
       });
 
       const layerList = new LayerList({
@@ -1149,7 +1149,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       } else if (fileType === 'gpx') {
         this.addGpxToMap(response.data.featureCollection);
       }
-      this.makingWork = false;
     }, (err) => {
       console.error(err);
     });
@@ -1230,7 +1229,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       fields
     });
     this.map.add(featureLayer);
-    this.makingWork = false;
     this.view.goTo(sourceGraphics);
   }
 
@@ -1400,11 +1398,25 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.selectedLayers = [];
           this.selectedPolygon = undefined;
           this.clearGraphics();
+          this.makingWork = false;
+        }, (error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: '',
+            detail: 'Error al descargar la capa.'
+          });
+          this.makingWork = false;
+        });
+      }, (error) => {
+        this.makingWork = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: '',
+          detail: 'Error al descargar la capa.'
         });
       });
       (window as any).ga('send', 'event', 'FORM', 'submit', 'extract');
     }
-    this.makingWork = false;
   }
 
   public onRowSelect(event: any): void {
@@ -1564,11 +1576,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       attribute.push(object);
     }
     const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-      const EXCEL_EXTENSION = '.xlsx';
-      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(attribute);
-      const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-      const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-      const dataBuffer: Blob = new Blob([excelBuffer], { type: EXCEL_TYPE });
-      FileSaver.saveAs(dataBuffer, this.layerSelected.title + EXCEL_EXTENSION);
+    const EXCEL_EXTENSION = '.xlsx';
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(attribute);
+    const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const dataBuffer: Blob = new Blob([excelBuffer], { type: EXCEL_TYPE });
+    FileSaver.saveAs(dataBuffer, this.layerSelected.title + EXCEL_EXTENSION);
   }
 }
