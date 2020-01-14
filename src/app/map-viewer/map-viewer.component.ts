@@ -80,7 +80,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     { name: 'Metros', value: 9001 },
     { name: 'Pies', value: 9002 },
   ];
-
+  featuresSelected: Array<any> = [];
   layerList: any;
   optionsLayers: SelectItem[] = [];
   optionsDepartment: SelectItem[] = [];
@@ -821,6 +821,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               this.featureDptos = result.features;
               this.columnsTable = Object.keys(this.featureDptos[0].attributes);
               this.layerSelected = layer;
+              layerListExpand.collapse();
               this.displayTable = true;
             }, (err) => {
               console.log(err);
@@ -840,13 +841,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 dptos.push(dpto);
               }
               this.featureDptos = dptos;
+              this.columnsTable = Object.keys(this.featureDptos[0].attributes);
               this.dptosSelected = [];
               this.layerSelected = layer;
+              layerListExpand.collapse();
               this.displayAnalisis = true;
             }, (err) => {
               console.log(err);
             });
           } else if (event.action.id === 'simbologia') {
+            layerListExpand.collapse();
             const dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
               width: '25%',
               header: `Cambio de Simbología ${layer.title}`
@@ -877,6 +881,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 this.makingWork = false;
               }
             });
+          } else if (event.action.id == 'increase-opacity') {
+            layer.opacity += 0.25;
+          } else if (event.action.id == 'decrease-opacity') {
+            layer.opacity -= 0.25;
           }
         });
       });
@@ -1583,16 +1591,30 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.sketch.cancel();
   }
 
-  changeAttrTable() {
-    console.log('Hola');
+  changeAttrTable(event: any) {
+    let ev = {
+      data: {
+        attributes: event.itemValue.attributes
+      }
+    }
+    if (event.value.indexOf(event.itemValue) != -1) {
+      //Añadir
+      console.log("Añadio")
+      this.onRowSelect(ev);
+    } else {
+      //Remover
+      console.log("Remover");
+      this.onRowUnselect(ev);
+    }
   }
 
   /**
    * Metodo que se realiza cuando se cierra el dialogo de analisis de cobertura
    */
   onHideDialogAnalisis() {
-    this.layerSelected = [];
+    this.featuresSelected = [];
     this.attributeTable.collapse();
+    this.clearGraphics();
     this.displayAnalisis = false;
   }
 
