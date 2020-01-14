@@ -403,15 +403,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D, DistanceMeasurement2D, LabelClass,
-        BasemapGallery, CoordinateConversion, SketchViewModel, GraphicsLayer, Graphic, Legend, ScaleBar, esriRequest,
-        SimpleFillSymbol, SimpleLineSymbol, Color, ListItem, geometryEngine] =
+        BasemapGallery, SketchViewModel, GraphicsLayer, Graphic, Legend, ScaleBar, esriRequest,
+        SimpleFillSymbol, SimpleLineSymbol, Color, ListItem, geometryEngine, SpatialReference, ProjectParameters, GeometryService] =
         await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
           "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
           "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D", "esri/layers/support/LabelClass",
-          'esri/widgets/BasemapGallery', 'esri/widgets/CoordinateConversion', 'esri/widgets/Sketch/SketchViewModel',
+          'esri/widgets/BasemapGallery', 'esri/widgets/Sketch/SketchViewModel',
           'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend', 'esri/widgets/ScaleBar', 'esri/request'
           , 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/Color',
-          'esri/widgets/LayerList/ListItem', 'esri/geometry/geometryEngine']);
+          'esri/widgets/LayerList/ListItem', 'esri/geometry/geometryEngine', 'esri/geometry/SpatialReference',
+          'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService']);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
 
@@ -419,6 +420,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       const mapProperties = {
         basemap: "streets"
       };
+
+      const geomSvc = new GeometryService(this.agsUrlBase + 'rest/services/Utilities/Geometry/GeometryServer');
+
 
       const map = new Map(mapProperties);
 
@@ -797,9 +801,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       this.map.add(ly_sensibilidad);
 
       this.view = new MapView(mapViewProperties);
-      this.view.on('click', () => {
+      this.view.on('click', (e) => {
         (<any>window).ga('send', 'event', 'MAP-CONTROL', 'click', 'overviewMap');
-      })
+        if (this.activeWidget.viewModel.mode !== undefined) {
+          if (this.activeWidget.viewModel.mode === 'capture') {
+            var outSR = new SpatialReference({ wkid: 3116 }); // MAGNA-SIRGAS / Colombia Bogota zone
+            var params = new ProjectParameters();
+            params.geometries = [e.mapPoint];
+            params.outSR = outSR;
+            geomSvc.project(params).then((response) => {
+              console.log(response[0]);
+            });
+          }
+        }
+      });
 
       let layerList = new LayerList({
         selectionEnabled: true,
@@ -928,18 +943,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         group: 'top-right'
       });
 
-      var ccWidget = new CoordinateConversion({
-        view: this.view
-      });
-
-      let expandCcWidget = new Expand({
-        expandIconClass: 'esri-icon-sketch-rectangle',
-        expandTooltip: 'Ubicación',
-        view: this.view,
-        content: ccWidget,
-        group: 'top-right'
-      });
-
       const graphicsLayer = new GraphicsLayer();
 
       let sketchVM = new SketchViewModel({
@@ -1043,13 +1046,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       let help = new Expand({
         expandIconClass: 'esri-icon-question',
         view: this.view,
-        content: document.getElementById("help")
+        content: document.getElementById("help"),
+        group: 'bottom-right'
       });
       help.expand();
       this.attributeTable = attributeTable;
       this.view.ui.add([expandLegend, layerListExpand, help],
         'bottom-right');
-      this.view.ui.add([expandPrint, expandBaseMapGallery, expandCcWidget], {
+      this.view.ui.add([expandPrint, expandBaseMapGallery], {
         position: 'top-right'
       });
       return this.view;
@@ -1076,38 +1080,45 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
   }
 
   public setActiveWidget(type) {
-    loadModules(["esri/widgets/DistanceMeasurement2D",
-      "esri/widgets/AreaMeasurement2D"]).then(([DistanceMeasurement2D, AreaMeasurement2D]) => {
-        this.activeWidget != null ? this.activeWidget.destroy() : null;
-        this.activeWidget = null;
-        let container = document.createElement("div");
-        container.id = "divWidget";
-        document.getElementById("widgetMeasure").appendChild(container);
-        switch (type) {
-          case "distance":
-            this.activeWidget = new DistanceMeasurement2D({
-              view: this.view,
-              container: document.getElementById("divWidget")
-            });
-            this.activeWidget.viewModel.newMeasurement();
-            this.setActiveButton(document.getElementById("distanceButton"));
-            break;
-          case "area":
-            this.activeWidget = new AreaMeasurement2D({
-              view: this.view,
-              container: document.getElementById("divWidget")
-            });
-            this.activeWidget.viewModel.newMeasurement();
-            this.setActiveButton(document.getElementById("areaButton"));
-            break;
-          case null:
-            if (this.activeWidget) {
-              this.activeWidget.destroy();
-              this.activeWidget = null;
-            }
-            break;
-        }
-      })
+    loadModules(["esri/widgets/DistanceMeasurement2D", "esri/widgets/AreaMeasurement2D", 'esri/widgets/CoordinateConversion']).then((
+      [DistanceMeasurement2D, AreaMeasurement2D, CoordinateConversion]) => {
+      this.activeWidget != null ? this.activeWidget.destroy() : null;
+      this.activeWidget = null;
+      let container = document.createElement("div");
+      container.id = "divWidget";
+      document.getElementById("widgetMeasure").appendChild(container);
+      switch (type) {
+        case "distance":
+          this.activeWidget = new DistanceMeasurement2D({
+            view: this.view,
+            container: document.getElementById("divWidget")
+          });
+          this.activeWidget.viewModel.newMeasurement();
+          this.setActiveButton(document.getElementById("distanceButton"));
+          break;
+        case "area":
+          this.activeWidget = new AreaMeasurement2D({
+            view: this.view,
+            container: document.getElementById("divWidget")
+          });
+          this.activeWidget.viewModel.newMeasurement();
+          this.setActiveButton(document.getElementById("areaButton"));
+          break;
+        case 'coordinate':
+          this.activeWidget = new CoordinateConversion({
+            view: this.view,
+            container: document.getElementById('divWidget')
+          });
+          this.setActiveButton(document.getElementById('coordinateButton'));
+          break;
+        case null:
+          if (this.activeWidget) {
+            this.activeWidget.destroy();
+            this.activeWidget = null;
+          }
+          break;
+      }
+    });
   }
 
   public setActiveButton(selectedButton) {

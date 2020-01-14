@@ -97,10 +97,19 @@
       id="distanceButton" type="button" title="Measure distance between two or more points"></button>
     <button class="action-button fas fa-ruler-combined esri-widget--button" (click)="setActiveWidget('area')"
       id="areaButton" type="button" title="Measure area"></button>
+    <button class="action-button fas fa-search-location esri-widget--button" (click)="setActiveWidget('coordinate')"
+      id="coordinateButton" type="button" title="Ubicación"></button>
   </div>
   <div id="widgetMeasure">
     <h3 style="text-align: center;">Resultado de la Medición</h3>
     <hr>
+  </div>
+  <div class="magna" style="background-color: #DEF0D8;">
+    <div>
+      <p>MAGNA-SIRGAS Origen Central</p>
+      <p>X(Este):</p>
+      <p>Y(Norte):</p>
+    </div>
   </div>
   <p-message id="infoMedicion" severity="info"
     text="Seleccione una herramienta y haga <b>clic</b><br> sobre el mapa para agregar puntos.
@@ -153,8 +162,8 @@
       </div>
       <div class="p-grid p-dir-col">
         <div class="p-col">
-          <button pButton type="button" label="Abrir Guía del Usuario" class="ui-button-raised"
-            icon="fa fa-book-open" (click)="onShowGuide()"></button>
+          <button pButton type="button" label="Abrir Guía del Usuario" class="ui-button-raised" icon="fa fa-book-open"
+            (click)="onShowGuide()"></button>
         </div>
         <div class="p-col">
           <button pButton type="button" label="Acerca de Geovisor ANH" class="ui-button-raised ui-button-secondary"

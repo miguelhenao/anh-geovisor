@@ -207,3 +207,9 @@ p-sidebar {
 .p-col {
   margin: 0 auto;
 }
+
+.magna {
+  margin: 5px 0px;
+  padding: 10px;
+  color: green;
+}
