@@ -57,12 +57,12 @@
 <!-- Fin del modal de extracción de datos -->
 
 <!-- Modal de analisis de cobertura -->
-<p-dialog header="Analisis de Cobertura de Entidades Terrritoriales" [(visible)]="displayAnalisis" [resizable]="false"
+<p-dialog header="Análisis de Cobertura de Entidades Territoriales" [(visible)]="displayAnalisis" [resizable]="false"
   (onHide)="onHideDialogAnalisis()">
   <p>
     Departamentos seleccionados para el analisis:
   </p>
-  <p-multiSelect defaultLabel="Seleccione los departamentos para realizar analísis" (onChange)="onClickItem($event)"
+  <p-multiSelect defaultLabel="Seleccione los departamentos para realizar análisis" (onChange)="changeAttrTable($event)"
     [options]="featureDptos" [(ngModel)]="dptosSelected" optionLabel="attributes.DEPARTAMEN"></p-multiSelect>
   <br>
   <p-button icon="pi pi-globe" [disabled]="dptosSelected.length == 0" (click)="generateAnalisisCobertura()"
@@ -127,9 +127,10 @@
 
 <!-- Modal de tabla de atributos -->
 <p-dialog header="Tabla de Atributos" [(visible)]="displayTable" [resizable]="false" (onHide)="onHideDialogAtributos()">
-  <p-table [style]="{width: '500px'}" selectionMode="multiple" #dt [columns]="columnsTable" *ngIf="displayTable"
-    [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true" [(selection)]="featuresSelected"
-    (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollHeight="200px">
+  <p-table [style]="{width: '500px'}" [paginator]="true" [rows]="5" selectionMode="multiple" #dt
+    [columns]="columnsTable" *ngIf="displayTable" [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true"
+    [(selection)]="featuresSelected" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+    scrollHeight="200px">
     <ng-template pTemplate="caption">
       {{layerSelected.title}}
     </ng-template>
