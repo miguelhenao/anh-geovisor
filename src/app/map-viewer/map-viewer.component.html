@@ -1,7 +1,7 @@
 <p-toast></p-toast>
-<p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10">
+<p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10" [style]="{width:'200px'}">
   <img src="logo-anh-p.png" (click)="visibleMenu = false">
-  <div id="helps">
+  <!-- <div id="helps">
     <button pButton type="button" icon="pi pi-spin pi-compass" class="ui-button-success" pTooltip="Navegación"
       tooltipPosition="bottom"></button>
     <button pButton type="button" icon="fas fa-ruler" (click)="displayMedicion = !displayMedicion"
@@ -10,7 +10,7 @@
       tooltipPosition="bottom"></button>
     <button pButton type="button" icon="pi pi-info-circle" class="ui-button-danger" pTooltip="Identificar"
       tooltipPosition="bottom"></button>
-  </div>
+  </div> -->
   <div style="overflow-y: auto;">
     <p-panelMenu [model]="menu" [style]="{'width':'100%', 'height': '550px'}" [multiple]="false"></p-panelMenu>
   </div>
@@ -140,6 +140,9 @@
       <tr [pSelectableRow]="dpto">
         <td *ngFor="let col of columns">{{dpto.attributes[col]}}</td>
       </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <button pButton icon="fas fa-file-excel" id="excel" (click)="generateExcelFeaturesLayer()"></button>
     </ng-template>
   </p-table>
 </p-dialog>

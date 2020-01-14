@@ -85,6 +85,10 @@ p-sidebar {
     clear: both;
 }
 
+#excel {
+    margin-left: 90% !important;
+}
+
 @media print {
     ::ng-deep .esri-component {
         display: none !important;
