@@ -54,7 +54,8 @@
   <p>
     Departamentos seleccionados para el analisis:
   </p>
-  <p-multiSelect defaultLabel="Seleccione los departamentos para realizar analísis" (onChange)="onClickItem($event)" [options]="featureDptos" [(ngModel)]="dptosSelected" optionLabel="attributes.DEPARTAMEN"></p-multiSelect>
+  <p-multiSelect defaultLabel="Seleccione los departamentos para realizar analísis" (onChange)="onClickItem($event)"
+    [options]="featureDptos" [(ngModel)]="dptosSelected" optionLabel="attributes.DEPARTAMEN"></p-multiSelect>
   <br>
   <p-button icon="pi pi-globe" [disabled]="dptosSelected.length == 0" (click)="generateAnalisisCobertura()"
     label="Iniciar Analisis de Cobertura"></p-button>
@@ -111,10 +112,13 @@
     Pulse <b>Ctrl</b> para activar la alineación<br> automática (snapping) con la geometría del<br> mapa mientras agrega puntos."></p-message>
 </p-dialog>
 
-<p-dialog header="Tabla de Atributos" [(visible)]="displayTable" [resizable]="true" (onHide)="onHideDialogAtributos()">
+<p-dialog header="Tabla de Atributos" [(visible)]="displayTable" [resizable]="false" (onHide)="onHideDialogAtributos()">
   <p-table [style]="{width: '500px'}" selectionMode="multiple" #dt [columns]="columnsTable" *ngIf="displayTable"
     [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true" [(selection)]="featuresSelected"
     (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollHeight="200px">
+    <ng-template pTemplate="caption">
+      {{layerSelected.title}}
+    </ng-template>
     <ng-template pTemplate="colgroup" let-columns>
       <colgroup>
         <col *ngFor="let col of columns" style="width:250px">
@@ -124,7 +128,11 @@
       <tr>
         <th *ngFor="let col of columns">
           {{col}}
-          <!-- <input pInputText type="text" (input)="dt.filter($event.target.value, col, 'contains')"> -->
+        </th>
+      </tr>
+      <tr>
+        <th *ngFor="let col of columns">
+          <input pInputText type="text" (input)="dt.filter($event.target.value, attrFilter(col), 'contains')">
         </th>
       </tr>
     </ng-template>
