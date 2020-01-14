@@ -362,6 +362,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  /**
+   * Método encargado de la inicialización del mapa con sus capas
+   */
   async initializeMap() {
     try {
       // Load the modules for the ArcGIS API for JavaScript
@@ -381,9 +384,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       const mapProperties = {
         basemap: 'streets'
       };
-
       const map = new Map(mapProperties);
-
       this.map = map;
       // Initialize the MapView
       const mapViewProperties = {
@@ -392,9 +393,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         zoom: 5,
         map: this.map
       };
-
       this.addSlider();
-
+      // Carga de capa de pozo
       const lyPozo = new FeatureLayer(this.mapRestUrl + '/1', {
         id: 'Pozo',
         opacity: 1.0,
@@ -403,7 +403,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-
       lyPozo.load().then(() => {
         let text = '';
         for (const field of lyPozo.fields) {
@@ -428,9 +427,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.search.sources = this.sourceSearch;
         lyPozo.popupTemplate = templatePozo;
       });
-
       this.map.add(lyPozo);
-
+      // Carga de capa rezumadero
       const lyRezumadero = new FeatureLayer(this.mapRestUrl + '/0', {
         id: 'Rezumadero',
         opacity: 1.0,
@@ -439,7 +437,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-
       lyRezumadero.load().then(() => {
         let text = '';
         for (const field of lyRezumadero.fields) {
@@ -464,9 +461,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.search.sources = this.sourceSearch;
         lyRezumadero.popupTemplate = templateRezumadero;
       });
-
       this.map.add(lyRezumadero);
-
+      // Carga de capa sismica
       const lySismica = new FeatureLayer(this.mapRestUrl + '/2', {
         id: 'Sismica 2D',
         opacity: 1.0,
@@ -475,7 +471,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-
       lySismica.load().then(() => {
         let text = '';
         for (const field of lySismica.fields) {
@@ -500,9 +495,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.search.sources = this.sourceSearch;
         lySismica.popupTemplate = templateSismica;
       });
-
       this.map.add(lySismica);
-
+      // Carga de capa sismica 3D
       const lySismica3d = new FeatureLayer(this.mapRestUrl + '/3', {
         id: 'Sismica 3D',
         opacity: 1.0,
@@ -511,7 +505,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-
       lySismica3d.load().then(() => {
         let text = '';
         for (const field of lySismica3d.fields) {
@@ -536,9 +529,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.search.sources = this.sourceSearch;
         lySismica3d.popupTemplate = templateSismica3d;
       });
-
       this.map.add(lySismica3d);
-
+      // Carga de capa de municipio
       const lyMunicipio = new FeatureLayer(this.mapRestUrl + '/5', {
         id: 'Municipio',
         opacity: 1.0,
@@ -547,7 +539,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-
       lyMunicipio.load().then(() => {
         let text = '';
         for (const field of lyMunicipio.fields) {
@@ -572,9 +563,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.search.sources = this.sourceSearch;
         lyMunicipio.popupTemplate = templateMunicipio;
       });
-
       this.map.add(lyMunicipio);
-
+      // Carga de capa de departamento
       const lyDepartamento = new FeatureLayer(this.mapRestUrl + '/4', {
         id: 'Departamento',
         opacity: 1.0,
@@ -583,9 +573,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-
       lyDepartamento.load().then(() => {
-
         const sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
           layer: lyDepartamento,
@@ -610,11 +598,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         };
         lyDepartamento.popupTemplate = templateDepartamento;
       });
-
       this.map.add(lyDepartamento);
-
-      this.departmentLayer = lyDepartamento;
-
+      // Carga de capa de cuencas
       const lyCuencas = new FeatureLayer(this.mapRestUrl + '/6', {
         id: 'Cuencas',
         opacity: 1.0,
@@ -623,7 +608,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-
       lyCuencas.load().then(() => {
         let text = '';
         for (const field of lyCuencas.fields) {
@@ -649,9 +633,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.search.sources = this.sourceSearch;
         lyCuencas.popupTemplate = templateCuencas;
       });
-
       this.map.add(lyCuencas);
-
+      // Carga de capa de tierras
       const lyTierras = new FeatureLayer(this.mapRestUrl + '/8', {
         id: 'Tierras',
         opacity: 0.5,
@@ -660,7 +643,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-
       lyTierras.load().then(() => {
         const query = {
           outFields: ['*'],
@@ -700,20 +682,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.search.sources = this.sourceSearch;
         lyTierras.popupTemplate = templateTierras;
       });
-
       const statesLabelClass = new LabelClass({
         labelExpressionInfo: { expression: '$feature.CONTRAT_ID' },
         symbol: {
-          type: 'text',  // autocasts as new TextSymbol()
+          type: 'text',
           color: 'black',
           haloSize: 1,
           haloColor: 'white'
         }
       });
-
       lyTierras.labelingInfo = [statesLabelClass];
       this.map.add(lyTierras);
-
+      // Carga de capa de sensibilidad
       const lySensibilidad = new FeatureLayer(this.mapRestUrl + '/7', {
         labelExpressionInfo: { expression: '$feature.CONTRAT_ID' },
         id: 'Sensibilidad',
@@ -725,7 +705,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       lySensibilidad.labelingInfo = [statesLabelClass];
       this.map.add(lySensibilidad);
-
       this.view = new MapView(mapViewProperties);
       this.view.on('click', (e) => {
         (window as any).ga('send', 'event', 'MAP-CONTROL', 'click', 'overviewMap');
@@ -743,7 +722,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           }
         }
       });
-
       this.view.on('layerview-create', () => {
         if (this.makingWork) {
           this.makingWork = false;
@@ -752,7 +730,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           console.log('holi');
         }
       });
-
+      // Widget de LayerList
       const layerList = new LayerList({
         selectionEnabled: true,
         multipleSelectionEnabled: true,
@@ -904,7 +882,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         content: print,
         group: 'top-right'
       });
-
       const legend = new Legend({
         view: this.view,
       });
@@ -916,7 +893,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         content: legend,
         group: 'bottom-right'
       });
-
       const basemapGallery = new BasemapGallery({
         view: this.view
       });
@@ -927,14 +903,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         content: basemapGallery,
         group: 'top-right'
       });
-
       const graphicsLayer = new GraphicsLayer();
-
       const sketchVM = new SketchViewModel({
         layer: graphicsLayer,
         view: this.view
       });
-
       sketchVM.on('create', (event) => {
         if (this.view.graphics.length === 1) {
           this.clearGraphics();
@@ -958,12 +931,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.view.graphics.add(graphic);
         }
       });
-
       const sketchVMBuffer = new SketchViewModel({
         layer: graphicsLayer,
         view: this.view
       });
-
       sketchVMBuffer.on('create', (event) => {
         if (event.state === 'complete') {
           this.clearGraphic = true;
@@ -1006,20 +977,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           }
         }
       });
-
       this.sketch = sketchVM;
       this.sketchBuffer = sketchVMBuffer;
-
       const scaleBar = new ScaleBar({
         style: 'line',
         view: this.view,
         unit: 'dual'
       });
-
       this.view.ui.add(scaleBar, {
         position: 'bottom-left',
       });
-
       const attributeTable = new Expand({
         expandIconClass: 'esri-icon-table',
         view: this.view,
@@ -1027,7 +994,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         iconNumber: this.featureDptos.length,
         content: document.getElementById('attributeTable')
       });
-
       const help = new Expand({
         expandIconClass: 'esri-icon-question',
         view: this.view,
@@ -1043,6 +1009,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       console.log('EsriLoader: ', error);
     }
   }
+
+  /**
+   * Limpia los graficos de la vista
+   */
   clearGraphics() {
     this.view.graphics.removeAll();
     this.clearGraphic = false;
@@ -1052,11 +1022,23 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.initializeMap();
   }
 
+  ngOnDestroy() {
+    if (this.view) {
+      this.view.container = null;
+    }
+  }
+
+  /**
+   * Método que se realiza cuando el dialogo de medición es cerrado
+   */
   public onHideDialogMedicion(): void {
     this.setActiveButton(null);
     this.setActiveWidget(null);
   }
 
+  /**
+   * Método con el cual se identifica cual fue el tipo de medición seleccionado por el usuario
+   */
   public setActiveWidget(type) {
     loadModules(['esri/widgets/DistanceMeasurement2D', 'esri/widgets/AreaMeasurement2D', 'esri/widgets/CoordinateConversion']).then((
       [DistanceMeasurement2D, AreaMeasurement2D, CoordinateConversion]) => {
@@ -1100,6 +1082,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
+  /**
+   * Método encargado activar el botón seleccionado en la barra del widget de medición
+   * @param selectedButton -> Botón seleccionado en el widget de medición
+   */
   public setActiveButton(selectedButton) {
     this.view.focus();
     const elements = document.getElementsByClassName('active');
@@ -1111,14 +1097,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
-
-  ngOnDestroy() {
-    if (this.view) {
-      // destroy the map view
-      this.view.container = null;
-    }
-  }
-
+  /**
+   * Genera colección a partir de la información encontrada en el archivo fuente
+   * @param fileName -> Nombre del archivo
+   * @param form -> Formulario del input
+   * @param fileType -> Tipo de archivo
+   */
   async generateFeatureCollection(fileName, form, fileType) {
     const [esriRequest] = await loadModules(['esri/request']);
     let name = fileName.split('.');
@@ -1152,9 +1136,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }, (err) => {
       console.error(err);
     });
-
   }
 
+  /**
+   * Método encargado de construir un layer de acuerdo a un archivo shapefile
+   * @param featureCollection -> Lista de features para construir el layer
+   */
   async addShapefileToMap(featureCollection) {
     const [FeatureLayer, Graphic, Field] = await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/layers/support/Field']);
     const layerName = featureCollection.data.featureCollection.layers[0].layerDefinition.name;
@@ -1178,6 +1165,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.view.goTo(sourceGraphics);
   }
 
+  /**
+   * Método encargado de la construcción de un layer segun un archivo GPX
+   * @param featureCollection -> Lista de features para construir el layer
+   */
   async addGpxToMap(featureCollection) {
     const [FeatureLayer, PopupTemplate, Graphic, Field, SimpleRenderer] =
       await loadModules([
@@ -1209,6 +1200,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.view.goTo(sourceGraphics);
   }
 
+  /**
+   * Método encargado de la construcción de un layer según un archivo geoJson
+   * @param featureCollection -> Colección de features con los cuales se construiran el layer de geoJson
+   */
   async addGeoJSONToMap(featureCollection) {
     const [Graphic, FeatureLayer, Field] = await loadModules(['esri/Graphic', 'esri/layers/FeatureLayer', 'esri/layers/support/Field']);
     let sourceGraphics = [];
@@ -1232,6 +1227,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.view.goTo(sourceGraphics);
   }
 
+  /**
+   * Método encargado de inicializar el Slider de tierras y de dar funcionalidad al mismo
+   */
   async addSlider() {
     const [Slider, FeatureLayer, LabelClass] =
       await loadModules(['esri/widgets/Slider', 'esri/layers/FeatureLayer', 'esri/layers/support/LabelClass']);
@@ -1282,7 +1280,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             showAttribution: true,
             mode: FeatureLayer.MODE_ONDEMAND,
           });
-
           lyTierrasMdt.load().then(() => {
             let text = '';
             for (const field of lyTierrasMdt.fields) {
@@ -1311,15 +1308,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           const statesLabelClass = new LabelClass({
             labelExpressionInfo: { expression: '$feature.TIERRAS_ID' },
             symbol: {
-              type: 'text',  // autocasts as new TextSymbol()
+              type: 'text',
               color: 'black',
               haloSize: 1,
               haloColor: 'white'
             }
           });
-
           lyTierrasMdt.labelingInfo = [statesLabelClass];
-
           this.map.add(lyTierrasMdt);
           (window as any).ga('send', 'event', 'TOOL', 'slide', 'ts-tierras');
         } else {
@@ -1329,6 +1324,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
+  /**
+   * Método que se ejecuta cuando se cambia la selección de poligono en el sketch
+   */
   onChangeSelect() {
     if (this.selectedPolygon.value === 'free-pol') {
       this.sketch.create('polygon', { mode: 'freehand' });
@@ -1337,6 +1335,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  /**
+   * Método encargado de la funcionalidad de extraer datos a un archivo Shapefile
+   */
   async extratShape() {
     this.makingWork = true;
     const [FeatureSet, Geoprocessor] = await loadModules(['esri/tasks/support/FeatureSet', 'esri/tasks/Geoprocessor']);
@@ -1419,6 +1420,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  /**
+   * Método que se ejecuta cuando un item de la tabla de atributos es seleccionado
+   * @param event -> Evento con el item de la tabla seleccionado
+   */
   public onRowSelect(event: any): void {
     loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
       'esri/Color', 'dojo/_base/array', 'esri/Graphic']).then(([SimpleFillSymbol, SimpleLineSymbol, Color,
@@ -1450,15 +1455,25 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
   }
 
+  /**
+   * Método que se ejecuta cuando el dialogo de tabla de atributos es cerrado
+   */
   public onHideDialogAtributos(): void {
     this.graphics = [];
     this.view.graphics.removeAll();
   }
 
+  /**
+   * Retorna el data key de la tabla de atributos
+   */
   public dataKey(): string {
     return `attributes.${this.columnsTable[0]}`;
   }
 
+  /**
+   * Método que se ejecuta cuando un elemento de la tabla de atributos es deseleccionado
+   * @param event -> Evento que contiene el dato deseleccionado
+   */
   public onRowUnselect(event: any): void {
     for (const object of this.graphics) {
       if (object.attr !== undefined && object.attr === event.data.attributes) {
@@ -1469,6 +1484,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  /**
+   * Método encargado de realizar el análisis de cobertura
+   */
   public generateAnalisisCobertura(): void {
     loadModules(['esri/tasks/support/FeatureSet', 'esri/tasks/Geoprocessor']).
       then(([, Geoprocessor]) => {
@@ -1512,6 +1530,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
   }
 
+  /**
+   * Retorna los nombres de los departamentos seleccionados en el analisis de cobertura
+   */
   public nameDptoSelected(): string {
     let nameDptos = '';
     for (const dpto of this.dptosSelected) {
@@ -1520,6 +1541,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     return nameDptos;
   }
 
+  /**
+   * Metodo que se realiza cuando se cierra el dialogo de extracción de datos
+   */
   onHideDialogExtract() {
     this.clearGraphics();
     this.selectedLayers = [];
@@ -1531,12 +1555,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     console.log('Hola');
   }
 
+  /**
+   * Metodo que se realiza cuando se cierra el dialogo de analisis de cobertura
+   */
   onHideDialogAnalisis() {
     this.layerSelected = [];
     this.attributeTable.collapse();
     this.displayAnalisis = false;
   }
 
+  /**
+   * Detecta cambio de herramienta de dibujo en el sketch de zona de influencia
+   */
   onChangeSelectSketchBuffer() {
     (window as any).ga('send', 'event', 'BUTTON', 'click', 'buffer');
     switch (this.selectedBufferSketch) {
@@ -1549,6 +1579,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  /**
+   * Metodo que se realiza cuando el dialogo de zona de influencia es cerrado
+   */
   onHideDialogBuffer() {
     this.clearGraphics();
     this.selectedBuffer = undefined;
@@ -1557,28 +1590,41 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.sketchBuffer.cancel();
   }
 
+  /**
+   * Muestra el "acerca de" del Geovisor
+   */
   onShowAbout() {
     this.about = true;
   }
 
+  /**
+   * Muestra la guia del Geovisor
+   */
   onShowGuide() {
     this.guide = true;
   }
 
+  /**
+   * Retorna el nombre completo de filtro de la columna en la tabla de atributos
+   * @param col -> Nombre de la columna
+   */
   public attrFilter(col: string): string {
     return `attributes.${col}`;
   }
 
+  /**
+   * Genera archivo excel de los features de un layer seleccionado
+   */
   public generateExcelFeaturesLayer(): void {
-    let attribute: Array<any> = [];
+    const attribute: Array<any> = [];
     for (const r of this.featureDptos) {
-      let object = r.attributes;
+      const object = r.attributes;
       attribute.push(object);
     }
     const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     const EXCEL_EXTENSION = '.xlsx';
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(attribute);
-    const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    const workbook: XLSX.WorkBook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const dataBuffer: Blob = new Blob([excelBuffer], { type: EXCEL_TYPE });
     FileSaver.saveAs(dataBuffer, this.layerSelected.title + EXCEL_EXTENSION);
