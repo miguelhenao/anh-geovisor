@@ -141,6 +141,9 @@
         <td *ngFor="let col of columns">{{dpto.attributes[col]}}</td>
       </tr>
     </ng-template>
+    <ng-template pTemplate="summary">
+      <button pButton icon="fas fa-file-excel" id="excel" (click)="generateExcelFeaturesLayer()"></button>
+    </ng-template>
   </p-table>
 </p-dialog>
 

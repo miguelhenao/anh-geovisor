@@ -8,6 +8,8 @@ import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.comp
 import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
 import { ImportCSV } from './ImportCSV';
 import { DialogSymbologyChangeComponent } from '../dialog-symbology-change/dialog-symbology-change.component';
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-map-viewer',
@@ -1558,4 +1560,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     return `attributes.${col}`;
   }
 
+  public generateExcelFeaturesLayer(): void {
+    let attribute: Array<any> = [];
+    for (const r of this.featureDptos) {
+      let object = r.attributes;
+      attribute.push(object);
+    }
+    const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+      const EXCEL_EXTENSION = '.xlsx';
+      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(attribute);
+      const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+      const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const dataBuffer: Blob = new Blob([excelBuffer], { type: EXCEL_TYPE });
+      FileSaver.saveAs(dataBuffer, this.layerSelected.title + EXCEL_EXTENSION);
+  }
 }
