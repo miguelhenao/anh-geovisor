@@ -2,11 +2,11 @@ import { MapViewerService } from './map-viewer.service';
 import { DialogUrlServiceComponent } from '../dialog-urlservice/dialog-urlservice.component';
 import { MenuItem, DialogService, SelectItem, MessageService } from 'primeng/api';
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked, SimpleChange, OnChanges } from '@angular/core';
-import { loadModules } from "esri-loader";
+import { loadModules } from 'esri-loader';
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
 import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.component';
 import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
-import { ImportCSV } from "./ImportCSV";
+import { ImportCSV } from './ImportCSV';
 import { DialogSymbologyChangeComponent } from '../dialog-symbology-change/dialog-symbology-change.component';
 
 @Component({
@@ -17,45 +17,45 @@ import { DialogSymbologyChangeComponent } from '../dialog-symbology-change/dialo
 })
 export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, OnChanges {
 
-  @ViewChild("mapViewNode", { static: true }) private mapViewEl: ElementRef;
+  @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
   view: any;
   eventLayer: any;
-  displayTable: boolean = false;
+  displayTable = false;
   layerSelected: any;
   columnsTable: Array<any> = [];
-  latitude: number = 4.6486259;
-  longitude: number = -74.2478963;
-  displayMedicion: boolean = false;
+  latitude = 4.6486259;
+  longitude = -74.2478963;
+  displayMedicion = false;
   dptosSelected: Array<any> = [];
-  makingWork: boolean = false;
+  makingWork = false;
   featureDptos: Array<any> = [];
   menu: Array<MenuItem> = [];
-  loadLayers: number = 0;
+  loadLayers = 0;
   departmentLayer: any;
   graphics: Array<any> = [];
   map: any;
   search: any;
   sourceSearch: Array<any> = [];
   attributeTable: any;
-  leftDialog: number = 200;
-  about: boolean = false;
-  guide: boolean = false;
+  leftDialog = 200;
+  about = false;
+  guide = false;
   activeWidget: any;
   tsLayer: any;
   legend: any;
-  agsHost = "anh-gisserver.anh.gov.co";
-  agsProtocol = "https";
-  mapRestUrl = this.agsProtocol + "://" + this.agsHost + "/arcgis/rest/services/Tierras/Mapa_ANH/MapServer";
-  agsDir = "arcgis";
-  agsUrlBase = this.agsProtocol + "://" + this.agsHost + "/" + this.agsDir + "/";
+  agsHost = 'anh-gisserver.anh.gov.co';
+  agsProtocol = 'https';
+  mapRestUrl = this.agsProtocol + '://' + this.agsHost + '/arcgis/rest/services/Tierras/Mapa_ANH/MapServer';
+  agsDir = 'arcgis';
+  agsUrlBase = this.agsProtocol + '://' + this.agsHost + '/' + this.agsDir + '/';
   // Url servidor ArcGIS.com para servicios de conversión (sharing)
-  sharingUrl = "https://www.arcgis.com"; // importante que sea https para evitar problemas de SSL
+  sharingUrl = 'https://www.arcgis.com'; // importante que sea https para evitar problemas de SSL
   // Url del servicio de impresión
-  printUrl = this.agsUrlBase + "rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task";
+  printUrl = this.agsUrlBase + 'rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task';
   nameLayer: string;
   display = false;
-  displayAnalisis: boolean = false;
-  displayBuffer: boolean = false;
+  displayAnalisis = false;
+  displayBuffer = false;
   optionsPolygon = [
     { name: 'Polígono', value: 'pol' },
     { name: 'Polígono Libre', value: 'free-pol' }
@@ -101,7 +101,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
   constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService) {
     this.setCurrentPosition();
     if (localStorage.getItem('agreeTerms') == undefined) {
-      let dialog = this.dialogService.open(DialogTerminosComponent, {
+      this.dialogService.open(DialogTerminosComponent, {
         width: '100vw',
         height: '100vh',
         showHeader: false
@@ -115,7 +115,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
           {
             label: 'Shapefile',
             command: () => {
-              let dialog = this.dialogService.open(DialogFileComponent, {
+              const dialog = this.dialogService.open(DialogFileComponent, {
                 width: '50%',
                 baseZIndex: 20,
                 header: 'Cargar un archivo',
@@ -125,7 +125,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
                 if (res !== undefined) {
                   if (res.data.indexOf('.zip') !== -1) {
                     this.makingWork = true;
-                    (<any>window).ga('send', 'event', 'FORM', 'submit', 'upload-form-shp');
+                    (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-shp');
                     this.generateFeatureCollection(res.data, res.form, 'shapefile');
                   }
                 }
@@ -135,7 +135,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
           {
             label: 'Archivo CSV',
             command: () => {
-              let dialog = this.dialogService.open(DialogFileComponent, {
+              const dialog = this.dialogService.open(DialogFileComponent, {
                 width: '50%',
                 baseZIndex: 20,
                 header: 'Cargar un archivo',
@@ -144,7 +144,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
               dialog.onClose.subscribe(res => {
                 if (res !== undefined) {
                   this.makingWork = true;
-                  (<any>window).ga('send', 'event', 'FORM', 'submit', 'upload-form-csv');
+                  (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-csv');
                   this.importCsv.uploadFileCsv(res.form.elements[0].files, res.data, this.agsUrlBase, this.map, this.view, this.makingWork);
                   this.makingWork = false;
                 }
@@ -154,7 +154,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
           {
             label: 'Archivo GPX',
             command: () => {
-              let dialog = this.dialogService.open(DialogFileComponent, {
+              const dialog = this.dialogService.open(DialogFileComponent, {
                 width: '50%',
                 baseZIndex: 20,
                 header: 'Cargar un archivo',
@@ -164,7 +164,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
                 if (res !== undefined) {
                   if (res.data.indexOf('.gpx') !== -1) {
                     this.makingWork = true;
-                    (<any>window).ga('send', 'event', 'FORM', 'submit', 'upload-form-gpx');
+                    (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-gpx');
                     this.generateFeatureCollection(res.data, res.form, 'gpx');
                   }
                 }
@@ -174,7 +174,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
           {
             label: 'Archivo GeoJSON',
             command: () => {
-              let dialog = this.dialogService.open(DialogFileComponent, {
+              const dialog = this.dialogService.open(DialogFileComponent, {
                 width: '50%',
                 baseZIndex: 20,
                 header: 'Cargar un archivo GeoJSON',
@@ -183,7 +183,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
               dialog.onClose.subscribe(res => {
                 if (res !== undefined) {
                   this.makingWork = true;
-                  (<any>window).ga('send', 'event', 'FORM', 'submit', 'upload-form-geojson');
+                  (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-geojson');
                   this.addGeoJSONToMap(res);
                 }
               });
@@ -192,7 +192,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
           {
             label: 'Servicio KML',
             command: () => {
-              let dialog = this.dialogService.open(DialogUrlServiceComponent, {
+              const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
                 baseZIndex: 100,
                 header: 'Cargar servicio KML',
@@ -201,20 +201,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
                 console.log(res);
                 loadModules(['esri/layers/KMLLayer']).then(([KMLLayer]) => {
                   this.makingWork = true;
-                  (<any>window).ga('send', 'event', 'FORM', 'submit', 'services-form-kml');
-                  let geo = new KMLLayer({
+                  (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-kml');
+                  const geo = new KMLLayer({
                     url: res
                   });
                   this.makingWork = false;
                   this.map.add(geo);
                 });
-              })
+              });
             }
           },
           {
             label: 'Servicio WMS',
             command: () => {
-              let dialog = this.dialogService.open(DialogUrlServiceComponent, {
+              const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
                 baseZIndex: 100,
                 header: 'Cargar servicio WMS',
@@ -223,20 +223,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
                 console.log(res);
                 loadModules(['esri/layers/WMSLayer']).then(([WMSLayer]) => {
                   this.makingWork = true;
-                  (<any>window).ga('send', 'event', 'FORM', 'submit', 'services-form-wms');
-                  let geo = new WMSLayer({
+                  (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-wms');
+                  const geo = new WMSLayer({
                     url: res
                   });
                   this.makingWork = false;
                   this.map.add(geo);
                 });
-              })
+              });
             }
           },
           {
             label: 'Servicio GeoJSON',
             command: () => {
-              let dialog = this.dialogService.open(DialogUrlServiceComponent, {
+              const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
                 baseZIndex: 100,
                 header: 'Cargar servicio geoJSON'
@@ -245,20 +245,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
                 console.log(res);
                 loadModules(['esri/layers/GeoJSONLayer']).then(([GeoJSONLayer]) => {
                   this.makingWork = true;
-                  (<any>window).ga('send', 'event', 'FORM', 'submit', 'services-form-geojson');
-                  let geo = new GeoJSONLayer({
+                  (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-geojson');
+                  const geo = new GeoJSONLayer({
                     url: res
                   });
                   this.makingWork = false;
                   this.map.add(geo);
                 });
-              })
+              });
             }
           },
           {
             label: 'Servicio CSV',
             command: () => {
-              let dialog = this.dialogService.open(DialogUrlServiceComponent, {
+              const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                 width: '50%',
                 baseZIndex: 100,
                 header: 'Cargar servicio CSV'
@@ -267,7 +267,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
                 console.log(res);
                 loadModules(['esri/layers/CSVLayer']).then(([CSVLayer]) => {
                   this.makingWork = true;
-                  (<any>window).ga('send', 'event', 'FORM', 'submit', 'services-form-csv');
+                  (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-csv');
                   const csv = new CSVLayer({
                     url: res
                   });
@@ -322,13 +322,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
           {
             label: 'Cambiar simbologia',
             command: () => {
-              let dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
+              const dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
                 width: '25%',
                 header: 'Cambio de Simbología'
               });
               dialog.onClose.subscribe(res => {
                 if (res != undefined) {
-                  (<any>window).ga('send', 'event', 'BUTTON', 'click', 'symbol-start');
+                  (window as any).ga('send', 'event', 'BUTTON', 'click', 'symbol-start');
                   this.makingWork = true;
                   loadModules(['esri/symbols/SimpleMarkerSymbol', 'esri/symbols/SimpleFillSymbol',
                     'esri/symbols/SimpleLineSymbol', 'esri/Color', 'esri/renderers/SimpleRenderer']).then(([
@@ -345,13 +345,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
                           defaultSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), res.borderSize);
                           break;
                       }
-                      let renderer = new SimpleRenderer();
+                      const renderer = new SimpleRenderer();
                       renderer.symbol = defaultSymbol;
                       this.layerList.selectedItems.items[0].layer.renderer = renderer;
                     });
                   this.makingWork = false;
                 }
-              })
+              });
             }
           }
         ]
@@ -360,11 +360,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         label: 'Impresión',
         icon: 'fa fa-print',
         command: () => {
-          (<any>window).ga('send', 'event', 'BUTTON', 'click', 'print');
+          (window as any).ga('send', 'event', 'BUTTON', 'click', 'print');
           window.print();
         }
       }
-    ]
+    ];
   }
 
   ngAfterViewChecked() {
@@ -408,23 +408,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
   async initializeMap() {
     try {
       // Load the modules for the ArcGIS API for JavaScript
-      const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, AreaMeasurement2D, DistanceMeasurement2D, LabelClass,
-        BasemapGallery, SketchViewModel, GraphicsLayer, Graphic, Legend, ScaleBar, esriRequest,
-        SimpleFillSymbol, SimpleLineSymbol, Color, ListItem, geometryEngine, SpatialReference, ProjectParameters, GeometryService] =
-        await loadModules(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer",
-          "esri/widgets/LayerList", "esri/widgets/Print", "esri/widgets/Search", "esri/widgets/Expand",
-          "esri/widgets/AreaMeasurement2D", "esri/widgets/DistanceMeasurement2D", "esri/layers/support/LabelClass",
-          'esri/widgets/BasemapGallery', 'esri/widgets/Sketch/SketchViewModel',
-          'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend', 'esri/widgets/ScaleBar', 'esri/request'
-          , 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/Color',
-          'esri/widgets/LayerList/ListItem', 'esri/geometry/geometryEngine', 'esri/geometry/SpatialReference',
+      const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, LabelClass, BasemapGallery, SketchViewModel,
+        GraphicsLayer, Graphic, Legend, ScaleBar, ListItem, geometryEngine, SpatialReference, ProjectParameters, GeometryService] =
+        await loadModules(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/LayerList', 'esri/widgets/Print',
+          'esri/widgets/Search', 'esri/widgets/Expand', 'esri/layers/support/LabelClass', 'esri/widgets/BasemapGallery',
+          'esri/widgets/Sketch/SketchViewModel', 'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend',
+          'esri/widgets/ScaleBar', 'esri/widgets/LayerList/ListItem', 'esri/geometry/geometryEngine', 'esri/geometry/SpatialReference',
           'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService']);
 
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
 
       // Configure the Map
       const mapProperties = {
-        basemap: "streets"
+        basemap: 'streets'
       };
 
       const geomSvc = new GeometryService(this.agsUrlBase + 'rest/services/Utilities/Geometry/GeometryServer');
@@ -443,376 +439,344 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
 
       this.addSlider();
 
-      const ly_pozo = new FeatureLayer(this.mapRestUrl + "/1", {
-        id: "Pozo",
+      const lyPozo = new FeatureLayer(this.mapRestUrl + '/1', {
+        id: 'Pozo',
         opacity: 1.0,
         visible: true,
-        outFields: ["*"],
+        outFields: ['*'],
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
 
-      ly_pozo.on("layerview-create", () => {
-        this.loadLayers++;
-      });
-
-      ly_pozo.load().then(() => {
-        let text: string = "";
-        for (const field of ly_pozo.fields) {
+      lyPozo.load().then(() => {
+        let text = '';
+        for (const field of lyPozo.fields) {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
-        let templatePozo = {
-          title: "Información Pozo",
+        const templatePozo = {
+          title: 'Información Pozo',
           content: text,
           fieldInfos: []
         };
-        let sourceSearch: Array<any> = this.sourceSearch.slice();
+        const sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
-          layer: ly_pozo,
-          searchFields: ["well_name"],
-          displayField: "well_name",
+          layer: lyPozo,
+          searchFields: ['well_name'],
+          displayField: 'well_name',
           exactMatch: false,
-          outFields: ["*"],
-          name: ly_pozo.title
+          outFields: ['*'],
+          name: lyPozo.title
         });
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
         this.search.sources = this.sourceSearch;
-        ly_pozo.popupTemplate = templatePozo;
-      })
+        lyPozo.popupTemplate = templatePozo;
+      });
 
-      this.map.add(ly_pozo);
+      this.map.add(lyPozo);
 
-      const ly_rezumadero = new FeatureLayer(this.mapRestUrl + "/0", {
-        id: "Rezumadero",
+      const lyRezumadero = new FeatureLayer(this.mapRestUrl + '/0', {
+        id: 'Rezumadero',
         opacity: 1.0,
         visible: true,
-        outFields: ["*"],
+        outFields: ['*'],
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
 
-      ly_rezumadero.on("layerview-create", () => {
-        this.loadLayers++;
-      });
-
-      ly_rezumadero.load().then(() => {
-        let text: string = "";
-        for (const field of ly_rezumadero.fields) {
+      lyRezumadero.load().then(() => {
+        let text = '';
+        for (const field of lyRezumadero.fields) {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
-        let templateRezumadero = {
-          title: "Información Rezumadero",
+        const templateRezumadero = {
+          title: 'Información Rezumadero',
           content: text,
           fieldInfos: []
         };
-        let sourceSearch: Array<any> = this.sourceSearch.slice();
+        const sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
-          layer: ly_rezumadero,
-          searchFields: ["Rezumadero"],
-          displayField: "Rezumadero",
+          layer: lyRezumadero,
+          searchFields: ['Rezumadero'],
+          displayField: 'Rezumadero',
           exactMatch: false,
-          outFields: ["*"],
-          name: ly_rezumadero.title
+          outFields: ['*'],
+          name: lyRezumadero.title
         });
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
         this.search.sources = this.sourceSearch;
-        ly_rezumadero.popupTemplate = templateRezumadero;
+        lyRezumadero.popupTemplate = templateRezumadero;
       });
 
-      this.map.add(ly_rezumadero);
+      this.map.add(lyRezumadero);
 
-      const ly_sismica = new FeatureLayer(this.mapRestUrl + "/2", {
-        id: "Sismica 2D",
+      const lySismica = new FeatureLayer(this.mapRestUrl + '/2', {
+        id: 'Sismica 2D',
         opacity: 1.0,
         visible: true,
-        outFields: ["*"],
+        outFields: ['*'],
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
 
-      ly_sismica.on("layerview-create", () => {
-        this.loadLayers++;
-      });
-
-      ly_sismica.load().then(() => {
-        let text: string = "";
-        for (const field of ly_sismica.fields) {
+      lySismica.load().then(() => {
+        let text = '';
+        for (const field of lySismica.fields) {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
-        let templateSismica = {
-          title: "Información Sismica",
+        const templateSismica = {
+          title: 'Información Sismica',
           content: text,
           fieldInfos: []
         };
-        let sourceSearch: Array<any> = this.sourceSearch.slice();
+        const sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
-          layer: ly_sismica,
-          searchFields: ["SURVEY_NAM"],
-          displayField: "SURVEY_NAM",
+          layer: lySismica,
+          searchFields: ['SURVEY_NAM'],
+          displayField: 'SURVEY_NAM',
           exactMatch: false,
-          outFields: ["*"],
-          name: ly_sismica.title
+          outFields: ['*'],
+          name: lySismica.title
         });
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
         this.search.sources = this.sourceSearch;
-        ly_sismica.popupTemplate = templateSismica;
+        lySismica.popupTemplate = templateSismica;
       });
 
-      this.map.add(ly_sismica);
+      this.map.add(lySismica);
 
-      const ly_sismica3d = new FeatureLayer(this.mapRestUrl + "/3", {
-        id: "Sismica 3D",
+      const lySismica3d = new FeatureLayer(this.mapRestUrl + '/3', {
+        id: 'Sismica 3D',
         opacity: 1.0,
         visible: true,
-        outFields: ["*"],
+        outFields: ['*'],
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
 
-      ly_sismica3d.on("layerview-create", () => {
-        this.loadLayers++;
-      });
-
-      ly_sismica3d.load().then(() => {
-        let text: string = "";
-        for (const field of ly_sismica3d.fields) {
+      lySismica3d.load().then(() => {
+        let text = '';
+        for (const field of lySismica3d.fields) {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
-        let templateSismica3d = {
-          title: "Información Sismica 3D",
+        const templateSismica3d = {
+          title: 'Información Sismica 3D',
           content: text,
           fieldInfos: []
         };
-        let sourceSearch: Array<any> = this.sourceSearch.slice();
+        const sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
-          layer: ly_sismica3d,
-          searchFields: ["NOMBRE"],
-          displayField: "NOMBRE",
+          layer: lySismica3d,
+          searchFields: ['NOMBRE'],
+          displayField: 'NOMBRE',
           exactMatch: false,
-          outFields: ["*"],
-          name: ly_sismica3d.title
+          outFields: ['*'],
+          name: lySismica3d.title
         });
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
         this.search.sources = this.sourceSearch;
-        ly_sismica3d.popupTemplate = templateSismica3d;
+        lySismica3d.popupTemplate = templateSismica3d;
       });
 
-      this.map.add(ly_sismica3d);
+      this.map.add(lySismica3d);
 
-      const ly_municipio = new FeatureLayer(this.mapRestUrl + "/5", {
-        id: "Municipio",
+      const lyMunicipio = new FeatureLayer(this.mapRestUrl + '/5', {
+        id: 'Municipio',
         opacity: 1.0,
         visible: true,
-        outFields: ["*"],
+        outFields: ['*'],
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
 
-      ly_municipio.load().then(() => {
-        let text: string = "";
-        for (const field of ly_municipio.fields) {
+      lyMunicipio.load().then(() => {
+        let text = '';
+        for (const field of lyMunicipio.fields) {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
-        let templateMunicipio = {
-          title: "Info",
+        const templateMunicipio = {
+          title: 'Info',
           content: text,
           fieldInfos: []
         };
-        let sourceSearch: Array<any> = this.sourceSearch.slice();
+        const sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
-          layer: ly_municipio,
-          searchFields: ["NOMBRE_ENT"],
-          displayField: "NOMBRE_ENT",
+          layer: lyMunicipio,
+          searchFields: ['NOMBRE_ENT'],
+          displayField: 'NOMBRE_ENT',
           exactMatch: false,
-          outFields: ["*"],
-          name: ly_municipio.title
+          outFields: ['*'],
+          name: lyMunicipio.title
         });
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
         this.search.sources = this.sourceSearch;
-        ly_municipio.popupTemplate = templateMunicipio;
-      })
-
-      ly_municipio.on("layerview-create", () => {
-        this.loadLayers++;
+        lyMunicipio.popupTemplate = templateMunicipio;
       });
 
-      this.map.add(ly_municipio);
+      this.map.add(lyMunicipio);
 
-      const ly_departamento = new FeatureLayer(this.mapRestUrl + "/4", {
-        id: "Departamento",
+      const lyDepartamento = new FeatureLayer(this.mapRestUrl + '/4', {
+        id: 'Departamento',
         opacity: 1.0,
         visible: true,
-        outFields: ["*"],
+        outFields: ['*'],
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
 
-      ly_departamento.load().then(() => {
+      lyDepartamento.load().then(() => {
 
-        let sourceSearch: Array<any> = this.sourceSearch.slice();
+        const sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
-          layer: ly_departamento,
-          searchFields: ["DEPARTAMEN"],
-          displayField: "DEPARTAMEN",
+          layer: lyDepartamento,
+          searchFields: ['DEPARTAMEN'],
+          displayField: 'DEPARTAMEN',
           exactMatch: false,
-          outFields: ["*"],
-          name: ly_departamento.title,
+          outFields: ['*'],
+          name: lyDepartamento.title,
           suggestionsEnabled: true,
         });
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
         this.search.sources = this.sourceSearch;
-        let text: string = "";
-        for (const field of ly_departamento.fields) {
+        let text = '';
+        for (const field of lyDepartamento.fields) {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
-        let templateDepartamento = {
-          title: "Info",
+        const templateDepartamento = {
+          title: 'Info',
           content: text,
           fieldInfos: []
         };
-        ly_departamento.popupTemplate = templateDepartamento;
+        lyDepartamento.popupTemplate = templateDepartamento;
       });
 
-      ly_departamento.on("layerview-create", () => {
-        this.loadLayers++;
-      });
+      this.map.add(lyDepartamento);
 
-      this.map.add(ly_departamento);
+      this.departmentLayer = lyDepartamento;
 
-      this.departmentLayer = ly_departamento;
-
-      const ly_cuencas = new FeatureLayer(this.mapRestUrl + "/6", {
-        id: "Cuencas",
+      const lyCuencas = new FeatureLayer(this.mapRestUrl + '/6', {
+        id: 'Cuencas',
         opacity: 1.0,
         visible: true,
-        outFields: ["*"],
+        outFields: ['*'],
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
 
-      ly_cuencas.load().then(() => {
-        let text: string = "";
-        for (const field of ly_cuencas.fields) {
+      lyCuencas.load().then(() => {
+        let text = '';
+        for (const field of lyCuencas.fields) {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
-        let templateCuencas = {
-          title: "Info",
+        const templateCuencas = {
+          title: 'Info',
           content: text,
           fieldInfos: []
         };
-        let sourceSearch: Array<any> = this.sourceSearch.slice();
+        const sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
-          layer: ly_cuencas,
-          searchFields: ["NOMBRE", "FID_CUENCA"],
-          displayField: "NOMBRE",
+          layer: lyCuencas,
+          searchFields: ['NOMBRE', 'FID_CUENCA'],
+          displayField: 'NOMBRE',
           exactMatch: false,
-          outFields: ["*"],
-          name: ly_cuencas.title,
+          outFields: ['*'],
+          name: lyCuencas.title,
           suggestionsEnabled: true,
         });
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
         this.search.sources = this.sourceSearch;
-        ly_cuencas.popupTemplate = templateCuencas;
-      })
-
-      ly_cuencas.on("layerview-create", () => {
-        this.loadLayers++;
+        lyCuencas.popupTemplate = templateCuencas;
       });
 
-      this.map.add(ly_cuencas);
+      this.map.add(lyCuencas);
 
-      const ly_tierras = new FeatureLayer(this.mapRestUrl + "/8", {
-        id: "Tierras",
+      const lyTierras = new FeatureLayer(this.mapRestUrl + '/8', {
+        id: 'Tierras',
         opacity: 0.5,
         visible: true,
-        outFields: ["*"],
+        outFields: ['*'],
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
 
-      ly_tierras.load().then(() => {
-        let query = {
-          outFields: ["*"],
+      lyTierras.load().then(() => {
+        const query = {
+          outFields: ['*'],
           returnGeometry: false,
-          where: ""
-        }
-        ly_tierras.queryFeatures(query).then((result) => {
+          where: ''
+        };
+        lyTierras.queryFeatures(query).then((result) => {
           this.featureDptos = result.features;
           this.columnsTable = Object.keys(this.featureDptos[0].attributes);
         }, (err) => {
           console.log(err);
         });
-        let searchField: Array<any> = [];
-        let text: string = "";
-        this.layerSelected = ly_tierras;
-        for (const field of ly_tierras.fields) {
+        const searchField: Array<any> = [];
+        let text = '';
+        this.layerSelected = lyTierras;
+        for (const field of lyTierras.fields) {
           searchField.push(field.name);
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
-        let templateTierras = {
-          title: "Info",
+        const templateTierras = {
+          title: 'Info',
           content: text,
           fieldInfos: []
         };
-        let sourceSearch: Array<any> = this.sourceSearch.slice();
+        const sourceSearch: Array<any> = this.sourceSearch.slice();
         sourceSearch.push({
-          layer: ly_tierras,
-          searchFields: ["CONTRAT_ID"],
-          displayField: "CONTRAT_ID",
+          layer: lyTierras,
+          searchFields: ['CONTRAT_ID'],
+          displayField: 'CONTRAT_ID',
           exactMatch: false,
-          outFields: ["*"],
-          name: ly_tierras.title,
+          outFields: ['*'],
+          name: lyTierras.title,
           suggestionsEnabled: true,
         });
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
         this.search.sources = this.sourceSearch;
-        ly_tierras.popupTemplate = templateTierras;
+        lyTierras.popupTemplate = templateTierras;
       });
 
-      ly_tierras.on("layerview-create", () => {
-        this.loadLayers++;
-      })
-
       const statesLabelClass = new LabelClass({
-        labelExpressionInfo: { expression: "$feature.CONTRAT_ID" },
+        labelExpressionInfo: { expression: '$feature.CONTRAT_ID' },
         symbol: {
-          type: "text",  // autocasts as new TextSymbol()
-          color: "black",
+          type: 'text',  // autocasts as new TextSymbol()
+          color: 'black',
           haloSize: 1,
-          haloColor: "white"
+          haloColor: 'white'
         }
       });
 
-      ly_tierras.labelingInfo = [statesLabelClass];
-      this.map.add(ly_tierras);
+      lyTierras.labelingInfo = [statesLabelClass];
+      this.map.add(lyTierras);
 
-      const ly_sensibilidad = new FeatureLayer(this.mapRestUrl + "/7", {
-        labelExpressionInfo: { expression: "$feature.CONTRAT_ID" },
-        id: "Sensibilidad",
+      const lySensibilidad = new FeatureLayer(this.mapRestUrl + '/7', {
+        labelExpressionInfo: { expression: '$feature.CONTRAT_ID' },
+        id: 'Sensibilidad',
         opacity: 0.5,
         visible: false,
-        outFields: ["*"],
+        outFields: ['*'],
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-      ly_sensibilidad.labelingInfo = [statesLabelClass];
-      this.map.add(ly_sensibilidad);
+      lySensibilidad.labelingInfo = [statesLabelClass];
+      this.map.add(lySensibilidad);
 
       this.view = new MapView(mapViewProperties);
       this.view.on('click', (e) => {
-        (<any>window).ga('send', 'event', 'MAP-CONTROL', 'click', 'overviewMap');
+        (window as any).ga('send', 'event', 'MAP-CONTROL', 'click', 'overviewMap');
         if (this.activeWidget.viewModel.mode !== undefined) {
           if (this.activeWidget.viewModel.mode === 'capture') {
-            var outSR = new SpatialReference({ wkid: 3116 }); // MAGNA-SIRGAS / Colombia Bogota zone
-            var params = new ProjectParameters();
+            const outSR = new SpatialReference({ wkid: 3116 }); // MAGNA-SIRGAS / Colombia Bogota zone
+            const params = new ProjectParameters();
             params.geometries = [e.mapPoint];
             params.outSR = outSR;
             geomSvc.project(params).then((response) => {
@@ -824,63 +788,64 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         }
       });
 
-      let layerList = new LayerList({
+      this.view.on('layerview-create', () => {
+        this.loadLayers++;
+      });
+
+      const layerList = new LayerList({
         selectionEnabled: true,
         multipleSelectionEnabled: true,
         view: this.view,
         listItemCreatedFunction: (event) => {
-          var item = event.item;
-          if (event.item.layer == ly_departamento) {
+          const item = event.item;
+          if (event.item.layer === lyDepartamento) {
             item.actionsSections = [
               [{
-                title: "Tabla de Atributos",
-                className: "esri-icon-table",
-                id: "attr-table"
+                title: 'Tabla de Atributos',
+                className: 'esri-icon-table',
+                id: 'attr-table'
               }, {
-                title: "Analisis de Cobertura",
-                className: "esri-icon-description",
-                id: "analisis"
+                title: 'Analisis de Cobertura',
+                className: 'esri-icon-description',
+                id: 'analisis'
               }], [{
-                title: "Aumentar opacidad",
-                className: "esri-icon-up",
-                id: "increase-opacity"
+                title: 'Aumentar opacidad',
+                className: 'esri-icon-up',
+                id: 'increase-opacity'
               }, {
-                title: "Reducir opacidad",
-                className: "esri-icon-down",
-                id: "decrease-opacity"
+                title: 'Reducir opacidad',
+                className: 'esri-icon-down',
+                id: 'decrease-opacity'
               }]
             ];
           } else {
             item.actionsSections = [
               [{
-                title: "Tabla de Atributos",
-                className: "esri-icon-table",
-                id: "attr-table"
+                title: 'Tabla de Atributos',
+                className: 'esri-icon-table',
+                id: 'attr-table'
               }], [{
-                title: "Aumentar opacidad",
-                className: "esri-icon-up",
-                id: "increase-opacity"
+                title: 'Aumentar opacidad',
+                className: 'esri-icon-up',
+                id: 'increase-opacity'
               }, {
-                title: "Reducir opacidad",
-                className: "esri-icon-down",
-                id: "decrease-opacity"
+                title: 'Reducir opacidad',
+                className: 'esri-icon-down',
+                id: 'decrease-opacity'
               }]
             ];
           }
         }
       });
       this.view.when(() => {
-        layerList.on("trigger-action", (event) => {
-          console.log("ok");
-          console.log(event);
-          debugger;
-          if (event.action.id == "attr-table") {
-            let layer = event.item.layer;
-            let query = {
-              outFields: ["*"],
+        layerList.on('trigger-action', (event) => {
+          if (event.action.id === 'attr-table') {
+            const layer = event.item.layer;
+            const query = {
+              outFields: ['*'],
               returnGeometry: false,
-              where: ""
-            }
+              where: ''
+            };
             layer.queryFeatures(query).then((result) => {
               this.featureDptos = result.features;
               this.columnsTable = Object.keys(this.featureDptos[0].attributes);
@@ -889,19 +854,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
             }, (err) => {
               console.log(err);
             });
-          } else if (event.action.id == "analisis") {
-            let layer = event.item.layer;
-            let query = {
-              outFields: ["*"],
+          } else if (event.action.id === 'analisis') {
+            const layer = event.item.layer;
+            const query = {
+              outFields: ['*'],
               returnGeometry: false,
-              where: ""
-            }
+              where: ''
+            };
             layer.queryFeatures(query).then((result) => {
-              let dptos: Array<any> = [];
+              const dptos: Array<any> = [];
               for (const r of result.features) {
-                let dpto = {
+                const dpto = {
                   attributes: Object.assign({}, r.attributes)
-                }
+                };
                 dptos.push(dpto);
               }
               this.featureDptos = dptos;
@@ -915,17 +880,17 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
           }
         });
       });
-      let item = new ListItem({ layer: ly_tierras });
+      const item = new ListItem({ layer: lyTierras });
       layerList.selectedItems.add(item);
       this.layerList = layerList;
       console.log(this.layerList);
-      let layerListExpand = new Expand({
-        expandIconClass: "esri-icon-layers",
+      const layerListExpand = new Expand({
+        expandIconClass: 'esri-icon-layers',
         expandTooltip: 'Tabla de contenido',
         view: this.view,
         content: layerList,
         group: 'bottom-right',
-      })
+      });
       this.search = new Search({
         view: this.view,
         sources: this.sourceSearch,
@@ -934,25 +899,25 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       this.view.ui.add(this.search, {
         position: 'top-right'
       });
-      this.view.ui.move(["zoom"], "top-right");
-      let print = new Print({
+      this.view.ui.move(['zoom'], 'top-right');
+      const print = new Print({
         view: this.view,
-        printServiceUrl: "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
+        printServiceUrl: 'https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task'
       });
-      let expandPrint = new Expand({
+      const expandPrint = new Expand({
         expandIconClass: 'esri-icon-download',
         expandTooltip: 'Exportar',
         view: this.view,
         content: print,
         group: 'top-right'
-      })
+      });
 
-      let legend = new Legend({
+      const legend = new Legend({
         view: this.view,
       });
 
       this.legend = legend;
-      let expandLegend = new Expand({
+      const expandLegend = new Expand({
         expandIconClass: 'esri-icon-layer-list',
         expandTooltip: 'Convenciones',
         view: this.view,
@@ -960,10 +925,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         group: 'bottom-right'
       });
 
-      let basemapGallery = new BasemapGallery({
+      const basemapGallery = new BasemapGallery({
         view: this.view
       });
-      let expandBaseMapGallery = new Expand({
+      const expandBaseMapGallery = new Expand({
         expandIconClass: 'esri-icon-basemap',
         expandTooltip: 'Mapa base',
         view: this.view,
@@ -973,7 +938,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
 
       const graphicsLayer = new GraphicsLayer();
 
-      let sketchVM = new SketchViewModel({
+      const sketchVM = new SketchViewModel({
         layer: graphicsLayer,
         view: this.view
       });
@@ -984,7 +949,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         }
         if (event.state === 'complete') {
           this.clearGraphic = true;
-          let symbolF = {
+          const symbolF = {
             type: 'simple-fill',
             color: [255, 255, 0, 0.25],
             style: 'solid',
@@ -994,7 +959,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
               style: 'dash-dot'
             }
           };
-          let graphic = new Graphic({
+          const graphic = new Graphic({
             geometry: event.graphic.geometry,
             symbol: symbolF
           });
@@ -1002,7 +967,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         }
       });
 
-      let sketchVMBuffer = new SketchViewModel({
+      const sketchVMBuffer = new SketchViewModel({
         layer: graphicsLayer,
         view: this.view
       });
@@ -1011,7 +976,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         if (event.state === 'complete') {
           this.clearGraphic = true;
           let symbolGeo;
-          let geometry = event.graphic.geometry;
+          const geometry = event.graphic.geometry;
           switch (geometry.type) {
             case 'point':
               symbolGeo = { type: 'simple-marker', color: [226, 0, 0] };
@@ -1025,7 +990,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
               };
               break;
           }
-          let symbolBuffer = {
+          const symbolBuffer = {
             type: 'simple-fill',
             color: [255, 0, 0, 0.35],
             style: 'solid',
@@ -1033,13 +998,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
               color: [255, 0, 0, 0.65], width: 2, style: 'solid'
             }
           };
-          let graphic = new Graphic({
-            geometry: geometry,
+          const graphic = new Graphic({
+            geometry,
             symbol: symbolGeo
           });
           this.view.graphics.add(graphic);
           if (this.bufDistance !== undefined) {
-            var buffer = geometryEngine.geodesicBuffer(geometry, this.bufDistance, this.selectedBuffer.value);
+            const buffer = geometryEngine.geodesicBuffer(geometry, this.bufDistance, this.selectedBuffer.value);
             this.view.graphics.add(
               new Graphic({
                 geometry: buffer,
@@ -1053,7 +1018,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       this.sketch = sketchVM;
       this.sketchBuffer = sketchVMBuffer;
 
-      let scaleBar = new ScaleBar({
+      const scaleBar = new ScaleBar({
         style: 'line',
         view: this.view,
         unit: 'dual'
@@ -1063,18 +1028,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         position: 'bottom-left',
       });
 
-      let attributeTable = new Expand({
-        expandIconClass: "esri-icon-table",
+      const attributeTable = new Expand({
+        expandIconClass: 'esri-icon-table',
         view: this.view,
         mode: 'drawer',
         iconNumber: this.featureDptos.length,
-        content: document.getElementById("attributeTable")
+        content: document.getElementById('attributeTable')
       });
 
-      let help = new Expand({
+      const help = new Expand({
         expandIconClass: 'esri-icon-question',
         view: this.view,
-        content: document.getElementById("help"),
+        content: document.getElementById('help'),
         group: 'bottom-right'
       });
       help.expand();
@@ -1086,7 +1051,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       });
       return this.view;
     } catch (error) {
-      console.log("EsriLoader: ", error);
+      console.log('EsriLoader: ', error);
     }
   }
   clearGraphics() {
@@ -1099,7 +1064,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
   }
 
   ngOnChanges() {
-    console.log("cambio");
+    console.log('cambio');
   }
 
   onClickItem(event: any): void {
@@ -1112,30 +1077,30 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
   }
 
   public setActiveWidget(type) {
-    loadModules(["esri/widgets/DistanceMeasurement2D", "esri/widgets/AreaMeasurement2D", 'esri/widgets/CoordinateConversion']).then((
+    loadModules(['esri/widgets/DistanceMeasurement2D', 'esri/widgets/AreaMeasurement2D', 'esri/widgets/CoordinateConversion']).then((
       [DistanceMeasurement2D, AreaMeasurement2D, CoordinateConversion]) => {
       this.activeWidget != null ? this.activeWidget.destroy() : null;
       this.activeWidget = null;
-      let container = document.createElement("div");
-      container.id = "divWidget";
-      document.getElementById("widgetMeasure").appendChild(container);
+      const container = document.createElement('div');
+      container.id = 'divWidget';
+      document.getElementById('widgetMeasure').appendChild(container);
       this.magnaSirgasFlag = false;
       switch (type) {
-        case "distance":
+        case 'distance':
           this.activeWidget = new DistanceMeasurement2D({
             view: this.view,
-            container: document.getElementById("divWidget")
+            container: document.getElementById('divWidget')
           });
           this.activeWidget.viewModel.newMeasurement();
-          this.setActiveButton(document.getElementById("distanceButton"));
+          this.setActiveButton(document.getElementById('distanceButton'));
           break;
-        case "area":
+        case 'area':
           this.activeWidget = new AreaMeasurement2D({
             view: this.view,
-            container: document.getElementById("divWidget")
+            container: document.getElementById('divWidget')
           });
           this.activeWidget.viewModel.newMeasurement();
-          this.setActiveButton(document.getElementById("areaButton"));
+          this.setActiveButton(document.getElementById('areaButton'));
           break;
         case 'coordinate':
           this.activeWidget = new CoordinateConversion({
@@ -1156,12 +1121,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
 
   public setActiveButton(selectedButton) {
     this.view.focus();
-    var elements = document.getElementsByClassName("active");
-    for (var i = 0; i < elements.length; i++) {
-      elements[i].classList.remove("active");
+    const elements = document.getElementsByClassName('active');
+    for (let i = 0; i < elements.length; i++) {
+      elements[i].classList.remove('active');
     }
     if (selectedButton) {
-      selectedButton.classList.add("active");
+      selectedButton.classList.add('active');
     }
   }
 
@@ -1216,7 +1181,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
     const [FeatureLayer, Graphic, Field] = await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/layers/support/Field']);
     var layerName = featureCollection.data.featureCollection.layers[0].layerDefinition.name;
     var sourceGraphics = [];
-    console.log(featureCollection)
+    console.log(featureCollection);
     var layers = featureCollection.data.featureCollection.layers.map((layer) => {
       var graphics = layer.featureSet.features.map((feature) => {
         return Graphic.fromJSON(feature);
@@ -1224,7 +1189,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       sourceGraphics = sourceGraphics.concat(graphics);
       var featureLayer = new FeatureLayer({
         title: layerName,
-        objectIdField: "FID",
+        objectIdField: 'FID',
         source: graphics,
         fields: layer.layerDefinition.fields.map((field) => {
           return Field.fromJSON(field);
@@ -1253,7 +1218,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
       });
       var featureLayer = new FeatureLayer({
         title: filename,
-        objectIdField: "FID",
+        objectIdField: 'FID',
         source: graphics,
         popupTemplate: popup,
         renderer: SimpleRenderer.fromJSON(layer.layerDefinition.drawingInfo.renderer),
@@ -1276,9 +1241,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
     sourceGraphics = sourceGraphics.concat(graphics);
     const fields = [
       new Field({
-        name: "ObjectID",
-        alias: "ObjectID",
-        type: "oid"
+        name: 'ObjectID',
+        alias: 'ObjectID',
+        type: 'oid'
       })
     ];
     var featureLayer = new FeatureLayer({
@@ -1295,23 +1260,23 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
     const [Slider, FeatureLayer, LabelClass] =
       await loadModules(['esri/widgets/Slider', 'esri/layers/FeatureLayer', 'esri/layers/support/LabelClass']);
     this.service.getLayersOfServer(this.mapRestUrl, '?f=pjson').subscribe(success => {
-      let timeStops = [];
+      const timeStops = [];
       let layers = [];
       layers = success.layers;
       layers.forEach(layer => {
         this.nameLayer = layer.name;
         if (this.nameLayer.substr(0, 8).toUpperCase().startsWith('TIERRAS')) {
-          let tierrasDate = this.nameLayer.substr(this.nameLayer.length - 10);
-          let y = tierrasDate.substr(0, 4);
-          let m = tierrasDate.substr(5, 2);
-          let d = tierrasDate.substr(8, 2);
-          let fecha = new Date(y + '/' + m + '/' + d);
+          const tierrasDate = this.nameLayer.substr(this.nameLayer.length - 10);
+          const y = tierrasDate.substr(0, 4);
+          const m = tierrasDate.substr(5, 2);
+          const d = tierrasDate.substr(8, 2);
+          const fecha = new Date(y + '/' + m + '/' + d);
           timeStops.unshift([layer.id, fecha]);
         }
       });
-      let monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-      let slider = new Slider({
+      const slider = new Slider({
         container: 'ts-tierras',
         min: 0,
         max: timeStops.length - 1,
@@ -1343,23 +1308,23 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
           });
 
           lyTierrasMdt.load().then(() => {
-            let text: string = '';
+            let text = '';
             for (const field of lyTierrasMdt.fields) {
               text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
             }
-            let templateTierras = {
+            const templateTierras = {
               title: 'Información',
               content: text,
               fieldInfos: []
             };
             lyTierrasMdt.popupTemplate = templateTierras;
-            let sourceSearch = this.sourceSearch.splice(0, 8);
+            const sourceSearch = this.sourceSearch.splice(0, 8);
             sourceSearch.push({
               layer: lyTierrasMdt,
-              searchFields: ["DEPARTAMEN"],
-              displayField: "DEPARTAMEN",
+              searchFields: ['DEPARTAMEN'],
+              displayField: 'DEPARTAMEN',
               exactMatch: false,
-              outFields: ["*"],
+              outFields: ['*'],
               name: lyTierrasMdt.title,
               suggestionsEnabled: true,
             });
@@ -1380,7 +1345,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
           lyTierrasMdt.labelingInfo = [statesLabelClass];
 
           this.map.add(lyTierrasMdt);
-          (<any>window).ga('send', 'event', 'TOOL', 'slide', 'ts-tierras');
+          (window as any).ga('send', 'event', 'TOOL', 'slide', 'ts-tierras');
         } else {
           layerTierras.visible = true;
         }
@@ -1428,7 +1393,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         });
       }
     } else {
-      const features = this.view.graphics.items[0]
+      const features = this.view.graphics.items[0];
       const featureSet = new FeatureSet();
       featureSet.features = features;
       const params = {
@@ -1437,7 +1402,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         Feature_Format: 'Shapefile - SHP - .shp'
       };
       gpExtract.submitJob(params).then((jobInfo) => {
-        let options = {
+        const options = {
           statusCallback: (jobInfo1) => {
           }
         };
@@ -1459,7 +1424,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
           this.clearGraphics();
         });
       });
-      (<any>window).ga('send', 'event', 'FORM', 'submit', 'extract');
+      (window as any).ga('send', 'event', 'FORM', 'submit', 'extract');
     }
     this.makingWork = false;
   }
@@ -1468,25 +1433,25 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
     loadModules(['esri/tasks/support/Query', 'esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
       'esri/Color', 'dojo/_base/array', 'esri/Graphic']).then(([Query, SimpleFillSymbol, SimpleLineSymbol, Color,
         dojo, Graphic]) => {
-        let layer = this.layerSelected;
-        let query = layer.createQuery();
+        const layer = this.layerSelected;
+        const query = layer.createQuery();
         query.where = `${this.columnsTable[0]} = ${event.data.attributes[this.columnsTable[0]]}`;
         query.returnGeometry = true;
-        query.outFields = ["*"];
+        query.outFields = ['*'];
         layer.queryFeatures(query).then((res) => {
-          let symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
+          const symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
             new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 255, 1.0]), 2),
             new Color([0, 0, 0, 0.5]));
           dojo.forEach(res.features, (key) => {
-            let graphic = new Graphic({
+            const graphic = new Graphic({
               geometry: key.geometry,
               symbol: symbol
             });
             this.view.graphics.add(graphic);
-            let objectGraphic = {
+            const objectGraphic = {
               attr: event.data.attributes,
               graphic: graphic
-            }
+            };
             this.graphics.push(objectGraphic);
           });
         }, (err) => {
@@ -1520,19 +1485,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
         this.makingWork = true;
         this.displayAnalisis = false;
         this.attributeTable.collapse();
-        let gpIntersect = new Geoprocessor(this.agsUrlBase + "rest/services/AnalisisCobertura/GPServer/AnalisisCobertura");
+        const gpIntersect = new Geoprocessor(this.agsUrlBase + 'rest/services/AnalisisCobertura/GPServer/AnalisisCobertura');
         gpIntersect.outSpatialReference = { wkid: 4326 };
-        let nameDptos: string = "";
-        (<any>window).ga('send', 'event', 'BUTTON', 'click', 'intersect-start');
+        let nameDptos = '';
+        (window as any).ga('send', 'event', 'BUTTON', 'click', 'intersect-start');
         for (const dpto of this.dptosSelected) {
           nameDptos = `${nameDptos}'${dpto.attributes.DEPARTAMEN}',`;
         }
         nameDptos = nameDptos.substr(0, nameDptos.length - 1);
-        let params = {
+        const params = {
           Nombres_Departamentos: nameDptos
         };
         gpIntersect.submitJob(params).then((jobInfo) => {
-          let options = {
+          const options = {
             statusCallback: (jobInfo1) => {
             }
           };
@@ -1558,7 +1523,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
   }
 
   public nameDptoSelected(): string {
-    let nameDptos = "";
+    let nameDptos = '';
     for (const dpto of this.dptosSelected) {
       nameDptos = `${nameDptos} ${dpto.attributes.DEPARTAMEN}`;
     }
@@ -1573,7 +1538,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
   }
 
   changeAttrTable(event: any) {
-    console.log("Hola");
+    console.log('Hola');
   }
 
   onHideDialogAnalisis() {
@@ -1584,7 +1549,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked, 
   }
 
   onChangeSelectSketchBuffer() {
-    (<any>window).ga('send', 'event', 'BUTTON', 'click', 'buffer');
+    (window as any).ga('send', 'event', 'BUTTON', 'click', 'buffer');
     switch (this.selectedBufferSketch) {
       case 'line':
         this.sketchBuffer.create('polyline', { mode: 'freehand' });
