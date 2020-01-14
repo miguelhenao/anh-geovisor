@@ -26,9 +26,9 @@ export class DialogSymbologyChangeComponent implements OnInit {
 
   public validateForm(): void {
     this.changeForm = this.formBuilder.group({
-      'borderColor': [this.changeObject.borderColor, [Validators.required]],
-      'fillColor': [this.changeObject.fillColor, [Validators.required]],
-      'borderSize': [this.changeObject.borderSize, [Validators.required]]
+      borderColor: [this.changeObject.borderColor, [Validators.required]],
+      fillColor: [this.changeObject.fillColor, [Validators.required]],
+      borderSize: [this.changeObject.borderSize, [Validators.required]]
     });
   }
 

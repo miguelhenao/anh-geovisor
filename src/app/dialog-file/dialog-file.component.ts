@@ -20,13 +20,13 @@ export class DialogFileComponent implements OnInit {
   }
 
   onUpload(event) {
-    let fileName = event.target.elements[0].files[0].name;
-    if (fileName.indexOf(".csv") !== -1) {
+    const fileName = event.target.elements[0].files[0].name;
+    if (fileName.indexOf('.csv') !== -1) {
       this.dialogRef.close({
         data: this.val1,
         form: document.getElementById('uploadForm')
       });
-    } else if (fileName.indexOf(".json") != -1) {
+    } else if (fileName.indexOf('.json') !== -1) {
       this.processJson(event.target.elements[0].files[0]);
     } else {
       this.dialogRef.close({
@@ -37,10 +37,10 @@ export class DialogFileComponent implements OnInit {
   }
 
   public processJson(file: File): void {
-    let reader = new FileReader();
+    const reader = new FileReader();
     reader.onload = (e) => {
       this.dialogRef.close(JSON.parse(reader.result.toString()));
-    }
+    };
     reader.readAsText(file);
   }
 }

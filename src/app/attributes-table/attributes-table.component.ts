@@ -23,6 +23,6 @@ export class AttributesTableComponent implements OnInit {
   }
 
   onRowUnselect(event: any): void {
-    
+
   }
 }

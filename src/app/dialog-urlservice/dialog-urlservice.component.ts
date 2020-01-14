@@ -20,7 +20,7 @@ export class DialogUrlServiceComponent implements OnInit {
 
   public validateForm(): void {
     this.serviceForm = this.formBuilder.group({
-      'urlservice': [ this.urlservice, [Validators.required]]
+      urlservice: [this.urlservice, [Validators.required]]
     });
   }
 
