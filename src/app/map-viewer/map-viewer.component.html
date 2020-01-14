@@ -1,10 +1,6 @@
 <p-toast></p-toast>
 <p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10">
   <img src="logo-anh-p.png" (click)="visibleMenu = false">
-  <div id="panel-selected-layer" class="esri-widget"
-    *ngIf="layerList != undefined && layerList.selectedItems.items[0] != undefined">
-    {{nameLayerSelected()}}
-  </div>
   <div id="helps">
     <button pButton type="button" icon="pi pi-spin pi-compass" class="ui-button-success" pTooltip="Navegación"
       tooltipPosition="bottom"></button>
@@ -21,10 +17,6 @@
 </p-sidebar>
 <div id="menu-info">
   <button id="menu" type="button" (click)="visibleMenu = true"></button>
-  <div id="panel-selected-layer" class="esri-widget"
-    *ngIf="layerList != undefined && layerList.selectedItems.items[0] != undefined">
-    {{nameLayerSelected()}}
-  </div>
 </div>
 <div *ngIf="loadLayers != 8 || makingWork" id="loading" class="loading-machin"></div>
 <div #mapViewNode></div>
@@ -62,7 +54,7 @@
   <p>
     Departamentos seleccionados para el analisis:
   </p>
-  <p>{{nameDptoSelected()}}</p>
+  <p-multiSelect defaultLabel="Seleccione los departamentos para realizar analísis" (onChange)="onClickItem($event)" [options]="featureDptos" [(ngModel)]="dptosSelected" optionLabel="attributes.DEPARTAMEN"></p-multiSelect>
   <br>
   <p-button icon="pi pi-globe" [disabled]="dptosSelected.length == 0" (click)="generateAnalisisCobertura()"
     label="Iniciar Analisis de Cobertura"></p-button>
@@ -110,7 +102,7 @@
     Pulse <b>Ctrl</b> para activar la alineación<br> automática (snapping) con la geometría del<br> mapa mientras agrega puntos."></p-message>
 </p-dialog>
 
-<p-dialog header="Tabla de Atributos" [(visible)]="displayTable" [resizable]="true" (onHide)="onHideDialogMedicion()">
+<p-dialog header="Tabla de Atributos" [(visible)]="displayTable" [resizable]="true" (onHide)="onHideDialogAtributos()">
   <p-table [style]="{width: '500px'}" selectionMode="multiple" #dt [columns]="columnsTable" *ngIf="displayTable"
     [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true" [(selection)]="featuresSelected"
     (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollHeight="200px">
