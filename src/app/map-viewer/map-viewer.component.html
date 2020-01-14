@@ -1,15 +1,28 @@
 <p-toast></p-toast>
+<!-- Empieza sidebar-menu -->
 <p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10" [style]="{width:'200px'}">
   <img src="logo-anh-p.png" (click)="visibleMenu = false">
   <div style="overflow-y: auto;">
     <p-panelMenu [model]="menu" [style]="{'width':'100%', 'height': '550px'}" [multiple]="false"></p-panelMenu>
   </div>
 </p-sidebar>
+<!-- Finaliza sidebar-menu -->
+
+<!-- Botón de menú -->
 <div id="menu-info">
   <button id="menu" type="button" (click)="visibleMenu = true"></button>
 </div>
+<!-- Finaliza botón de menú -->
+
+<!-- Div de carga de tareas -->
 <div *ngIf="loadLayers != 10 || makingWork" id="loading" class="loading-machin"></div>
+<!-- Fin de div de carga de tareas -->
+
+<!-- Div contenedor del mapa -->
 <div #mapViewNode></div>
+<!-- Fin del div contenedor del mapa -->
+
+<!-- Tierra Slider del mapa -->
 <div id="ts-tierras-wrapper" align="center">
   <div class="ts-bg">
     <div id="ts-tierras" class="ui-slider-orange">
@@ -17,6 +30,9 @@
     </div>
   </div>
 </div>
+<!-- Fin del tierra slider del mapa -->
+
+<!-- Modal de extracción de datos -->
 <p-dialog header="Extracción de datos" [(visible)]="display" [resizable]="false" (onHide)="onHideDialogExtract()"
   [positionTop]="0">
   <div id="infoDiv">
@@ -38,7 +54,9 @@
     text="Proceda con los poligonos ya <b>seleccionados en la capa actual</b>. Si no<br> hay una selección en la capa actual debe usar las <b>Herramientas de</b><br><b>Selección.</b><br><b>Seleccione las capas</b> que se incluirán en la extracción">
   </p-message>
 </p-dialog>
+<!-- Fin del modal de extracción de datos -->
 
+<!-- Modal de analisis de cobertura -->
 <p-dialog header="Analisis de Cobertura de Entidades Terrritoriales" [(visible)]="displayAnalisis" [resizable]="false"
   (onHide)="onHideDialogAnalisis()">
   <p>
@@ -55,7 +73,9 @@
     text="Con este análisis se obtienen los <b>Bloques Explorativos que se <br> encuentran en la jurisdicción del Departamento</b> seleccionado,<br>indicando el porcentaje de cobertura de cada bloque. <br>Use las <b>herramientas de selección</b> o la <b>tabla de atributos</b> para indicar<br>cuales departamentos desea usar para este análisis.">
   </p-message>
 </p-dialog>
+<!-- Fin del modal de analisis de cobertura -->
 
+<!-- Modal de zona de influencia -->
 <p-dialog header="Zona de Influencia (Buffer)" [(visible)]="displayBuffer" [resizable]="false"
   (onHide)="onHideDialogBuffer()">
   <div id="div">
@@ -72,7 +92,9 @@
     <br>
   </div>
 </p-dialog>
+<!-- Fin del modal de zona de influencia -->
 
+<!-- Modal de herramientas de medicion -->
 <p-dialog header="Herramientas de Medición" [(visible)]="displayMedicion" [resizable]="false"
   (onHide)="onHideDialogMedicion()">
   <div id="topbar">
@@ -101,7 +123,9 @@
     <br>
     Pulse <b>Ctrl</b> para activar la alineación<br> automática (snapping) con la geometría del<br> mapa mientras agrega puntos."></p-message>
 </p-dialog>
+<!-- Fin del modal de herramientas de medición -->
 
+<!-- Modal de tabla de atributos -->
 <p-dialog header="Tabla de Atributos" [(visible)]="displayTable" [resizable]="false" (onHide)="onHideDialogAtributos()">
   <p-table [style]="{width: '500px'}" selectionMode="multiple" #dt [columns]="columnsTable" *ngIf="displayTable"
     [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true" [(selection)]="featuresSelected"
@@ -136,7 +160,9 @@
     </ng-template>
   </p-table>
 </p-dialog>
+<!-- Fin del modal de tabla de atributos -->
 
+<!-- Div contenedor del widget de ayuda -->
 <div id="help" class="esri-widget">
   <div *ngIf="loadLayers == 8">
 
@@ -166,11 +192,16 @@
     </h3>
   </div>
 </div>
+<!-- Fin del div contenedor del widget de ayuda -->
 
+<!-- Modal de acerca de -->
 <p-dialog header="Acerca de..." [(visible)]="about">
   <app-dialog-about></app-dialog-about>
 </p-dialog>
+<!-- Fin del modal de acerca de -->
 
+<!-- Modal de ayuda -->
 <p-dialog header="Ayuda del Geovisor ANH v3" [(visible)]="guide" [resizable]="false">
   <app-dialog-guide></app-dialog-guide>
 </p-dialog>
+<!-- Fin del modal de ayuda -->
