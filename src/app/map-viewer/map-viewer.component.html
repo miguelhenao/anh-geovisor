@@ -9,13 +9,13 @@
 <!-- Finaliza sidebar-menu -->
 
 <!-- Botón de menú -->
-<div id="menu-info">
+<div id="menu-info" *ngIf="view.ready">
   <button id="menu" type="button" (click)="visibleMenu = true"></button>
 </div>
 <!-- Finaliza botón de menú -->
 
 <!-- Div de carga de tareas -->
-<div *ngIf="loadLayers != 10 || makingWork" id="loading" class="loading-machin"></div>
+<div *ngIf="view.updating || makingWork" id="loading" class="loading-machin"></div>
 <!-- Fin de div de carga de tareas -->
 
 <!-- Div contenedor del mapa -->
@@ -165,7 +165,7 @@
 
 <!-- Div contenedor del widget de ayuda -->
 <div id="help" class="esri-widget">
-  <div *ngIf="loadLayers == 10">
+  <div *ngIf="view.ready">
     <div class="title-help">
       <div class="icon">
         <i class="esri-icon-comment" style="font-size: 1.5em"></i>

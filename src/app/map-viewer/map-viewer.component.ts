@@ -32,7 +32,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   makingWork = false;
   featureDptos: Array<any> = [];
   menu: Array<MenuItem> = [];
-  loadLayers = 0;
   departmentLayer: any;
   graphics: Array<any> = [];
   map: any;
@@ -413,6 +412,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         zoom: 5,
         map: this.map
       };
+
+      this.view = new MapView(mapViewProperties);
+
+
       this.addSlider();
       // Carga de capa de pozo
       const lyPozo = new FeatureLayer(this.mapRestUrl + '/1', {
@@ -747,7 +750,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       lySensibilidad.labelingInfo = [statesLabelClass];
       this.map.add(lySensibilidad);
-      this.view = new MapView(mapViewProperties);
       this.view.on('click', (e) => {
         if (this.activeWidget !== undefined && this.activeWidget !== null && this.activeWidget.viewModel.mode !== undefined) {
           if (this.activeWidget.viewModel.mode === 'capture') {
@@ -766,8 +768,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.view.on('layerview-create', () => {
         if (this.makingWork) {
           this.makingWork = false;
-        } else if (this.loadLayers < 10) {
-          this.loadLayers++;
         }
       });
       // Widget de LayerList
