@@ -330,6 +330,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             command: () => {
               this.displayMedicion = true;
               this.view.popup.autoOpenEnabled = false;
+              (window as any).ga('send', 'event', 'BUTTON', 'click', 'open-measure-menu');
             }
           }
         ]
@@ -832,6 +833,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         layerList.on('trigger-action', (event) => {
           const layer = event.item.layer;
           if (event.action.id === 'attr-table') {
+            (window as any).ga('send', 'event', 'BUTTON', 'click', 'att-table-button');
             const query = {
               outFields: ['*'],
               returnGeometry: false,
@@ -914,7 +916,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         expandTooltip: 'Tabla de contenido',
         view: this.view,
         content: layerList,
-        group: 'bottom-right',
+        group: 'expand',
       });
 
       this.search = new Search({
@@ -937,7 +939,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         expandTooltip: 'Exportar',
         view: this.view,
         content: print,
-        group: 'top-right'
+        group: 'expand'
       });
       const legend = new Legend({
         view: this.view,
@@ -948,7 +950,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         expandTooltip: 'Convenciones',
         view: this.view,
         content: legend,
-        group: 'bottom-right'
+        group: 'expand'
       });
       const basemapGallery = new BasemapGallery({
         view: this.view
@@ -958,7 +960,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         expandTooltip: 'Mapa base',
         view: this.view,
         content: basemapGallery,
-        group: 'top-right'
+        group: 'expand'
       });
       const graphicsLayer = new GraphicsLayer();
       const sketchVM = new SketchViewModel({
@@ -1055,7 +1057,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         expandIconClass: 'esri-icon-question',
         view: this.view,
         content: document.getElementById('help'),
-        group: 'bottom-right'
+        group: 'expand',
+        expandTooltip: 'Ayuda'
       });
       help.expand();
       this.attributeTable = attributeTable;
@@ -1387,6 +1390,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           layerTierras.visible = true;
         }
       });
+    }, error => {
+      console.log(error);
     });
   }
 
@@ -1682,6 +1687,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   onShowGuide() {
     this.guide = true;
+    (window as any).ga('send', 'event', 'BUTTON', 'click', 'ayuda');
   }
 
   /**
