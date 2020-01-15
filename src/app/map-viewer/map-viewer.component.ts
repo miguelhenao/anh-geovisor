@@ -779,6 +779,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 title: 'Analisis de Cobertura',
                 className: 'esri-icon-description',
                 id: 'analisis'
+              },
+              {
+                title: 'Cambiar simbología',
+                className: 'esri-icon-edit',
+                id: 'simbologia'
               }], [{
                 title: 'Aumentar opacidad',
                 className: 'esri-icon-up',
@@ -795,6 +800,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 title: 'Tabla de Atributos',
                 className: 'esri-icon-table',
                 id: 'attr-table'
+              },
+              {
+                title: 'Cambiar simbología',
+                className: 'esri-icon-edit',
+                id: 'simbologia'
               }], [{
                 title: 'Aumentar opacidad',
                 className: 'esri-icon-up',
