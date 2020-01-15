@@ -20,7 +20,9 @@ import * as FileSaver from 'file-saver';
 export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   @ViewChild('mapViewNode', { static: true }) private mapViewEl: ElementRef;
-  view: any;
+  view: any = {
+    ready: false
+  };
   eventLayer: any;
   displayTable = false;
   layerSelected: any;
