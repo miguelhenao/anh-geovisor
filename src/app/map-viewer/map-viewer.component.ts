@@ -1058,10 +1058,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       const help = new Expand({
         expandIconClass: 'esri-icon-question',
-        collapseIconClass: 'esri-icon-question',
         view: this.view,
         content: document.getElementById('help'),
-        group: 'expand'
+        group: 'expand',
+        expandTooltip: 'Ayuda'
       });
       help.expand();
       this.attributeTable = attributeTable;
