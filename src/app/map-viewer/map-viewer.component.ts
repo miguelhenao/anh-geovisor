@@ -909,9 +909,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
       });
 
-      const item = new ListItem({ layer: lyTierras });
-      layerList.selectedItems.add(item);
-      this.layerList = layerList;
       const layerListExpand = new Expand({
         expandIconClass: 'esri-icon-layers',
         expandTooltip: 'Tabla de contenido',
