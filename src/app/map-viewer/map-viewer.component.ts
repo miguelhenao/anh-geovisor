@@ -1120,6 +1120,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             view: this.view,
             container: document.getElementById('divWidget')
           });
+          const symbol = {
+            type: 'picture-marker',  // autocasts as new PictureMarkerSymbol()
+            url: 'assets/marker.png',
+            width: '18px',
+            height: '32px',
+            yoffset: '16px'
+          };
+          this.activeWidget.viewModel.locationSymbol = symbol;
           this.setActiveButton(document.getElementById('coordinateButton'));
           break;
         case null:
