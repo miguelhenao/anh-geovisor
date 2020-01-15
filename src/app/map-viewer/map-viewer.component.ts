@@ -210,14 +210,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 header: 'Cargar servicio KML',
               });
               dialog.onClose.subscribe(res => {
-                loadModules(['esri/layers/KMLLayer']).then(([KMLLayer]) => {
-                  this.makingWork = true;
-                  (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-kml');
-                  const geo = new KMLLayer({
-                    url: res
+                if (res !== undefined) {
+                  loadModules(['esri/layers/KMLLayer']).then(([KMLLayer]) => {
+                    this.makingWork = true;
+                    (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-kml');
+                    const geo = new KMLLayer({
+                      url: res
+                    });
+                    this.map.add(geo);
                   });
-                  this.map.add(geo);
-                });
+                }
               });
             }
           },
@@ -230,14 +232,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 header: 'Cargar servicio WMS',
               });
               dialog.onClose.subscribe(res => {
-                loadModules(['esri/layers/WMSLayer']).then(([WMSLayer]) => {
-                  this.makingWork = true;
-                  (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-wms');
-                  const wms = new WMSLayer({
-                    url: res
+                if (res !== undefined) {
+                  loadModules(['esri/layers/WMSLayer']).then(([WMSLayer]) => {
+                    this.makingWork = true;
+                    (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-wms');
+                    const wms = new WMSLayer({
+                      url: res
+                    });
+                    this.map.add(wms);
                   });
-                  this.map.add(wms);
-                });
+                }
               });
             }
           },
@@ -250,14 +254,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 header: 'Cargar servicio geoJSON'
               });
               dialog.onClose.subscribe(res => {
-                loadModules(['esri/layers/GeoJSONLayer']).then(([GeoJSONLayer]) => {
-                  this.makingWork = true;
-                  (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-geojson');
-                  const geo = new GeoJSONLayer({
-                    url: res
+                if (res !== undefined) {
+                  loadModules(['esri/layers/GeoJSONLayer']).then(([GeoJSONLayer]) => {
+                    this.makingWork = true;
+                    (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-geojson');
+                    const geo = new GeoJSONLayer({
+                      url: res
+                    });
+                    this.map.add(geo);
                   });
-                  this.map.add(geo);
-                });
+                }
               });
             }
           },
@@ -270,14 +276,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 header: 'Cargar servicio CSV'
               });
               dialog.onClose.subscribe(res => {
-                loadModules(['esri/layers/CSVLayer']).then(([CSVLayer]) => {
-                  this.makingWork = true;
-                  (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-csv');
-                  const csv = new CSVLayer({
-                    url: res
+                if (res !== undefined) {
+                  loadModules(['esri/layers/CSVLayer']).then(([CSVLayer]) => {
+                    this.makingWork = true;
+                    (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-csv');
+                    const csv = new CSVLayer({
+                      url: res
+                    });
+                    this.map.add(csv);
                   });
-                  this.map.add(csv);
-                });
+                }
               });
             }
           }
@@ -320,6 +328,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Herramientas de Medición',
             command: () => {
               this.displayMedicion = true;
+              this.view.popup.autoOpenEnabled = false;
             }
           }
         ]
@@ -740,8 +749,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.map.add(lySensibilidad);
       this.view = new MapView(mapViewProperties);
       this.view.on('click', (e) => {
-        (window as any).ga('send', 'event', 'MAP-CONTROL', 'click', 'overviewMap');
-        if (this.activeWidget !== undefined && this.activeWidget.viewModel.mode !== undefined) {
+        if (this.activeWidget !== undefined && this.activeWidget !== null && this.activeWidget.viewModel.mode !== undefined) {
           if (this.activeWidget.viewModel.mode === 'capture') {
             const outSR = new SpatialReference({ wkid: 3116 }); // MAGNA-SIRGAS / Colombia Bogota zone
             const params = new ProjectParameters();
@@ -1084,6 +1092,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public onHideDialogMedicion(): void {
     this.setActiveButton(null);
     this.setActiveWidget(null);
+    this.view.popup.autoOpenEnabled = true;
   }
 
   /**
