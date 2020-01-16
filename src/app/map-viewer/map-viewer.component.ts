@@ -30,6 +30,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   latitude = 4.6486259;
   longitude = -74.2478963;
   displayMedicion = false;
+  errorLoadSlider: boolean = false;
   dptosSelected: Array<any> = [];
   makingWork = false;
   featureDptos: Array<any> = [];
@@ -1387,6 +1388,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
     }, error => {
       console.log(error);
+      this.errorLoadSlider = true;
     });
   }
 

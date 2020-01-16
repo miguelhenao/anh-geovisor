@@ -23,7 +23,7 @@
 <!-- Fin del div contenedor del mapa -->
 
 <!-- Tierra Slider del mapa -->
-<div id="ts-tierras-wrapper" align="center">
+<div id="ts-tierras-wrapper" *ngIf="!errorLoadSlider" align="center">
   <div class="ts-bg">
     <div id="ts-tierras" class="ui-slider-orange">
       <div class="ts-label">{{nameLayer}}</div>
