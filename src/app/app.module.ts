@@ -23,7 +23,6 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { ToastModule } from 'primeng/toast';
 import {TableModule} from 'primeng/table';
 import {MessageModule} from 'primeng/message';
-import { AttributesTableComponent } from './attributes-table/attributes-table.component';
 import {RadioButtonModule} from 'primeng/radiobutton';
 import {SelectButtonModule} from 'primeng/selectbutton';
 import {ColorPickerModule} from 'primeng/colorpicker';
@@ -39,7 +38,6 @@ import { DialogGuideComponent } from './dialog-guide/dialog-guide.component';
     DialogUrlServiceComponent,
     DialogFileComponent,
     DialogTerminosComponent,
-    AttributesTableComponent,
     DialogSymbologyChangeComponent,
     DialogAboutComponent,
     DialogGuideComponent
