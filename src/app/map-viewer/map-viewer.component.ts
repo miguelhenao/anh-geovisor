@@ -773,6 +773,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.makingWork = false;
         }
       });
+      this.view.on('layerview-create-error', (e) => {
+        this.messageService.add({detail: `Error cargando la capa ${e.layer.id}`, summary: 'Carga de capas', severity: 'error'});
+      });
       // Widget de LayerList
       const layerList = new LayerList({
         selectionEnabled: true,
