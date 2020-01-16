@@ -129,166 +129,182 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'Shapefile',
             command: () => {
-              const dialog = this.dialogService.open(DialogFileComponent, {
-                width: '50%',
-                baseZIndex: 20,
-                header: 'Cargar un archivo',
-                data: { type: 'zip' }
-              });
-              dialog.onClose.subscribe(res => {
-                if (res !== undefined) {
-                  if (res.data.indexOf('.zip') !== -1) {
-                    this.makingWork = true;
-                    (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-shp');
-                    this.generateFeatureCollection(res.data, res.form, 'shapefile');
+              if (!this.errorLoadSlider) {
+                const dialog = this.dialogService.open(DialogFileComponent, {
+                  width: '50%',
+                  baseZIndex: 20,
+                  header: 'Cargar un archivo',
+                  data: { type: 'zip' }
+                });
+                dialog.onClose.subscribe(res => {
+                  if (res !== undefined) {
+                    if (res.data.indexOf('.zip') !== -1) {
+                      this.makingWork = true;
+                      (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-shp');
+                      this.generateFeatureCollection(res.data, res.form, 'shapefile');
+                    }
                   }
-                }
-              });
+                });
+              }
             }
           },
           {
             label: 'Archivo CSV',
             command: () => {
-              const dialog = this.dialogService.open(DialogFileComponent, {
-                width: '50%',
-                baseZIndex: 20,
-                header: 'Cargar un archivo',
-                data: { type: 'csv' }
-              });
-              dialog.onClose.subscribe(res => {
-                if (res !== undefined) {
-                  this.makingWork = true;
-                  (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-csv');
-                  this.importCsv.uploadFileCsv(res.form.elements[0].files, res.data, this.urlGeometryService, this.map, this.view,
-                    this.makingWork);
-                }
-              });
+              if (!this.errorLoadSlider) {
+                const dialog = this.dialogService.open(DialogFileComponent, {
+                  width: '50%',
+                  baseZIndex: 20,
+                  header: 'Cargar un archivo',
+                  data: { type: 'csv' }
+                });
+                dialog.onClose.subscribe(res => {
+                  if (res !== undefined) {
+                    this.makingWork = true;
+                    (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-csv');
+                    this.importCsv.uploadFileCsv(res.form.elements[0].files, res.data, this.urlGeometryService, this.map, this.view,
+                      this.makingWork);
+                  }
+                });
+              }
             }
           },
           {
             label: 'Archivo GPX',
             command: () => {
-              const dialog = this.dialogService.open(DialogFileComponent, {
-                width: '50%',
-                baseZIndex: 20,
-                header: 'Cargar un archivo',
-                data: { type: 'gpx' }
-              });
-              dialog.onClose.subscribe(res => {
-                if (res !== undefined) {
-                  if (res.data.indexOf('.gpx') !== -1) {
-                    this.makingWork = true;
-                    (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-gpx');
-                    this.generateFeatureCollection(res.data, res.form, 'gpx');
+              if (!this.errorLoadSlider) {
+                const dialog = this.dialogService.open(DialogFileComponent, {
+                  width: '50%',
+                  baseZIndex: 20,
+                  header: 'Cargar un archivo',
+                  data: { type: 'gpx' }
+                });
+                dialog.onClose.subscribe(res => {
+                  if (res !== undefined) {
+                    if (res.data.indexOf('.gpx') !== -1) {
+                      this.makingWork = true;
+                      (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-gpx');
+                      this.generateFeatureCollection(res.data, res.form, 'gpx');
+                    }
                   }
-                }
-              });
+                });
+              }
             }
           },
           {
             label: 'Archivo GeoJSON',
             command: () => {
-              const dialog = this.dialogService.open(DialogFileComponent, {
-                width: '50%',
-                baseZIndex: 20,
-                header: 'Cargar un archivo GeoJSON',
-                data: { type: 'json' }
-              });
-              dialog.onClose.subscribe(res => {
-                if (res !== undefined) {
-                  this.makingWork = true;
-                  (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-geojson');
-                  this.addGeoJSONToMap(res);
-                }
-              });
+              if (!this.errorLoadSlider) {
+                const dialog = this.dialogService.open(DialogFileComponent, {
+                  width: '50%',
+                  baseZIndex: 20,
+                  header: 'Cargar un archivo GeoJSON',
+                  data: { type: 'json' }
+                });
+                dialog.onClose.subscribe(res => {
+                  if (res !== undefined) {
+                    this.makingWork = true;
+                    (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-geojson');
+                    this.addGeoJSONToMap(res);
+                  }
+                });
+              }
             }
           },
           {
             label: 'Servicio KML',
             command: () => {
-              const dialog = this.dialogService.open(DialogUrlServiceComponent, {
-                width: '50%',
-                baseZIndex: 100,
-                header: 'Cargar servicio KML',
-              });
-              dialog.onClose.subscribe(res => {
-                if (res !== undefined) {
-                  loadModules(['esri/layers/KMLLayer']).then(([KMLLayer]) => {
-                    this.makingWork = true;
-                    (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-kml');
-                    const geo = new KMLLayer({
-                      url: res
+              if (!this.errorLoadSlider) {
+                const dialog = this.dialogService.open(DialogUrlServiceComponent, {
+                  width: '50%',
+                  baseZIndex: 100,
+                  header: 'Cargar servicio KML',
+                });
+                dialog.onClose.subscribe(res => {
+                  if (res !== undefined) {
+                    loadModules(['esri/layers/KMLLayer']).then(([KMLLayer]) => {
+                      this.makingWork = true;
+                      (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-kml');
+                      const geo = new KMLLayer({
+                        url: res
+                      });
+                      this.map.add(geo);
                     });
-                    this.map.add(geo);
-                  });
-                }
-              });
+                  }
+                });
+              }
             }
           },
           {
             label: 'Servicio WMS',
             command: () => {
-              const dialog = this.dialogService.open(DialogUrlServiceComponent, {
-                width: '50%',
-                baseZIndex: 100,
-                header: 'Cargar servicio WMS',
-              });
-              dialog.onClose.subscribe(res => {
-                if (res !== undefined) {
-                  loadModules(['esri/layers/WMSLayer']).then(([WMSLayer]) => {
-                    this.makingWork = true;
-                    (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-wms');
-                    const wms = new WMSLayer({
-                      url: res
+              if (!this.errorLoadSlider) {
+                const dialog = this.dialogService.open(DialogUrlServiceComponent, {
+                  width: '50%',
+                  baseZIndex: 100,
+                  header: 'Cargar servicio WMS',
+                });
+                dialog.onClose.subscribe(res => {
+                  if (res !== undefined) {
+                    loadModules(['esri/layers/WMSLayer']).then(([WMSLayer]) => {
+                      this.makingWork = true;
+                      (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-wms');
+                      const wms = new WMSLayer({
+                        url: res
+                      });
+                      this.map.add(wms);
                     });
-                    this.map.add(wms);
-                  });
-                }
-              });
+                  }
+                });
+              }
             }
           },
           {
             label: 'Servicio GeoJSON',
             command: () => {
-              const dialog = this.dialogService.open(DialogUrlServiceComponent, {
-                width: '50%',
-                baseZIndex: 100,
-                header: 'Cargar servicio geoJSON'
-              });
-              dialog.onClose.subscribe(res => {
-                if (res !== undefined) {
-                  loadModules(['esri/layers/GeoJSONLayer']).then(([GeoJSONLayer]) => {
-                    this.makingWork = true;
-                    (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-geojson');
-                    const geo = new GeoJSONLayer({
-                      url: res
+              if (!this.errorLoadSlider) {
+                const dialog = this.dialogService.open(DialogUrlServiceComponent, {
+                  width: '50%',
+                  baseZIndex: 100,
+                  header: 'Cargar servicio geoJSON'
+                });
+                dialog.onClose.subscribe(res => {
+                  if (res !== undefined) {
+                    loadModules(['esri/layers/GeoJSONLayer']).then(([GeoJSONLayer]) => {
+                      this.makingWork = true;
+                      (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-geojson');
+                      const geo = new GeoJSONLayer({
+                        url: res
+                      });
+                      this.map.add(geo);
                     });
-                    this.map.add(geo);
-                  });
-                }
-              });
+                  }
+                });
+              }
             }
           },
           {
             label: 'Servicio CSV',
             command: () => {
-              const dialog = this.dialogService.open(DialogUrlServiceComponent, {
-                width: '50%',
-                baseZIndex: 100,
-                header: 'Cargar servicio CSV'
-              });
-              dialog.onClose.subscribe(res => {
-                if (res !== undefined) {
-                  loadModules(['esri/layers/CSVLayer']).then(([CSVLayer]) => {
-                    this.makingWork = true;
-                    (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-csv');
-                    const csv = new CSVLayer({
-                      url: res
+              if (!this.errorLoadSlider) {
+                const dialog = this.dialogService.open(DialogUrlServiceComponent, {
+                  width: '50%',
+                  baseZIndex: 100,
+                  header: 'Cargar servicio CSV'
+                });
+                dialog.onClose.subscribe(res => {
+                  if (res !== undefined) {
+                    loadModules(['esri/layers/CSVLayer']).then(([CSVLayer]) => {
+                      this.makingWork = true;
+                      (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-csv');
+                      const csv = new CSVLayer({
+                        url: res
+                      });
+                      this.map.add(csv);
                     });
-                    this.map.add(csv);
-                  });
-                }
-              });
+                  }
+                });
+              }
             }
           }
         ]
@@ -341,7 +357,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         icon: 'fa fa-print',
         command: () => {
           (window as any).ga('send', 'event', 'BUTTON', 'click', 'print');
-          window.print();
+          if (!this.errorLoadSlider) {
+            window.print();
+          }
         }
       }
     ];
