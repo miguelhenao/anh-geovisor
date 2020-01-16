@@ -316,7 +316,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'A Shapefile',
             command: () => {
-              this.visibleMenu = false;
               this.optionsLayers = [];
               this.map.layers.items.forEach((layer) => {
                 if (layer.title !== null) {
@@ -338,7 +337,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'Zona de Influencia (Buffer)',
             command: () => {
-              this.visibleMenu = false;
               this.displayBuffer = true;
             }
           },
