@@ -347,30 +347,22 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-    /* let layerList: HTMLCollection = document.getElementsByClassName('esri-layer-list__item--selectable');
+    let layerList: HTMLCollection = document.getElementsByClassName('esri-expand__panel');
     for (let index = 0; index < layerList.length; index++) {
       const element = layerList[index];
-      element.addEventListener('click', this.clickItemLayer);
-    } */
+      element.addEventListener('click', this.clickItemExpand);
+    }
   }
 
-
-  /* clickItemLayer: (any) => void = (event: any): void => {
-    if (this.layerList.selectedItems.items[0].layer != undefined) {
-      let layer = this.layerList.selectedItems.items[0].layer;
-      let query = {
-        outFields: ['*'],
-        returnGeometry: false,
-        where: ''
-      }
-      layer.queryFeatures(query).then((result) => {
-        this.featureDptos = result.features;
-        this.columnsTable = Object.keys(this.featureDptos[0].attributes);
-      }, (err) => {
-        console.log(err);
-      });
+  clickItemExpand: (any) => void = (event: any): void => {
+    if (event.srcElement.className.includes("layer-list")) {
+      (window as any).ga('send', 'event', 'BUTTON', 'click', 'legend-button');
+    } else if (event.srcElement.className.includes("layers")) {
+      (window as any).ga('send', 'event', 'BUTTON', 'click', 'toc-button');
+    } else if (event.srcElement.className.includes("question")) {
+      (window as any).ga('send', 'event', 'BUTTON', 'click', 'help-button');
     }
-  } */
+  }
 
   /**
    * Consigue la ubicación del computador
