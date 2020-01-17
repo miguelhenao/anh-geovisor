@@ -30,7 +30,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   latitude = 4.6486259;
   longitude = -74.2478963;
   displayMedicion = false;
-  errorLoadSlider: boolean = false;
+  errorLoadSlider = false;
   dptosSelected: Array<any> = [];
   makingWork = false;
   featureDptos: Array<any> = [];
@@ -364,19 +364,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-    let layerList: HTMLCollection = document.getElementsByClassName('esri-expand__panel');
+    const layerList: HTMLCollection = document.getElementsByClassName('esri-expand__panel');
     for (let index = 0; index < layerList.length; index++) {
       const element = layerList[index];
       element.addEventListener('click', this.clickItemExpand);
     }
   }
 
-  clickItemExpand: (any) => void = (event: any): void => {
-    if (event.srcElement.className.includes("layer-list")) {
+  clickItemExpand: (arg0: any) => void = (event: any): void => {
+    if (event.srcElement.className.includes('layer-list')) {
       (window as any).ga('send', 'event', 'BUTTON', 'click', 'legend-button');
-    } else if (event.srcElement.className.includes("layers")) {
+    } else if (event.srcElement.className.includes('layers')) {
       (window as any).ga('send', 'event', 'BUTTON', 'click', 'toc-button');
-    } else if (event.srcElement.className.includes("question")) {
+    } else if (event.srcElement.className.includes('question')) {
       (window as any).ga('send', 'event', 'BUTTON', 'click', 'help-button');
     }
   }
@@ -915,9 +915,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 this.makingWork = false;
               }
             });
-          } else if (event.action.id == 'increase-opacity') {
+          } else if (event.action.id === 'increase-opacity') {
             layer.opacity += 0.25;
-          } else if (event.action.id == 'decrease-opacity') {
+          } else if (event.action.id === 'decrease-opacity') {
             layer.opacity -= 0.25;
           }
         });
@@ -1636,18 +1636,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   changeAttrTable(event: any) {
-    let ev = {
+    const ev = {
       data: {
         attributes: event.itemValue.attributes
       }
-    }
-    if (event.value.indexOf(event.itemValue) != -1) {
-      //Añadir
-      console.log("Añadio")
+    };
+    if (event.value.indexOf(event.itemValue) !== -1) {
+      // Añadir
+      console.log('Añadio');
       this.onRowSelect(ev);
     } else {
-      //Remover
-      console.log("Remover");
+      // Remover
+      console.log('Remover');
       this.onRowUnselect(ev);
     }
   }
