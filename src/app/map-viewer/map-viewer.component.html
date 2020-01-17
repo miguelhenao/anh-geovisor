@@ -1,7 +1,9 @@
 <p-toast></p-toast>
 <!-- Empieza sidebar-menu -->
 <p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10" [style]="{width:'200px', 'height': 'auto'}">
-  <img src="logo-anh-p.png" (click)="visibleMenu = false">
+  <div id="logomenu">
+    <img src="logo-anh-p.png" (click)="visibleMenu = false">
+  </div>
   <div style="overflow-y: auto;">
     <p-panelMenu [model]="menu" [style]="{'width':'100%', 'height': 'auto'}" [multiple]="false"></p-panelMenu>
   </div>
@@ -9,8 +11,8 @@
 <!-- Finaliza sidebar-menu -->
 
 <!-- Botón de menú -->
-<div id="menu-info" *ngIf="view.ready">
-  <button id="menu" type="button" (click)="visibleMenu = true"></button>
+<div id="menu-info" (click)="visibleMenu = true" title="Menú" *ngIf="view.ready">
+  <button id="menu" style="float: right;" type="button"></button>
 </div>
 <!-- Finaliza botón de menú -->
 
