@@ -30,7 +30,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   latitude = 4.6486259;
   longitude = -74.2478963;
   displayMedicion = false;
-  errorLoadSlider = false;
+  errorArcgisService = false;
   dptosSelected: Array<any> = [];
   makingWork = false;
   featureDptos: Array<any> = [];
@@ -129,7 +129,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'Shapefile',
             command: () => {
-              if (!this.errorLoadSlider) {
+              if (!this.errorArcgisService) {
                 const dialog = this.dialogService.open(DialogFileComponent, {
                   width: '50%',
                   baseZIndex: 20,
@@ -151,7 +151,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'Archivo CSV',
             command: () => {
-              if (!this.errorLoadSlider) {
+              if (!this.errorArcgisService) {
                 const dialog = this.dialogService.open(DialogFileComponent, {
                   width: '50%',
                   baseZIndex: 20,
@@ -172,7 +172,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'Archivo GPX',
             command: () => {
-              if (!this.errorLoadSlider) {
+              if (!this.errorArcgisService) {
                 const dialog = this.dialogService.open(DialogFileComponent, {
                   width: '50%',
                   baseZIndex: 20,
@@ -194,7 +194,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'Archivo GeoJSON',
             command: () => {
-              if (!this.errorLoadSlider) {
+              if (!this.errorArcgisService) {
                 const dialog = this.dialogService.open(DialogFileComponent, {
                   width: '50%',
                   baseZIndex: 20,
@@ -214,7 +214,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'Servicio KML',
             command: () => {
-              if (!this.errorLoadSlider) {
+              if (!this.errorArcgisService) {
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
@@ -238,7 +238,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'Servicio WMS',
             command: () => {
-              if (!this.errorLoadSlider) {
+              if (!this.errorArcgisService) {
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
@@ -262,7 +262,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'Servicio GeoJSON',
             command: () => {
-              if (!this.errorLoadSlider) {
+              if (!this.errorArcgisService) {
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
@@ -286,7 +286,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'Servicio CSV',
             command: () => {
-              if (!this.errorLoadSlider) {
+              if (!this.errorArcgisService) {
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
@@ -316,16 +316,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'A Shapefile',
             command: () => {
-              this.optionsLayers = [];
-              this.map.layers.items.forEach((layer) => {
-                if (layer.title !== null) {
-                  this.optionsLayers.push({
-                    label: layer.title.substr(11),
-                    value: layer.title.substr(11)
-                  });
-                }
-              });
-              this.displayExtract = true;
+              if (!this.errorArcgisService) {
+                this.optionsLayers = [];
+                this.map.layers.items.forEach((layer) => {
+                  if (layer.title !== null) {
+                    this.optionsLayers.push({
+                      label: layer.title.substr(11),
+                      value: layer.title.substr(11)
+                    });
+                  }
+                });
+                this.displayExtract = true;
+              }
             }
           }
         ]
@@ -337,15 +339,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'Zona de Influencia (Buffer)',
             command: () => {
-              this.displayBuffer = true;
+              if (!this.errorArcgisService) {
+                this.displayBuffer = true;
+              }
             }
           },
           {
             label: 'Herramientas de Medición',
             command: () => {
-              this.displayMedicion = true;
-              this.view.popup.autoOpenEnabled = false;
-              (window as any).ga('send', 'event', 'BUTTON', 'click', 'open-measure-menu');
+              if (!this.errorArcgisService) {
+                this.displayMedicion = true;
+                this.view.popup.autoOpenEnabled = false;
+                (window as any).ga('send', 'event', 'BUTTON', 'click', 'open-measure-menu');
+              }
             }
           }
         ]
@@ -354,8 +360,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         label: 'Impresión',
         icon: 'fa fa-print',
         command: () => {
-          (window as any).ga('send', 'event', 'BUTTON', 'click', 'print');
-          if (!this.errorLoadSlider) {
+          if (!this.errorArcgisService) {
+            (window as any).ga('send', 'event', 'BUTTON', 'click', 'print');
             window.print();
           }
         }
@@ -783,7 +789,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       });
       this.view.on('layerview-create-error', (e) => {
-        this.messageService.add({detail: `Error cargando la capa ${e.layer.id}`, summary: 'Carga de capas', severity: 'error'});
+        this.messageService.add({ detail: `Error cargando la capa ${e.layer.id}`, summary: 'Carga de capas', severity: 'error' });
       });
       // Widget de LayerList
       const layerList = new LayerList({
@@ -1091,6 +1097,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   ngOnInit() {
+    this.service.validateServices(this.mapRestUrl).subscribe(success => {
+      console.log(success);
+    }, error => {
+      this.errorArcgisService = true;
+      console.log(error);
+    });
     this.initializeMap();
   }
 
@@ -1404,7 +1416,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
     }, error => {
       console.log(error);
-      this.errorLoadSlider = true;
     });
   }
 
