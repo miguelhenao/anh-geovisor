@@ -1,8 +1,8 @@
 <p-toast></p-toast>
 <!-- Empieza sidebar-menu -->
 <p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10" [style]="{width:'200px', 'height': 'auto'}">
-  <div id="logomenu">
-    <img src="logo-anh-p.png" (click)="visibleMenu = false">
+  <div id="logomenu" (click)="visibleMenu = false">
+    <img src="logo-anh-p.png">
   </div>
   <div style="overflow-y: auto;">
     <p-panelMenu [model]="menu" [style]="{'width':'100%', 'height': 'auto'}" [multiple]="false"></p-panelMenu>
