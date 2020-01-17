@@ -24,12 +24,17 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     ready: false
   };
   eventLayer: any;
-  displayTable = false;
+  modalTable = false;
+  modalMeasurement = false;
+  modalAbout = false;
+  modalGuide = false;
+  modalExtract = false;
+  modalAnalysis = false;
+  modalBuffer = false;
   layerSelected: any;
   columnsTable: Array<any> = [];
   latitude = 4.6486259;
   longitude = -74.2478963;
-  displayMedicion = false;
   errorArcgisService = false;
   dptosSelected: Array<any> = [];
   makingWork = false;
@@ -41,9 +46,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   search: any;
   sourceSearch: Array<any> = [];
   attributeTable: any;
-  leftDialog = 200;
-  about = false;
-  guide = false;
   activeWidget: any;
   tsLayer: any;
   legend: any;
@@ -67,9 +69,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   // Url del servicio para realizar el análisis de cobertura
   urlAnalisisCobertura = this.agsUrlBase + 'rest/services/AnalisisCobertura/GPServer/AnalisisCobertura';
   nameLayer: string;
-  displayExtract = false;
-  displayAnalisis = false;
-  displayBuffer = false;
   optionsPolygon = [
     { name: 'Polígono', value: 'pol' },
     { name: 'Polígono Libre', value: 'free-pol' }
@@ -326,7 +325,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                     });
                   }
                 });
-                this.displayExtract = true;
+                this.visibleModal(false, false, false, true, false, false, false);
               }
             }
           }
@@ -340,7 +339,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Zona de Influencia (Buffer)',
             command: () => {
               if (!this.errorArcgisService) {
-                this.displayBuffer = true;
+                this.visibleModal(false, false, true, false, false, false, false);
               }
             }
           },
@@ -348,7 +347,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Herramientas de Medición',
             command: () => {
               if (!this.errorArcgisService) {
-                this.displayMedicion = true;
+                this.visibleModal(false, false, false, false, false, true, false);
                 this.view.popup.autoOpenEnabled = false;
                 (window as any).ga('send', 'event', 'BUTTON', 'click', 'open-measure-menu');
               }
@@ -862,7 +861,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               this.columnsTable = Object.keys(this.featureDptos[0].attributes);
               this.layerSelected = layer;
               layerListExpand.collapse();
-              this.displayTable = true;
+              this.visibleModal(false, false, false, false, false, false, true);
             }, (err) => {
               console.log(err);
             });
@@ -885,7 +884,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               this.dptosSelected = [];
               this.layerSelected = layer;
               layerListExpand.collapse();
-              this.displayAnalisis = true;
+              this.visibleModal(false, true, false, false, false, false, false);
             }, (err) => {
               console.log(err);
             });
@@ -1586,7 +1585,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     loadModules(['esri/tasks/support/FeatureSet', 'esri/tasks/Geoprocessor']).
       then(([, Geoprocessor]) => {
         this.makingWork = true;
-        this.displayAnalisis = false;
+        this.modalAnalysis = false;
         this.attributeTable.collapse();
         const gpIntersect = new Geoprocessor(this.urlAnalisisCobertura);
         gpIntersect.outSpatialReference = { wkid: 4326 };
@@ -1670,7 +1669,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.featuresSelected = [];
     this.attributeTable.collapse();
     this.clearGraphics();
-    this.displayAnalisis = false;
+    this.modalAnalysis = false;
   }
 
   /**
@@ -1703,14 +1702,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Muestra el "acerca de" del Geovisor
    */
   onShowAbout() {
-    this.about = true;
+    this.visibleModal(true, false, false, false, false, false, false);
   }
 
   /**
    * Muestra la guia del Geovisor
    */
   onShowGuide() {
-    this.guide = true;
+    this.visibleModal(false, false, false, false, true, false, false);
     (window as any).ga('send', 'event', 'BUTTON', 'click', 'ayuda');
   }
 
@@ -1738,5 +1737,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const dataBuffer: Blob = new Blob([excelBuffer], { type: EXCEL_TYPE });
     FileSaver.saveAs(dataBuffer, this.layerSelected.title + EXCEL_EXTENSION);
+  }
+
+  public visibleModal(about: boolean, analysis: boolean, buffer: boolean, extract: boolean, guide: boolean, measurement: boolean, table: boolean) {
+    this.modalAbout = about;
+    this.modalAnalysis = analysis;
+    this.modalBuffer = buffer;
+    this.modalExtract = extract;
+    this.modalGuide = guide;
+    this.modalMeasurement = measurement;
+    this.modalTable = table;
   }
 }
