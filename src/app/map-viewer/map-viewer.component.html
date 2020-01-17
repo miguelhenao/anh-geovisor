@@ -25,7 +25,7 @@
 <!-- Fin del div contenedor del mapa -->
 
 <!-- Tierra Slider del mapa -->
-<div id="ts-tierras-wrapper" *ngIf="!errorLoadSlider" align="center">
+<div id="ts-tierras-wrapper" *ngIf="!errorArcgisService" align="center">
   <div class="ts-bg">
     <div id="ts-tierras" class="ui-slider-orange">
       <div class="ts-label">{{nameLayer}}</div>
@@ -35,7 +35,7 @@
 <!-- Fin del tierra slider del mapa -->
 
 <!-- Modal de extracción de datos -->
-<p-dialog header="Extracción de datos" [(visible)]="displayExtract" [resizable]="false" (onHide)="onHideDialogExtract()"
+<p-dialog header="Extracción de datos" [(visible)]="modalExtract" [resizable]="false" (onHide)="onHideDialogExtract()"
   [positionTop]="0">
   <div id="infoDiv">
     <p>1. Defina el área de interés</p>
@@ -59,7 +59,7 @@
 <!-- Fin del modal de extracción de datos -->
 
 <!-- Modal de analisis de cobertura -->
-<p-dialog header="Análisis de Cobertura de Entidades Territoriales" [(visible)]="displayAnalisis" [resizable]="false"
+<p-dialog header="Análisis de Cobertura de Entidades Territoriales" [(visible)]="modalAnalysis" [resizable]="false"
   (onHide)="onHideDialogAnalisis()">
   <p>
     Departamentos seleccionados para el analisis:
@@ -78,7 +78,7 @@
 <!-- Fin del modal de analisis de cobertura -->
 
 <!-- Modal de zona de influencia -->
-<p-dialog header="Zona de Influencia (Buffer)" [(visible)]="displayBuffer" [resizable]="false"
+<p-dialog header="Zona de Influencia (Buffer)" [(visible)]="modalBuffer" [resizable]="false"
   (onHide)="onHideDialogBuffer()">
   <div id="div">
     <p>1. Defina la anchura deseada</p>
@@ -97,7 +97,7 @@
 <!-- Fin del modal de zona de influencia -->
 
 <!-- Modal de herramientas de medicion -->
-<p-dialog header="Herramientas de Medición" [(visible)]="displayMedicion" [resizable]="false"
+<p-dialog header="Herramientas de Medición" [(visible)]="modalMeasurement" [resizable]="false"
   (onHide)="onHideDialogMedicion()">
   <div id="topbar">
     <button class="action-button fas fa-ruler esri-widget--button" (click)="setActiveWidget('distance')"
@@ -128,9 +128,9 @@
 <!-- Fin del modal de herramientas de medición -->
 
 <!-- Modal de tabla de atributos -->
-<p-dialog header="Tabla de Atributos" [(visible)]="displayTable" [resizable]="false" (onHide)="onHideDialogAtributos()">
+<p-dialog header="Tabla de Atributos" [(visible)]="modalTable" [resizable]="false" (onHide)="onHideDialogAtributos()">
   <p-table [style]="{width: '500px'}" [paginator]="true" [rows]="5" selectionMode="multiple" #dt
-    [columns]="columnsTable" *ngIf="displayTable" [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true"
+    [columns]="columnsTable" *ngIf="modalTable" [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true"
     [(selection)]="featuresSelected" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
     scrollHeight="200px">
     <ng-template pTemplate="caption">
@@ -199,13 +199,13 @@
 <!-- Fin del div contenedor del widget de ayuda -->
 
 <!-- Modal de acerca de -->
-<p-dialog header="Acerca de..." [(visible)]="about" [resizable]="false">
+<p-dialog header="Acerca de..." [(visible)]="modalAbout" [resizable]="false">
   <app-dialog-about></app-dialog-about>
 </p-dialog>
 <!-- Fin del modal de acerca de -->
 
 <!-- Modal de ayuda -->
-<p-dialog header="Ayuda del Geovisor ANH v3" [(visible)]="guide" [resizable]="false">
+<p-dialog header="Ayuda del Geovisor ANH v3" [(visible)]="modalGuide" [resizable]="false">
   <app-dialog-guide></app-dialog-guide>
 </p-dialog>
 <!-- Fin del modal de ayuda -->
