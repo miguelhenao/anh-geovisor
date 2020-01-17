@@ -51,78 +51,6 @@
 
 @media only screen and (max-width: 991px) {
     #menu-info:before {
-        border-top: 3px solid rgb(255, 237, 0);
-        border-bottom: 3px solid rgb(254, 204, 0);
-        height: 5px;
-        width: 18px;
-        content: "";
-        position: absolute;
-        z-index: 11;
-        top: 13px;
-        left: 4px;
-        -webkit-transition: all 0.1s ease;
-        transition: all 0.1s ease;
-        -o-transition: none;
-        -webkit-box-sizing: content-box;
-        -moz-box-sizing: content-box;
-        box-sizing: content-box;
-    }
-
-    #menu-info:after {
-        border-top: 3px solid rgb(240, 125, 0);
-        border-bottom: 3px solid rgb(227, 6, 19);
-        content: "";
-        height: 5px;
-        width: 18px;
-        position: absolute;
-        top: 19px;
-        left: 4px;
-        -webkit-transition: all 0.1s ease;
-        transition: all 0.1s ease;
-        -o-transition: none;
-        -webkit-box-sizing: content-box;
-        -moz-box-sizing: content-box;
-        box-sizing: content-box;
-    }
-}
-
-#menu-info:before {
-    border-top: 3px solid rgb(255, 237, 0);
-    border-bottom: 3px solid rgb(254, 204, 0);
-    height: 5px;
-    width: 18px;
-    content: "";
-    position: absolute;
-    z-index: 11;
-    top: 13px;
-    left: 4px;
-    -webkit-transition: all 0.1s ease;
-    transition: all 0.1s ease;
-    -o-transition: none;
-    -webkit-box-sizing: content-box;
-    -moz-box-sizing: content-box;
-    box-sizing: content-box;
-}
-
-#menu-info:after {
-    border-top: 3px solid rgb(240, 125, 0);
-    border-bottom: 3px solid rgb(227, 6, 19);
-    content: "";
-    height: 5px;
-    width: 18px;
-    position: absolute;
-    top: 19px;
-    left: 4px;
-    -webkit-transition: all 0.1s ease;
-    transition: all 0.1s ease;
-    -o-transition: none;
-    -webkit-box-sizing: content-box;
-    -moz-box-sizing: content-box;
-    box-sizing: content-box;
-}
-
-@media only screen and (max-width: 991px) {
-    #logomenu:before {
         border-top: 1px solid rgb(255, 237, 0);
         border-bottom: 1px solid rgb(254, 204, 0);
         height: 2px;
@@ -140,7 +68,7 @@
         box-sizing: content-box;
     }
 
-    #logomenu:after {
+    #menu-info:after {
         border-top: 1px solid rgb(240, 125, 0);
         border-bottom: 1px solid rgb(227, 6, 19);
         content: "";
@@ -158,7 +86,7 @@
     }
 }
 
-#logomenu:before {
+#menu-info:before {
     border-top: 1px solid rgb(255, 237, 0);
     border-bottom: 1px solid rgb(254, 204, 0);
     height: 2px;
@@ -176,7 +104,7 @@
     box-sizing: content-box;
 }
 
-#logomenu:after {
+#menu-info:after {
     border-top: 1px solid rgb(240, 125, 0);
     border-bottom: 1px solid rgb(227, 6, 19);
     content: "";
@@ -192,7 +120,78 @@
     -moz-box-sizing: content-box;
     box-sizing: content-box;
 }
-/* Handle on hover */
+
+@media only screen and (max-width: 991px) {
+    #logomenu:before {
+        border-top: 3px solid rgb(255, 237, 0);
+        border-bottom: 3px solid rgb(254, 204, 0);
+        height: 5px;
+        width: 18px;
+        content: "";
+        position: absolute;
+        z-index: 11;
+        top: 13px;
+        left: 4px;
+        -webkit-transition: all 0.1s ease;
+        transition: all 0.1s ease;
+        -o-transition: none;
+        -webkit-box-sizing: content-box;
+        -moz-box-sizing: content-box;
+        box-sizing: content-box;
+    }
+
+    #logomenu:after {
+        border-top: 3px solid rgb(240, 125, 0);
+        border-bottom: 3px solid rgb(227, 6, 19);
+        content: "";
+        height: 5px;
+        width: 18px;
+        position: absolute;
+        top: 19px;
+        left: 4px;
+        -webkit-transition: all 0.1s ease;
+        transition: all 0.1s ease;
+        -o-transition: none;
+        -webkit-box-sizing: content-box;
+        -moz-box-sizing: content-box;
+        box-sizing: content-box;
+    }
+}
+
+#logomenu:before {
+    border-top: 3px solid rgb(255, 237, 0);
+    border-bottom: 3px solid rgb(254, 204, 0);
+    height: 5px;
+    width: 18px;
+    content: "";
+    position: absolute;
+    z-index: 11;
+    top: 13px;
+    left: 4px;
+    -webkit-transition: all 0.1s ease;
+    transition: all 0.1s ease;
+    -o-transition: none;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+#logomenu:after {
+    border-top: 3px solid rgb(240, 125, 0);
+    border-bottom: 3px solid rgb(227, 6, 19);
+    content: "";
+    height: 5px;
+    width: 18px;
+    position: absolute;
+    top: 19px;
+    left: 4px;
+    -webkit-transition: all 0.1s ease;
+    transition: all 0.1s ease;
+    -o-transition: none;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
 
 ::-webkit-scrollbar-thumb:hover {
     background: #999;
