@@ -1,20 +1,35 @@
 <p-toast></p-toast>
 <!-- Empieza sidebar-menu -->
-<p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10" [style]="{width:'200px', 'height': 'auto'}">
+<!-- <p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10" [style]="{width:'200px', 'height': 'auto'}">
   <div id="logomenu" (click)="visibleMenu = false">
     <img src="logo-anh-p.png">
   </div>
   <div style="overflow-y: auto;">
     <p-panelMenu [model]="menu" [style]="{'width':'100%', 'height': 'auto'}" [multiple]="false"></p-panelMenu>
   </div>
-</p-sidebar>
+</p-sidebar> -->
 <!-- Finaliza sidebar-menu -->
 
 <!-- Botón de menú -->
-<div id="menu-info" (click)="visibleMenu = true" title="Menú" *ngIf="view.ready">
+<!-- <div id="menu-info" (click)="visibleMenu = true" title="Menú" *ngIf="view.ready">
   <button id="menu" style="float: right;" type="button"></button>
-</div>
+</div> -->
 <!-- Finaliza botón de menú -->
+
+<!-- Menú con Accordion -->
+<div id="menu-info" title="Menú" *ngIf="view.ready">
+  <p-accordion [expandIcon]="null" [collapseIcon]="null">
+    <p-accordionTab [selected]="visibleMenu">
+      <p-header>
+        <div id="menu"></div>
+      </p-header>
+      <div style="overflow-y: auto;">
+        <p-panelMenu [model]="menu" [style]="{'width':'100%', 'height': 'auto'}" [multiple]="false"></p-panelMenu>
+      </div>
+    </p-accordionTab>
+  </p-accordion>
+</div>
+<!-- Finaliza menú con Accordion -->
 
 <!-- Div de carga de tareas -->
 <div *ngIf="view.updating || makingWork" id="loading" class="loading-machin"></div>

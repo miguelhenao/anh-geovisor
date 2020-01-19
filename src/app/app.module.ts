@@ -30,6 +30,7 @@ import { DialogSymbologyChangeComponent } from './dialog-symbology-change/dialog
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import { DialogAboutComponent } from './dialog-about/dialog-about.component';
 import { DialogGuideComponent } from './dialog-guide/dialog-guide.component';
+import { AccordionModule } from 'primeng/accordion';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { DialogGuideComponent } from './dialog-guide/dialog-guide.component';
     SelectButtonModule,
     MessageModule,
     ColorPickerModule,
-    OverlayPanelModule
+    OverlayPanelModule,
+    AccordionModule
   ],
   providers: [],
   entryComponents: [
