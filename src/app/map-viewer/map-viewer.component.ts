@@ -113,7 +113,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService) {
     this.setCurrentPosition();
-    debugger;
     if (localStorage.getItem('agreeTerms') === undefined || localStorage.getItem('agreeTerms') === null) {
       this.dialogService.open(DialogTerminosComponent, {
         width: '100vw',
