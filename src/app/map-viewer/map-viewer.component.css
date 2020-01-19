@@ -414,17 +414,25 @@ p-sidebar {
 }
 
 .title-help {
-  background-color: #007AD8;
+  background-color: #0079C0;
   border-bottom-color: #D5DDE8;
   color: #FFFFFF;
   text-shadow: none;
   display: grid;
   grid-template-columns: auto auto;
-  margin: 0 auto;
+  height: 36px;
+}
+
+.icon, .title-text {
+  height: 36px;
+}
+
+.title-text h4 {
+  margin-top: 9px;
 }
 
 .title-help .icon {
-  margin: auto auto;
+  margin: 4px auto;
 }
 
 .body-help {
