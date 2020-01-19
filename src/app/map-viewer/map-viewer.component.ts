@@ -1749,4 +1749,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.modalMeasurement = measurement;
     this.modalTable = table;
   }
+
+  public onAccordion(value: boolean) {
+    this.visibleMenu = value;
+  }
 }

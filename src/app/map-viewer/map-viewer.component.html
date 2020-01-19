@@ -18,9 +18,9 @@
 
 <!-- Menú con Accordion -->
 <div id="menu-info" title="Menú" *ngIf="view.ready">
-  <p-accordion [expandIcon]="null" [collapseIcon]="null">
+  <p-accordion [expandIcon]="null" [collapseIcon]="null" (onOpen)="onAccordion(true)" (onClose)="onAccordion(false)">
     <p-accordionTab [selected]="true">
-      <p-header (click)="visibleMenu = !visibleMenu">
+      <p-header>
         <div class="logo-toggler" [ngClass]="{'display': visibleMenu}" id="menu"></div>
       </p-header>
       <div style="overflow-y: auto;">
