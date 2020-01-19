@@ -1,7 +1,7 @@
 @import url('https://js.arcgis.com/4.12/esri/css/main.css');
 #menu {
     background: #ffffff;
-    background-image: url("../../assets/logo-anh-p.png");
+    /* background-image: url("../../assets/logo-anh-p.png"); */
     background-repeat: no-repeat;
     /* width: 160px;
     padding: 29px;
@@ -9,7 +9,8 @@
     border: none; */
     /* height: 54px; */
 
-    height: 73px;
+    background-image: url("../../assets/logo-anh-q.png");
+    height: 67px;
     width: 188px;
 }
 
