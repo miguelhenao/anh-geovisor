@@ -17,10 +17,10 @@
 <!-- Finaliza botón de menú -->
 
 <!-- Menú con Accordion -->
-<div id="menu-info" title="Menú" *ngIf="view.ready">
+<div class="logo-toggler" [ngClass]="{'display': visibleMenu}" id="menu-info" title="Menú" *ngIf="view.ready">
   <p-accordion [expandIcon]="null" [collapseIcon]="null">
-    <p-accordionTab [selected]="visibleMenu">
-      <p-header>
+    <p-accordionTab [selected]="true">
+      <p-header (click)="visibleMenu = !visibleMenu">
         <div id="menu"></div>
       </p-header>
       <div style="overflow-y: auto;">

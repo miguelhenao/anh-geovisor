@@ -36,6 +36,10 @@
 }
 /* #endregion */
 
+::ng-deep .esri-scale-bar__line {
+  z-index: 0 !important;
+}
+
 #logomenu img{
     margin-left: 20px;
 }
@@ -68,7 +72,7 @@
 }
 
 @media only screen and (max-width: 991px) {
-    #menu-info:before {
+    /* #menu-info:before {
         border-top: 1px solid rgb(255, 237, 0);
         border-bottom: 1px solid rgb(254, 204, 0);
         height: 2px;
@@ -101,10 +105,54 @@
         -webkit-box-sizing: content-box;
         -moz-box-sizing: content-box;
         box-sizing: content-box;
-    }
+    } */
 }
 
-#menu-info:before {
+.logo-toggler:before {
+  border-top: 1px solid rgb(255, 237, 0);
+  border-bottom: 1px solid rgb(254, 204, 0);
+  height: 2px;
+  width: 18px;
+  content: "";
+  position: absolute;
+  z-index: 11;
+  top: 13px;
+  left: 4px;
+  -webkit-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+  -o-transition: none;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  }
+  .logo-toggler:after {
+  border-top: 1px solid rgb(240, 125, 0);
+  border-bottom: 1px solid rgb(227, 6, 19);
+  content: "";
+  height: 2px;
+  width: 18px;
+  position: absolute;
+  top: 19px;
+  left: 4px;
+  -webkit-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+  -o-transition: none;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  }
+  .logo-toggler.display:before {
+  height: 4px;
+  top: 8px;
+  border-width: 2px;
+  }
+  .logo-toggler.display:after {
+  height: 4px;
+  top: 20px;
+  border-width: 2px;
+  }
+
+/* #menu-info:before {
     border-top: 1px solid rgb(255, 237, 0);
     border-bottom: 1px solid rgb(254, 204, 0);
     height: 2px;
@@ -137,10 +185,10 @@
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
     box-sizing: content-box;
-}
+} */
 
 @media only screen and (max-width: 991px) {
-    #logomenu:before {
+    /* #logomenu:before {
         border-top: 3px solid rgb(255, 237, 0);
         border-bottom: 3px solid rgb(254, 204, 0);
         height: 5px;
@@ -173,10 +221,10 @@
         -webkit-box-sizing: content-box;
         -moz-box-sizing: content-box;
         box-sizing: content-box;
-    }
+    } */
 }
 
-#logomenu:before {
+/* #logomenu:before {
     border-top: 3px solid rgb(255, 237, 0);
     border-bottom: 3px solid rgb(254, 204, 0);
     height: 5px;
@@ -209,7 +257,7 @@
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
     box-sizing: content-box;
-}
+} */
 
 ::-webkit-scrollbar-thumb:hover {
     background: #999;
