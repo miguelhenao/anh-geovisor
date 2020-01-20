@@ -103,12 +103,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   };
   magnaSirgasFlag = false;
 
-  modes: SelectItem[] = [
+  modesBuffer: SelectItem[] = [
     { value: 'point', title: 'Punto', icon: 'fa fa-fw fa-circle' },
     { value: 'line', title: 'Línea', icon: 'esri-icon-minus' },
     { value: 'polyline', title: 'Polilínea', icon: 'esri-icon-polyline' },
     { value: 'rectangle', title: 'Rectángulo', icon: 'esri-icon-sketch-rectangle' },
     { value: 'polygon', title: 'Polígono', icon: 'esri-icon-polygon' }
+  ];
+  selectedMeasurement: any;
+  modesMeasurement: SelectItem[] = [
+    { value: 'area', title: 'Área', icon: 'fas fa-ruler-combined'},
+    { value: 'distance', title: 'Distancia', icon: 'fas fa-ruler'},
+    { value: 'coordinate', title: 'Ubicación', icon: 'esri-icon-map-pin'}
   ];
 
   constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService) {
@@ -1098,7 +1104,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   ngOnInit() {
     this.service.validateServices(this.mapRestUrl).subscribe(success => {
-      console.log(success);
+      // console.log(success);
     }, error => {
       this.errorArcgisService = true;
       console.log(error);
@@ -1117,14 +1123,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   public onHideDialogMedicion(): void {
     this.setActiveButton(null);
-    this.setActiveWidget(null);
+    this.selectedMeasurement = null;
+    this.setActiveWidget();
     this.view.popup.autoOpenEnabled = true;
   }
 
   /**
    * Método con el cual se identifica cual fue el tipo de medición seleccionado por el usuario
    */
-  public setActiveWidget(type) {
+  public setActiveWidget() {
     loadModules(['esri/widgets/DistanceMeasurement2D', 'esri/widgets/AreaMeasurement2D', 'esri/widgets/CoordinateConversion']).then((
       [DistanceMeasurement2D, AreaMeasurement2D, CoordinateConversion]) => {
       this.activeWidget != null ? this.activeWidget.destroy() : null;
@@ -1133,14 +1140,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       container.id = 'divWidget';
       document.getElementById('widgetMeasure').appendChild(container);
       this.magnaSirgasFlag = false;
-      switch (type) {
+      switch (this.selectedMeasurement) {
         case 'distance':
           this.activeWidget = new DistanceMeasurement2D({
             view: this.view,
             container: document.getElementById('divWidget')
           });
           this.activeWidget.viewModel.newMeasurement();
-          this.setActiveButton(document.getElementById('distanceButton'));
+          // this.setActiveButton(document.getElementById('distanceButton'));
           break;
         case 'area':
           this.activeWidget = new AreaMeasurement2D({
@@ -1148,7 +1155,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             container: document.getElementById('divWidget')
           });
           this.activeWidget.viewModel.newMeasurement();
-          this.setActiveButton(document.getElementById('areaButton'));
+          // this.setActiveButton(document.getElementById('areaButton'));
           break;
         case 'coordinate':
           this.activeWidget = new CoordinateConversion({
@@ -1163,7 +1170,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             yoffset: '16px'
           };
           this.activeWidget.viewModel.locationSymbol = symbol;
-          this.setActiveButton(document.getElementById('coordinateButton'));
+          // this.setActiveButton(document.getElementById('coordinateButton'));
           break;
         case null:
           if (this.activeWidget) {

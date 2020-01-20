@@ -102,7 +102,7 @@
     <p-dropdown [options]="optionsBuffer" optionLabel="name" [(ngModel)]="selectedBuffer">
     </p-dropdown>
     <p>2. Dibuje la geometría para la Zona de Influencia</p>
-    <p-selectButton [options]="modes" [(ngModel)]="selectedBufferSketch" (onChange)="onChangeSelectSketchBuffer()">
+    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedBufferSketch" (onChange)="onChangeSelectSketchBuffer()">
     </p-selectButton>
     <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
     </p-button>
@@ -114,31 +114,32 @@
 <!-- Modal de herramientas de medicion -->
 <p-dialog header="Herramientas de Medición" [(visible)]="modalMeasurement" [resizable]="false"
   (onHide)="onHideDialogMedicion()">
-  <div id="topbar">
+  <!-- <div id="topbar">
     <button class="action-button fas fa-ruler esri-widget--button" (click)="setActiveWidget('distance')"
       id="distanceButton" type="button" title="Measure distance between two or more points"></button>
     <button class="action-button fas fa-ruler-combined esri-widget--button" (click)="setActiveWidget('area')"
       id="areaButton" type="button" title="Measure area"></button>
     <button class="action-button fas fa-search-location esri-widget--button" (click)="setActiveWidget('coordinate')"
       id="coordinateButton" type="button" title="Ubicación"></button>
-  </div>
-  <div id="widgetMeasure">
-    <h3 style="text-align: center;">Resultado de la Medición</h3>
-    <hr>
-  </div>
-  <div class="magna" style="background-color: #DEF0D8;" *ngIf="magnaSirgasFlag">
-    <div>
-      <p>MAGNA-SIRGAS Origen Central</p>
-      <p>X(Este): {{magnaSirgas.x || ''}}</p>
-      <p>Y(Norte): {{magnaSirgas.y || ''}}</p>
+  </div> -->
+  <div style="width: 400px;">
+    <p-selectButton [options]="modesMeasurement" [(ngModel)]="selectedMeasurement" (onChange)="setActiveWidget()"></p-selectButton>
+    <div id="widgetMeasure">
+      <h3 style="text-align: center;">Resultado de la Medición</h3>
+      <hr>
     </div>
+    <div class="magna" style="background-color: #DEF0D8;" *ngIf="magnaSirgasFlag">
+      <div>
+        <p>MAGNA-SIRGAS Origen Central</p>
+        <p>X(Este): {{magnaSirgas.x || ''}}</p>
+        <p>Y(Norte): {{magnaSirgas.y || ''}}</p>
+      </div>
+    </div>
+    <p-message id="infoMedicion" severity="info"
+      text="Seleccione una herramienta y haga <b>clic</b> sobre el mapa para agregar puntos.
+      <b>Doble clic</b> para terminar la medición.
+      <br>Pulse <b>Ctrl</b> para activar la alineación automática (snapping) con la geometría del mapa mientras agrega puntos."></p-message>
   </div>
-  <p-message id="infoMedicion" severity="info"
-    text="Seleccione una herramienta y haga <b>clic</b><br> sobre el mapa para agregar puntos.
-    <br>
-    <b>Doble clic</b> para terminar la medición.
-    <br>
-    Pulse <b>Ctrl</b> para activar la alineación<br> automática (snapping) con la geometría del<br> mapa mientras agrega puntos."></p-message>
 </p-dialog>
 <!-- Fin del modal de herramientas de medición -->
 
