@@ -458,7 +458,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templatePozo = {
-          title: 'Información Pozo',
+          title: lyPozo.title,
           content: text,
           fieldInfos: []
         };
@@ -493,7 +493,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateRezumadero = {
-          title: 'Información Rezumadero',
+          title: lyRezumadero.title,
           content: text,
           fieldInfos: []
         };
@@ -528,7 +528,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateSismica = {
-          title: 'Información Sismica',
+          title: lySismica.title,
           content: text,
           fieldInfos: []
         };
@@ -563,7 +563,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateSismica3d = {
-          title: 'Información Sismica 3D',
+          title: lySismica3d.title,
           content: text,
           fieldInfos: []
         };
@@ -598,7 +598,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateMunicipio = {
-          title: 'Info',
+          title: lyMunicipio.title,
           content: text,
           fieldInfos: []
         };
@@ -645,7 +645,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.sourceSearch = sourceSearch;
         this.search.sources = this.sourceSearch;
         const templateDepartamento = {
-          title: 'Info',
+          title: lyDepartamento.title,
           content: text,
           fieldInfos: []
         };
@@ -669,7 +669,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateCuencas = {
-          title: 'Info',
+          title: lyCuencas.title,
           content: text,
           fieldInfos: []
         };
@@ -706,7 +706,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateTierras = {
-          title: 'Info',
+          title: lyTierras.title,
           content: text,
           fieldInfos: []
         };
@@ -754,7 +754,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateSensibilidad = {
-          title: 'Info',
+          title: lySensibilidad.title,
           content: text,
           fieldInfos: []
         };
