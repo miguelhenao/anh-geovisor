@@ -317,6 +317,10 @@ p-sidebar {
     #menu {
         display: none;
     }
+
+    #menu-info {
+      display: none;
+    }
     #ts-tierras-wrapper {
         display: none;
     }
