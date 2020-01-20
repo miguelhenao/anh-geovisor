@@ -403,6 +403,26 @@ p-sidebar {
     background-color: rgba(255, 255, 255, 0.6);
 }
 
+::ng-deep .esri-slider__thumb {
+  border-radius: 0 !important;
+  border: 2px solid #FF9900;
+}
+
+::ng-deep .esri-slider__thumb:hover {
+  border-color: #FF9900;
+}
+
+::ng-deep .esri-slider__anchor--moving:focus .esri-slider__thumb {
+  border: 2px solid #FF9900;
+}
+
+::ng-deep .esri-slider__segment {
+  /* background-color: #FF9900; */
+  height: 6px !important;
+  top: -2px !important;
+
+}
+
 #infoDiv {
     padding: 5px;
 }
