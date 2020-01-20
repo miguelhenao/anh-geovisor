@@ -31,6 +31,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   modalExtract = false;
   modalAnalysis = false;
   modalBuffer = false;
+  modalSelection = false;
   layerSelected: any;
   columnsTable: Array<any> = [];
   latitude = 4.6486259;
@@ -112,9 +113,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   ];
   selectedMeasurement: any;
   modesMeasurement: SelectItem[] = [
-    { value: 'area', title: 'Área', icon: 'fas fa-ruler-combined'},
-    { value: 'distance', title: 'Distancia', icon: 'fas fa-ruler'},
-    { value: 'coordinate', title: 'Ubicación', icon: 'esri-icon-map-pin'}
+    { value: 'area', title: 'Área', icon: 'fas fa-ruler-combined' },
+    { value: 'distance', title: 'Distancia', icon: 'fas fa-ruler' },
+    { value: 'coordinate', title: 'Ubicación', icon: 'esri-icon-map-pin' }
   ];
 
   constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService) {
@@ -819,6 +820,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 title: 'Cambiar simbología',
                 className: 'esri-icon-edit',
                 id: 'simbologia'
+              },
+              {
+                title: 'Selección',
+                className: 'esri-icon-cursor',
+                id: 'seleccion'
               }], [{
                 title: 'Aumentar opacidad',
                 className: 'esri-icon-up',
@@ -840,6 +846,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 title: 'Cambiar simbología',
                 className: 'esri-icon-edit',
                 id: 'simbologia'
+              },
+              {
+                title: 'Selección',
+                className: 'esri-icon-cursor',
+                id: 'seleccion'
               }], [{
                 title: 'Aumentar opacidad',
                 className: 'esri-icon-up',
@@ -931,6 +942,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             layer.opacity += 0.25;
           } else if (event.action.id === 'decrease-opacity') {
             layer.opacity -= 0.25;
+          } else if (event.action.id === 'seleccion') {
+            this.modalSelection = true;
           }
         });
       });

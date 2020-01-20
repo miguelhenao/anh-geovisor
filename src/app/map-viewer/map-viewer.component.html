@@ -225,3 +225,19 @@
   <app-dialog-guide></app-dialog-guide>
 </p-dialog>
 <!-- Fin del modal de ayuda -->
+
+<!-- Modal Herramientas de selección -->
+<p-dialog header="Herramientas de selección" [(visible)]="modalSelection" [resizable]="false">
+  <div style="margin-bottom: 5px;">
+    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedBufferSketch" (onChange)="onChangeSelectSketchBuffer()">
+    </p-selectButton>
+    <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
+    </p-button>
+  </div>
+  <p-message id="infoMedicion" severity="info"
+      text="La selección aplica a la capa selecccionada.
+      <br> Para la selección con un punto <b>clic</b> en el mapa.
+      <br>Para las demás herramientas haga <b>clic</b> y sostenga
+      <br> mientras mueve el mouse, y suelte para finalizar."></p-message>
+</p-dialog>
+<!-- Fin de modal herramientas de selección -->
