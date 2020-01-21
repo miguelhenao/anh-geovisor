@@ -1093,7 +1093,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             if (result.features.length === 0) {
               this.makingWork = false;
             }
+            this.clearGraphics();
             this.featureDptos = result.features;
+            this.messageService.add({
+              severity: 'info',
+              summary: '',
+              detail: `Se seleccionaron ${result.features.length} elementos de la capa ${this.layerSelected.id}
+                        y se cargaron sus atributos.`
+            });
             this.columnsTable = Object.keys(this.featureDptos[0].attributes);
             layerListExpand.collapse();
             loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
@@ -1102,7 +1109,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 const symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
                   new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 255, 1.0]), 2),
                   new Color([0, 0, 0, 0.5]));
-                this.clearGraphics();
                 dojo.forEach(result.features, (key) => {
                   const graphic = new Graphic({
                     geometry: key.geometry,
