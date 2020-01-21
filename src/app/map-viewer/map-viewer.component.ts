@@ -88,6 +88,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   optionsDepartment: SelectItem[] = [];
   sketch;
   sketchBuffer;
+  sketchSelection;
   selectedPolygon: SelectItem;
   selectedBufferSketch: any;
   selectedBuffer: SelectItem = {
@@ -944,6 +945,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             layer.opacity -= 0.25;
           } else if (event.action.id === 'seleccion') {
             this.modalSelection = true;
+            layerListExpand.collapse();
           }
         });
       });
@@ -1071,6 +1073,17 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               })
             );
           }
+        }
+      });
+
+      this.sketchSelection = new SketchViewModel({
+        layer: graphicsLayer,
+        view: this.view
+      });
+
+      this.sketchSelection.on('create', (event) => {
+        if (event.state === 'complete') {
+          //
         }
       });
       this.sketch = sketchVM;
@@ -1696,7 +1709,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   /**
    * Detecta cambio de herramienta de dibujo en el sketch de zona de influencia
    */
-  onChangeSelectSketchBuffer() {
+  onChangeSelectedSketchBuffer() {
     (window as any).ga('send', 'event', 'BUTTON', 'click', 'buffer');
     switch (this.selectedBufferSketch) {
       case 'line':
@@ -1772,5 +1785,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   public onAccordion(value: boolean) {
     this.visibleMenu = value;
+  }
+
+  public onChangeSelectedSketchSelection() {
+    switch (this.selectedBufferSketch) {
+      case 'line':
+        this.sketchSelection.create('polyline', { mode: 'freehand' });
+        break;
+      default:
+        this.sketchSelection.create(this.selectedBufferSketch);
+        break;
+    }
   }
 }
