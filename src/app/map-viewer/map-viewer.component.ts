@@ -334,7 +334,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                     });
                   }
                 });
-                this.visibleModal(false, false, false, true, false, false, false);
+                this.visibleModal(false, false, false, true, false, false, false, false);
               }
             }
           }
@@ -348,7 +348,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Zona de Influencia (Buffer)',
             command: () => {
               if (!this.errorArcgisService) {
-                this.visibleModal(false, false, true, false, false, false, false);
+                this.visibleModal(false, false, true, false, false, false, false, false);
               }
             }
           },
@@ -356,7 +356,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Herramientas de Medición',
             command: () => {
               if (!this.errorArcgisService) {
-                this.visibleModal(false, false, false, false, false, true, false);
+                this.visibleModal(false, false, false, false, false, true, false, false);
                 this.view.popup.autoOpenEnabled = false;
                 (window as any).ga('send', 'event', 'BUTTON', 'click', 'open-measure-menu');
               }
@@ -880,7 +880,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               this.columnsTable = Object.keys(this.featureDptos[0].attributes);
               this.layerSelected = layer;
               layerListExpand.collapse();
-              this.visibleModal(false, false, false, false, false, false, true);
+              this.visibleModal(false, false, false, false, false, false, true, false);
             }, (err) => {
               console.log(err);
             });
@@ -903,7 +903,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               this.dptosSelected = [];
               this.layerSelected = layer;
               layerListExpand.collapse();
-              this.visibleModal(false, true, false, false, false, false, false);
+              this.visibleModal(false, true, false, false, false, false, false, false);
             }, (err) => {
               console.log(err);
             });
@@ -945,7 +945,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             layer.opacity -= 0.25;
           } else if (event.action.id === 'seleccion') {
             this.featureDptos = [];
-            this.modalSelection = true;
+            this.visibleModal(false, false, false, false, false, false, false, true);
             this.layerSelected = layer;
             layerListExpand.collapse();
           }
@@ -1112,7 +1112,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 });
                 this.clearGraphic = true;
                 this.makingWork = false;
-                this.visibleModal(false, false, false, false, false, false, true);
+                this.visibleModal(false, false, false, false, false, false, true, true);
               });
           });
           this.onChangeSelectedSketchSelection();
@@ -1768,14 +1768,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Muestra el "acerca de" del Geovisor
    */
   onShowAbout() {
-    this.visibleModal(true, false, false, false, false, false, false);
+    this.visibleModal(true, false, false, false, false, false, false, false);
   }
 
   /**
    * Muestra la guia del Geovisor
    */
   onShowGuide() {
-    this.visibleModal(false, false, false, false, true, false, false);
+    this.visibleModal(false, false, false, false, true, false, false, false);
     (window as any).ga('send', 'event', 'BUTTON', 'click', 'ayuda');
   }
 
@@ -1805,7 +1805,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     FileSaver.saveAs(dataBuffer, this.layerSelected.title + EXCEL_EXTENSION);
   }
 
-  public visibleModal(about: boolean, analysis: boolean, buffer: boolean, extract: boolean, guide: boolean, measurement: boolean, table: boolean) {
+  /**
+   * @param about -> Bandera para dialog About
+   * @param analysis -> Bandera para dialog Analisis de cobertura
+   * @param buffer -> Bandera para dialog Zona de influencia
+   * @param extract -> Bandera para dialog Extraer capa
+   * @param guide -> Bandera para dialog Guía
+   * @param measurement -> Bandera para dialog Herramientas de medición
+   * @param table -> Bandera para dialog Tabla de atributos
+   */
+  public visibleModal(about: boolean, analysis: boolean, buffer: boolean, extract: boolean, guide: boolean, measurement: boolean, table: boolean, selection: boolean) {
     this.modalAbout = about;
     this.modalAnalysis = analysis;
     this.modalBuffer = buffer;
@@ -1813,12 +1822,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.modalGuide = guide;
     this.modalMeasurement = measurement;
     this.modalTable = table;
+    this.modalSelection = selection;
   }
-
+  /**
+   *
+   * @param value -> Variable de control para menú
+   */
   public onAccordion(value: boolean) {
     this.visibleMenu = value;
   }
 
+  /**
+   * Metodo que se realiza cuando cambia el sketch para Herramientas de seleccion
+   */
   public onChangeSelectedSketchSelection() {
     switch (this.selectedSketch) {
       case 'line':
@@ -1830,6 +1846,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  /**
+   *  Metodo que se realiza cuando se cierra el dialog de Herramientas de selección
+   */
   public onHideDialogSelection() {
     this.clearGraphics();
     this.sketchSelection.cancel();
