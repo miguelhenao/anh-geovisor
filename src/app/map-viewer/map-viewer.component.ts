@@ -1188,7 +1188,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public onHideDialogMedicion(): void {
     this.setActiveButton(null);
     this.selectedMeasurement = null;
-    this.setActiveWidget();
+    // this.setActiveWidget();
     this.view.popup.autoOpenEnabled = true;
   }
 
