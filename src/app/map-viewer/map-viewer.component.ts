@@ -1,7 +1,7 @@
 import { MapViewerService } from './map-viewer.service';
 import { DialogUrlServiceComponent } from '../dialog-urlservice/dialog-urlservice.component';
 import { MenuItem, DialogService, SelectItem, MessageService } from 'primeng/api';
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked, Query, AfterViewInit } from '@angular/core';
 import { loadModules } from 'esri-loader';
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
 import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.component';
@@ -90,7 +90,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   sketchBuffer;
   sketchSelection;
   selectedPolygon: SelectItem;
-  selectedBufferSketch: any;
+  selectedSketch: any;
   selectedBuffer: SelectItem = {
     value: 9036
   };
@@ -944,7 +944,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           } else if (event.action.id === 'decrease-opacity') {
             layer.opacity -= 0.25;
           } else if (event.action.id === 'seleccion') {
+            this.featureDptos = [];
             this.modalSelection = true;
+            this.layerSelected = layer;
             layerListExpand.collapse();
           }
         });
@@ -1083,7 +1085,37 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       this.sketchSelection.on('create', (event) => {
         if (event.state === 'complete') {
-          //
+          this.makingWork = true;
+          const spQry = this.layerSelected.createQuery();
+          spQry.maxAllowableOffset = 1;
+          spQry.geometry = event.graphic.geometry;
+          this.layerSelected.queryFeatures(spQry).then((result) => {
+            if (result.features.length === 0) {
+              this.makingWork = false;
+            }
+            this.featureDptos = result.features;
+            this.columnsTable = Object.keys(this.featureDptos[0].attributes);
+            layerListExpand.collapse();
+            loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
+              'esri/Color', 'dojo/_base/array', 'esri/Graphic']).then(([SimpleFillSymbol, SimpleLineSymbol, Color,
+                dojo, Graphic]) => {
+                const symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
+                  new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 255, 1.0]), 2),
+                  new Color([0, 0, 0, 0.5]));
+                this.clearGraphics();
+                dojo.forEach(result.features, (key) => {
+                  const graphic = new Graphic({
+                    geometry: key.geometry,
+                    symbol
+                  });
+                  this.view.graphics.add(graphic);
+                });
+                this.clearGraphic = true;
+                this.makingWork = false;
+                this.visibleModal(false, false, false, false, false, false, true);
+              });
+          });
+          this.onChangeSelectedSketchSelection();
         }
       });
       this.sketch = sketchVM;
@@ -1588,7 +1620,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   public onHideDialogAtributos(): void {
     this.graphics = [];
-    this.view.graphics.removeAll();
+    this.clearGraphics();
   }
 
   /**
@@ -1711,12 +1743,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   onChangeSelectedSketchBuffer() {
     (window as any).ga('send', 'event', 'BUTTON', 'click', 'buffer');
-    switch (this.selectedBufferSketch) {
+    switch (this.selectedSketch) {
       case 'line':
         this.sketchBuffer.create('polyline', { mode: 'freehand' });
         break;
       default:
-        this.sketchBuffer.create(this.selectedBufferSketch);
+        this.sketchBuffer.create(this.selectedSketch);
         break;
     }
   }
@@ -1727,7 +1759,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   onHideDialogBuffer() {
     this.clearGraphics();
     this.selectedBuffer = undefined;
-    this.selectedBufferSketch = undefined;
+    this.selectedSketch = undefined;
     this.bufDistance = undefined;
     this.sketchBuffer.cancel();
   }
@@ -1788,13 +1820,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public onChangeSelectedSketchSelection() {
-    switch (this.selectedBufferSketch) {
+    switch (this.selectedSketch) {
       case 'line':
         this.sketchSelection.create('polyline', { mode: 'freehand' });
         break;
       default:
-        this.sketchSelection.create(this.selectedBufferSketch);
+        this.sketchSelection.create(this.selectedSketch);
         break;
     }
+  }
+
+  public onHideDialogSelection() {
+    this.clearGraphics();
+    this.sketchSelection.cancel();
+    this.selectedSketch = null;
   }
 }

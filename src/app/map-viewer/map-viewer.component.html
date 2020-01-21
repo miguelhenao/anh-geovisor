@@ -102,7 +102,7 @@
     <p-dropdown [options]="optionsBuffer" optionLabel="name" [(ngModel)]="selectedBuffer">
     </p-dropdown>
     <p>2. Dibuje la geometría para la Zona de Influencia</p>
-    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedBufferSketch"
+    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch"
       (onChange)="onChangeSelectedSketchBuffer()">
     </p-selectButton>
     <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
@@ -231,9 +231,9 @@
 
 <!-- Modal Herramientas de selección -->
 <p-dialog header="Herramientas de selección" [(visible)]="modalSelection" [resizable]="false" [positionTop]="10"
-  [positionLeft]="200">
+  [positionLeft]="200" (onHide)="onHideDialogSelection()">
   <div style="margin-bottom: 5px;">
-    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedBufferSketch"
+    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch"
       (onChange)="onChangeSelectedSketchSelection()">
     </p-selectButton>
     <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
