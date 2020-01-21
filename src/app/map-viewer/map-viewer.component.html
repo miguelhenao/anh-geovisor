@@ -51,7 +51,7 @@
 
 <!-- Modal de extracción de datos -->
 <p-dialog header="Extracción de datos" [(visible)]="modalExtract" [resizable]="false" (onHide)="onHideDialogExtract()"
-  [positionTop]="0">
+  [positionTop]="10" [positionLeft]="200">
   <div id="infoDiv">
     <p>1. Defina el área de interés</p>
     <p-dropdown [options]="optionsPolygon" optionLabel="name" placeholder="Selección en la capa actual"
@@ -75,7 +75,7 @@
 
 <!-- Modal de analisis de cobertura -->
 <p-dialog header="Análisis de Cobertura de Entidades Territoriales" [(visible)]="modalAnalysis" [resizable]="false"
-  (onHide)="onHideDialogAnalisis()">
+  (onHide)="onHideDialogAnalisis()" [positionTop]="10" [positionLeft]="200">
   <p>
     Departamentos seleccionados para el analisis:
   </p>
@@ -94,7 +94,7 @@
 
 <!-- Modal de zona de influencia -->
 <p-dialog header="Zona de Influencia (Buffer)" [(visible)]="modalBuffer" [resizable]="false"
-  (onHide)="onHideDialogBuffer()">
+  (onHide)="onHideDialogBuffer()" [positionTop]="10" [positionLeft]="200">
   <div id="div">
     <p>1. Defina la anchura deseada</p>
     <input id="input" type="text" size="18" pInputText [(ngModel)]="bufDistance" placeholder="Ingrese un número">
@@ -102,7 +102,8 @@
     <p-dropdown [options]="optionsBuffer" optionLabel="name" [(ngModel)]="selectedBuffer">
     </p-dropdown>
     <p>2. Dibuje la geometría para la Zona de Influencia</p>
-    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedBufferSketch" (onChange)="onChangeSelectedSketchBuffer()">
+    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedBufferSketch"
+      (onChange)="onChangeSelectedSketchBuffer()">
     </p-selectButton>
     <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
     </p-button>
@@ -113,7 +114,7 @@
 
 <!-- Modal de herramientas de medicion -->
 <p-dialog header="Herramientas de Medición" [(visible)]="modalMeasurement" [resizable]="false"
-  (onHide)="onHideDialogMedicion()">
+  (onHide)="onHideDialogMedicion()" [positionTop]="10" [positionLeft]="200">
   <!-- <div id="topbar">
     <button class="action-button fas fa-ruler esri-widget--button" (click)="setActiveWidget('distance')"
       id="distanceButton" type="button" title="Measure distance between two or more points"></button>
@@ -123,7 +124,8 @@
       id="coordinateButton" type="button" title="Ubicación"></button>
   </div> -->
   <div style="width: 400px;">
-    <p-selectButton [options]="modesMeasurement" [(ngModel)]="selectedMeasurement" (onChange)="setActiveWidget()"></p-selectButton>
+    <p-selectButton [options]="modesMeasurement" [(ngModel)]="selectedMeasurement" (onChange)="setActiveWidget()">
+    </p-selectButton>
     <div id="widgetMeasure">
       <h3 style="text-align: center;">Resultado de la Medición</h3>
       <hr>
@@ -175,7 +177,8 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="summary">
-      <button pButton icon="fas fa-file-excel" id="excel" pTooltip="Exportar a Excel" (click)="generateExcelFeaturesLayer()"></button>
+      <button pButton icon="fas fa-file-excel" id="excel" pTooltip="Exportar a Excel"
+        (click)="generateExcelFeaturesLayer()"></button>
     </ng-template>
   </p-table>
 </p-dialog>
@@ -227,15 +230,16 @@
 <!-- Fin del modal de ayuda -->
 
 <!-- Modal Herramientas de selección -->
-<p-dialog header="Herramientas de selección" [(visible)]="modalSelection" [resizable]="false" [positionTop]="10" [positionLeft]="200">
+<p-dialog header="Herramientas de selección" [(visible)]="modalSelection" [resizable]="false" [positionTop]="10"
+  [positionLeft]="200">
   <div style="margin-bottom: 5px;">
-    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedBufferSketch" (onChange)="onChangeSelectedSketchSelection()">
+    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedBufferSketch"
+      (onChange)="onChangeSelectedSketchSelection()">
     </p-selectButton>
     <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
     </p-button>
   </div>
-  <p-message id="infoMedicion" severity="info"
-      text="La selección aplica a la capa selecccionada.
+  <p-message id="infoMedicion" severity="info" text="La selección aplica a la capa selecccionada.
       <br> Para la selección con un punto <b>clic</b> en el mapa.
       <br>Para las demás herramientas haga <b>clic</b> y sostenga
       <br> mientras mueve el mouse, y suelte para finalizar."></p-message>
