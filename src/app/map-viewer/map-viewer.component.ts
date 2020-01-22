@@ -123,8 +123,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.setCurrentPosition();
     if (localStorage.getItem('agreeTerms') === undefined || localStorage.getItem('agreeTerms') === null) {
       this.dialogService.open(DialogTerminosComponent, {
-        width: '100vw',
-        height: '100vh',
+        width: '80%',
+        height: '80%',
         baseZIndex: 2000,
         showHeader: false
       });
