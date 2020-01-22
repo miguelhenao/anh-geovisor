@@ -209,7 +209,7 @@
 <p-dialog header="Herramientas de selección" [(visible)]="modalSelection" [resizable]="false" [positionTop]="10"
   [positionLeft]="200" (onHide)="onHideDialogSelection()">
   <div style="margin-bottom: 5px;">
-    <p>Capa de Selección: <b>{{layerSelected.title}}</b></p>
+    <p>Capa de Selección: <b>{{getNameLayer()}}</b></p>
     <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch"
       (onChange)="onChangeSelectedSketchSelection()">
     </p-selectButton>
