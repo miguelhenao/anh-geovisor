@@ -1202,7 +1202,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.activeWidget = null;
       const container = document.createElement('div');
       container.id = 'divWidget';
-      document.getElementById('widgetMeasure').appendChild(container);
+      document.getElementById('widgetMeasure') != null ? document.getElementById('widgetMeasure').appendChild(container) : null;
       this.magnaSirgasFlag = false;
       switch (this.selectedMeasurement) {
         case 'distance':
