@@ -1186,9 +1186,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Método que se realiza cuando el dialogo de medición es cerrado
    */
   public onHideDialogMedicion(): void {
-    this.setActiveButton(null);
     this.selectedMeasurement = null;
-    // this.setActiveWidget();
+    this.activeWidget.destroy();
     this.view.popup.autoOpenEnabled = true;
   }
 
@@ -1211,7 +1210,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             container: document.getElementById('divWidget')
           });
           this.activeWidget.viewModel.newMeasurement();
-          // this.setActiveButton(document.getElementById('distanceButton'));
           break;
         case 'area':
           this.activeWidget = new AreaMeasurement2D({
@@ -1219,7 +1217,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             container: document.getElementById('divWidget')
           });
           this.activeWidget.viewModel.newMeasurement();
-          // this.setActiveButton(document.getElementById('areaButton'));
           break;
         case 'coordinate':
           this.activeWidget = new CoordinateConversion({
@@ -1234,7 +1231,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             yoffset: '16px'
           };
           this.activeWidget.viewModel.locationSymbol = symbol;
-          // this.setActiveButton(document.getElementById('coordinateButton'));
           break;
         case null:
           if (this.activeWidget) {
@@ -1244,21 +1240,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           break;
       }
     });
-  }
-
-  /**
-   * Método encargado activar el botón seleccionado en la barra del widget de medición
-   * @param selectedButton -> Botón seleccionado en el widget de medición
-   */
-  public setActiveButton(selectedButton) {
-    this.view.focus();
-    const elements = document.getElementsByClassName('active');
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].classList.remove('active');
-    }
-    if (selectedButton) {
-      selectedButton.classList.add('active');
-    }
   }
 
   /**

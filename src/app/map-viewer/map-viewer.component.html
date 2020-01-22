@@ -1,20 +1,4 @@
 <p-toast></p-toast>
-<!-- Empieza sidebar-menu -->
-<!-- <p-sidebar [(visible)]="visibleMenu" [modal]="false" [baseZIndex]="10" [style]="{width:'200px', 'height': 'auto'}">
-  <div id="logomenu" (click)="visibleMenu = false">
-    <img src="logo-anh-p.png">
-  </div>
-  <div style="overflow-y: auto;">
-    <p-panelMenu [model]="menu" [style]="{'width':'100%', 'height': 'auto'}" [multiple]="false"></p-panelMenu>
-  </div>
-</p-sidebar> -->
-<!-- Finaliza sidebar-menu -->
-
-<!-- Botón de menú -->
-<!-- <div id="menu-info" (click)="visibleMenu = true" title="Menú" *ngIf="view.ready">
-  <button id="menu" style="float: right;" type="button"></button>
-</div> -->
-<!-- Finaliza botón de menú -->
 
 <!-- Menú con Accordion -->
 <div id="menu-info" *ngIf="view.ready">
@@ -115,14 +99,6 @@
 <!-- Modal de herramientas de medicion -->
 <p-dialog header="Herramientas de Medición" [(visible)]="modalMeasurement" [resizable]="false"
   (onHide)="onHideDialogMedicion()" [positionTop]="10" [positionLeft]="200">
-  <!-- <div id="topbar">
-    <button class="action-button fas fa-ruler esri-widget--button" (click)="setActiveWidget('distance')"
-      id="distanceButton" type="button" title="Measure distance between two or more points"></button>
-    <button class="action-button fas fa-ruler-combined esri-widget--button" (click)="setActiveWidget('area')"
-      id="areaButton" type="button" title="Measure area"></button>
-    <button class="action-button fas fa-search-location esri-widget--button" (click)="setActiveWidget('coordinate')"
-      id="coordinateButton" type="button" title="Ubicación"></button>
-  </div> -->
   <div style="width: 400px;">
     <p-selectButton [options]="modesMeasurement" [(ngModel)]="selectedMeasurement" (onChange)="setActiveWidget()">
     </p-selectButton>
