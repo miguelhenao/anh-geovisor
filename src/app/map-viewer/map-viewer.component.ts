@@ -335,6 +335,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   }
                 });
                 this.visibleModal(false, false, false, true, false, false, false, false);
+                this.view.popup.autoOpenEnabled = false;
               }
             }
           }
@@ -349,6 +350,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             command: () => {
               if (!this.errorArcgisService) {
                 this.visibleModal(false, false, true, false, false, false, false, false);
+                this.view.popup.autoOpenEnabled = false;
               }
             }
           },
@@ -1699,6 +1701,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.selectedLayers = [];
     this.selectedPolygon = undefined;
     this.sketch.cancel();
+    this.view.popup.autoOpenEnabled = true;
   }
 
   changeAttrTable(event: any) {
@@ -1752,6 +1755,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.selectedSketch = undefined;
     this.bufDistance = undefined;
     this.sketchBuffer.cancel();
+    this.view.popup.autoOpenEnabled = true;
   }
 
   /**
