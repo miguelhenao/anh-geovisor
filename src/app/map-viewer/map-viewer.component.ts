@@ -139,9 +139,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             command: () => {
               if (!this.errorArcgisService) {
                 const dialog = this.dialogService.open(DialogFileComponent, {
-                  width: '50%',
+                  width: '400px',
                   baseZIndex: 20,
-                  header: 'Cargar un archivo',
+                  header: 'Cargar un archivo Shapefile',
                   data: { type: 'zip' }
                 });
                 dialog.onClose.subscribe(res => {
@@ -161,9 +161,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             command: () => {
               if (!this.errorArcgisService) {
                 const dialog = this.dialogService.open(DialogFileComponent, {
-                  width: '50%',
+                  width: '400px',
                   baseZIndex: 20,
-                  header: 'Cargar un archivo',
+                  header: 'Cargar un archivo CSV',
                   data: { type: 'csv' }
                 });
                 dialog.onClose.subscribe(res => {
@@ -182,9 +182,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             command: () => {
               if (!this.errorArcgisService) {
                 const dialog = this.dialogService.open(DialogFileComponent, {
-                  width: '50%',
+                  width: '400px',
                   baseZIndex: 20,
-                  header: 'Cargar un archivo',
+                  header: 'Cargar un archivo GPX',
                   data: { type: 'gpx' }
                 });
                 dialog.onClose.subscribe(res => {
@@ -204,7 +204,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             command: () => {
               if (!this.errorArcgisService) {
                 const dialog = this.dialogService.open(DialogFileComponent, {
-                  width: '50%',
+                  width: '400px',
                   baseZIndex: 20,
                   header: 'Cargar un archivo GeoJSON',
                   data: { type: 'json' }
@@ -274,7 +274,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
-                  header: 'Cargar servicio geoJSON'
+                  header: 'Cargar servicio GeoJSON'
                 });
                 dialog.onClose.subscribe(res => {
                   if (res !== undefined) {
@@ -1298,6 +1298,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.addGpxToMap(response.data.featureCollection);
       }
     }, (err) => {
+      this.makingWork = false;
       console.error(err);
     });
   }

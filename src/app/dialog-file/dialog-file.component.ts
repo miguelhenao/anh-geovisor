@@ -10,30 +10,38 @@ export class DialogFileComponent implements OnInit {
   uploadedFiles: any[] = [];
   dataJSON: Array<any> = [];
   type: string;
-  val1: string;
+  valueCoordenate: string;
+  formatError = false;
   constructor(private dialogRef: DynamicDialogRef, private config: DynamicDialogConfig) {
-    this.type = config.data.type;
+    this.type = '.' + config.data.type;
   }
 
   ngOnInit() {
-    this.val1 = undefined;
+    this.valueCoordenate = undefined;
   }
 
   onUpload(event) {
     const fileName = event.target.elements[0].files[0].name;
     if (fileName.indexOf('.csv') !== -1) {
       this.dialogRef.close({
-        data: this.val1,
+        data: this.valueCoordenate,
         form: document.getElementById('uploadForm')
       });
     } else if (fileName.indexOf('.json') !== -1) {
       this.processJson(event.target.elements[0].files[0]);
-    } else {
+    } else if (fileName.indexOf('.zip') !== -1 || fileName.indexOf('.gpx') !== -1) {
       this.dialogRef.close({
         data: fileName,
         form: document.getElementById('uploadForm')
       });
+    } else {
+      this.formatError = true;
     }
+  }
+
+  validateFormat(event) {
+    const fileName = event.target.files[0].name;
+    this.formatError = fileName.indexOf(this.type) === -1;
   }
 
   public processJson(file: File): void {
