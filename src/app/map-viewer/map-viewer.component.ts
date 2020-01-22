@@ -1299,6 +1299,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
     }, (err) => {
       console.error(err);
+      this.messageService.add({summary: 'Error de carga', detail: 'No se pudo realizar la petición de carga de capa', severity: 'error'});
     });
   }
 
@@ -1617,6 +1618,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           });
         }, (err) => {
           console.error(err);
+          this.messageService.add({summary: 'Error de selección', detail: `No se pudo seleccionar el objeto de la capa ${layer.id}`, severity: 'error'});
         });
       });
   }
@@ -1859,5 +1861,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.clearGraphics();
     this.sketchSelection.cancel();
     this.selectedSketch = null;
+  }
+
+  public getNameLayer(): string {
+    return this.layerSelected != undefined || this.layerSelected != null ? this.layerSelected.title : null;
   }
 }
