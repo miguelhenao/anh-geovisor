@@ -78,7 +78,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     { name: 'Kilómetros', value: 9036 },
     { name: 'Millas', value: 9093 },
     { name: 'Millas náuticas', value: 9030 },
-    { name: 'Millas nauticas (US)', value: 109012 },
+    { name: 'Millas náuticas (US)', value: 109012 },
     { name: 'Metros', value: 9001 },
     { name: 'Pies', value: 9002 },
   ];
