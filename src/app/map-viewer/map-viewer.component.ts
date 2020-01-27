@@ -91,6 +91,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   sketchSelection;
   selectedPolygon: SelectItem;
   selectedSketch: any;
+  intervalChange: any;
+  levelColors: number = 0;
+  indexColor: number = 0;
+  items: MenuItem[];
   selectedBuffer: SelectItem = {
     value: 9036
   };
@@ -118,9 +122,52 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     { value: 'distance', title: 'Distancia', icon: 'fas fa-ruler' },
     { value: 'coordinate', title: 'Ubicación', icon: 'esri-icon-map-pin' }
   ];
+  colorsFirst: Array<any> = [];
+  colorsSeconds: Array<any> = [];
+  colorsThirst: Array<any> = [];
+  colorsFourth: Array<any> = [];
+  colorsFiveth: Array<any> = [];
 
   constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService) {
     this.setCurrentPosition();
+    this.colorsFirst = this.generateColor("#F8C933", "#FFE933", 50);
+    this.colorsSeconds = this.generateColor("#E18230", "#F8C933", 50);
+    this.colorsThirst = this.generateColor("#D75C31", "#E18230", 50);
+    this.colorsFourth = this.generateColor("#CC3D36", "#D75C31", 50);
+    this.colorsFiveth = this.generateColor("#44546A", "#FFE933", 50);
+    var _this = this;
+    this.changeColor(this.indexColor, this.colorsFirst);
+    this.indexColor++;
+    this.intervalChange = setInterval(function () {
+      if (_this.indexColor >= 50) {
+        _this.indexColor = 0;
+        if (_this.levelColors > 5) {
+          _this.levelColors = 1;
+        } else {
+          _this.levelColors++;
+        }
+      }
+      switch (_this.levelColors) {
+        case 1:
+          _this.changeColor(_this.indexColor, _this.colorsFirst);
+          break;
+        case 2:
+          _this.changeColor(_this.indexColor, _this.colorsSeconds);
+          break;
+        case 3:
+          _this.changeColor(_this.indexColor, _this.colorsThirst);
+          break;
+        case 4:
+          _this.changeColor(_this.indexColor, _this.colorsFourth);
+          break;
+        case 5:
+          _this.changeColor(_this.indexColor, _this.colorsFiveth);
+          break;
+        default:
+          break;
+      }
+      _this.indexColor++;
+    }, 10);
     if (localStorage.getItem('agreeTerms') === undefined || localStorage.getItem('agreeTerms') === null) {
       this.dialogService.open(DialogTerminosComponent, {
         width: '80%',
@@ -978,7 +1025,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         printServiceUrl: this.printUrl
       });
       const expandPrint = new Expand({
-        expandIconClass: 'esri-icon-download',
+        expandIconClass: 'fa fa-file-export',
         expandTooltip: 'Exportar',
         view: this.view,
         content: print,
@@ -1175,6 +1222,164 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       console.log(error);
     });
     this.initializeMap();
+    this.items = [
+      {
+        label: 'TV', icon: 'fa fa-fw fa-check',
+        items: [
+          [
+            {
+              label: 'TV 1',
+              items: [{ label: 'TV 1.1' }, { label: 'TV 1.2' }]
+            },
+            {
+              label: 'TV 2',
+              items: [{ label: 'TV 2.1' }, { label: 'TV 2.2' }]
+            }
+          ],
+          [
+            {
+              label: 'TV 3',
+              items: [{ label: 'TV 3.1' }, { label: 'TV 3.2' }]
+            },
+            {
+              label: 'TV 4',
+              items: [{ label: 'TV 4.1' }, { label: 'TV 4.2' }]
+            }
+          ]
+        ]
+      },
+      {
+        label: 'Sports', icon: 'fa fa-fw fa-soccer-ball-o',
+        items: [
+          [
+            {
+              label: 'Sports 1',
+              items: [{ label: 'Sports 1.1' }, { label: 'Sports 1.2' }]
+            },
+            {
+              label: 'Sports 2',
+              items: [{ label: 'Sports 2.1' }, { label: 'Sports 2.2' }]
+            },
+
+          ],
+          [
+            {
+              label: 'Sports 3',
+              items: [{ label: 'Sports 3.1' }, { label: 'Sports 3.2' }]
+            },
+            {
+              label: 'Sports 4',
+              items: [{ label: 'Sports 4.1' }, { label: 'Sports 4.2' }]
+            }
+          ],
+          [
+            {
+              label: 'Sports 5',
+              items: [{ label: 'Sports 5.1' }, { label: 'Sports 5.2' }]
+            },
+            {
+              label: 'Sports 6',
+              items: [{ label: 'Sports 6.1' }, { label: 'Sports 6.2' }]
+            }
+          ]
+        ]
+      },
+      {
+        label: 'Entertainment', icon: 'fa fa-fw fa-child',
+        items: [
+          [
+            {
+              label: 'Entertainment 1',
+              items: [{ label: 'Entertainment 1.1' }, { label: 'Entertainment 1.2' }]
+            },
+            {
+              label: 'Entertainment 2',
+              items: [{ label: 'Entertainment 2.1' }, { label: 'Entertainment 2.2' }]
+            }
+          ],
+          [
+            {
+              label: 'Entertainment 3',
+              items: [{ label: 'Entertainment 3.1' }, { label: 'Entertainment 3.2' }]
+            },
+            {
+              label: 'Entertainment 4',
+              items: [{ label: 'Entertainment 4.1' }, { label: 'Entertainment 4.2' }]
+            }
+          ]
+        ]
+      },
+      {
+        label: 'Technology', icon: 'fa fa-fw fa-gears',
+        items: [
+          [
+            {
+              label: 'Technology 1',
+              items: [{ label: 'Technology 1.1' }, { label: 'Technology 1.2' }]
+            },
+            {
+              label: 'Technology 2',
+              items: [{ label: 'Technology 2.1' }, { label: 'Technology 2.2' }]
+            },
+            {
+              label: 'Technology 3',
+              items: [{ label: 'Technology 3.1' }, { label: 'Technology 3.2' }]
+            }
+          ],
+          [
+            {
+              label: 'Technology 4',
+              items: [{ label: 'Technology 4.1' }, { label: 'Technology 4.2' }]
+            }
+          ]
+        ]
+      }
+    ];
+  }
+
+  public changeColor(indexColor: number, colors: Array<any>): void {
+    document.getElementsByClassName("ui-progressbar")[0] != undefined ? document.getElementsByClassName("ui-progressbar")[0].setAttribute('style', `height: 6px; background: #${colors[indexColor]} !important; margin-top: 18px; margin-left: -72px;`) : null;
+  }
+  public hex(c: any): string {
+    let s = "0123456789abcdef";
+    let i = parseInt(c);
+    if (i == 0 || isNaN(c))
+      return "00";
+    i = Math.round(Math.min(Math.max(0, i), 255));
+    return s.charAt((i - i % 16) / 16) + s.charAt(i % 16);
+  }
+
+  public convertToHex(rgb: any): string {
+    return this.hex(rgb[0]) + this.hex(rgb[1]) + this.hex(rgb[2]);
+  }
+
+  public trim(s): string {
+    return (s.charAt(0) == '#') ? s.substring(1, 7) : s
+  }
+
+  public convertToRGB(hex): Array<any> {
+    let color = [];
+    color[0] = parseInt((this.trim(hex)).substring(0, 2), 16);
+    color[1] = parseInt((this.trim(hex)).substring(2, 4), 16);
+    color[2] = parseInt((this.trim(hex)).substring(4, 6), 16);
+    return color;
+  }
+
+  public generateColor(colorStart, colorEnd, colorCount): Array<any> {
+    let start = this.convertToRGB(colorStart);
+    let end = this.convertToRGB(colorEnd);
+    let len = colorCount;
+    let alpha = 0.0;
+    let salida = [];
+    for (let i = 0; i < len; i++) {
+      let c = [];
+      alpha += (1.0 / len);
+      c[0] = start[0] * alpha + (1 - alpha) * end[0];
+      c[1] = start[1] * alpha + (1 - alpha) * end[1];
+      c[2] = start[2] * alpha + (1 - alpha) * end[2];
+      salida.push(this.convertToHex(c));
+    }
+    return salida;
   }
 
   ngOnDestroy() {
@@ -1282,7 +1487,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }, (err) => {
       this.makingWork = false;
       console.error(err);
-      this.messageService.add({summary: 'Error de carga', detail: 'No se pudo realizar la petición de carga de capa', severity: 'error'});
+      this.messageService.add({ summary: 'Error de carga', detail: 'No se pudo realizar la petición de carga de capa', severity: 'error' });
     });
   }
 
@@ -1601,7 +1806,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           });
         }, (err) => {
           console.error(err);
-          this.messageService.add({summary: 'Error de selección', detail: `No se pudo seleccionar el objeto de la capa ${layer.id}`, severity: 'error'});
+          this.messageService.add({ summary: 'Error de selección', detail: `No se pudo seleccionar el objeto de la capa ${layer.id}`, severity: 'error' });
         });
       });
   }
@@ -1848,7 +2053,48 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.selectedSketch = null;
   }
 
-  public getNameLayer(): string {
-    return this.layerSelected != undefined || this.layerSelected != null ? this.layerSelected.title : null;
+  /**
+   * Retracta el menu dejando visible solo los iconos
+   */
+  public retractMenu(): void {
+    this.visibleMenu = !this.visibleMenu;
+    var elements = document.getElementsByClassName('ui-menuitem-text');
+    var icons = document.getElementsByClassName('ui-submenu-icon pi pi-fw pi-caret-right ng-star-inserted');
+    var menu = document.getElementsByClassName('ui-tieredmenu')[0];
+    if (elements != null && elements != undefined) {
+      for (let index = 0; index < elements.length; index++) {
+        const element = elements[index];
+        if (this.validateHiddenElement(element.textContent)) {
+          if (this.visibleMenu) {
+            menu.setAttribute('style', 'padding: 0; background-color: #ffffff; border: none; width: auto;');
+            element.setAttribute('style', 'display: initial;');
+          } else {
+            menu.setAttribute('style', 'padding: 0; background-color: #ffffff; border: none; width: 45px;');
+            element.setAttribute('style', 'display: none;');
+          }
+        }
+      }
+    }
+    if (icons != null && icons != undefined) {
+      for (let index = 0; index < icons.length; index++) {
+        const element = icons[index];
+        if (this.visibleMenu) {
+          element.setAttribute('style', 'display: initial;');
+        } else {
+          element.setAttribute('style', 'display: none;');
+        }
+      }
+    }
+  }
+  
+  public validateHiddenElement(menu: string): boolean {
+    let isValid: boolean = false;
+    for (const item of this.menu) {
+      if (item.label == menu) {
+        isValid = true;
+        break
+      }
+    }
+    return isValid;
   }
 }

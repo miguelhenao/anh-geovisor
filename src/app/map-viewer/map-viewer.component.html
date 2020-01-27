@@ -2,21 +2,25 @@
 <div *ngIf="view.updating || makingWork" id="opacidad"></div>
 <!-- Menú con Accordion -->
 <div id="menu-info" *ngIf="view.ready">
-  <p-accordion [expandIcon]="null" [collapseIcon]="null" (onOpen)="onAccordion(true)" (onClose)="onAccordion(false)">
-    <p-accordionTab [selected]="true" [transitionOptions]="'200ms'">
-      <p-header>
+  <!-- <p-accordion [expandIcon]="null" [collapseIcon]="null" (onOpen)="onAccordion(true)" (onClose)="onAccordion(false)">
+    <p-accordionTab [selected]="true" [transitionOptions]="'200ms'"> -->
+      <p-header (click)="retractMenu()">
         <div title="Menú" class="logo-toggler" [ngClass]="{'display': visibleMenu}" id="menu"></div>
       </p-header>
-      <div style="overflow-y: auto;">
-        <p-panelMenu [model]="menu" [style]="{'width':'100%', 'height': 'auto'}" [multiple]="false"></p-panelMenu>
+      <div>
+        <p-tieredMenu [style]="{'width': 'auto'}" id="content-menu" [model]="menu"></p-tieredMenu>
       </div>
-    </p-accordionTab>
-  </p-accordion>
+    <!-- </p-accordionTab>
+  </p-accordion> -->
 </div>
 <!-- Finaliza menú con Accordion -->
 
 <!-- Div de carga de tareas -->
-<div *ngIf="view.updating || makingWork" id="loading" class="loading-machin"></div>
+<div id="loading" *ngIf="view.updating || makingWork">
+  <div class="loading-machin">
+  </div>
+  <p-progressBar mode="indeterminate" [style]="{'height': '6px', 'margin-top': '18px', 'margin-left': '-72px'}"></p-progressBar>
+</div>
 <!-- Fin de div de carga de tareas -->
 
 <!-- Div contenedor del mapa -->
