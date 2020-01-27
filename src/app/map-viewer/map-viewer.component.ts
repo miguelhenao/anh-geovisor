@@ -973,7 +973,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.search = new Search({
         view: this.view,
         sources: this.sourceSearch,
-        includeDefaultSources: false
+        includeDefaultSources: false,
+        locationEnabled: false,
+        activeMenu: 'suggestion'
       });
       this.view.ui.add(this.search, {
         position: 'top-right'
