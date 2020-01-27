@@ -1,5 +1,5 @@
 <p-toast></p-toast>
-
+<div *ngIf="view.updating || makingWork" id="opacidad"></div>
 <!-- Menú con Accordion -->
 <div id="menu-info" *ngIf="view.ready">
   <p-accordion [expandIcon]="null" [collapseIcon]="null" (onOpen)="onAccordion(true)" (onClose)="onAccordion(false)">

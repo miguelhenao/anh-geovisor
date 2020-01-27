@@ -343,7 +343,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       },
       {
         label: 'Herramientas',
-        icon: 'fa fa-gear',
+        icon: 'fa fa-wrench',
         items: [
           {
             label: 'Zona de Influencia (Buffer)',
@@ -437,7 +437,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       const mapViewProperties = {
         container: this.mapViewEl.nativeElement,
         center: [this.longitude, this.latitude],
-        zoom: 5,
+        zoom: 6,
         map: this.map
       };
 
@@ -1152,8 +1152,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       help.expand();
       this.attributeTable = attributeTable;
-      this.view.ui.add([expandLegend, layerListExpand, help], 'bottom-right');
-      this.view.ui.add([expandPrint, expandBaseMapGallery], 'top-right');
+      this.view.ui.add([expandPrint, expandBaseMapGallery, expandLegend, layerListExpand, help], 'top-right');
       return this.view;
     } catch (error) {
       console.log('EsriLoader: ', error);
