@@ -185,6 +185,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Shapefile',
             command: () => {
               if (!this.errorArcgisService) {
+                this.visibleModal(false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogFileComponent, {
                   width: '400px',
                   baseZIndex: 20,
@@ -207,6 +208,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Archivo CSV',
             command: () => {
               if (!this.errorArcgisService) {
+                this.visibleModal(false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogFileComponent, {
                   width: '400px',
                   baseZIndex: 20,
@@ -228,6 +230,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Archivo GPX',
             command: () => {
               if (!this.errorArcgisService) {
+                this.visibleModal(false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogFileComponent, {
                   width: '400px',
                   baseZIndex: 20,
@@ -250,6 +253,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Archivo GeoJSON',
             command: () => {
               if (!this.errorArcgisService) {
+                this.visibleModal(false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogFileComponent, {
                   width: '400px',
                   baseZIndex: 20,
@@ -270,6 +274,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Servicio KML',
             command: () => {
               if (!this.errorArcgisService) {
+                this.visibleModal(false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
@@ -294,6 +299,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Servicio WMS',
             command: () => {
               if (!this.errorArcgisService) {
+                this.visibleModal(false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
@@ -318,6 +324,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Servicio GeoJSON',
             command: () => {
               if (!this.errorArcgisService) {
+                this.visibleModal(false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
@@ -342,6 +349,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Servicio CSV',
             command: () => {
               if (!this.errorArcgisService) {
+                this.visibleModal(false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
@@ -1012,7 +1020,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.search = new Search({
         view: this.view,
         sources: this.sourceSearch,
-        includeDefaultSources: false
+        includeDefaultSources: false,
+        locationEnabled: false,
+        activeMenu: 'suggestion'
       });
       this.view.ui.add(this.search, {
         position: 'top-right'
