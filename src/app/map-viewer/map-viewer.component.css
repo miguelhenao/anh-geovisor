@@ -331,11 +331,10 @@ p-sidebar {
     top: 50%;
     left: 50%;
     width: 144px;
-    height: 144px;
-    background: url(../../assets/machin144_sombra-suave.png) -5px -20px;
+    height: 90px;
+    background: url(../../assets/pozo.gif);
     margin-top: -72px;
     margin-left: -72px;
-    animation: mymove 1.6s steps(30, end) infinite;
     z-index: 1001;
 }
 
