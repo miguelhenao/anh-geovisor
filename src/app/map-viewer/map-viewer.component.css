@@ -446,7 +446,10 @@ p-sidebar {
   /* background-color: #FF9900; */
   height: 6px !important;
   top: -2px !important;
+}
 
+::ng-deep .esri-slider__max {
+  margin-left: 5px !important;
 }
 
 #infoDiv {

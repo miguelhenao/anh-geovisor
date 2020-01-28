@@ -1609,8 +1609,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         max: timeStops.length - 1,
         values: [timeStops.length - 1],
         steps: 1,
-        labelsVisible: false
+        labelsVisible: false,
+        rangeLabelsVisible: true
       });
+      const minValueSlider = document.getElementsByClassName('esri-slider__min')[0];
+      minValueSlider.textContent = timeStops[0][1].getFullYear();
+      const maxValueSlider = document.getElementsByClassName('esri-slider__max')[0];
+      maxValueSlider.textContent = timeStops[timeStops.length - 1][1].getFullYear();
       let d = timeStops[slider.values[0]][1];
       this.nameLayer = monthNames[d.getMonth()] + ' ' + d.getFullYear();
       let lyTierrasMdt;
@@ -2053,7 +2058,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.selectedSketch = null;
   }
 
-  
+
   public getNameLayer(): string {
     return this.layerSelected != undefined || this.layerSelected != null ? this.layerSelected.title : null;
   }
@@ -2091,7 +2096,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
     }
   }
-  
+
   public validateHiddenElement(menu: string): boolean {
     let isValid: boolean = false;
     for (const item of this.menu) {
