@@ -16,8 +16,8 @@ export class DialogGuideComponent implements OnInit, OnChanges {
   ngOnChanges() {
     if (this.flag) {
       setTimeout(() => {
-        document.getElementById('h-extraer').scrollIntoView({block: 'start', behavior: 'smooth'});
-      }, 1000);
+        document.getElementById(this.elementId).scrollIntoView({block: 'start', behavior: 'smooth'});
+      }, 500);
     }
   }
 

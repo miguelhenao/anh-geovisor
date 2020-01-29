@@ -10,6 +10,7 @@ import { ImportCSV } from './ImportCSV';
 import { DialogSymbologyChangeComponent } from '../dialog-symbology-change/dialog-symbology-change.component';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-map-viewer',
@@ -108,7 +109,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     y: null
   };
   magnaSirgasFlag = false;
-
+  sectionSelected: string;
   modesBuffer: SelectItem[] = [
     { value: 'point', title: 'Punto', icon: 'fa fa-fw fa-circle' },
     { value: 'line', title: 'Línea', icon: 'esri-icon-minus' },
@@ -128,7 +129,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   colorsFourth: Array<any> = [];
   colorsFiveth: Array<any> = [];
 
-  constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService) {
+  constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService, private router: Router) {
     this.setCurrentPosition();
     this.colorsFirst = this.generateColor("#F8C933", "#FFE933", 50);
     this.colorsSeconds = this.generateColor("#E18230", "#F8C933", 50);
@@ -189,7 +190,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '400px',
                   baseZIndex: 20,
                   header: 'Cargar un archivo Shapefile',
-                  data: { type: 'zip' }
+                  data: { type: 'zip', help: this }
                 });
                 dialog.onClose.subscribe(res => {
                   if (res !== undefined) {
@@ -211,7 +212,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '400px',
                   baseZIndex: 20,
                   header: 'Cargar un archivo CSV',
-                  data: { type: 'csv' }
+                  data: { type: 'csv', help: this }
                 });
                 dialog.onClose.subscribe(res => {
                   if (res !== undefined) {
@@ -232,7 +233,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '400px',
                   baseZIndex: 20,
                   header: 'Cargar un archivo GPX',
-                  data: { type: 'gpx' }
+                  data: { type: 'gpx', help: this }
                 });
                 dialog.onClose.subscribe(res => {
                   if (res !== undefined) {
@@ -254,7 +255,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '400px',
                   baseZIndex: 20,
                   header: 'Cargar un archivo GeoJSON',
-                  data: { type: 'json' }
+                  data: { type: 'json', help: this }
                 });
                 dialog.onClose.subscribe(res => {
                   if (res !== undefined) {
@@ -274,6 +275,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '50%',
                   baseZIndex: 100,
                   header: 'Cargar servicio KML',
+                  data: { help: this }
                 });
                 dialog.onClose.subscribe(res => {
                   if (res !== undefined) {
@@ -298,6 +300,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '50%',
                   baseZIndex: 100,
                   header: 'Cargar servicio WMS',
+                  data: { help: this }
                 });
                 dialog.onClose.subscribe(res => {
                   if (res !== undefined) {
@@ -321,7 +324,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
-                  header: 'Cargar servicio GeoJSON'
+                  header: 'Cargar servicio GeoJSON',
+                  data: { help: this }
                 });
                 dialog.onClose.subscribe(res => {
                   if (res !== undefined) {
@@ -345,7 +349,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
-                  header: 'Cargar servicio CSV'
+                  header: 'Cargar servicio CSV',
+                  data: { help: this }
                 });
                 dialog.onClose.subscribe(res => {
                   if (res !== undefined) {
@@ -974,7 +979,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             layerListExpand.collapse();
             const dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
               width: '25%',
-              header: `Cambio de Simbología ${layer.title}`
+              header: `Cambio de Simbología ${layer.title}`,
+              data: { help: this }
             });
             dialog.onClose.subscribe(res => {
               if (res !== undefined) {
@@ -1986,11 +1992,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   onShowAbout() {
     this.visibleModal(true, false, false, false, false, false, false, false);
   }
-
+  
   /**
    * Muestra la guia del Geovisor
    */
   onShowGuide() {
+    this.sectionSelected = 'h-introduccion';
     this.visibleModal(false, false, false, false, true, false, false, false);
     (window as any).ga('send', 'event', 'BUTTON', 'click', 'ayuda');
   }
@@ -2074,6 +2081,25 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   public getNameLayer(): string {
     return this.layerSelected != undefined || this.layerSelected != null ? this.layerSelected.title : null;
+  }
+
+  public requestHelp(modal: string): void {
+    console.log(modal);
+    this.sectionSelected = modal;
+    switch (modal) {
+      case 'buffer':
+        this.visibleModal(false, false, true, false, true, false, false, false);
+        break;
+      case 'h-medir':
+        this.visibleModal(false, false, false, false, true, true, false, false);
+        break;
+      case 'h-extraer':
+        this.visibleModal(false, false, false, true, true, false, false, false);
+        break;
+        default:
+          this.modalGuide = true;
+          break;
+    }
   }
 
   /**
