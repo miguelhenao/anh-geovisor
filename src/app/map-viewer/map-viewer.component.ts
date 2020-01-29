@@ -1197,7 +1197,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         group: 'expand',
         expandTooltip: 'Ayuda'
       });
-      help.expand();
       this.attributeTable = attributeTable;
       this.view.ui.add([expandPrint, expandBaseMapGallery, expandLegend, layerListExpand, help], 'top-right');
       return this.view;
