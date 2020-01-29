@@ -22,7 +22,6 @@ export class DialogFileComponent implements OnInit {
     this.valueCoordenate = undefined;
   }
   requestHelp(modal: string): void {
-    debugger;
     this.help.requestHelp(modal);
   }
 

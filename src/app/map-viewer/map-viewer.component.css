@@ -520,3 +520,16 @@ p-sidebar {
 #div {
   margin: 2px;
 }
+
+#buttons {
+  /* justify-content: center; */
+  padding: 4px;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  background-color: white;
+}
+
+#buttons p-button {
+  margin: 0 auto;
+}
+

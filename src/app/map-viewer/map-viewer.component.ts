@@ -410,9 +410,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Herramientas de Medición',
             command: () => {
               if (!this.errorArcgisService) {
-                this.visibleModal(false, false, false, false, false, true, false, false);
-                this.view.popup.autoOpenEnabled = false;
-                (window as any).ga('send', 'event', 'BUTTON', 'click', 'open-measure-menu');
+                this.openMeasuringTools();
               }
             }
           }
@@ -2147,5 +2145,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
     }
     return isValid;
+  }
+
+  public openMeasuringTools(): void {
+    this.visibleModal(false, false, false, false, false, true, false, false);
+    this.view.popup.autoOpenEnabled = false;
+    (window as any).ga('send', 'event', 'BUTTON', 'click', 'open-measure-menu');
   }
 }
