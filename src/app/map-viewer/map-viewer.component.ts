@@ -10,6 +10,7 @@ import { ImportCSV } from './ImportCSV';
 import { DialogSymbologyChangeComponent } from '../dialog-symbology-change/dialog-symbology-change.component';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-map-viewer',
@@ -108,7 +109,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     y: null
   };
   magnaSirgasFlag = false;
-
+  sectionSelected: string;
   modesBuffer: SelectItem[] = [
     { value: 'point', title: 'Punto', icon: 'fa fa-fw fa-circle' },
     { value: 'line', title: 'Línea', icon: 'esri-icon-minus' },
@@ -128,7 +129,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   colorsFourth: Array<any> = [];
   colorsFiveth: Array<any> = [];
 
-  constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService) {
+  constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService, private router: Router) {
     this.setCurrentPosition();
     this.colorsFirst = this.generateColor("#F8C933", "#FFE933", 50);
     this.colorsSeconds = this.generateColor("#E18230", "#F8C933", 50);
@@ -2056,6 +2057,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   
   public getNameLayer(): string {
     return this.layerSelected != undefined || this.layerSelected != null ? this.layerSelected.title : null;
+  }
+
+  public requestHelp(el: HTMLElement, modal: string): void {
+    switch (modal) {
+      case 'buffer':
+        this.sectionSelected = 'buffer';
+        this.visibleModal(false, false, true, false, true, false, false, false);
+        break;
+    
+      default:
+        break;
+    }
   }
 
   /**
