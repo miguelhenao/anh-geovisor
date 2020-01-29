@@ -1209,6 +1209,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         view: this.view,
         content: document.getElementById('help'),
         group: 'expand',
+        mode: 'floating',
         expandTooltip: 'Ayuda'
       });
       this.attributeTable = attributeTable;
