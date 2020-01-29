@@ -452,6 +452,13 @@ p-sidebar {
   margin-left: 5px !important;
 }
 
+::ng-deep .esri-icon-expand:before {
+  margin-left: 65px !important;
+}
+
+::ng-deep .ui.menuitem-link {
+  height: 40.1px !important;
+}
 #infoDiv {
     padding: 5px;
 }

@@ -422,6 +422,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             window.print();
           }
         }
+      },
+      {
+        icon: 'esri-icon-expand',
+        title: 'Expandir/Contraer',
+        command: () => {
+          this.retractMenu();
+          if (this.visibleMenu) {
+            document.getElementsByClassName('esri-icon-collapse')[0].classList.add('esri-icon-expand');
+            document.getElementsByClassName('esri-icon-expand')[0].classList.remove('esri-icon-collapse');
+          } else {
+            document.getElementsByClassName('esri-icon-expand')[0].classList.add('esri-icon-collapse');
+            document.getElementsByClassName('esri-icon-collapse')[0].classList.remove('esri-icon-expand');
+          }
+        }
       }
     ];
   }

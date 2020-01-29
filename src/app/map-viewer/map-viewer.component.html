@@ -2,16 +2,12 @@
 <div *ngIf="view.updating || makingWork" id="opacidad"></div>
 <!-- Menú con Accordion -->
 <div id="menu-info" *ngIf="view.ready">
-  <!-- <p-accordion [expandIcon]="null" [collapseIcon]="null" (onOpen)="onAccordion(true)" (onClose)="onAccordion(false)">
-    <p-accordionTab [selected]="true" [transitionOptions]="'200ms'"> -->
-      <p-header (click)="retractMenu()">
-        <div title="Menú" class="logo-toggler" [ngClass]="{'display': visibleMenu}" id="menu"></div>
-      </p-header>
-      <div>
-        <p-tieredMenu [style]="{'width': 'auto'}" id="content-menu" [model]="menu"></p-tieredMenu>
-      </div>
-    <!-- </p-accordionTab>
-  </p-accordion> -->
+  <p-header>
+    <div class="logo-toggler display" id="menu"></div>
+  </p-header>
+  <div>
+    <p-tieredMenu [style]="{'width': 'auto'}" id="content-menu" [model]="menu"></p-tieredMenu>
+  </div>
 </div>
 <!-- Finaliza menú con Accordion -->
 
@@ -19,7 +15,8 @@
 <div id="loading" *ngIf="view.updating || makingWork">
   <div class="loading-machin">
   </div>
-  <p-progressBar mode="indeterminate" [style]="{'height': '6px', 'margin-top': '18px', 'margin-left': '-72px'}"></p-progressBar>
+  <p-progressBar mode="indeterminate" [style]="{'height': '6px', 'margin-top': '18px', 'margin-left': '-72px'}">
+  </p-progressBar>
 </div>
 <!-- Fin de div de carga de tareas -->
 
@@ -90,15 +87,13 @@
     <p-dropdown [options]="optionsBuffer" optionLabel="name" [(ngModel)]="selectedBuffer">
     </p-dropdown>
     <p>2. Dibuje la geometría para la Zona de Influencia</p>
-    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch"
-      (onChange)="onChangeSelectedSketchBuffer()">
+    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch" (onChange)="onChangeSelectedSketchBuffer()">
     </p-selectButton>
     <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
     </p-button>
     <br>
   </div>
-  <p-message id="infoMedicion" severity="info"
-      text="La <b>anchura del área de influencia (buffer)</b> se mide apartir del
+  <p-message id="infoMedicion" severity="info" text="La <b>anchura del área de influencia (buffer)</b> se mide apartir del
       <br> contorno de la geometría. Cuando se usa un punto, la anchura equivale
       <br> al <b>radio</b> del círculo resultante.
       <br>Para dibujar un punto haga <b>clic</b> en el mapa.
@@ -221,8 +216,7 @@
   [positionLeft]="200" (onHide)="onHideDialogSelection()">
   <div style="margin-bottom: 5px;">
     <p>Capa de Selección: <b>{{getNameLayer()}}</b></p>
-    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch"
-      (onChange)="onChangeSelectedSketchSelection()">
+    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch" (onChange)="onChangeSelectedSketchSelection()">
     </p-selectButton>
     <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
     </p-button>
