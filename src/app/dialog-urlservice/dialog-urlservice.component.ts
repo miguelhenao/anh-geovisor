@@ -22,7 +22,6 @@ export class DialogUrlServiceComponent implements OnInit {
   }
 
   requestHelp(modal: string): void {
-    debugger;
     this.help.requestHelp(modal);
   }
 
