@@ -482,12 +482,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, LabelClass, BasemapGallery, SketchViewModel,
-        GraphicsLayer, Graphic, Legend, ScaleBar, ListItem, geometryEngine, SpatialReference, ProjectParameters, GeometryService] =
+        GraphicsLayer, Graphic, Legend, ScaleBar, ListItem, geometryEngine, SpatialReference, ProjectParameters, GeometryService,
+        Widget] =
         await loadModules(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/LayerList', 'esri/widgets/Print',
           'esri/widgets/Search', 'esri/widgets/Expand', 'esri/layers/support/LabelClass', 'esri/widgets/BasemapGallery',
           'esri/widgets/Sketch/SketchViewModel', 'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend',
           'esri/widgets/ScaleBar', 'esri/widgets/LayerList/ListItem', 'esri/geometry/geometryEngine', 'esri/geometry/SpatialReference',
-          'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService']);
+          'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService', 'esri/widgets/Widget']);
 
       // Geometry Service
       const geomSvc = new GeometryService(this.urlGeometryService);
@@ -1034,6 +1035,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         sources: this.sourceSearch,
         includeDefaultSources: false
       });
+
       this.view.ui.add(this.search, {
         position: 'top-right'
       });
@@ -1992,7 +1994,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   onShowAbout() {
     this.visibleModal(true, false, false, false, false, false, false, false);
   }
-  
+
   /**
    * Muestra la guia del Geovisor
    */
@@ -2096,9 +2098,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       case 'h-extraer':
         this.visibleModal(false, false, false, true, true, false, false, false);
         break;
-        default:
-          this.modalGuide = true;
-          break;
+      default:
+        this.modalGuide = true;
+        break;
     }
   }
 
