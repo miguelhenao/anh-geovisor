@@ -2150,4 +2150,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.view.popup.autoOpenEnabled = false;
     (window as any).ga('send', 'event', 'BUTTON', 'click', 'open-measure-menu');
   }
+
+  public openEnabledPopup(): void {
+    this.view.popup.autoOpenEnabled = !this.view.popup.autoOpenEnabled;
+    if (this.view.popup.autoOpenEnabled) {
+      this.messageService.add({ detail: `Se ha activado la selección de información`, summary: 'Información', severity: 'info' });
+    } else {
+      this.messageService.add({ detail: `Se ha desactivado la selección de información`, summary: 'Información', severity: 'info' });
+    }
+  }
 }
