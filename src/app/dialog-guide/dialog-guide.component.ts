@@ -1,23 +1,24 @@
-import { Component, OnInit, Input, OnChanges, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 
 @Component({
   selector: 'app-dialog-guide',
   templateUrl: './dialog-guide.component.html',
   styleUrls: ['./dialog-guide.component.css']
 })
-export class DialogGuideComponent implements OnInit, AfterViewChecked {
-
-  @Input()
-  sectionSelected: string;
+export class DialogGuideComponent implements OnInit, OnChanges {
+  @Input() flag: boolean;
+  @Input() elementId: string;
   constructor() { }
 
   ngOnInit() {
   }
 
-  ngAfterViewChecked(): void {
-    if (this.sectionSelected) {
-      document.getElementById(this.sectionSelected) != null ? document.getElementById(this.sectionSelected).scrollIntoView() : null;
+  ngOnChanges() {
+    if (this.flag) {
+      setTimeout(() => {
+        document.getElementById(this.elementId).scrollIntoView({block: 'start', behavior: 'smooth'});
+      }, 500);
     }
-    this.sectionSelected = null;
   }
+
 }

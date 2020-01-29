@@ -2,16 +2,12 @@
 <div *ngIf="view.updating || makingWork" id="opacidad"></div>
 <!-- Menú con Accordion -->
 <div id="menu-info" *ngIf="view.ready">
-  <!-- <p-accordion [expandIcon]="null" [collapseIcon]="null" (onOpen)="onAccordion(true)" (onClose)="onAccordion(false)">
-    <p-accordionTab [selected]="true" [transitionOptions]="'200ms'"> -->
-  <p-header (click)="retractMenu()">
-    <div title="Menú" class="logo-toggler" [ngClass]="{'display': visibleMenu}" id="menu"></div>
+  <p-header>
+    <div class="logo-toggler display" id="menu"></div>
   </p-header>
   <div>
     <p-tieredMenu [style]="{'width': 'auto'}" id="content-menu" [model]="menu"></p-tieredMenu>
   </div>
-  <!-- </p-accordionTab>
-  </p-accordion> -->
 </div>
 <!-- Finaliza menú con Accordion -->
 
@@ -42,6 +38,8 @@
 <p-dialog header="Extracción de datos" [(visible)]="modalExtract" [resizable]="false" (onHide)="onHideDialogExtract()"
   [positionTop]="10" [positionLeft]="200">
   <div id="infoDiv">
+    <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
+      (click)="requestHelp('h-extraer')" icon="pi pi-question"></button>
     <p>1. Defina el área de interés</p>
     <p-dropdown [options]="optionsPolygon" optionLabel="name" placeholder="Selección en la capa actual"
       (onChange)="onChangeSelect()" [(ngModel)]="selectedPolygon"></p-dropdown>
@@ -65,6 +63,8 @@
 <!-- Modal de analisis de cobertura -->
 <p-dialog header="Análisis de Cobertura de Entidades Territoriales" [(visible)]="modalAnalysis" [resizable]="false"
   (onHide)="onHideDialogAnalisis()" [positionTop]="10" [positionLeft]="200">
+  <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
+      (click)="requestHelp('h-cobertura')" icon="pi pi-question"></button>
   <p>
     Departamentos seleccionados para el analisis:
   </p>
@@ -86,7 +86,7 @@
   (onHide)="onHideDialogBuffer()" [positionTop]="10" [positionLeft]="200">
   <div id="div">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
-      (click)="requestHelp(navegadores, 'buffer')" icon="pi pi-question"></button>
+      (click)="requestHelp('buffer')" icon="pi pi-question"></button>
     <p>1. Defina la anchura deseada</p>
     <input id="input" type="text" size="18" pInputText [(ngModel)]="bufDistance" placeholder="Ingrese un número">
     <p-dropdown [options]="optionsBuffer" optionLabel="name" [(ngModel)]="selectedBuffer">
@@ -98,7 +98,7 @@
     </p-button>
     <br>
   </div>
-  <p-message id="infoMedicion" severity="info" text="La <b>anchura del área de influencia (buffer)</b> se mide a partir del
+  <p-message id="infoMedicion" severity="info" text="La <b>anchura del área de influencia (buffer)</b> se mide apartir del
       <br> contorno de la geometría. Cuando se usa un punto, la anchura equivale
       <br> al <b>radio</b> del círculo resultante.
       <br>Para dibujar un punto haga <b>clic</b> en el mapa.
@@ -110,6 +110,8 @@
 <!-- Modal de herramientas de medicion -->
 <p-dialog header="Herramientas de Medición" [(visible)]="modalMeasurement" [resizable]="false"
   (onHide)="onHideDialogMedicion()" [positionTop]="10" [positionLeft]="200">
+  <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
+      (click)="requestHelp('h-medir')" icon="pi pi-question"></button>
   <div style="width: 400px;">
     <p-selectButton [options]="modesMeasurement" [(ngModel)]="selectedMeasurement" (onChange)="setActiveWidget()">
     </p-selectButton>
@@ -212,13 +214,15 @@
 
 <!-- Modal de ayuda -->
 <p-dialog header="Ayuda del Geovisor ANH v3" [(visible)]="modalGuide" [resizable]="false">
-  <app-dialog-guide [sectionSelected]="sectionSelected"></app-dialog-guide>
+  <app-dialog-guide [flag]="modalGuide" [elementId]="sectionSelected"></app-dialog-guide>
 </p-dialog>
 <!-- Fin del modal de ayuda -->
 
 <!-- Modal Herramientas de selección -->
 <p-dialog header="Herramientas de selección" [(visible)]="modalSelection" [resizable]="false" [positionTop]="10"
   [positionLeft]="200" (onHide)="onHideDialogSelection()">
+  <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
+      (click)="requestHelp('h-seleccionar')" icon="pi pi-question"></button>
   <div style="margin-bottom: 5px;">
     <p>Capa de Selección: <b>{{getNameLayer()}}</b></p>
     <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch" (onChange)="onChangeSelectedSketchSelection()">

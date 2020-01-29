@@ -9,15 +9,21 @@ import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/api';
 export class DialogFileComponent implements OnInit {
   uploadedFiles: any[] = [];
   dataJSON: Array<any> = [];
+  help: any;
   type: string;
   valueCoordenate: string;
   formatError = false;
   constructor(private dialogRef: DynamicDialogRef, private config: DynamicDialogConfig) {
     this.type = '.' + config.data.type;
+    this.help = config.data.help;
   }
 
   ngOnInit() {
     this.valueCoordenate = undefined;
+  }
+  requestHelp(modal: string): void {
+    debugger;
+    this.help.requestHelp(modal);
   }
 
   onUpload(event) {

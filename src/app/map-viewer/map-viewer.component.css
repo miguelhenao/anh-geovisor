@@ -446,9 +446,19 @@ p-sidebar {
   /* background-color: #FF9900; */
   height: 6px !important;
   top: -2px !important;
-
 }
 
+::ng-deep .esri-slider__max {
+  margin-left: 5px !important;
+}
+
+::ng-deep .esri-icon-expand:before {
+  margin-left: 65px !important;
+}
+
+::ng-deep .ui-tieredmenu .ui-menuitem-icon{
+  height: 18.89px !important;
+}
 #infoDiv {
     padding: 5px;
 }
