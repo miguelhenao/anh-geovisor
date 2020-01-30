@@ -1,5 +1,5 @@
 <p-toast></p-toast>
-<div *ngIf="view.updating || makingWork" id="opacidad"></div>
+<!-- <div *ngIf="view.updating || makingWork" id="opacidad"></div> -->
 <!-- Menú con Accordion -->
 <div id="menu-info" *ngIf="view.ready">
   <p-header>
@@ -22,7 +22,8 @@
 <!-- Finaliza menú con Accordion -->
 
 <!-- Div de carga de tareas -->
-<div id="loading" *ngIf="view.updating || makingWork">
+<div id="loading"
+  *ngIf="(view.updating || makingWork) && !modalMeasurement && !modalBuffer && !flagSketch">
   <div class="loading-machin">
   </div>
   <p-progressBar mode="indeterminate" [style]="{'height': '6px', 'margin-top': '18px', 'margin-left': '-72px'}">
@@ -67,7 +68,7 @@
     <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados"
       [(ngModel)]="selectedLayers"></p-multiSelect>
     <br>
-    <p-button label="Extraer" icon="pi pi-download" (onClick)="extratShape()"></p-button>
+    <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()"></p-button>
   </div>
   <br>
   <p-message id="infoMedicion" severity="info"
@@ -80,7 +81,7 @@
 <p-dialog header="Análisis de Cobertura de Entidades Territoriales" [(visible)]="modalAnalysis" [resizable]="false"
   (onHide)="onHideDialogAnalisis()" [positionTop]="10" [positionLeft]="200">
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
-      (click)="requestHelp('h-cobertura')" icon="pi pi-question"></button>
+    (click)="requestHelp('h-cobertura')" icon="pi pi-question"></button>
   <p>
     Departamentos seleccionados para el analisis:
   </p>
@@ -127,7 +128,7 @@
 <p-dialog header="Herramientas de Medición" [(visible)]="modalMeasurement" [resizable]="false"
   (onHide)="onHideDialogMedicion()" [positionTop]="10" [positionLeft]="200">
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
-      (click)="requestHelp('h-medir')" icon="pi pi-question"></button>
+    (click)="requestHelp('h-medir')" icon="pi pi-question"></button>
   <div style="width: 400px;">
     <p-selectButton [options]="modesMeasurement" [(ngModel)]="selectedMeasurement" (onChange)="setActiveWidget()">
     </p-selectButton>
@@ -238,7 +239,7 @@
 <p-dialog header="Herramientas de selección" [(visible)]="modalSelection" [resizable]="false" [positionTop]="10"
   [positionLeft]="200" (onHide)="onHideDialogSelection()">
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
-      (click)="requestHelp('h-seleccionar')" icon="pi pi-question"></button>
+    (click)="requestHelp('h-seleccionar')" icon="pi pi-question"></button>
   <div style="margin-bottom: 5px;">
     <p>Capa de Selección: <b>{{getNameLayer()}}</b></p>
     <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch" (onChange)="onChangeSelectedSketchSelection()">

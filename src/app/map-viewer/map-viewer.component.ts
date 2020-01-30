@@ -87,7 +87,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   layerList: any;
   optionsLayers: SelectItem[] = [];
   optionsDepartment: SelectItem[] = [];
-  sketch;
+  sketchExtract;
   sketchBuffer;
   sketchSelection;
   selectedPolygon: SelectItem;
@@ -128,6 +128,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   colorsThirst: Array<any> = [];
   colorsFourth: Array<any> = [];
   colorsFiveth: Array<any> = [];
+  flagSketch = false;
 
   constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService, private router: Router) {
     this.setCurrentPosition();
@@ -1073,15 +1074,17 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         group: 'expand'
       });
       const graphicsLayer = new GraphicsLayer();
-      const sketchVM = new SketchViewModel({
+      this.sketchExtract = new SketchViewModel({
         layer: graphicsLayer,
         view: this.view
       });
-      sketchVM.on('create', (event) => {
+      this.sketchExtract.on('create', (event) => {
+        this.flagSketch = true;
         if (this.view.graphics.length === 1) {
           this.clearGraphics();
         }
         if (event.state === 'complete') {
+          this.flagSketch = false;
           this.clearGraphic = true;
           const symbolF = {
             type: 'simple-fill',
@@ -1105,7 +1108,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         view: this.view
       });
       sketchVMBuffer.on('create', (event) => {
+        this.flagSketch = true;
         if (event.state === 'complete') {
+          this.flagSketch = false;
           this.clearGraphic = true;
           let symbolGeo;
           const geometry = event.graphic.geometry;
@@ -1153,7 +1158,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
 
       this.sketchSelection.on('create', (event) => {
+        this.flagSketch = true;
         if (event.state === 'complete') {
+          this.flagSketch = false;
           this.makingWork = true;
           const spQry = this.layerSelected.createQuery();
           spQry.maxAllowableOffset = 1;
@@ -1193,7 +1200,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.onChangeSelectedSketchSelection();
         }
       });
-      this.sketch = sketchVM;
       this.sketchBuffer = sketchVMBuffer;
       const scaleBar = new ScaleBar({
         style: 'line',
@@ -1414,6 +1420,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.selectedMeasurement = null;
     this.setActiveWidget();
     this.view.popup.autoOpenEnabled = true;
+    this.flagSketch = false;
   }
 
   /**
@@ -1708,17 +1715,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   onChangeSelect() {
     if (this.selectedPolygon.value === 'free-pol') {
-      this.sketch.create('polygon', { mode: 'freehand' });
+      this.sketchExtract.create('polygon', { mode: 'freehand' });
     } else if (this.selectedPolygon.value === 'pol') {
-      this.sketch.create('polygon', { mode: 'click' });
+      this.sketchExtract.create('polygon', { mode: 'click' });
     }
   }
 
   /**
    * Método encargado de la funcionalidad de extraer datos a un archivo Shapefile
    */
-  async extratShape() {
-    this.makingWork = true;
+  async extractShape() {
     const [FeatureSet, Geoprocessor] = await loadModules(['esri/tasks/support/FeatureSet', 'esri/tasks/Geoprocessor']);
     const gpExtract = new Geoprocessor({
       url: this.urlExtractShape,
@@ -1749,6 +1755,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
       }
     } else {
+      this.makingWork = true;
       const features = this.view.graphics.items[0];
       const featureSet = new FeatureSet();
       featureSet.features = features;
@@ -1928,8 +1935,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.clearGraphics();
     this.selectedLayers = [];
     this.selectedPolygon = undefined;
-    this.sketch.cancel();
+    this.sketchExtract.cancel();
     this.view.popup.autoOpenEnabled = true;
+    this.flagSketch = false;
   }
 
   changeAttrTable(event: any) {
@@ -1984,6 +1992,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.bufDistance = undefined;
     this.sketchBuffer.cancel();
     this.view.popup.autoOpenEnabled = true;
+    this.flagSketch = false;
   }
 
   /**
