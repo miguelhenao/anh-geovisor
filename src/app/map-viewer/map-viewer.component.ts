@@ -2084,7 +2084,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public requestHelp(modal: string): void {
-    console.log(modal);
     this.sectionSelected = modal;
     switch (modal) {
       case 'buffer':
