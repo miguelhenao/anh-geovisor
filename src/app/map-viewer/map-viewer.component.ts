@@ -1431,7 +1431,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     esriRequest(this.urlGenerateFeatureCollection, {
       query: myContent,
       body: form,
-      responseType: 'json'
+      responseType: 'json',
+      timeout: 0
     }).then((response) => {
       if (fileType === 'shapefile') {
         this.addShapefileToMap(response);
