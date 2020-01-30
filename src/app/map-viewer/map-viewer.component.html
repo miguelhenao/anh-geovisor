@@ -11,7 +11,7 @@
       <p-button icon="esri-icon-cursor" [style]="{'background-color': '#D75C31', 'border-color': '#D75C31'}"
         title="Seleccionar" (click)="openSelectionTool()"></p-button>
       <p-button icon="esri-icon-description" [style]="{'background-color': '#CC3D36', 'border-color': '#CC3D36'}"
-        title="Identificar" (onClick)="this.view.popup.autoOpenEnabled = !this.view.popup.autoOpenEnabled">
+        title="Identificar" (onClick)="openEnabledPopup()">
       </p-button>
     </div>
   </p-header>
