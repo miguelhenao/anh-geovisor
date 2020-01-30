@@ -9,7 +9,7 @@
         title="Tomar medidas" (onClick)="openMeasuringTools()">
       </p-button>
       <p-button icon="esri-icon-cursor" [style]="{'background-color': '#D75C31', 'border-color': '#D75C31'}"
-        title="Seleccionar"></p-button>
+        title="Seleccionar" (click)="openSelectionTool()"></p-button>
       <p-button icon="esri-icon-description" [style]="{'background-color': '#CC3D36', 'border-color': '#CC3D36'}"
         title="Identificar" (onClick)="this.view.popup.autoOpenEnabled = !this.view.popup.autoOpenEnabled">
       </p-button>
@@ -80,7 +80,7 @@
 <p-dialog header="Análisis de Cobertura de Entidades Territoriales" [(visible)]="modalAnalysis" [resizable]="false"
   (onHide)="onHideDialogAnalisis()" [positionTop]="10" [positionLeft]="200">
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
-      (click)="requestHelp('h-cobertura')" icon="pi pi-question"></button>
+    (click)="requestHelp('h-cobertura')" icon="pi pi-question"></button>
   <p>
     Departamentos seleccionados para el analisis:
   </p>
@@ -127,7 +127,7 @@
 <p-dialog header="Herramientas de Medición" [(visible)]="modalMeasurement" [resizable]="false"
   (onHide)="onHideDialogMedicion()" [positionTop]="10" [positionLeft]="200">
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
-      (click)="requestHelp('h-medir')" icon="pi pi-question"></button>
+    (click)="requestHelp('h-medir')" icon="pi pi-question"></button>
   <div style="width: 400px;">
     <p-selectButton [options]="modesMeasurement" [(ngModel)]="selectedMeasurement" (onChange)="setActiveWidget()">
     </p-selectButton>
@@ -238,9 +238,14 @@
 <p-dialog header="Herramientas de selección" [(visible)]="modalSelection" [resizable]="false" [positionTop]="10"
   [positionLeft]="200" (onHide)="onHideDialogSelection()">
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
-      (click)="requestHelp('h-seleccionar')" icon="pi pi-question"></button>
+    (click)="requestHelp('h-seleccionar')" icon="pi pi-question"></button>
   <div style="margin-bottom: 5px;">
-    <p>Capa de Selección: <b>{{getNameLayer()}}</b></p>
+
+    <div>
+      <label>Capa de Selección:</label>
+      <p-dropdown (ngModelChange)="changeLayer($event)" [options]="optionsLayers" [(ngModel)]="layerSelectedSelection">
+      </p-dropdown>
+    </div>
     <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch" (onChange)="onChangeSelectedSketchSelection()">
     </p-selectButton>
     <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
