@@ -30,10 +30,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   modalAbout = false;
   modalGuide = false;
   modalExtract = false;
+  layersOptionsList: Array<any> = [];
   modalAnalysis = false;
   modalBuffer = false;
   modalSelection = false;
   layerSelected: any;
+  layerSelectedSelection: string;
   columnsTable: Array<any> = [];
   latitude = 4.6486259;
   longitude = -74.2478963;
@@ -378,15 +380,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'A Shapefile',
             command: () => {
               if (!this.errorArcgisService) {
-                this.optionsLayers = [];
-                this.map.layers.items.forEach((layer) => {
-                  if (layer.title !== null) {
-                    this.optionsLayers.push({
-                      label: layer.title.substr(11),
-                      value: layer.title.substr(11)
-                    });
-                  }
-                });
+                this.buildOptionsLayers();
                 this.visibleModal(false, false, false, true, false, false, false, false);
                 this.view.popup.autoOpenEnabled = false;
               }
@@ -450,6 +444,52 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       const element = layerList[index];
       element.addEventListener('click', this.clickItemExpand);
     }
+  }
+
+  buildOptionsLayers(): void {
+    this.optionsLayers = [];
+    this.map.layers.items.forEach((layer) => {
+      if (layer.title !== null) {
+        this.optionsLayers.push({
+          label: layer.title.substr(11),
+          value: layer.title.substr(11)
+        });
+      }
+    });
+  }
+
+  buildOptionsLayersValue(nameLayer: string): void {
+    this.layersOptionsList = [];
+    this.layerSelectedSelection = null;
+    this.optionsLayers.push({
+      label: 'Seleccione una capa',
+      value: null
+    });
+    this.map.layers.items.forEach((layer) => {
+      if (layer.title !== null) {
+        let sel: SelectItem =  {
+          label: layer.title.substr(11),
+          value: layer.title.substr(11)
+        }
+        if (layer.title == nameLayer) {
+          this.layerSelectedSelection = sel.value;
+        }
+        this.optionsLayers.push(sel);
+      }
+    });
+  }
+
+  changeLayer(event: any): void {
+    this.map.layers.items.forEach((layer) => {
+      if (layer.title != null && layer.title.substr(11) == event) {
+        this.layerSelected = layer;
+      }
+    });
+  }
+
+  public openSelectionTool(): void {
+    this.buildOptionsLayersValue(null);
+    this.visibleModal(false, false, false, false, false, false, false, true);
   }
 
   clickItemExpand: (arg0: any) => void = (event: any): void => {
@@ -936,6 +976,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.view.when(() => {
         layerList.on('trigger-action', (event) => {
           const layer = event.item.layer;
+          this.buildOptionsLayersValue(layer.title);
           if (event.action.id === 'attr-table') {
             (window as any).ga('send', 'event', 'BUTTON', 'click', 'att-table-button');
             const query = {
@@ -950,7 +991,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               layerListExpand.collapse();
               this.visibleModal(false, false, false, false, false, false, true, false);
             }, (err) => {
-              console.log(err);
+              console.error(err);
             });
           } else if (event.action.id === 'analisis') {
             const query = {
@@ -973,7 +1014,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               layerListExpand.collapse();
               this.visibleModal(false, true, false, false, false, false, false, false);
             }, (err) => {
-              console.log(err);
+              console.error(err);
             });
           } else if (event.action.id === 'simbologia') {
             layerListExpand.collapse();
@@ -1227,7 +1268,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.view.ui.add([expandPrint, expandBaseMapGallery, expandLegend, layerListExpand, help], 'top-right');
       return this.view;
     } catch (error) {
-      console.log('EsriLoader: ', error);
+      console.error('EsriLoader: ', error);
     }
   }
 
@@ -1244,122 +1285,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       // console.log(success);
     }, error => {
       this.errorArcgisService = true;
-      console.log(error);
+      console.error(error);
     });
     this.initializeMap();
-    this.items = [
-      {
-        label: 'TV', icon: 'fa fa-fw fa-check',
-        items: [
-          [
-            {
-              label: 'TV 1',
-              items: [{ label: 'TV 1.1' }, { label: 'TV 1.2' }]
-            },
-            {
-              label: 'TV 2',
-              items: [{ label: 'TV 2.1' }, { label: 'TV 2.2' }]
-            }
-          ],
-          [
-            {
-              label: 'TV 3',
-              items: [{ label: 'TV 3.1' }, { label: 'TV 3.2' }]
-            },
-            {
-              label: 'TV 4',
-              items: [{ label: 'TV 4.1' }, { label: 'TV 4.2' }]
-            }
-          ]
-        ]
-      },
-      {
-        label: 'Sports', icon: 'fa fa-fw fa-soccer-ball-o',
-        items: [
-          [
-            {
-              label: 'Sports 1',
-              items: [{ label: 'Sports 1.1' }, { label: 'Sports 1.2' }]
-            },
-            {
-              label: 'Sports 2',
-              items: [{ label: 'Sports 2.1' }, { label: 'Sports 2.2' }]
-            },
-
-          ],
-          [
-            {
-              label: 'Sports 3',
-              items: [{ label: 'Sports 3.1' }, { label: 'Sports 3.2' }]
-            },
-            {
-              label: 'Sports 4',
-              items: [{ label: 'Sports 4.1' }, { label: 'Sports 4.2' }]
-            }
-          ],
-          [
-            {
-              label: 'Sports 5',
-              items: [{ label: 'Sports 5.1' }, { label: 'Sports 5.2' }]
-            },
-            {
-              label: 'Sports 6',
-              items: [{ label: 'Sports 6.1' }, { label: 'Sports 6.2' }]
-            }
-          ]
-        ]
-      },
-      {
-        label: 'Entertainment', icon: 'fa fa-fw fa-child',
-        items: [
-          [
-            {
-              label: 'Entertainment 1',
-              items: [{ label: 'Entertainment 1.1' }, { label: 'Entertainment 1.2' }]
-            },
-            {
-              label: 'Entertainment 2',
-              items: [{ label: 'Entertainment 2.1' }, { label: 'Entertainment 2.2' }]
-            }
-          ],
-          [
-            {
-              label: 'Entertainment 3',
-              items: [{ label: 'Entertainment 3.1' }, { label: 'Entertainment 3.2' }]
-            },
-            {
-              label: 'Entertainment 4',
-              items: [{ label: 'Entertainment 4.1' }, { label: 'Entertainment 4.2' }]
-            }
-          ]
-        ]
-      },
-      {
-        label: 'Technology', icon: 'fa fa-fw fa-gears',
-        items: [
-          [
-            {
-              label: 'Technology 1',
-              items: [{ label: 'Technology 1.1' }, { label: 'Technology 1.2' }]
-            },
-            {
-              label: 'Technology 2',
-              items: [{ label: 'Technology 2.1' }, { label: 'Technology 2.2' }]
-            },
-            {
-              label: 'Technology 3',
-              items: [{ label: 'Technology 3.1' }, { label: 'Technology 3.2' }]
-            }
-          ],
-          [
-            {
-              label: 'Technology 4',
-              items: [{ label: 'Technology 4.1' }, { label: 'Technology 4.2' }]
-            }
-          ]
-        ]
-      }
-    ];
   }
 
   public changeColor(indexColor: number, colors: Array<any>): void {
@@ -1706,7 +1634,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       });
     }, error => {
-      console.log(error);
+      console.error(error);
     });
   }
 
@@ -1947,12 +1875,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
     };
     if (event.value.indexOf(event.itemValue) !== -1) {
-      // Añadir
-      console.log('Añadio');
       this.onRowSelect(ev);
     } else {
-      // Remover
-      console.log('Remover');
       this.onRowUnselect(ev);
     }
   }

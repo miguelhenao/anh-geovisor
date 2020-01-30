@@ -9,7 +9,7 @@
         title="Tomar medidas" (onClick)="openMeasuringTools()">
       </p-button>
       <p-button icon="esri-icon-cursor" [style]="{'background-color': '#D75C31', 'border-color': '#D75C31'}"
-        title="Seleccionar"></p-button>
+        title="Seleccionar" (click)="openSelectionTool()"></p-button>
       <p-button icon="esri-icon-description" [style]="{'background-color': '#CC3D36', 'border-color': '#CC3D36'}"
         title="Identificar" (onClick)="openEnabledPopup()">
       </p-button>
@@ -241,7 +241,12 @@
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
     (click)="requestHelp('h-seleccionar')" icon="pi pi-question"></button>
   <div style="margin-bottom: 5px;">
-    <p>Capa de Selección: <b>{{getNameLayer()}}</b></p>
+
+    <div>
+      <label>Capa de Selección:</label>
+      <p-dropdown (ngModelChange)="changeLayer($event)" [options]="optionsLayers" [(ngModel)]="layerSelectedSelection">
+      </p-dropdown>
+    </div>
     <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch" (onChange)="onChangeSelectedSketchSelection()">
     </p-selectButton>
     <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
