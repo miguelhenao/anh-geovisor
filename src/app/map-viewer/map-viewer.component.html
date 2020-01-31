@@ -22,8 +22,7 @@
 <!-- Finaliza menú con Accordion -->
 
 <!-- Div de carga de tareas -->
-<div id="loading"
-  *ngIf="(view.updating || makingWork) && !modalMeasurement && !modalBuffer && !flagSketch">
+<div id="loading" *ngIf="(view.updating || makingWork) && !modalMeasurement && !modalBuffer && !flagSketch">
   <div class="loading-machin">
   </div>
   <p-progressBar mode="indeterminate" [style]="{'height': '6px', 'margin-top': '18px', 'margin-left': '-72px'}">
@@ -47,7 +46,7 @@
 
 <!--Footer-->
 <div id="footer">
-  <img src="../../assets/mineria.png">
+  <img src="assets/mineria.png">
 </div>
 <!-- Fin Footer-->
 
@@ -244,7 +243,8 @@
 
     <div>
       <label>Capa de Selección:</label>
-      <p-dropdown (ngModelChange)="changeLayer($event)" [options]="optionsLayers" [(ngModel)]="layerSelectedSelection">
+      <p-dropdown (ngModelChange)="changeLayer($event)" [options]="optionsLayers" [(ngModel)]="layerSelectedSelection"
+        placeholder="Seleccione una capa">
       </p-dropdown>
     </div>
     <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch" (onChange)="onChangeSelectedSketchSelection()">

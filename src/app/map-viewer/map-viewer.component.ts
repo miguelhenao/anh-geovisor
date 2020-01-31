@@ -460,14 +460,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   buildOptionsLayersValue(nameLayer: string): void {
     this.layersOptionsList = [];
+    this.optionsLayers = [];
     this.layerSelectedSelection = null;
-    this.optionsLayers.push({
-      label: 'Seleccione una capa',
-      value: null
-    });
     this.map.layers.items.forEach((layer) => {
       if (layer.title !== null) {
-        let sel: SelectItem =  {
+        let sel: SelectItem = {
           label: layer.title.substr(11),
           value: layer.title.substr(11)
         }
@@ -978,6 +975,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           const layer = event.item.layer;
           this.buildOptionsLayersValue(layer.title);
           if (event.action.id === 'attr-table') {
+            console.log('Hola');
             (window as any).ga('send', 'event', 'BUTTON', 'click', 'att-table-button');
             const query = {
               outFields: ['*'],
@@ -1201,43 +1199,54 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.sketchSelection.on('create', (event) => {
         this.flagSketch = true;
         if (event.state === 'complete') {
-          this.flagSketch = false;
-          this.makingWork = true;
-          const spQry = this.layerSelected.createQuery();
-          spQry.maxAllowableOffset = 1;
-          spQry.geometry = event.graphic.geometry;
-          this.layerSelected.queryFeatures(spQry).then((result) => {
-            if (result.features.length === 0) {
-              this.makingWork = false;
-            }
-            this.clearGraphics();
-            this.featureDptos = result.features;
-            this.messageService.add({
-              severity: 'info',
-              summary: '',
-              detail: `Se seleccionaron ${result.features.length} elementos de la capa ${this.layerSelected.id}
-                        y se cargaron sus atributos.`
-            });
-            this.columnsTable = Object.keys(this.featureDptos[0].attributes);
-            layerListExpand.collapse();
-            loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
-              'esri/Color', 'dojo/_base/array', 'esri/Graphic']).then(([SimpleFillSymbol, SimpleLineSymbol, Color,
-                dojo, Graphic]) => {
-                const symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
-                  new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 255, 1.0]), 2),
-                  new Color([0, 0, 0, 0.5]));
-                dojo.forEach(result.features, (key) => {
-                  const graphic = new Graphic({
-                    geometry: key.geometry,
-                    symbol
-                  });
-                  this.view.graphics.add(graphic);
-                });
-                this.clearGraphic = true;
+          if (this.layerSelectedSelection !== null) {
+            this.flagSketch = false;
+            this.makingWork = true;
+            const spQry = this.layerSelected.createQuery();
+            spQry.maxAllowableOffset = 1;
+            spQry.geometry = event.graphic.geometry;
+            debugger;
+            this.layerSelected.queryFeatures(spQry).then((result) => {
+              if (result.features.length === 0) {
                 this.makingWork = false;
-                this.visibleModal(false, false, false, false, false, false, true, true);
+              }
+              this.clearGraphics();
+              this.featureDptos = result.features;
+              debugger;
+              this.messageService.add({
+                severity: 'info',
+                summary: '',
+                detail: `Se seleccionaron ${result.features.length} elementos de la capa ${this.layerSelected.id}
+                          y se cargaron sus atributos.`
               });
-          });
+              this.columnsTable = Object.keys(this.featureDptos[0].attributes);
+              layerListExpand.collapse();
+              loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
+                'esri/Color', 'dojo/_base/array', 'esri/Graphic']).then(([SimpleFillSymbol, SimpleLineSymbol, Color,
+                  dojo, Graphic]) => {
+                  const symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
+                    new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 255, 1.0]), 2),
+                    new Color([0, 0, 0, 0.5]));
+                  dojo.forEach(result.features, (key) => {
+                    const graphic = new Graphic({
+                      geometry: key.geometry,
+                      symbol
+                    });
+                    this.view.graphics.add(graphic);
+                  });
+                  this.clearGraphic = true;
+                  this.makingWork = false;
+                  this.visibleModal(false, false, false, false, false, false, true, true);
+                });
+            });
+          } else {
+            console.log(this.layerSelectedSelection);
+            this.messageService.add({
+              severity: 'warn',
+              summary: '',
+              detail: 'Debe seleccionar una capa.'
+            });
+          }
           this.onChangeSelectedSketchSelection();
         }
       });
