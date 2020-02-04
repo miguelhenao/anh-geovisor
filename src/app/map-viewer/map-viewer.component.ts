@@ -95,8 +95,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   selectedPolygon: SelectItem;
   selectedSketch: any;
   intervalChange: any;
-  levelColors: number = 0;
-  indexColor: number = 0;
+  levelColors = 0;
+  indexColor = 0;
   items: MenuItem[];
   selectedBuffer: SelectItem = {
     value: 9036
@@ -134,15 +134,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService, private router: Router) {
     this.setCurrentPosition();
-    this.colorsFirst = this.generateColor("#F8C933", "#FFE933", 50);
-    this.colorsSeconds = this.generateColor("#E18230", "#F8C933", 50);
-    this.colorsThirst = this.generateColor("#D75C31", "#E18230", 50);
-    this.colorsFourth = this.generateColor("#CC3D36", "#D75C31", 50);
-    this.colorsFiveth = this.generateColor("#44546A", "#FFE933", 50);
-    var _this = this;
+    this.colorsFirst = this.generateColor('#F8C933', '#FFE933', 50);
+    this.colorsSeconds = this.generateColor('#E18230', '#F8C933', 50);
+    this.colorsThirst = this.generateColor('#D75C31', '#E18230', 50);
+    this.colorsFourth = this.generateColor('#CC3D36', '#D75C31', 50);
+    this.colorsFiveth = this.generateColor('#44546A', '#FFE933', 50);
+    let _this = this;
     this.changeColor(this.indexColor, this.colorsFirst);
     this.indexColor++;
-    this.intervalChange = setInterval(function () {
+    this.intervalChange = setInterval(() => {
       if (_this.indexColor >= 50) {
         _this.indexColor = 0;
         if (_this.levelColors > 5) {
@@ -464,11 +464,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.layerSelectedSelection = null;
     this.map.layers.items.forEach((layer) => {
       if (layer.title !== null) {
-        let sel: SelectItem = {
+        const sel: SelectItem = {
           label: layer.title.substr(11),
           value: layer.title.substr(11)
-        }
-        if (layer.title == nameLayer) {
+        };
+        if (layer.title === nameLayer) {
           this.layerSelectedSelection = sel.value;
         }
         this.optionsLayers.push(sel);
@@ -478,15 +478,17 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   changeLayer(event: any): void {
     this.map.layers.items.forEach((layer) => {
-      if (layer.title != null && layer.title.substr(11) == event) {
+      if (layer.title != null && layer.title.substr(11) === event) {
         this.layerSelected = layer;
       }
     });
   }
 
   public openSelectionTool(): void {
-    this.buildOptionsLayersValue(null);
-    this.visibleModal(false, false, false, false, false, false, false, true);
+    if (!this.errorArcgisService) {
+      this.buildOptionsLayersValue(null);
+      this.visibleModal(false, false, false, false, false, false, false, true);
+    }
   }
 
   clickItemExpand: (arg0: any) => void = (event: any): void => {
@@ -518,13 +520,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, LabelClass, BasemapGallery, SketchViewModel,
-        GraphicsLayer, Graphic, Legend, ScaleBar, ListItem, geometryEngine, SpatialReference, ProjectParameters, GeometryService,
-        Widget] =
+        GraphicsLayer, Graphic, Legend, ScaleBar, geometryEngine, SpatialReference, ProjectParameters, GeometryService] =
         await loadModules(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/LayerList', 'esri/widgets/Print',
           'esri/widgets/Search', 'esri/widgets/Expand', 'esri/layers/support/LabelClass', 'esri/widgets/BasemapGallery',
           'esri/widgets/Sketch/SketchViewModel', 'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend',
-          'esri/widgets/ScaleBar', 'esri/widgets/LayerList/ListItem', 'esri/geometry/geometryEngine', 'esri/geometry/SpatialReference',
-          'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService', 'esri/widgets/Widget']);
+          'esri/widgets/ScaleBar', 'esri/geometry/geometryEngine', 'esri/geometry/SpatialReference',
+          'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService']);
 
       // Geometry Service
       const geomSvc = new GeometryService(this.urlGeometryService);
@@ -1205,14 +1206,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             const spQry = this.layerSelected.createQuery();
             spQry.maxAllowableOffset = 1;
             spQry.geometry = event.graphic.geometry;
-            debugger;
             this.layerSelected.queryFeatures(spQry).then((result) => {
               if (result.features.length === 0) {
                 this.makingWork = false;
               }
               this.clearGraphics();
               this.featureDptos = result.features;
-              debugger;
               this.messageService.add({
                 severity: 'info',
                 summary: '',
@@ -1300,13 +1299,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public changeColor(indexColor: number, colors: Array<any>): void {
-    document.getElementsByClassName("ui-progressbar")[0] != undefined ? document.getElementsByClassName("ui-progressbar")[0].setAttribute('style', `height: 6px; background: #${colors[indexColor]} !important; margin-top: 18px; margin-left: -72px;`) : null;
+    document.getElementsByClassName('ui-progressbar')[0] != undefined ? document.getElementsByClassName('ui-progressbar')[0].setAttribute('style', `height: 6px; background: #${colors[indexColor]} !important; margin-top: 18px; margin-left: -72px;`) : null;
   }
   public hex(c: any): string {
-    let s = "0123456789abcdef";
+    const s = '0123456789abcdef';
     let i = parseInt(c);
-    if (i == 0 || isNaN(c))
-      return "00";
+    if (i === 0 || isNaN(c)) {
+      return '00';
+    }
     i = Math.round(Math.min(Math.max(0, i), 255));
     return s.charAt((i - i % 16) / 16) + s.charAt(i % 16);
   }
@@ -1316,11 +1316,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public trim(s): string {
-    return (s.charAt(0) == '#') ? s.substring(1, 7) : s
+    return (s.charAt(0) === '#') ? s.substring(1, 7) : s;
   }
 
   public convertToRGB(hex): Array<any> {
-    let color = [];
+    const color = [];
     color[0] = parseInt((this.trim(hex)).substring(0, 2), 16);
     color[1] = parseInt((this.trim(hex)).substring(2, 4), 16);
     color[2] = parseInt((this.trim(hex)).substring(4, 6), 16);
@@ -1328,13 +1328,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public generateColor(colorStart, colorEnd, colorCount): Array<any> {
-    let start = this.convertToRGB(colorStart);
-    let end = this.convertToRGB(colorEnd);
-    let len = colorCount;
+    const start = this.convertToRGB(colorStart);
+    const end = this.convertToRGB(colorEnd);
+    const len = colorCount;
     let alpha = 0.0;
-    let salida = [];
+    const salida = [];
     for (let i = 0; i < len; i++) {
-      let c = [];
+      const c = [];
       alpha += (1.0 / len);
       c[0] = start[0] * alpha + (1 - alpha) * end[0];
       c[1] = start[1] * alpha + (1 - alpha) * end[1];
@@ -1775,7 +1775,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           });
         }, (err) => {
           console.error(err);
-          this.messageService.add({ summary: 'Error de selección', detail: `No se pudo seleccionar el objeto de la capa ${layer.id}`, severity: 'error' });
+          this.messageService.add(
+            { summary: 'Error de selección',
+            detail: `No se pudo seleccionar el objeto de la capa ${layer.id}`, severity: 'error'
+          });
         });
       });
   }
@@ -2049,9 +2052,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   public retractMenu(): void {
     this.visibleMenu = !this.visibleMenu;
-    var elements = document.getElementsByClassName('ui-menuitem-text');
-    var icons = document.getElementsByClassName('ui-submenu-icon pi pi-fw pi-caret-right ng-star-inserted');
-    var menu = document.getElementsByClassName('ui-tieredmenu')[0];
+    const elements = document.getElementsByClassName('ui-menuitem-text');
+    const icons = document.getElementsByClassName('ui-submenu-icon pi pi-fw pi-caret-right ng-star-inserted');
+    const menu = document.getElementsByClassName('ui-tieredmenu')[0];
     if (elements != null && elements != undefined) {
       for (let index = 0; index < elements.length; index++) {
         const element = elements[index];
@@ -2079,28 +2082,32 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public validateHiddenElement(menu: string): boolean {
-    let isValid: boolean = false;
+    let isValid = false;
     for (const item of this.menu) {
-      if (item.label == menu) {
+      if (item.label === menu) {
         isValid = true;
-        break
+        break;
       }
     }
     return isValid;
   }
 
   public openMeasuringTools(): void {
-    this.visibleModal(false, false, false, false, false, true, false, false);
-    this.view.popup.autoOpenEnabled = false;
-    (window as any).ga('send', 'event', 'BUTTON', 'click', 'open-measure-menu');
+    if (!this.errorArcgisService) {
+      this.visibleModal(false, false, false, false, false, true, false, false);
+      this.view.popup.autoOpenEnabled = false;
+      (window as any).ga('send', 'event', 'BUTTON', 'click', 'open-measure-menu');
+    }
   }
 
   public openEnabledPopup(): void {
-    this.view.popup.autoOpenEnabled = !this.view.popup.autoOpenEnabled;
-    if (this.view.popup.autoOpenEnabled) {
-      this.messageService.add({ detail: `Se ha activado la selección de información`, summary: 'Información', severity: 'info' });
-    } else {
-      this.messageService.add({ detail: `Se ha desactivado la selección de información`, summary: 'Información', severity: 'info' });
+    if (!this.errorArcgisService) {
+      this.view.popup.autoOpenEnabled = !this.view.popup.autoOpenEnabled;
+      if (this.view.popup.autoOpenEnabled) {
+        this.messageService.add({ detail: `Se ha activado la selección de información`, summary: 'Información', severity: 'info' });
+      } else {
+        this.messageService.add({ detail: `Se ha desactivado la selección de información`, summary: 'Información', severity: 'info' });
+      }
     }
   }
 }
