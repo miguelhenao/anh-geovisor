@@ -101,40 +101,6 @@
 }
 
 @media only screen and (max-width: 991px) {
-    /* #menu-info:before {
-        border-top: 1px solid rgb(255, 237, 0);
-        border-bottom: 1px solid rgb(254, 204, 0);
-        height: 2px;
-        width: 18px;
-        content: "";
-        position: absolute;
-        z-index: 11;
-        top: 13px;
-        left: 4px;
-        -webkit-transition: all 0.1s ease;
-        transition: all 0.1s ease;
-        -o-transition: none;
-        -webkit-box-sizing: content-box;
-        -moz-box-sizing: content-box;
-        box-sizing: content-box;
-    }
-
-    #menu-info:after {
-        border-top: 1px solid rgb(240, 125, 0);
-        border-bottom: 1px solid rgb(227, 6, 19);
-        content: "";
-        height: 2px;
-        width: 18px;
-        position: absolute;
-        top: 19px;
-        left: 4px;
-        -webkit-transition: all 0.1s ease;
-        transition: all 0.1s ease;
-        -o-transition: none;
-        -webkit-box-sizing: content-box;
-        -moz-box-sizing: content-box;
-        box-sizing: content-box;
-    } */
 }
 
 .logo-toggler:before {
@@ -180,113 +146,6 @@
   top: 20px;
   border-width: 2px;
   }
-
-/* #menu-info:before {
-    border-top: 1px solid rgb(255, 237, 0);
-    border-bottom: 1px solid rgb(254, 204, 0);
-    height: 2px;
-    width: 18px;
-    content: "";
-    position: absolute;
-    z-index: 11;
-    top: 13px;
-    left: 4px;
-    -webkit-transition: all 0.1s ease;
-    transition: all 0.1s ease;
-    -o-transition: none;
-    -webkit-box-sizing: content-box;
-    -moz-box-sizing: content-box;
-    box-sizing: content-box;
-}
-
-#menu-info:after {
-    border-top: 1px solid rgb(240, 125, 0);
-    border-bottom: 1px solid rgb(227, 6, 19);
-    content: "";
-    height: 2px;
-    width: 18px;
-    position: absolute;
-    top: 19px;
-    left: 4px;
-    -webkit-transition: all 0.1s ease;
-    transition: all 0.1s ease;
-    -o-transition: none;
-    -webkit-box-sizing: content-box;
-    -moz-box-sizing: content-box;
-    box-sizing: content-box;
-} */
-
-@media only screen and (max-width: 991px) {
-    /* #logomenu:before {
-        border-top: 3px solid rgb(255, 237, 0);
-        border-bottom: 3px solid rgb(254, 204, 0);
-        height: 5px;
-        width: 18px;
-        content: "";
-        position: absolute;
-        z-index: 11;
-        top: 13px;
-        left: 4px;
-        -webkit-transition: all 0.1s ease;
-        transition: all 0.1s ease;
-        -o-transition: none;
-        -webkit-box-sizing: content-box;
-        -moz-box-sizing: content-box;
-        box-sizing: content-box;
-    }
-
-    #logomenu:after {
-        border-top: 3px solid rgb(240, 125, 0);
-        border-bottom: 3px solid rgb(227, 6, 19);
-        content: "";
-        height: 5px;
-        width: 18px;
-        position: absolute;
-        top: 19px;
-        left: 4px;
-        -webkit-transition: all 0.1s ease;
-        transition: all 0.1s ease;
-        -o-transition: none;
-        -webkit-box-sizing: content-box;
-        -moz-box-sizing: content-box;
-        box-sizing: content-box;
-    } */
-}
-
-/* #logomenu:before {
-    border-top: 3px solid rgb(255, 237, 0);
-    border-bottom: 3px solid rgb(254, 204, 0);
-    height: 5px;
-    width: 18px;
-    content: "";
-    position: absolute;
-    z-index: 11;
-    top: 13px;
-    left: 4px;
-    -webkit-transition: all 0.1s ease;
-    transition: all 0.1s ease;
-    -o-transition: none;
-    -webkit-box-sizing: content-box;
-    -moz-box-sizing: content-box;
-    box-sizing: content-box;
-}
-
-#logomenu:after {
-    border-top: 3px solid rgb(240, 125, 0);
-    border-bottom: 3px solid rgb(227, 6, 19);
-    content: "";
-    height: 5px;
-    width: 18px;
-    position: absolute;
-    top: 19px;
-    left: 4px;
-    -webkit-transition: all 0.1s ease;
-    transition: all 0.1s ease;
-    -o-transition: none;
-    -webkit-box-sizing: content-box;
-    -moz-box-sizing: content-box;
-    box-sizing: content-box;
-} */
 
 ::-webkit-scrollbar-thumb:hover {
     background: #999;
@@ -347,6 +206,9 @@ p-sidebar {
     }
     #ts-tierras-wrapper {
         display: none;
+    }
+    #footer {
+      display: none;
     }
 }
 
@@ -476,7 +338,7 @@ p-sidebar {
 
 #help {
   background-color: white;
-  width: 272px;
+  width: 420px;
 }
 
 .title-help {
@@ -533,3 +395,9 @@ p-sidebar {
   margin: 0 auto;
 }
 
+::ng-deep .esri-view-height-medium .esri-expand .esri-widget--panel, .esri-view-height-small .esri-expand .esri-widget--panel,
+::ng-deep .esri-view-height-medium .esri-expand .esri-widget--panel-height-only,
+::ng-deep .esri-view-height-small .esri-expand .esri-widget--panel,
+::ng-deep .esri-basemap-gallery__item-container {
+  max-height: 300px !important;
+}
