@@ -338,8 +338,20 @@ p-sidebar {
 
 #help {
   background-color: white;
-  width: 420px;
 }
+
+@media only screen and (max-height: 700px) {
+  #help {
+    width: 420px;
+  }
+}
+
+@media only screen and (min-height: 701px) {
+  #help {
+    width: 272px;
+  }
+}
+
 
 .title-help {
   background-color: #0079C0;
