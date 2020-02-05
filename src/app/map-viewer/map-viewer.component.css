@@ -406,10 +406,32 @@ p-sidebar {
 #buttons p-button {
   margin: 0 auto;
 }
+@media only screen and (max-width: 544px) {
+  ::ng-deep .esri-view-height-medium .esri-expand .esri-widget--panel, .esri-view-height-small .esri-expand .esri-widget--panel,
+  ::ng-deep .esri-view-height-medium .esri-expand .esri-widget--panel-height-only,
+  ::ng-deep .esri-view-height-small .esri-expand .esri-widget--panel,
+  ::ng-deep .esri-basemap-gallery__item-container {
+    max-height: 420px !important;
+  }
+}
 
-::ng-deep .esri-view-height-medium .esri-expand .esri-widget--panel, .esri-view-height-small .esri-expand .esri-widget--panel,
-::ng-deep .esri-view-height-medium .esri-expand .esri-widget--panel-height-only,
-::ng-deep .esri-view-height-small .esri-expand .esri-widget--panel,
-::ng-deep .esri-basemap-gallery__item-container {
-  max-height: 300px !important;
+@media only screen and (min-width: 545px) {
+  ::ng-deep .esri-view-height-medium .esri-expand .esri-widget--panel, .esri-view-height-small .esri-expand .esri-widget--panel,
+  ::ng-deep .esri-view-height-medium .esri-expand .esri-widget--panel-height-only,
+  ::ng-deep .esri-view-height-small .esri-expand .esri-widget--panel,
+  ::ng-deep .esri-basemap-gallery__item-container {
+    max-height: 300px !important;
+  }
+}
+
+@media only screen and (max-width: 799px) {
+  #ts-tierras-wrapper {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  #ts-tierras-wrapper {
+    display: initial;
+  }
 }
