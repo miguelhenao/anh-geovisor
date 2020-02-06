@@ -26,21 +26,23 @@ export class DialogFileComponent implements OnInit {
   }
 
   onUpload(event) {
-    const fileName = event.target.elements[0].files[0].name;
-    if (fileName.indexOf('.csv') !== -1) {
-      this.dialogRef.close({
-        data: this.valueCoordenate,
-        form: document.getElementById('uploadForm')
-      });
-    } else if (fileName.indexOf('.json') !== -1) {
-      this.processJson(event.target.elements[0].files[0]);
-    } else if (fileName.indexOf('.zip') !== -1 || fileName.indexOf('.gpx') !== -1) {
-      this.dialogRef.close({
-        data: fileName,
-        form: document.getElementById('uploadForm')
-      });
-    } else {
-      this.formatError = true;
+    if (event.target.elements[0].files.length > 0) {
+      const fileName = event.target.elements[0].files[0].name;
+      if (fileName.indexOf('.csv') !== -1) {
+        this.dialogRef.close({
+          data: this.valueCoordenate,
+          form: document.getElementById('uploadForm')
+        });
+      } else if (fileName.indexOf('.json') !== -1) {
+        this.processJson(event.target.elements[0].files[0]);
+      } else if (fileName.indexOf('.zip') !== -1 || fileName.indexOf('.gpx') !== -1) {
+        this.dialogRef.close({
+          data: fileName,
+          form: document.getElementById('uploadForm')
+        });
+      } else {
+        this.formatError = true;
+      }
     }
   }
 
