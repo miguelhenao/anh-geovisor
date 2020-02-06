@@ -1,7 +1,7 @@
 <p-toast></p-toast>
 <!-- <div *ngIf="view.updating || makingWork" id="opacidad"></div> -->
 <!-- Menú con Accordion -->
-<div id="menu-info" *ngIf="view.ready">
+<!-- <div id="menu-info" *ngIf="view.ready">
   <p-header>
     <div class="logo-toggler display" id="menu"></div>
     <div id="buttons">
@@ -21,8 +21,37 @@
   <div>
     <p-tieredMenu [style]="{'width': 'auto'}" id="content-menu" [model]="menu"></p-tieredMenu>
   </div>
+</div> -->
+<!-- Finaliza menú con Accordion -->
+
+<!-- Menú con Accordion -->
+<div id="menu-info" *ngIf="view.ready">
+  <p-accordion [expandIcon]="null" [collapseIcon]="null" (onOpen)="onAccordion(true)" (onClose)="onAccordion(false)">
+    <p-accordionTab [selected]="true" [transitionOptions]="'200ms'">
+      <p-header>
+        <div title="Menú" class="logo-toggler" [ngClass]="{'display': visibleMenu}" id="menu"></div>
+      </p-header>
+      <div id="buttons">
+        <p-button icon="esri-icon-globe" [style]="{'background-color': '#F8C933', 'border-color': '#F8C933'}"
+          title="Ver todo" (onClick)="viewAll()">
+        </p-button>
+        <p-button icon="fa fa-ruler-horizontal" [style]="{'background-color': '#E18230', 'border-color': '#E18230'}"
+          title="Tomar medidas" (onClick)="openMeasuringTools()">
+        </p-button>
+        <p-button icon="esri-icon-cursor" [style]="{'background-color': '#D75C31', 'border-color': '#D75C31'}"
+          title="Seleccionar" (click)="openSelectionTool()"></p-button>
+        <p-button icon="esri-icon-description" [style]="{'background-color': '#CC3D36', 'border-color': '#CC3D36'}"
+          title="Identificar" (onClick)="openEnabledPopup()">
+        </p-button>
+      </div>
+      <div>
+        <p-tieredMenu [style]="{'width': 'auto'}" id="content-menu" [model]="menu"></p-tieredMenu>
+      </div>
+    </p-accordionTab>
+  </p-accordion>
 </div>
 <!-- Finaliza menú con Accordion -->
+
 
 <!-- Div de carga de tareas -->
 <div id="loading" *ngIf="(view.updating || makingWork) && !modalMeasurement && !modalBuffer && !flagSketch">

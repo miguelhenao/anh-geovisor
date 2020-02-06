@@ -48,6 +48,12 @@
   padding: 0 !important;
 }
 
+::ng-deep body .ui-accordion .ui-accordion-header a,
+::ng-deep body .ui-accordion .ui-accordion-content{
+  border: none !important;
+  background-color: transparent;
+}
+
 ::ng-deep .ui-accordion .ui-accordion-header a, .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a{
   background-color: white !important;
   border-color: #c8c8c8 !important;

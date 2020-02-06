@@ -104,6 +104,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   selectedLayers: SelectItem[] = [];
   clearGraphic = false;
   visibleMenu = true;
+  contractMenu = true;
   importCsv = new ImportCSV();
   bufDistance: string;
   magnaSirgas = {
@@ -426,7 +427,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         title: 'Expandir/Contraer',
         command: () => {
           this.retractMenu();
-          if (this.visibleMenu) {
+          if (this.contractMenu) {
             document.getElementsByClassName('esri-icon-collapse')[0].classList.add('esri-icon-expand');
             document.getElementsByClassName('esri-icon-expand')[0].classList.remove('esri-icon-collapse');
           } else {
@@ -2054,7 +2055,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Retracta menu dejando solo visibles los iconos
    */
   public retractMenu(): void {
-    this.visibleMenu = !this.visibleMenu;
+    this.contractMenu = !this.contractMenu;
     const elements = document.getElementsByClassName('ui-menuitem-text');
     const icons = document.getElementsByClassName('ui-submenu-icon pi pi-fw pi-caret-right ng-star-inserted');
     const menu = document.getElementsByClassName('ui-tieredmenu')[0];
@@ -2062,7 +2063,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       for (let index = 0; index < elements.length; index++) {
         const element = elements[index];
         if (this.validateHiddenElement(element.textContent)) {
-          if (this.visibleMenu) {
+          if (this.contractMenu) {
             menu.setAttribute('style', 'padding: 0; background-color: #ffffff; border: none; width: auto;');
             element.setAttribute('style', 'display: initial;');
           } else {
@@ -2075,7 +2076,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (icons != null && icons != undefined) {
       for (let index = 0; index < icons.length; index++) {
         const element = icons[index];
-        if (this.visibleMenu) {
+        if (this.contractMenu) {
           element.setAttribute('style', 'display: initial;');
         } else {
           element.setAttribute('style', 'display: none;');
