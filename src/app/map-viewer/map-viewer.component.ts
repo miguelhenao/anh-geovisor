@@ -846,7 +846,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         lyTierras.popupTemplate = templateTierras;
       });
       const statesLabelClass = new LabelClass({
-        labelExpressionInfo: { expression: '$feature.CONTRAT_ID' },
+        labelExpressionInfo: { expression: '$feature.CONTRATO_N' },
         symbol: {
           type: 'text',
           color: 'black',
@@ -855,10 +855,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       });
       lyTierras.labelingInfo = [statesLabelClass];
+      console.log(lyTierras);
       this.map.add(lyTierras);
       // Carga de capa de sensibilidad
       const lySensibilidad = new FeatureLayer(this.mapRestUrl + '/7', {
-        labelExpressionInfo: { expression: '$feature.CONTRAT_ID' },
+        labelExpressionInfo: { expression: '$feature.CONTRATO_N' },
         id: 'Sensibilidad',
         opacity: 0.5,
         visible: false,
