@@ -53,6 +53,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   activeWidget: any;
   tsLayer: any;
   legend: any;
+  expandPrint: any;
   agsHost = 'anh-gisserver.anh.gov.co';
   agsProtocol = 'https';
   mapRestUrl = this.agsProtocol + '://' + this.agsHost + '/arcgis/rest/services/Tierras/Mapa_ANH/MapServer';
@@ -415,12 +416,23 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       {
         label: 'Impresión',
         icon: 'fa fa-print',
-        command: () => {
-          if (!this.errorArcgisService) {
-            (window as any).ga('send', 'event', 'BUTTON', 'click', 'print');
-            window.print();
+        items: [
+          {
+            label: 'Impresión rápida',
+            command: () => {
+              if (!this.errorArcgisService) {
+                (window as any).ga('send', 'event', 'BUTTON', 'click', 'print');
+                window.print();
+              }
+            }
+          },
+          {
+            label: 'Exportar mapa',
+            command: () => {
+              this.expandPrint.expand();
+            }
           }
-        }
+        ]
       },
       {
         icon: 'esri-icon-expand',
@@ -1088,7 +1100,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         view: this.view,
         printServiceUrl: this.printUrl
       });
-      const expandPrint = new Expand({
+      this.expandPrint = new Expand({
         expandIconClass: 'fa fa-file-export',
         expandTooltip: 'Exportar',
         view: this.view,
@@ -1276,7 +1288,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         expandTooltip: 'Ayuda'
       });
       this.attributeTable = attributeTable;
-      this.view.ui.add([expandPrint, expandBaseMapGallery, expandLegend, layerListExpand, help], 'top-right');
+      this.view.ui.add([this.expandPrint, expandBaseMapGallery, expandLegend, layerListExpand, help], 'top-right');
       return this.view;
     } catch (error) {
       console.error('EsriLoader: ', error);
