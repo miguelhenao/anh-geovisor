@@ -122,8 +122,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   ];
   selectedMeasurement: any;
   modesMeasurement: SelectItem[] = [
-    { value: 'area', title: 'Área', icon: 'fas fa-ruler-combined' },
-    { value: 'distance', title: 'Distancia', icon: 'fas fa-ruler' },
+    { value: 'area', title: 'Área', icon: 'esri-icon-measure-area' },
+    { value: 'distance', title: 'Distancia', icon: 'esri-icon-measure-line' },
     { value: 'coordinate', title: 'Ubicación', icon: 'esri-icon-map-pin' }
   ];
   colorsFirst: Array<any> = [];
