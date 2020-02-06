@@ -2113,4 +2113,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
     }
   }
+
+  public viewAll(): void {
+    this.view.center = [this.longitude, this.latitude];
+    this.view.zoom = 6;
+  }
 }

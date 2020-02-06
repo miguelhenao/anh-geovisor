@@ -5,6 +5,9 @@
   <p-header>
     <div class="logo-toggler display" id="menu"></div>
     <div id="buttons">
+      <p-button icon="esri-icon-globe" [style]="{'background-color': '#F8C933', 'border-color': '#F8C933'}"
+        title="Ver todo" (onClick)="viewAll()">
+      </p-button>
       <p-button icon="fa fa-ruler-horizontal" [style]="{'background-color': '#E18230', 'border-color': '#E18230'}"
         title="Tomar medidas" (onClick)="openMeasuringTools()">
       </p-button>
@@ -212,9 +215,9 @@
       <div class="p-col" style="margin: 0 auto;">
         <button pButton type="button" label="Abrir Guía del Usuario" class="ui-button-raised" icon="fa fa-book-open"
           (click)="onShowGuide()"></button>
-          <button pButton type="button" label="Acerca de Geovisor ANH" class="ui-button-raised ui-button-secondary"
-            icon="pi pi-info-circle" (click)="onShowAbout()"></button>
-      <!-- </div>
+        <button pButton type="button" label="Acerca de Geovisor ANH" class="ui-button-raised ui-button-secondary"
+          icon="pi pi-info-circle" (click)="onShowAbout()"></button>
+        <!-- </div>
       <div class="p-col"> -->
       </div>
     </div>
