@@ -1679,8 +1679,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Método encargado de la funcionalidad de extraer datos a un archivo Shapefile
    */
   async extractShape() {
-    const [FeatureSet, Geoprocessor, Polygon] = await loadModules(['esri/tasks/support/FeatureSet',
-      'esri/tasks/Geoprocessor', 'esri/geometry/Polygon']);
+    const [FeatureSet, Geoprocessor, Polygon] = await loadModules(['esri/tasks/support/FeatureSet', 
+    'esri/tasks/Geoprocessor', 'esri/geometry/Polygon']);
     const gpExtract = new Geoprocessor({
       url: this.urlExtractShape,
       outSpatialReference: {
@@ -1726,7 +1726,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 [-9412723.318837143, -566567.245174313],
                 [-9618186.050867643, 1884309.6297609266]
               ]
-            ]
+             ]
           }),
           symbol: {
             type: "simple-fill",
@@ -2130,15 +2130,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       }
     }
-    let collapse = document.getElementsByClassName('esri-icon-collapse')[0];
-    let expand = document.getElementsByClassName('esri-icon-expand')[0];
-    if (collapse !== undefined || expand !== undefined) {
+    if (document.getElementsByClassName('esri-icon-collapse')[0] !== undefined ||
+      document.getElementsByClassName('esri-icon-expand')[0] !== undefined) {
       if (this.contractMenu) {
-        collapse.classList.add('esri-icon-expand');
-        expand.classList.remove('esri-icon-collapse');
+        document.getElementsByClassName('esri-icon-collapse')[0].classList.add('esri-icon-expand');
+        document.getElementsByClassName('esri-icon-expand')[0].classList.remove('esri-icon-collapse');
       } else {
-        expand.classList.add('esri-icon-collapse');
-        collapse.classList.remove('esri-icon-expand');
+        document.getElementsByClassName('esri-icon-expand')[0].classList.add('esri-icon-collapse');
+        document.getElementsByClassName('esri-icon-collapse')[0].classList.remove('esri-icon-expand');
       }
     }
   }
