@@ -438,7 +438,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         ]
       },
       {
-        icon: 'esri-icon-expand',
+        icon: 'esri-icon-collapse',
         title: 'Expandir/Contraer',
         command: () => {
           this.retractMenu();
@@ -991,7 +991,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           const layer = event.item.layer;
           this.buildOptionsLayersValue(layer.title);
           if (event.action.id === 'attr-table') {
-            console.log('Hola');
             (window as any).ga('send', 'event', 'BUTTON', 'click', 'att-table-button');
             const query = {
               outFields: ['*'],
@@ -1679,8 +1678,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Método encargado de la funcionalidad de extraer datos a un archivo Shapefile
    */
   async extractShape() {
-    const [FeatureSet, Geoprocessor, Polygon] = await loadModules(['esri/tasks/support/FeatureSet', 
-    'esri/tasks/Geoprocessor', 'esri/geometry/Polygon']);
+    const [FeatureSet, Geoprocessor, Polygon] = await loadModules(['esri/tasks/support/FeatureSet',
+      'esri/tasks/Geoprocessor', 'esri/geometry/Polygon']);
     const gpExtract = new Geoprocessor({
       url: this.urlExtractShape,
       outSpatialReference: {
@@ -1726,7 +1725,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 [-9412723.318837143, -566567.245174313],
                 [-9618186.050867643, 1884309.6297609266]
               ]
-             ]
+            ]
           }),
           symbol: {
             type: "simple-fill",
@@ -2130,15 +2129,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       }
     }
-    if (document.getElementsByClassName('esri-icon-collapse')[0] !== undefined ||
-      document.getElementsByClassName('esri-icon-expand')[0] !== undefined) {
-      if (this.contractMenu) {
-        document.getElementsByClassName('esri-icon-collapse')[0].classList.add('esri-icon-expand');
-        document.getElementsByClassName('esri-icon-expand')[0].classList.remove('esri-icon-collapse');
-      } else {
-        document.getElementsByClassName('esri-icon-expand')[0].classList.add('esri-icon-collapse');
-        document.getElementsByClassName('esri-icon-collapse')[0].classList.remove('esri-icon-expand');
-      }
+    if (this.contractMenu && document.getElementsByClassName('esri-icon-collapse')[0] !== undefined) {
+      document.getElementsByClassName('esri-icon-collapse')[0].classList.add('esri-icon-expand');
+      document.getElementsByClassName('esri-icon-expand')[0].classList.remove('esri-icon-collapse');
+    } else if (!this.contractMenu && document.getElementsByClassName('esri-icon-expand')[0] !== undefined) {
+      document.getElementsByClassName('esri-icon-expand')[0].classList.add('esri-icon-collapse');
+      document.getElementsByClassName('esri-icon-collapse')[0].classList.remove('esri-icon-expand');
     }
   }
 
