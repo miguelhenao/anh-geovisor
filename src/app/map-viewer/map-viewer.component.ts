@@ -855,7 +855,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       });
       lyTierras.labelingInfo = [statesLabelClass];
-      console.log(lyTierras);
       this.map.add(lyTierras);
       // Carga de capa de sensibilidad
       const lySensibilidad = new FeatureLayer(this.mapRestUrl + '/7', {
