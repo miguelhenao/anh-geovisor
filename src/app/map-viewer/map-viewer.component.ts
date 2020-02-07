@@ -452,9 +452,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       const element = layerList[index];
       element.addEventListener('click', this.clickItemExpand);
     }
-    debugger;
     if (!this.loaded) {
-      this.retractMenu()
+      this.retractMenu();
     }
   }
 
@@ -2096,12 +2095,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       }
     }
-    if (this.contractMenu) {
-      document.getElementsByClassName('esri-icon-collapse')[0].classList.add('esri-icon-expand');
-      document.getElementsByClassName('esri-icon-expand')[0].classList.remove('esri-icon-collapse');
-    } else {
-      document.getElementsByClassName('esri-icon-expand')[0].classList.add('esri-icon-collapse');
-      document.getElementsByClassName('esri-icon-collapse')[0].classList.remove('esri-icon-expand');
+    if (document.getElementsByClassName('esri-icon-collapse')[0] !== undefined ||
+      document.getElementsByClassName('esri-icon-expand')[0] !== undefined) {
+      if (this.contractMenu) {
+        document.getElementsByClassName('esri-icon-collapse')[0].classList.add('esri-icon-expand');
+        document.getElementsByClassName('esri-icon-expand')[0].classList.remove('esri-icon-collapse');
+      } else {
+        document.getElementsByClassName('esri-icon-expand')[0].classList.add('esri-icon-collapse');
+        document.getElementsByClassName('esri-icon-collapse')[0].classList.remove('esri-icon-expand');
+      }
     }
   }
 
