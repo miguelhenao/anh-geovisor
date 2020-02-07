@@ -87,19 +87,20 @@
   [positionTop]="10" [positionLeft]="200">
   <div id="infoDiv">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
-      (click)="requestHelp('h-extraer')" icon="pi pi-question"></button>
-    <p>1. Defina el área de interés</p>
+    (click)="requestHelp('h-extraer')" icon="pi pi-question"></button>
+    <p>1. Seleccione las capas a extraer</p>
+    <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados"
+      [(ngModel)]="selectedLayers"></p-multiSelect>
+    <br>
+    <p>2. Defina el área de interés</p>
     <p-dropdown [options]="optionsPolygon" optionLabel="name" placeholder="Selección en la capa actual"
       (onChange)="onChangeSelect()" [(ngModel)]="selectedPolygon"></p-dropdown>
     <p-button label="Limpiar área" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
     </p-button>
     <p-button class="clearGraphics" [disabled]="selectedPolygon === undefined" icon="pi pi-undo"
       (onClick)="onChangeSelect()" pTooltip="Volver a dibujar" tooltipPosition="bottom"></p-button>
-    <p>2. Seleccione las capas a extraer</p>
-    <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados"
-      [(ngModel)]="selectedLayers"></p-multiSelect>
     <br>
-    <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()"></p-button>
+    <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()" [style]="{'margin-top': '5px'}"></p-button>
   </div>
   <br>
   <p-message id="infoMedicion" severity="info"
