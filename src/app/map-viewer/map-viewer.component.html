@@ -43,6 +43,9 @@
         <p-button icon="esri-icon-description" [style]="{'background-color': '#CC3D36', 'border-color': '#CC3D36'}"
           title="Identificar" (onClick)="openEnabledPopup()">
         </p-button>
+        <p-button icon="esri-icon-description" [style]="{'background-color': '#CC3D36', 'border-color': '#CC3D36'}"
+        title="Identificar" (onClick)="openEnabledPopup()">
+      </p-button>
       </div>
       <div>
         <p-tieredMenu [style]="{'width': 'auto'}" id="content-menu" [model]="menu"></p-tieredMenu>
@@ -57,7 +60,7 @@
 <div id="loading" *ngIf="(view.updating || makingWork) && !modalMeasurement && !modalBuffer && !flagSketch">
   <div class="loading-machin">
   </div>
-  <p-progressBar mode="indeterminate" [style]="{'height': '6px', 'margin-top': '18px', 'margin-left': '-72px'}">
+  <p-progressBar mode="indeterminate" [style]="{'height': '6px', 'margin-top': '56px', 'margin-left': '-72px'}">
   </p-progressBar>
 </div>
 <!-- Fin de div de carga de tareas -->

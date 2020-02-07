@@ -24,6 +24,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   view: any = {
     ready: false
   };
+  loaded: boolean = false;
   eventLayer: any;
   modalTable = false;
   modalMeasurement = false;
@@ -439,13 +440,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         title: 'Expandir/Contraer',
         command: () => {
           this.retractMenu();
-          if (this.contractMenu) {
-            document.getElementsByClassName('esri-icon-collapse')[0].classList.add('esri-icon-expand');
-            document.getElementsByClassName('esri-icon-expand')[0].classList.remove('esri-icon-collapse');
-          } else {
-            document.getElementsByClassName('esri-icon-expand')[0].classList.add('esri-icon-collapse');
-            document.getElementsByClassName('esri-icon-collapse')[0].classList.remove('esri-icon-expand');
-          }
+
         }
       }
     ];
@@ -456,6 +451,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     for (let index = 0; index < layerList.length; index++) {
       const element = layerList[index];
       element.addEventListener('click', this.clickItemExpand);
+    }
+    debugger;
+    if (!this.loaded) {
+      this.retractMenu()
     }
   }
 
@@ -1315,7 +1314,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public changeColor(indexColor: number, colors: Array<any>): void {
-    document.getElementsByClassName('ui-progressbar')[0] != undefined ? document.getElementsByClassName('ui-progressbar')[0].setAttribute('style', `height: 6px; background: #${colors[indexColor]} !important; margin-top: 18px; margin-left: -72px;`) : null;
+    document.getElementsByClassName('ui-progressbar')[0] != undefined ? document.getElementsByClassName('ui-progressbar')[0].setAttribute('style', `height: 6px; background: #${colors[indexColor]} !important; margin-top: 56px; margin-left: -72px;`) : null;
   }
 
   public hex(c: any): string {
@@ -1793,9 +1792,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }, (err) => {
           console.error(err);
           this.messageService.add(
-            { summary: 'Error de selección',
-            detail: `No se pudo seleccionar el objeto de la capa ${layer.id}`, severity: 'error'
-          });
+            {
+              summary: 'Error de selección',
+              detail: `No se pudo seleccionar el objeto de la capa ${layer.id}`, severity: 'error'
+            });
         });
       });
   }
@@ -2093,8 +2093,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           element.setAttribute('style', 'display: initial;');
         } else {
           element.setAttribute('style', 'display: none;');
+          this.loaded = true;
         }
       }
+    }
+    if (this.contractMenu) {
+      document.getElementsByClassName('esri-icon-collapse')[0].classList.add('esri-icon-expand');
+      document.getElementsByClassName('esri-icon-expand')[0].classList.remove('esri-icon-collapse');
+    } else {
+      document.getElementsByClassName('esri-icon-expand')[0].classList.add('esri-icon-collapse');
+      document.getElementsByClassName('esri-icon-collapse')[0].classList.remove('esri-icon-expand');
     }
   }
 
