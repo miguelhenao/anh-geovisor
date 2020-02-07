@@ -43,9 +43,9 @@
         <p-button icon="esri-icon-description" [style]="{'background-color': '#CC3D36', 'border-color': '#CC3D36'}"
           title="Identificar" (onClick)="openEnabledPopup()">
         </p-button>
-        <p-button icon="esri-icon-description" [style]="{'background-color': '#CC3D36', 'border-color': '#CC3D36'}"
-        title="Identificar" (onClick)="openEnabledPopup()">
-      </p-button>
+        <p-button icon="esri-icon-download" [style]="{'background-color': '#44546A', 'border-color': '#44546A'}"
+          title="Identificar" (onClick)="openExtract()">
+        </p-button>
       </div>
       <div>
         <p-tieredMenu [style]="{'width': 'auto'}" id="content-menu" [model]="menu"></p-tieredMenu>
@@ -90,24 +90,30 @@
   [positionTop]="10" [positionLeft]="200">
   <div id="infoDiv">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
-    (click)="requestHelp('h-extraer')" icon="pi pi-question"></button>
+      (click)="requestHelp('h-extraer')" icon="pi pi-question"></button>
     <p>1. Seleccione las capas a extraer</p>
     <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados"
       [(ngModel)]="selectedLayers"></p-multiSelect>
     <br>
-    <p>2. Defina el área de interés</p>
-    <p-dropdown [options]="optionsPolygon" optionLabel="name" placeholder="Selección en la capa actual"
-      (onChange)="onChangeSelect()" [(ngModel)]="selectedPolygon"></p-dropdown>
-    <p-button label="Limpiar área" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
+    <div *ngIf="!layerExtract">
+      <p>2. Defina el área de interés</p>
+      <p-dropdown [options]="optionsPolygon" optionLabel="name" placeholder="Selección en la capa actual"
+        (onChange)="onChangeSelect()" [(ngModel)]="selectedPolygon"></p-dropdown>
+      <p-button label="Limpiar área" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
+      </p-button>
+      <p-button class="clearGraphics" [disabled]="selectedPolygon === undefined" icon="pi pi-undo"
+        (onClick)="onChangeSelect()" pTooltip="Volver a dibujar" tooltipPosition="bottom"></p-button>
+      <br>
+    </div>
+    <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()" [style]="{'margin-top': '5px'}">
     </p-button>
-    <p-button class="clearGraphics" [disabled]="selectedPolygon === undefined" icon="pi pi-undo"
-      (onClick)="onChangeSelect()" pTooltip="Volver a dibujar" tooltipPosition="bottom"></p-button>
-    <br>
-    <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()" [style]="{'margin-top': '5px'}"></p-button>
   </div>
   <br>
-  <p-message id="infoMedicion" severity="info"
+  <p-message id="infoMedicion" *ngIf="!layerExtract" severity="info"
     text="Proceda con los poligonos ya <b>seleccionados en la capa actual</b>. Si no<br> hay una selección en la capa actual debe usar las <b>Herramientas de</b><br><b>Selección.</b><br><b>Seleccione las capas</b> que se incluirán en la extracción">
+  </p-message>
+  <p-message id="infoMedicion" *ngIf="layerExtract" severity="info"
+    text="<b>Seleccione las capas</b> que se incluirán en la extracción">
   </p-message>
 </p-dialog>
 <!-- Fin del modal de extracción de datos -->

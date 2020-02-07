@@ -32,6 +32,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   modalGuide = false;
   modalExtract = false;
   layersOptionsList: Array<any> = [];
+  layerExtract: boolean = false;
   modalAnalysis = false;
   modalBuffer = false;
   modalSelection = false;
@@ -384,6 +385,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             command: () => {
               if (!this.errorArcgisService) {
                 this.buildOptionsLayers();
+                this.layerExtract = false;
                 this.visibleModal(false, false, false, true, false, false, false, false);
                 this.view.popup.autoOpenEnabled = false;
               }
@@ -452,7 +454,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       const element = layerList[index];
       element.addEventListener('click', this.clickItemExpand);
     }
-    debugger;
     if (!this.loaded) {
       this.retractMenu()
     }
@@ -1678,14 +1679,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Método encargado de la funcionalidad de extraer datos a un archivo Shapefile
    */
   async extractShape() {
-    const [FeatureSet, Geoprocessor] = await loadModules(['esri/tasks/support/FeatureSet', 'esri/tasks/Geoprocessor']);
+    const [FeatureSet, Geoprocessor, Polygon] = await loadModules(['esri/tasks/support/FeatureSet', 
+    'esri/tasks/Geoprocessor', 'esri/geometry/Polygon']);
     const gpExtract = new Geoprocessor({
       url: this.urlExtractShape,
       outSpatialReference: {
         wkid: 4326
       }
     });
-    if (this.selectedLayers.length === 0 || this.selectedPolygon === undefined || this.view.graphics.length === 0) {
+    if (!this.layerExtract && (this.selectedLayers.length === 0 || this.selectedPolygon === undefined || this.view.graphics.length === 0)) {
       if (this.selectedLayers.length === 0) {
         this.messageService.add({
           severity: 'warn',
@@ -1709,7 +1711,39 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
     } else {
       this.makingWork = true;
-      const features = this.view.graphics.items[0];
+      let sourceLayer: any;
+      if (this.layerExtract) {
+        sourceLayer = {
+          geometry: new Polygon({
+            spatialReference: {
+              wkid: 102100
+            },
+            rings: [
+              [
+                [-9618186.050867643, 1884309.6297609266],
+                [-7622262.368285651, 1982149.0259659262],
+                [-7250472.662706653, -498079.6678308132],
+                [-9412723.318837143, -566567.245174313],
+                [-9618186.050867643, 1884309.6297609266]
+              ]
+             ]
+          }),
+          symbol: {
+            type: "simple-fill",
+            color: [255, 255, 0, 64],
+            outline: {
+              type: "simple-line",
+              color: [255, 0, 0, 255],
+              width: 2,
+              style: "dash-dot"
+            },
+            style: "solid"
+          },
+          attributes: {},
+          popupTemplate: null
+        }
+      }
+      const features = !this.layerExtract ? this.view.graphics.items[0] : sourceLayer;
       const featureSet = new FeatureSet();
       featureSet.features = features;
       const params = {
@@ -2096,6 +2130,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       }
     }
+    const collapse = document.getElementsByClassName('esri-icon-collapse')[0];
+    const expand = document.getElementsByClassName('esri-icon-expand')[0];
     if (this.contractMenu) {
       document.getElementsByClassName('esri-icon-collapse')[0].classList.add('esri-icon-expand');
       document.getElementsByClassName('esri-icon-expand')[0].classList.remove('esri-icon-collapse');
@@ -2114,6 +2150,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
     }
     return isValid;
+  }
+
+  public openExtract(): void {
+    this.layerExtract = true;
+    this.buildOptionsLayers();
+    this.visibleModal(false, false, false, true, false, false, false, false);
+    this.view.popup.autoOpenEnabled = false;
   }
 
   public openMeasuringTools(): void {
