@@ -57,7 +57,7 @@
 
 
 <!-- Div de carga de tareas -->
-<div id="loading" *ngIf="(view.updating || makingWork) && !modalMeasurement && !modalBuffer && !flagSketch">
+<div id="loading" *ngIf="(view.updating || makingWork) && !modalMeasurement && !flagSketch">
   <div class="loading-machin">
   </div>
   <p-progressBar mode="indeterminate" [style]="{'height': '6px', 'margin-top': '56px', 'margin-left': '-72px'}">
@@ -105,7 +105,8 @@
         (onClick)="onChangeSelect()" pTooltip="Volver a dibujar" tooltipPosition="bottom"></p-button>
       <br>
     </div>
-    <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()" [style]="{'margin-top': '5px'}">
+    <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()" [style]="{'margin-top': '5px'}"
+      [disabled]="!clearGraphic">
     </p-button>
   </div>
   <br>
@@ -155,6 +156,12 @@
     <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
     </p-button>
     <br>
+    <p>3. Seleccione las capas a extraer</p>
+    <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados"
+      [(ngModel)]="selectedLayers"></p-multiSelect>
+    <br>
+    <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()" [disabled]="!clearGraphic">
+    </p-button>
   </div>
   <p-message id="infoMedicion" severity="info" text="La <b>anchura del área de influencia (buffer)</b> se mide apartir del
       <br> contorno de la geometría. Cuando se usa un punto, la anchura equivale
