@@ -428,6 +428,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 this.openMeasuringTools();
               }
             }
+          },
+          {
+            label: 'Analisis de Cobertura',
+            command: () => {
+              !this.errorArcgisService ? this.analisis() : null;
+            }
+          },
+          {
+            label: 'Cambiar Simbología',
+            command: () => {
+              this.layerSelected = null;
+              this.layerSelectedSelection = null;
+              !this.errorArcgisService ? this.symbologyChange() : null
+            }
           }
         ]
       },
@@ -761,6 +775,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
+      this.departmentLayer = lyDepartamento;
       lyDepartamento.load().then(() => {
         let text = '';
         const searchField: Array<any> = [];
@@ -1022,61 +1037,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               console.error(err);
             });
           } else if (event.action.id === 'analisis') {
-            const query = {
-              outFields: ['*'],
-              returnGeometry: false,
-              where: ''
-            };
-            layer.queryFeatures(query).then((result) => {
-              const dptos: Array<any> = [];
-              for (const r of result.features) {
-                const dpto = {
-                  attributes: Object.assign({}, r.attributes)
-                };
-                dptos.push(dpto);
-              }
-              this.featureDptos = dptos;
-              this.columnsTable = Object.keys(this.featureDptos[0].attributes);
-              this.dptosSelected = [];
-              this.layerSelected = layer;
-              layerListExpand.collapse();
-              this.visibleModal(false, true, false, false, false, false, false, false);
-            }, (err) => {
-              console.error(err);
-            });
+            this.departmentLayer = layer;
+            layerListExpand.collapse();
+            this.analisis();
           } else if (event.action.id === 'simbologia') {
             layerListExpand.collapse();
-            const dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
-              width: '25%',
-              header: `Cambio de Simbología ${layer.title}`,
-              data: { help: this }
-            });
-            dialog.onClose.subscribe(res => {
-              if (res !== undefined) {
-                (window as any).ga('send', 'event', 'BUTTON', 'click', 'symbol-start');
-                this.makingWork = true;
-                loadModules(['esri/symbols/SimpleMarkerSymbol', 'esri/symbols/SimpleFillSymbol',
-                  'esri/symbols/SimpleLineSymbol', 'esri/Color', 'esri/renderers/SimpleRenderer']).then(([
-                    SimpleMarkerSymbol, SimpleFillSymbol, SimpleLineSymbol, Color, SimpleRenderer]) => {
-                    let defaultSymbol: any;
-                    switch (layer.geometryType) {
-                      case 'point':
-                        defaultSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 8, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), 1), new Color(res.fillColor));
-                        break;
-                      case 'polygon':
-                        defaultSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), res.borderSize), new Color(res.fillColor));
-                        break;
-                      case 'polyline':
-                        defaultSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), res.borderSize);
-                        break;
-                    }
-                    const renderer = new SimpleRenderer();
-                    renderer.symbol = defaultSymbol;
-                    layer.renderer = renderer;
-                  });
-                this.makingWork = false;
-              }
-            });
+            this.layerSelected = layer;
+            this.symbologyChange();
           } else if (event.action.id === 'increase-opacity') {
             layer.opacity += 0.25;
           } else if (event.action.id === 'decrease-opacity') {
@@ -1307,6 +1274,72 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     } catch (error) {
       console.error('EsriLoader: ', error);
     }
+  }
+
+  public symbologyChange(): void {
+    let title: string = this.layerSelected != null && this.layerSelected != undefined ? this.layerSelected.title : '';
+    this.buildOptionsLayersValue(title);
+    const dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
+      width: '25%',
+      header: `Cambio de Simbología ${title}`,
+      data: { help: this, optionsLayers: this.optionsLayers, layerSelected: this.layerSelectedSelection }
+    });
+    dialog.onClose.subscribe(res => {
+      if (res !== undefined) {
+        this.map.layers.items.forEach((layer) => {
+          if (layer.title !== null) {
+            if (layer.title.substr(11) === res.layerSelected) {
+              this.layerSelected = layer;
+            }
+          }
+        });
+        (window as any).ga('send', 'event', 'BUTTON', 'click', 'symbol-start');
+        this.makingWork = true;
+        loadModules(['esri/symbols/SimpleMarkerSymbol', 'esri/symbols/SimpleFillSymbol',
+          'esri/symbols/SimpleLineSymbol', 'esri/Color', 'esri/renderers/SimpleRenderer']).then(([
+            SimpleMarkerSymbol, SimpleFillSymbol, SimpleLineSymbol, Color, SimpleRenderer]) => {
+            let defaultSymbol: any;
+            switch (this.layerSelected.geometryType) {
+              case 'point':
+                defaultSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 8, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), 1), new Color(res.fillColor));
+                break;
+              case 'polygon':
+                defaultSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), res.borderSize), new Color(res.fillColor));
+                break;
+              case 'polyline':
+                defaultSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), res.borderSize);
+                break;
+            }
+            const renderer = new SimpleRenderer();
+            renderer.symbol = defaultSymbol;
+            this.layerSelected.renderer = renderer;
+          });
+        this.makingWork = false;
+      }
+    });
+  }
+  public analisis(): void {
+    const query = {
+      outFields: ['*'],
+      returnGeometry: false,
+      where: ''
+    };
+    this.departmentLayer.queryFeatures(query).then((result) => {
+      const dptos: Array<any> = [];
+      for (const r of result.features) {
+        const dpto = {
+          attributes: Object.assign({}, r.attributes)
+        };
+        dptos.push(dpto);
+      }
+      this.featureDptos = dptos;
+      this.columnsTable = Object.keys(this.featureDptos[0].attributes);
+      this.dptosSelected = [];
+      this.layerSelected = this.departmentLayer;
+      this.visibleModal(false, true, false, false, false, false, false, false);
+    }, (err) => {
+      console.error(err);
+    });
   }
 
   /**

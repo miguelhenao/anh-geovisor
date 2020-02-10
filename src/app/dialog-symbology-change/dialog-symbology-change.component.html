@@ -1,13 +1,20 @@
 <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
-      (click)="requestHelp('h-simbologia')" icon="pi pi-question"></button>
+    (click)="requestHelp('h-simbologia')" icon="pi pi-question"></button>
 <form [formGroup]="changeForm" (ngSubmit)="changeForm.valid && setupChange()">
     <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            Capa Seleccionada:
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <p-dropdown formControlName="feature" [options]="optionsLayers" [(ngModel)]="changeObject.layerSelected"
+                placeholder="Seleccione una capa"></p-dropdown>
+        </div>
         <div class="ui-g-12 ui-md-6">
             <p>Color para el borde: </p>
         </div>
         <div class="ui-g-12 ui-md-6">
-            <p-colorPicker format="rgb" formControlName="borderColor"
-                [(ngModel)]="changeObject.borderColor"></p-colorPicker>
+            <p-colorPicker format="rgb" formControlName="borderColor" [(ngModel)]="changeObject.borderColor">
+            </p-colorPicker>
         </div>
         <div class="ui-g-12 ui-md-6">
             <p>Grosor del borde: </p>
@@ -19,8 +26,8 @@
             <p>Color para el relleno: </p>
         </div>
         <div class="ui-g-12 ui-md-6">
-            <p-colorPicker format="rgb" formControlName="fillColor"
-                [(ngModel)]="changeObject.fillColor"></p-colorPicker>
+            <p-colorPicker format="rgb" formControlName="fillColor" [(ngModel)]="changeObject.fillColor">
+            </p-colorPicker>
         </div>
     </div>
     <div class="ui-g ui-fluid">
@@ -32,4 +39,5 @@
 </form>
 <br>
 <p-message id="infoMedicion" severity="info"
-  text="El color seleccionado se aplica a la capa actual. Si la capa actual es de poligonos el color se aplica al relleno de capa."></p-message>
+    text="El color seleccionado se aplica a la capa actual. Si la capa actual es de poligonos el color se aplica al relleno de capa.">
+</p-message>
