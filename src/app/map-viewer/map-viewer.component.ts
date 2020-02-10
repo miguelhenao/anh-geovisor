@@ -78,7 +78,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   nameLayer: string;
   optionsPolygon = [
     { name: 'Polígono', value: 'pol' },
-    { name: 'Polígono Libre', value: 'free-pol' }
+    { name: 'Polígono Libre', value: 'free-pol' },
+    { name: 'Entidad', value: 'entity' }
   ];
   optionsBuffer = [
     { name: 'Kilómetros', value: 9036 },
@@ -1132,11 +1133,29 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               style: 'dash-dot'
             }
           };
-          const graphic = new Graphic({
-            geometry: event.graphic.geometry,
-            symbol: symbolF
-          });
-          this.view.graphics.add(graphic);
+          if (this.selectedPolygon.value !== 'entity') {
+            const graphic = new Graphic({
+              geometry: event.graphic.geometry,
+              symbol: symbolF
+            });
+            this.view.graphics.add(graphic);
+          } else {
+            this.selectedLayers.forEach(layer => {
+              this.changeLayer(layer);
+              const spQry = this.layerSelected.createQuery();
+              spQry.maxAllowableOffset = 1;
+              spQry.geometry = event.graphic.geometry;
+              this.layerSelected.queryFeatures(spQry).then((result) => {
+                result.features.forEach(key => {
+                  const graphic = new Graphic({
+                    geometry: key.geometry,
+                    symbol: symbolF
+                  });
+                  this.view.graphics.add(graphic);
+                });
+              });
+            });
+          }
         }
       });
       const sketchVMBuffer = new SketchViewModel({
@@ -1719,6 +1738,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.sketchExtract.create('polygon', { mode: 'freehand' });
     } else if (this.selectedPolygon.value === 'pol') {
       this.sketchExtract.create('polygon', { mode: 'click' });
+    } else if (this.selectedPolygon.value === 'entity') {
+      this.sketchExtract.create('point');
     }
   }
 
@@ -1790,7 +1811,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           popupTemplate: null
         };
       }
-      const features = !this.layerExtract ? this.view.graphics.items[0] : sourceLayer;
+      const features = !this.layerExtract ? this.view.graphics.items : sourceLayer;
       const featureSet = new FeatureSet();
       featureSet.features = features;
       const params = {
