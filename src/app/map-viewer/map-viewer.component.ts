@@ -57,8 +57,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   legend: any;
   expandPrint: any;
   agsHost = 'anh-gisserver.anh.gov.co';
+  //agsHost = 'services6.arcgis.com/QNcm0ph3xAgJ1Ghk';
   agsProtocol = 'https';
   mapRestUrl = this.agsProtocol + '://' + this.agsHost + '/arcgis/rest/services/Tierras/Mapa_ANH/MapServer';
+  //mapRestUrl = this.agsProtocol + '://' + this.agsHost + '/arcgis/rest/services/Tierras_2019_09_17/FeatureServer';
   agsDir = 'arcgis';
   agsUrlBase = this.agsProtocol + '://' + this.agsHost + '/' + this.agsDir + '/';
   // Url servidor ArcGIS.com para servicios de conversión (sharing)
