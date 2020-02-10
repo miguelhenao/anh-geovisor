@@ -80,7 +80,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   nameLayer: string;
   optionsPolygon = [
     { name: 'Polígono', value: 'pol' },
-    { name: 'Polígono Libre', value: 'free-pol' }
+    { name: 'Polígono Libre', value: 'free-pol' },
+    { name: 'Entidad', value: 'entity' }
   ];
   optionsBuffer = [
     { name: 'Kilómetros', value: 9036 },
@@ -119,7 +120,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   magnaSirgasFlag = false;
   sectionSelected: string;
   modesBuffer: SelectItem[] = [
-    { value: 'point', title: 'Punto', icon: 'fa fa-fw fa-circle' },
+    { value: 'point', title: 'Punto', icon: 'esri-icon-radio-checked' },
     { value: 'line', title: 'Línea', icon: 'esri-icon-minus' },
     { value: 'polyline', title: 'Polilínea', icon: 'esri-icon-polyline' },
     { value: 'rectangle', title: 'Rectángulo', icon: 'esri-icon-sketch-rectangle' },
@@ -195,6 +196,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Shapefile',
             command: () => {
               if (!this.errorArcgisService) {
+                this.visibleModal(false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogFileComponent, {
                   width: '400px',
                   baseZIndex: 20,
@@ -217,6 +219,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Archivo CSV',
             command: () => {
               if (!this.errorArcgisService) {
+                this.visibleModal(false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogFileComponent, {
                   width: '400px',
                   baseZIndex: 20,
@@ -238,6 +241,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Archivo GPX',
             command: () => {
               if (!this.errorArcgisService) {
+                this.visibleModal(false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogFileComponent, {
                   width: '400px',
                   baseZIndex: 20,
@@ -260,6 +264,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Archivo GeoJSON',
             command: () => {
               if (!this.errorArcgisService) {
+                this.visibleModal(false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogFileComponent, {
                   width: '400px',
                   baseZIndex: 20,
@@ -280,6 +285,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Servicio KML',
             command: () => {
               if (!this.errorArcgisService) {
+                this.visibleModal(false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
@@ -305,6 +311,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Servicio WMS',
             command: () => {
               if (!this.errorArcgisService) {
+                this.visibleModal(false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
@@ -330,6 +337,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Servicio GeoJSON',
             command: () => {
               if (!this.errorArcgisService) {
+                this.visibleModal(false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
@@ -355,6 +363,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Servicio CSV',
             command: () => {
               if (!this.errorArcgisService) {
+                this.visibleModal(false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
@@ -392,6 +401,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 this.view.popup.autoOpenEnabled = false;
               }
             }
+          },
+          {
+            label: 'Extraer capa',
+            command: () => {
+              this.openExtract();
+            }
           }
         ]
       },
@@ -403,6 +418,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Zona de Influencia (Buffer)',
             command: () => {
               if (!this.errorArcgisService) {
+                this.buildOptionsLayers();
                 this.visibleModal(false, false, true, false, false, false, false, false);
                 this.view.popup.autoOpenEnabled = false;
               }
@@ -1119,11 +1135,29 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               style: 'dash-dot'
             }
           };
-          const graphic = new Graphic({
-            geometry: event.graphic.geometry,
-            symbol: symbolF
-          });
-          this.view.graphics.add(graphic);
+          if (this.selectedPolygon.value !== 'entity') {
+            const graphic = new Graphic({
+              geometry: event.graphic.geometry,
+              symbol: symbolF
+            });
+            this.view.graphics.add(graphic);
+          } else {
+            this.selectedLayers.forEach(layer => {
+              this.changeLayer(layer);
+              const spQry = this.layerSelected.createQuery();
+              spQry.maxAllowableOffset = 1;
+              spQry.geometry = event.graphic.geometry;
+              this.layerSelected.queryFeatures(spQry).then((result) => {
+                result.features.forEach(key => {
+                  const graphic = new Graphic({
+                    geometry: key.geometry,
+                    symbol: symbolF
+                  });
+                  this.view.graphics.add(graphic);
+                });
+              });
+            });
+          }
         }
       });
       const sketchVMBuffer = new SketchViewModel({
@@ -1162,7 +1196,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             geometry,
             symbol: symbolGeo
           });
-          this.view.graphics.add(graphic);
           if (this.bufDistance !== undefined) {
             const buffer = geometryEngine.geodesicBuffer(geometry, this.bufDistance, this.selectedBuffer.value);
             this.view.graphics.add(
@@ -1172,6 +1205,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               })
             );
           }
+          this.view.graphics.add(graphic);
         }
       });
 
@@ -1706,6 +1740,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.sketchExtract.create('polygon', { mode: 'freehand' });
     } else if (this.selectedPolygon.value === 'pol') {
       this.sketchExtract.create('polygon', { mode: 'click' });
+    } else if (this.selectedPolygon.value === 'entity') {
+      this.sketchExtract.create('point');
     }
   }
 
@@ -1721,7 +1757,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         wkid: 4326
       }
     });
-    if (!this.layerExtract && (this.selectedLayers.length === 0 || this.selectedPolygon === undefined || this.view.graphics.length === 0)) {
+    if (!this.layerExtract && (this.selectedLayers.length === 0 || this.view.graphics.length === 0)) {
       if (this.selectedLayers.length === 0) {
         this.messageService.add({
           severity: 'warn',
@@ -1775,9 +1811,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           attributes: {},
           popupTemplate: null
-        }
+        };
       }
-      const features = !this.layerExtract ? this.view.graphics.items[0] : sourceLayer;
+      const features = !this.layerExtract ? this.view.graphics.items : sourceLayer;
       const featureSet = new FeatureSet();
       featureSet.features = features;
       const params = {
@@ -1805,7 +1841,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           }
           this.selectedLayers = [];
           this.selectedPolygon = undefined;
-          this.clearGraphics();
+          // this.clearGraphics();
           this.makingWork = false;
         }, (error) => {
           this.messageService.add({
