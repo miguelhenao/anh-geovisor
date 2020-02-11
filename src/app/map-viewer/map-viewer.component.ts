@@ -504,6 +504,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   buildOptionsLayersValue(nameLayer: string): void {
+    debugger;
     this.layersOptionsList = [];
     this.optionsLayers = [];
     this.layerSelectedSelection = null;
@@ -515,6 +516,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         };
         if (layer.title === nameLayer) {
           this.layerSelectedSelection = sel.value;
+          this.layerSelected = layer;
         }
         this.optionsLayers.push(sel);
       }
@@ -531,7 +533,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   public openSelectionTool(): void {
     if (!this.errorArcgisService) {
-      this.buildOptionsLayersValue(null);
+      console.log(this.layerList);
+      let nameLayer = this.layerList.selectedItems.items[0] != undefined ? this.layerList.selectedItems.items[0].title : null;
+      this.buildOptionsLayersValue(nameLayer);
       this.visibleModal(false, false, false, false, false, false, false, true);
     }
   }
@@ -1060,6 +1064,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
       });
 
+      this.layerList = layerList;
       const layerListExpand = new Expand({
         expandIconClass: 'esri-icon-layers',
         expandTooltip: 'Tabla de contenido',
