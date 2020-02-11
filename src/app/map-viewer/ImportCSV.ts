@@ -4,18 +4,17 @@ const longFieldStrings = ['lon', 'long', 'longitude', 'x', 'xcenter'];
 export class ImportCSV {
   urlGeometryService: string;
   map;
-  makingWork;
   view;
   filename: string;
   coorGeoPlanas: string;
+  mapViewComponent;
 
-  public uploadFileCsv(files: Array<any>, coor: string, url: string, map: any, view: any,  makingWork: any): void {
+  public uploadFileCsv(files: Array<any>, coor: string, url: string, map: any, view: any, _this): void {
     this.urlGeometryService = url;
     this.coorGeoPlanas = coor;
     this.map = map;
     this.view = view;
-    makingWork = true;
-    this.makingWork = makingWork;
+    this.mapViewComponent = _this;
     if (files && files.length === 1) {
       this.filename = files[0].name.split('.')[0];
       this.handleCsv(files[0]);
@@ -40,7 +39,6 @@ export class ImportCSV {
       'esri/renderers/SimpleRenderer', 'esri/Graphic', 'esri/layers/support/Field']).then((
         [CsvStore, lang, SpatialReference, Point, GeometryService, ProjectParameters, FeatureLayer, SimpleRenderer,
           Graphic, Field]) => {
-        this.makingWork = true;
         const newLineIdx = data.indexOf('\n');
         const firtsLine = lang.trim(data.substr(0, newLineIdx));
         const separator = this.getSeparator(firtsLine);
@@ -99,6 +97,15 @@ export class ImportCSV {
               arrAttrib.push(attributes);
               arrGeom.push(geom);
             });
+            if (arrGeom.length === 0) {
+              this.mapViewComponent.makingWork = false;
+              this.mapViewComponent.messageService.add({
+                detail: `Error cargando el archivo CSV`,
+                summary: 'Mis capas',
+                severity: 'error'
+              });
+              return;
+            }
             const outSR = new SpatialReference({ wkid: 102100 }); // ESRI Web Mercator
             const geomSvc = new GeometryService({
               url: this.urlGeometryService
@@ -136,10 +143,17 @@ export class ImportCSV {
                 })
               });
               featureLayer.load().then(() => {
-                 if (featureLayer.loadStatus === 'loaded') {
+                if (featureLayer.loadStatus === 'loaded') {
                   this.map.add(featureLayer);
                   this.view.goTo(sourceGraphics);
                 }
+              });
+            }, (error) => {
+              this.mapViewComponent.makingWork = false;
+              this.mapViewComponent.messageService.add({
+                detail: `Error cargando el archivo CSV`,
+                summary: 'Mis capas',
+                severity: 'error'
               });
             });
           }

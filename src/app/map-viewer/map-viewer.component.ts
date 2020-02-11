@@ -228,8 +228,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   if (res !== undefined) {
                     this.makingWork = true;
                     (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-csv');
-                    this.importCsv.uploadFileCsv(res.form.elements[0].files, res.data, this.urlGeometryService, this.map, this.view,
-                      this.makingWork);
+                    this.importCsv.uploadFileCsv(res.form.elements[0].files, res.data, this.urlGeometryService, this.map, this.view, this);
                   }
                 });
               }
