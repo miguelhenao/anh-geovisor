@@ -98,12 +98,7 @@ export class ImportCSV {
               arrGeom.push(geom);
             });
             if (arrGeom.length === 0) {
-              this.mapViewComponent.makingWork = false;
-              this.mapViewComponent.messageService.add({
-                detail: `Error cargando el archivo CSV`,
-                summary: 'Mis capas',
-                severity: 'error'
-              });
+              this.messageError();
               return;
             }
             const outSR = new SpatialReference({ wkid: 102100 }); // ESRI Web Mercator
@@ -147,14 +142,11 @@ export class ImportCSV {
                   this.map.add(featureLayer);
                   this.view.goTo(sourceGraphics);
                 }
+              }, (error) => {
+                this.messageError();
               });
             }, (error) => {
-              this.mapViewComponent.makingWork = false;
-              this.mapViewComponent.messageService.add({
-                detail: `Error cargando el archivo CSV`,
-                summary: 'Mis capas',
-                severity: 'error'
-              });
+              this.messageError();
             });
           }
         });
@@ -300,5 +292,14 @@ export class ImportCSV {
       }
     });
     return maxSeparatorValue;
+  }
+
+  private messageError(): void {
+    this.mapViewComponent.makingWork = false;
+    this.mapViewComponent.messageService.add({
+      detail: `Error cargando el archivo CSV`,
+      summary: 'Mis capas',
+      severity: 'error'
+    });
   }
 }
