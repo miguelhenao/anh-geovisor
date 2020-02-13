@@ -1,7 +1,7 @@
 import { MapViewerService } from './map-viewer.service';
 import { DialogUrlServiceComponent } from '../dialog-urlservice/dialog-urlservice.component';
 import { MenuItem, DialogService, SelectItem, MessageService } from 'primeng/api';
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked, Query, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked } from '@angular/core';
 import { loadModules } from 'esri-loader';
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
 import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.component';
@@ -24,7 +24,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   view: any = {
     ready: false
   };
-  loaded: boolean = false;
+  loaded = false;
   eventLayer: any;
   modalTable = false;
   modalMeasurement = false;
@@ -32,7 +32,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   modalGuide = false;
   modalExtract = false;
   layersOptionsList: Array<any> = [];
-  layerExtract: boolean = false;
+  layerExtract = false;
   modalAnalysis = false;
   modalBuffer = false;
   modalSelection = false;
@@ -57,10 +57,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   legend: any;
   expandPrint: any;
   agsHost = 'anh-gisserver.anh.gov.co';
-  //agsHost = 'services6.arcgis.com/QNcm0ph3xAgJ1Ghk';
+  // agsHost = 'services6.arcgis.com/QNcm0ph3xAgJ1Ghk';
   agsProtocol = 'https';
   mapRestUrl = this.agsProtocol + '://' + this.agsHost + '/arcgis/rest/services/Tierras/Mapa_ANH/MapServer';
-  //mapRestUrl = this.agsProtocol + '://' + this.agsHost + '/arcgis/rest/services/Tierras_2019_09_17/FeatureServer';
+  // mapRestUrl = this.agsProtocol + '://' + this.agsHost + '/arcgis/rest/services/Tierras_2019_09_17/FeatureServer';
   agsDir = 'arcgis';
   agsUrlBase = this.agsProtocol + '://' + this.agsHost + '/' + this.agsDir + '/';
   // Url servidor ArcGIS.com para servicios de conversión (sharing)
@@ -503,7 +503,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   buildOptionsLayersValue(nameLayer: string): void {
-    debugger;
     this.layersOptionsList = [];
     this.optionsLayers = [];
     this.layerSelectedSelection = null;
@@ -532,8 +531,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   public openSelectionTool(): void {
     if (!this.errorArcgisService) {
-      console.log(this.layerList);
-      let nameLayer = this.layerList.selectedItems.items[0] != undefined ? this.layerList.selectedItems.items[0].title : null;
+      const nameLayer = this.layerList.selectedItems.items[0] !== undefined ? this.layerList.selectedItems.items[0].title : null;
       this.buildOptionsLayersValue(nameLayer);
       this.visibleModal(false, false, false, false, false, false, false, true);
     }
@@ -1261,7 +1259,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 });
             });
           } else {
-            console.log(this.layerSelectedSelection);
             this.messageService.add({
               severity: 'warn',
               summary: '',
@@ -1303,7 +1300,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public symbologyChange(): void {
-    let title: string = this.layerSelected != null && this.layerSelected != undefined ? this.layerSelected.title : '';
+    const title: string = this.layerSelected != null && this.layerSelected !== undefined ? this.layerSelected.title : '';
     this.buildOptionsLayersValue(title);
     const dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
       width: '25%',
@@ -1804,15 +1801,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             ]
           }),
           symbol: {
-            type: "simple-fill",
+            type: 'simple-fill',
             color: [255, 255, 0, 64],
             outline: {
-              type: "simple-line",
+              type: 'simple-line',
               color: [255, 0, 0, 255],
               width: 2,
-              style: "dash-dot"
+              style: 'dash-dot'
             },
-            style: "solid"
+            style: 'solid'
           },
           attributes: {},
           popupTemplate: null
@@ -2151,7 +2148,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
 
   public getNameLayer(): string {
-    return this.layerSelected != undefined || this.layerSelected != null ? this.layerSelected.title : null;
+    return this.layerSelected !== undefined || this.layerSelected != null ? this.layerSelected.title : null;
   }
 
   public requestHelp(modal: string): void {

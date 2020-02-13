@@ -22,7 +22,7 @@ export class DialogSymbologyChangeComponent implements OnInit {
   help: any;
   changeObject: ChangeSymbology = new ChangeSymbology();
 
-  constructor(private formBuilder: FormBuilder, private ref: DynamicDialogRef, private config: DynamicDialogConfig) { 
+  constructor(private formBuilder: FormBuilder, private ref: DynamicDialogRef, private config: DynamicDialogConfig) {
     this.help = config.data.help;
     this.changeObject.layerSelected = config.data.layerSelected;
     this.optionsLayers = config.data.optionsLayers;
@@ -44,7 +44,7 @@ export class DialogSymbologyChangeComponent implements OnInit {
   requestHelp(modal: string): void {
     this.help.requestHelp(modal);
   }
-  
+
   public setupChange(): void {
     this.ref.close(this.changeObject);
   }

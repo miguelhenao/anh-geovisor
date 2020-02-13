@@ -296,7 +296,8 @@
         placeholder="Seleccione una capa">
       </p-dropdown>
     </div>
-    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch" (onChange)="onChangeSelectedSketchSelection()">
+    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch" (onChange)="onChangeSelectedSketchSelection()"
+      [style]="{'margin-top': '5px'}">
     </p-selectButton>
     <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
     </p-button>
