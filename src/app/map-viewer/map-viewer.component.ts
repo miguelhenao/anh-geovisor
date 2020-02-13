@@ -885,7 +885,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           type: 'text',
           color: 'black',
           haloSize: 1,
-          haloColor: 'white'
+          haloColor: 'white',
+          font: {
+            size: 7.5
+          }
         }
       });
       lyTierras.labelingInfo = [statesLabelClass];
