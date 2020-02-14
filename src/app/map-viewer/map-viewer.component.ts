@@ -1040,7 +1040,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               this.columnsTable = result.fields;
               this.layerSelected = layer;
               layerListExpand.collapse();
-              console.log(this.featureDptos);
               this.visibleModal(false, false, false, false, false, false, true, false);
             }, (err) => {
               console.error(err);
