@@ -105,8 +105,7 @@
         (onClick)="onChangeSelect()" pTooltip="Volver a dibujar" tooltipPosition="bottom"></p-button>
       <br>
     </div>
-    <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()" [style]="{'margin-top': '5px'}"
-      [disabled]="!clearGraphic">
+    <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()" [style]="{'margin-top': '5px'}">
     </p-button>
   </div>
   <br>
@@ -160,7 +159,7 @@
     <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados"
       [(ngModel)]="selectedLayers"></p-multiSelect>
     <br>
-    <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()" [disabled]="!clearGraphic">
+    <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()">
     </p-button>
   </div>
   <p-message id="infoMedicion" severity="info" text="La <b>anchura del área de influencia (buffer)</b> se mide apartir del
@@ -235,8 +234,12 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="summary">
-      <button pButton icon="fas fa-file-excel" id="excel" class="ui-button-rounded ui-button-success"
-        pTooltip="Exportar a Excel" (click)="generateExcelFeaturesLayer()"></button>
+      <div id="excel">
+        <button pButton icon="esri-icon-download" class="ui-button-rounded ui-button-warning"
+          pTooltip="Exportar a Shapefile" (click)="extractShapeFromAttr()"></button>
+        <button pButton icon="fas fa-file-excel" class="ui-button-rounded ui-button-success"
+          pTooltip="Exportar a Excel" (click)="generateExcelFeaturesLayer()"></button>
+      </div>
     </ng-template>
   </p-table>
 </p-dialog>

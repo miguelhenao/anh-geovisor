@@ -107,7 +107,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   selectedBuffer: SelectItem = {
     value: 9036
   };
-  selectedLayers: SelectItem[] = [];
+  selectedLayers: Array<string> = [];
   clearGraphic = false;
   visibleMenu = true;
   contractMenu = true;
@@ -1766,6 +1766,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         wkid: 4326
       }
     });
+    debugger;
     if (!this.layerExtract && (this.selectedLayers.length === 0 || this.view.graphics.length === 0)) {
       if (this.selectedLayers.length === 0) {
         this.messageService.add({
@@ -1924,7 +1925,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Retorna el data key de la tabla de atributos
    */
   public dataKey(): string {
-    return this.columnsTable != null ? `attributes.${this.columnsTable[0].name}` : null;
+    return this.columnsTable !== null || this.columnsTable !== undefined ? `attributes.${this.columnsTable[0].name}` : null;
+  }
+
+  public extractShapeFromAttr(): void {
+    this.layerExtract = true;
+    this.buildOptionsLayers();
+    for (const option of this.optionsLayers) {
+      if (option.label == this.layerSelected.title.substr(11)) {
+        this.selectedLayers.push(option.label);
+        break;
+      }
+    }
+    debugger;
+    this.extractShape();
   }
 
   public nextLayer(): void {
@@ -1942,7 +1956,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   public previousLayer(): void {
     let index = this.map.layers.items.indexOf(this.layerSelected);
-    if (index == 0) {
+    if (index === 0) {
       index = this.map.layers.items.length - 1;
     } else {
       index--;
