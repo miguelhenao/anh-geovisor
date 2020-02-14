@@ -30,13 +30,6 @@
   width: auto;
 }
 
-#footer {
-  position: absolute;
-  z-index: 5;
-  bottom: 11px;
-  right: 0px;
-}
-
 /* #region  Accordion*/
 
 ::ng-deep .ui-accordion .ui-accordion-content {
