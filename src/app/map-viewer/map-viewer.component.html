@@ -201,12 +201,16 @@
 
 <!-- Modal de tabla de atributos -->
 <p-dialog header="Tabla de Atributos" [(visible)]="modalTable" [resizable]="false" (onHide)="onHideDialogAtributos()">
-  <p-table class="esri-widget__table" [style]="{width: '500px'}" [paginator]="true" [rows]="5" selectionMode="multiple" #dt
-    [columns]="columnsTable" *ngIf="modalTable" [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true"
+  <p-table class="esri-widget__table" [style]="{width: '500px'}" [paginator]="true" [rows]="5" selectionMode="multiple"
+    #dt [columns]="columnsTable" *ngIf="modalTable" [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true"
     [(selection)]="featuresSelected" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
     scrollHeight="200px">
     <ng-template pTemplate="caption">
+      <button pButton type="button" (click)="previousLayer()" class="ui-button-rounded" icon="fas fa-arrow-circle-left"
+        title="Ver ant capa"></button>
       {{layerSelected.title.substr(11)}}
+      <button pButton type="button" (click)="nextLayer()" class="ui-button-rounded" icon="fas fa-arrow-circle-right"
+        title="Ver sgte capa"></button>
     </ng-template>
     <ng-template pTemplate="colgroup" let-columns>
       <colgroup>
@@ -231,8 +235,8 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="summary">
-      <button pButton icon="fas fa-file-excel" id="excel" pTooltip="Exportar a Excel"
-        (click)="generateExcelFeaturesLayer()"></button>
+      <button pButton icon="fas fa-file-excel" id="excel" class="ui-button-rounded ui-button-success"
+        pTooltip="Exportar a Excel" (click)="generateExcelFeaturesLayer()"></button>
     </ng-template>
   </p-table>
 </p-dialog>

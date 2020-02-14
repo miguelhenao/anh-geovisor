@@ -1029,21 +1029,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.buildOptionsLayersValue(layer.title);
           if (event.action.id === 'attr-table') {
             (window as any).ga('send', 'event', 'BUTTON', 'click', 'att-table-button');
-            const query = {
-              outFields: ['*'],
-              returnGeometry: false,
-              where: ''
-            };
-            layer.queryFeatures(query).then((result) => {
-              this.featureDptos = result.features;
-              // this.columnsTable = Object.keys(this.featureDptos[0].attributes);
-              this.columnsTable = result.fields;
-              this.layerSelected = layer;
-              layerListExpand.collapse();
-              this.visibleModal(false, false, false, false, false, false, true, false);
-            }, (err) => {
-              console.error(err);
-            });
+            this.getFeaturesLayer(layer);
           } else if (event.action.id === 'analisis') {
             this.departmentLayer = layer;
             layerListExpand.collapse();
@@ -1738,6 +1724,23 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
+  getFeaturesLayer(layer: any): void {
+    const query = {
+      outFields: ['*'],
+      returnGeometry: false,
+      where: ''
+    };
+    layer.queryFeatures(query).then((result) => {
+      this.featureDptos = result.features;
+      // this.columnsTable = Object.keys(this.featureDptos[0].attributes);
+      this.columnsTable = result.fields;
+      this.layerSelected = layer;
+      this.visibleModal(false, false, false, false, false, false, true, false);
+    }, (err) => {
+      console.error(err);
+    });
+  }
+
   /**
    * Método que se ejecuta cuando se cambia la selección de poligono en el sketch
    */
@@ -1879,7 +1882,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         dojo, Graphic]) => {
         const layer = this.layerSelected;
         const query = layer.createQuery();
-        query.where = `${this.columnsTable[0]} = ${event.data.attributes[this.columnsTable[0]]}`;
+        query.where = `${this.columnsTable[0].name} = ${event.data.attributes[this.columnsTable[0].name]}`;
         query.returnGeometry = true;
         query.outFields = ['*'];
         layer.queryFeatures(query).then((res) => {
@@ -1921,9 +1924,34 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Retorna el data key de la tabla de atributos
    */
   public dataKey(): string {
-    return `attributes.${this.columnsTable[0]}`;
+    return this.columnsTable != null ? `attributes.${this.columnsTable[0].name}` : null;
   }
 
+  public nextLayer(): void {
+    let index = this.map.layers.items.indexOf(this.layerSelected);
+    if (index >= this.map.layers.items.length - 1) {
+      index = 0;
+    } else {
+      index++;
+    }
+    this.layerSelected = this.map.layers.items[index];
+    this.featureDptos = null;
+    this.columnsTable = null;
+    this.getFeaturesLayer(this.layerSelected);
+  }
+
+  public previousLayer(): void {
+    let index = this.map.layers.items.indexOf(this.layerSelected);
+    if (index == 0) {
+      index = this.map.layers.items.length - 1;
+    } else {
+      index--;
+    }
+    this.layerSelected = this.map.layers.items[index];
+    this.featureDptos = null;
+    this.columnsTable = null;
+    this.getFeaturesLayer(this.layerSelected);
+  }
   /**
    * Método que se ejecuta cuando un elemento de la tabla de atributos es deseleccionado
    * @param event -> Evento que contiene el dato deseleccionado
