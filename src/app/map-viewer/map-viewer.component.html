@@ -201,12 +201,12 @@
 
 <!-- Modal de tabla de atributos -->
 <p-dialog header="Tabla de Atributos" [(visible)]="modalTable" [resizable]="false" (onHide)="onHideDialogAtributos()">
-  <p-table [style]="{width: '500px'}" [paginator]="true" [rows]="5" selectionMode="multiple" #dt
+  <p-table class="esri-widget__table" [style]="{width: '500px'}" [paginator]="true" [rows]="5" selectionMode="multiple" #dt
     [columns]="columnsTable" *ngIf="modalTable" [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true"
     [(selection)]="featuresSelected" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
     scrollHeight="200px">
     <ng-template pTemplate="caption">
-      {{layerSelected.title}}
+      {{layerSelected.title.substr(11)}}
     </ng-template>
     <ng-template pTemplate="colgroup" let-columns>
       <colgroup>
@@ -216,18 +216,18 @@
     <ng-template pTemplate="header" let-columns>
       <tr>
         <th *ngFor="let col of columns">
-          {{col}}
+          {{col.alias}}
         </th>
       </tr>
       <tr>
         <th *ngFor="let col of columns">
-          <input pInputText type="text" (input)="dt.filter($event.target.value, attrFilter(col), 'contains')">
+          <input pInputText type="text" (input)="dt.filter($event.target.value, attrFilter(col.name), 'contains')">
         </th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-dpto let-columns="columns">
-      <tr [pSelectableRow]="dpto">
-        <td *ngFor="let col of columns">{{dpto.attributes[col]}}</td>
+    <ng-template pTemplate="body" let-item let-columns="columns">
+      <tr [pSelectableRow]="item">
+        <td *ngFor="let col of columns">{{item.attributes[col.name]}}</td>
       </tr>
     </ng-template>
     <ng-template pTemplate="summary">

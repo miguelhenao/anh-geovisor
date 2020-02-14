@@ -455,3 +455,14 @@ p-sidebar {
     display: initial;
   }
 }
+
+thead {
+  position: relative;
+  display: block;
+}
+
+tbody {
+  display: block;
+  height: 400px;
+  overflow: auto;
+}
