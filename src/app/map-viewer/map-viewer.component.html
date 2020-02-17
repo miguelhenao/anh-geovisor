@@ -32,7 +32,7 @@
         <div title="Menú" class="logo-toggler" [ngClass]="{'display': visibleMenu}" id="menu"></div>
       </p-header>
       <div id="buttons">
-        <p-button icon="esri-icon-globe" [style]="{'background-color': '#F8C933', 'border-color': '#F8C933'}"
+        <!-- <p-button icon="icofont-addons" [style]="{'background-color': '#F8C933', 'border-color': '#F8C933'}"
           title="Ver todo" (onClick)="viewAll()">
         </p-button>
         <p-button icon="esri-icon-measure" [style]="{'background-color': '#E18230', 'border-color': '#E18230'}"
@@ -45,7 +45,23 @@
         </p-button>
         <p-button icon="esri-icon-download" [style]="{'background-color': '#44546A', 'border-color': '#44546A'}"
           title="Extraer capa general" (onClick)="openExtract()">
-        </p-button>
+        </p-button> -->
+        <!-- ----------------------------------------------------------------------------------------------------------- -->
+        <button class="esri-button" style="background-color: #F8C933; border-color: #F8C933; border-radius: 4px;" title="Ver todo" (click)="viewAll()">
+          <i class="icofont-world" align="center"></i>
+        </button>
+        <button class="esri-button" style="background-color: #E18230; border-color: #E18230; border-radius: 4px;" title="Tomar medidas" (click)="openMeasuringTools()">
+          <i class="icofont-ruler-compass" align="center"></i>
+        </button>
+        <button class="esri-button" style="background-color: #D75C31; border-color: #D75C31; border-radius: 4px;" title="Seleccionar" (click)="openSelectionTool()">
+          <i class="icofont-hand-drag1" align="center"></i>
+        </button>
+        <button class="esri-button" style="background-color: #CC3D36; border-color: #CC3D36; border-radius: 4px;" title="Identificar" (click)="openEnabledPopup()">
+          <i class="esri-icon-description" align="center"></i>
+        </button>
+        <button class="esri-button" style="background-color: #44546A; border-color: #44546A; border-radius: 4px;" title="Extraer capa general" (click)="openExtract()">
+          <i class="esri-icon-download" align="center"></i>
+        </button>
       </div>
       <div>
         <p-tieredMenu [style]="{'width': 'auto'}" id="content-menu" [model]="menu"></p-tieredMenu>
@@ -193,11 +209,12 @@
 <!-- Fin del modal de herramientas de medición -->
 
 <!-- Modal de tabla de atributos -->
-<p-dialog header="Tabla de Atributos" [(visible)]="modalTable" [resizable]="false" (onHide)="onHideDialogAtributos()" [maximizable]="true" [style]="{width: '500px'}">
-  <p-table class="esri-widget__table" [style]="{width: 'inherit'}" [paginator]="true" [rows]="100" [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple"
-    #dt [columns]="columnsTable" *ngIf="modalTable" [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true"
-    [(selection)]="featuresSelected" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
-    scrollHeight="500px">
+<p-dialog header="Tabla de Atributos" [(visible)]="modalTable" [resizable]="false" (onHide)="onHideDialogAtributos()"
+  [maximizable]="true" [style]="{width: '500px'}">
+  <p-table class="esri-widget__table" [style]="{width: 'inherit'}" [paginator]="true" [rows]="100"
+    [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple" #dt [columns]="columnsTable" *ngIf="modalTable"
+    [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true" [(selection)]="featuresSelected"
+    (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollHeight="500px">
     <ng-template pTemplate="caption">
       <button pButton type="button" (click)="previousLayer()" class="ui-button-rounded" icon="fas fa-arrow-circle-left"
         title="Ver ant capa"></button>
@@ -231,8 +248,8 @@
       <div id="excel">
         <button pButton icon="esri-icon-download" class="ui-button-rounded ui-button-warning"
           pTooltip="Exportar a Shapefile" (click)="extractShapeFromAttr()"></button>
-        <button pButton icon="fas fa-file-excel" class="ui-button-rounded ui-button-success"
-          pTooltip="Exportar a Excel" (click)="generateExcelFeaturesLayer()"></button>
+        <button pButton icon="fas fa-file-excel" class="ui-button-rounded ui-button-success" pTooltip="Exportar a Excel"
+          (click)="generateExcelFeaturesLayer()"></button>
       </div>
     </ng-template>
   </p-table>

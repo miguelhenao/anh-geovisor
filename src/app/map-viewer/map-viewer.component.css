@@ -417,6 +417,7 @@ p-sidebar {
   padding: 4px;
   display: grid;
   grid-template-columns: auto auto auto auto auto;
+  grid-column-gap: 2px;
   background-color: white;
 }
 
@@ -447,3 +448,23 @@ p-sidebar {
     display: initial;
   }
 }
+
+::ng-deep .esri-button {
+  padding: 0px 0px !important;
+  width: 33px !important;
+  height: 33px !important;
+}
+
+::ng-deep .esri-button i {
+  font-size: 26px;
+  color: initial;
+  margin-left: 10%;
+}
+
+::ng-deep .icofont-tools-alt-2,
+::ng-deep .icofont-download-alt,
+::ng-deep .icofont-printer,
+::ng-deep .icofont-location-pin {
+  font-size: 22px !important;
+}
+

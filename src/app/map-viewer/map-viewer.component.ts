@@ -190,7 +190,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.menu = [
       {
         label: 'Mis capas',
-        icon: 'pi pi-map-marker',
+        icon: 'icofont-location-pin',
         items: [
           {
             label: 'Shapefile',
@@ -388,7 +388,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       },
       {
         label: 'Extraer datos',
-        icon: 'pi pi-download',
+        icon: 'icofont-download-alt',
         items: [
           {
             label: 'A Shapefile',
@@ -411,7 +411,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       },
       {
         label: 'Herramientas',
-        icon: 'fa fa-wrench',
+        icon: 'icofont-tools-alt-2',
         items: [
           {
             label: 'Zona de Influencia (Buffer)',
@@ -449,7 +449,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       },
       {
         label: 'Impresión',
-        icon: 'fa fa-print',
+        icon: 'icofont-printer',
         items: [
           {
             label: 'Impresión rápida',
