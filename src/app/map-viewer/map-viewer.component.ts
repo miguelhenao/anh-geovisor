@@ -51,7 +51,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   map: any;
   search: any;
   sourceSearch: Array<any> = [];
-  attributeTable: any;
   activeWidget: any;
   tsLayer: any;
   legend: any;
@@ -1267,13 +1266,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.view.ui.add(scaleBar, {
         position: 'bottom-left',
       });
-      const attributeTable = new Expand({
-        expandIconClass: 'esri-icon-table',
-        view: this.view,
-        mode: 'drawer',
-        iconNumber: this.featureDptos.length,
-        content: document.getElementById('attributeTable')
-      });
       const help = new Expand({
         expandIconClass: 'esri-icon-question',
         view: this.view,
@@ -1281,7 +1273,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         group: 'expand',
         expandTooltip: 'Ayuda'
       });
-      this.attributeTable = attributeTable;
       this.view.ui.add([this.expandPrint, expandBaseMapGallery, expandLegend, layerListExpand, help], 'top-right');
       return this.view;
     } catch (error) {
@@ -1988,7 +1979,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       then(([, Geoprocessor]) => {
         this.makingWork = true;
         this.modalAnalysis = false;
-        this.attributeTable.collapse();
         const gpIntersect = new Geoprocessor(this.urlAnalisisCobertura);
         gpIntersect.outSpatialReference = { wkid: 4326 };
         let nameDptos = '';
@@ -2067,7 +2057,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   onHideDialogAnalisis() {
     this.featuresSelected = [];
-    this.attributeTable.collapse();
     this.clearGraphics();
     this.modalAnalysis = false;
   }
