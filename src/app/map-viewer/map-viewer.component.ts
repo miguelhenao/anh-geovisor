@@ -55,6 +55,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   tsLayer: any;
   legend: any;
   expandPrint: any;
+  coordsWidget: any;
   agsHost = 'anh-gisserver.anh.gov.co';
   // agsHost = 'services6.arcgis.com/QNcm0ph3xAgJ1Ghk';
   agsProtocol = 'https';
@@ -956,6 +957,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.messageService.add({ detail: `Error cargando la capa ${e.layer.id}`, summary: 'Carga de capas', severity: 'error' });
         }
       });
+      this.view.watch('stationary', (isStationary) => {
+        this.showCoordinates(this.view.center);
+      });
+      this.view.on('pointer-move', (evt) => {
+        this.showCoordinates(this.view.toMap({ x: evt.x, y: evt.y }));
+      });
       // Widget de LayerList
       const layerList = new LayerList({
         selectionEnabled: true,
@@ -1273,11 +1280,21 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         group: 'expand',
         expandTooltip: 'Ayuda'
       });
+      this.coordsWidget = document.createElement('div');
+      this.coordsWidget.id = 'coordsWidget';
+      this.coordsWidget.className = 'esri-widget esri-component';
+      this.coordsWidget.style.padding = '7px 15px 5px';
+      this.view.ui.add(this.coordsWidget, 'bottom-right');
       this.view.ui.add([this.expandPrint, expandBaseMapGallery, expandLegend, layerListExpand, help], 'top-right');
       return this.view;
     } catch (error) {
       console.error('EsriLoader: ', error);
     }
+  }
+
+  public showCoordinates(pt): void {
+    const coords = 'Lat/Lon ' + pt.latitude.toFixed(3) + ' ' + pt.longitude.toFixed(3);
+    this.coordsWidget.innerHTML = coords;
   }
 
   public symbologyChange(): void {
