@@ -1,7 +1,7 @@
 import { MapViewerService } from './map-viewer.service';
 import { DialogUrlServiceComponent } from '../dialog-urlservice/dialog-urlservice.component';
 import { MenuItem, DialogService, SelectItem, MessageService } from 'primeng/api';
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { loadModules } from 'esri-loader';
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
 import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.component';
@@ -34,6 +34,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   layersOptionsList: Array<any> = [];
   layerExtract = false;
   modalAnalysis = false;
+  heightTable: number;
   modalBuffer = false;
   modalSelection = false;
   layerSelected: any;
@@ -139,7 +140,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   colorsFiveth: Array<any> = [];
   flagSketch = false;
 
-  constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService, private router: Router) {
+  constructor(private dialogService: DialogService, private service: MapViewerService,
+    private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef) {
     this.setCurrentPosition();
     this.colorsFirst = this.generateColor('#F8C933', '#FFE933', 50);
     this.colorsSeconds = this.generateColor('#E18230', '#F8C933', 50);
@@ -487,6 +489,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
     if (!this.loaded) {
       this.retractMenu();
+    }
+    if (this.modalTable) {
+      let panel = document.getElementsByClassName('ui-dialog-content ui-widget-content');
+      if (panel !== undefined && panel[0] !== undefined) {
+        console.log(panel[0].clientHeight)
+        if (panel[0].clientHeight >= 502) {
+          this.heightTable = panel[0].clientHeight - 250;
+        } else {
+          this.heightTable = 502
+        }
+        this.ref.detectChanges();
+      }
     }
   }
 
@@ -1933,7 +1947,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Retorna el data key de la tabla de atributos
    */
   public dataKey(): string {
-    return this.columnsTable !== null || this.columnsTable !== undefined ? `attributes.${this.columnsTable[0].name}` : null;
+    return this.columnsTable !== null && this.columnsTable !== undefined ? `attributes.${this.columnsTable[0].name}` : null;
   }
 
   public extractShapeFromAttr(): void {
