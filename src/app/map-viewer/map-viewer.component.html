@@ -111,8 +111,8 @@
         (onChange)="onChangeSelect()" [(ngModel)]="selectedPolygon"></p-dropdown>
       <p-button label="Limpiar área" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
       </p-button>
-      <p-button class="clearGraphics" [disabled]="selectedPolygon === undefined" icon="pi pi-undo"
-        (onClick)="onChangeSelect()" pTooltip="Volver a dibujar" tooltipPosition="bottom"></p-button>
+      <!-- <p-button class="clearGraphics" [disabled]="selectedPolygon === undefined" icon="pi pi-undo"
+        (onClick)="onChangeSelect()" pTooltip="Volver a dibujar" tooltipPosition="bottom"></p-button> -->
       <br>
     </div>
     <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()" [style]="{'margin-top': '5px'}">

@@ -1132,12 +1132,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       this.sketchExtract.on('create', (event) => {
         this.flagSketch = true;
-        if (this.view.graphics.length === 1) {
-          this.clearGraphics();
-        }
+        // if (this.view.graphics.length === 1) {
+        //   this.clearGraphics();
+        // }
         if (event.state === 'complete') {
           this.flagSketch = false;
-          this.clearGraphic = true;
           const symbolF = {
             type: 'simple-fill',
             color: [255, 255, 0, 0.25],
@@ -1154,7 +1153,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               symbol: symbolF
             });
             this.view.graphics.add(graphic);
+            this.clearGraphic = true;
           } else {
+            if (this.selectedLayers.length === 0) {
+              this.messageService.add({
+                severity: 'warn',
+                summary: '',
+                detail: 'Debe seleccionar una capa.'
+              });
+            }
             this.selectedLayers.forEach(layer => {
               this.changeLayer(layer);
               const spQry = this.layerSelected.createQuery();
@@ -1167,10 +1174,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                     symbol: symbolF
                   });
                   this.view.graphics.add(graphic);
+                  this.clearGraphic = true;
                 });
               });
+              // debugger;
             });
           }
+          this.onChangeSelect();
         }
       });
       const sketchVMBuffer = new SketchViewModel({
@@ -1788,7 +1798,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         wkid: 4326
       }
     });
-    debugger;
+    // debugger;
     if (!this.layerExtract && (this.selectedLayers.length === 0 || this.view.graphics.length === 0)) {
       if (this.selectedLayers.length === 0) {
         this.messageService.add({
@@ -1959,7 +1969,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         break;
       }
     }
-    debugger;
     this.extractShape();
   }
 
