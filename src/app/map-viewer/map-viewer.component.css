@@ -413,7 +413,6 @@ p-sidebar {
 }
 
 #buttons {
-  /* justify-content: center; */
   padding: 4px;
   display: grid;
   grid-template-columns: auto auto auto auto auto;

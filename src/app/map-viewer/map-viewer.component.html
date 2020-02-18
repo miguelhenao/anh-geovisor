@@ -47,19 +47,24 @@
           title="Extraer capa general" (onClick)="openExtract()">
         </p-button> -->
         <!-- ----------------------------------------------------------------------------------------------------------- -->
-        <button class="esri-button" style="background-color: #F8C933; border-color: #F8C933; border-radius: 4px;" title="Ver todo" (click)="viewAll()">
+        <button class="esri-button" style="background-color: #F8C933; border-color: #F8C933; border-radius: 4px;"
+          title="Ver todo" (click)="viewAll()">
           <i class="icofont-world" align="center"></i>
         </button>
-        <button class="esri-button" style="background-color: #E18230; border-color: #E18230; border-radius: 4px;" title="Tomar medidas" (click)="openMeasuringTools()">
+        <button class="esri-button" style="background-color: #E18230; border-color: #E18230; border-radius: 4px;"
+          title="Tomar medidas" (click)="openMeasuringTools()">
           <i class="icofont-ruler-compass" align="center"></i>
         </button>
-        <button class="esri-button" style="background-color: #D75C31; border-color: #D75C31; border-radius: 4px;" title="Seleccionar" (click)="openSelectionTool()">
+        <button class="esri-button" style="background-color: #D75C31; border-color: #D75C31; border-radius: 4px;"
+          title="Seleccionar" (click)="openSelectionTool()">
           <i class="icofont-hand-drag1" align="center"></i>
         </button>
-        <button class="esri-button" style="background-color: #CC3D36; border-color: #CC3D36; border-radius: 4px;" title="Identificar" (click)="openEnabledPopup()">
+        <button class="esri-button" style="background-color: #CC3D36; border-color: #CC3D36; border-radius: 4px;"
+          title="Identificar" (click)="openEnabledPopup()">
           <i class="esri-icon-description" align="center"></i>
         </button>
-        <button class="esri-button" style="background-color: #44546A; border-color: #44546A; border-radius: 4px;" title="Extraer capa general" (click)="openExtract()">
+        <button class="esri-button" style="background-color: #44546A; border-color: #44546A; border-radius: 4px;"
+          title="Extraer capa general" (click)="openExtract()">
           <i class="esri-icon-download" align="center"></i>
         </button>
       </div>
@@ -326,3 +331,36 @@
       <br> mientras mueve el mouse, y suelte para finalizar."></p-message>
 </p-dialog>
 <!-- Fin de modal herramientas de selección -->
+
+<!-- Componente ubicar coordenada -->
+<p-dialog header="Ubicar coordenada" [(visible)]="modalCoordinate" [resizable]="false" [positionTop]="10"
+  [positionLeft]="200">
+  <div>
+    <p>1. Unidades de la coordenada:</p>
+    <p>2. Sistema de coordenadas</p>
+    <div>
+      <p>3. Ingrese coordenada</p>
+      <div class="ui-inputgroup">
+        <span class="ui-inputgroup-addon">Latitud</span>
+        <input type="text" pInputText>
+      </div>
+      <div class="ui-inputgroup" style="margin-top: 5px;">
+        <span class="ui-inputgroup-addon">Longitud</span>
+        <input type="text" pInputText>
+      </div>
+    </div>
+    <div style="margin-top: 5px;">
+      <p-button label="Limpiar" icon="pi pi-times"></p-button>
+      <p-button label="Ubicar" icon="pi pi-map-marker" [style]="{'margin-left': '5px'}"></p-button>
+    </div>
+  </div>
+  <br>
+  <p-message id="infoMedicion" severity="info"
+  text="Ingrese los datos solicitados para <b>crear un punto en la coordenada</b>
+  <br>que desea ubicar.
+  <br>Al ingresar Longitud y Latitud se deben <b>llenar todos los espacios
+  <br>subrayados</b> con dígitos entre 0 y 9. Para grados de un sólo dígito
+  <br>use un espacio o cero al inicio. Todo lo anterior no aplica para X e Y.">
+
+  </p-message>
+</p-dialog>
