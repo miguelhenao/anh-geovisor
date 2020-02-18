@@ -214,8 +214,8 @@
 <!-- Fin del modal de herramientas de medición -->
 
 <!-- Modal de tabla de atributos -->
-<p-dialog id="attr-table" header="Tabla de Atributos" [(visible)]="modalTable" [resizable]="false" (onHide)="onHideDialogAtributos()"
-  [maximizable]="true" [style]="{width: '500px'}">
+<p-dialog id="attr-table" header="Tabla de Atributos" [(visible)]="modalTable" [resizable]="false"
+  (onHide)="onHideDialogAtributos()" [maximizable]="true" [style]="{width: '500px'}">
   <p-table class="esri-widget__table" [style]="{width: 'inherit'}" [paginator]="true" [rows]="100"
     [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple" #dt [columns]="columnsTable" *ngIf="modalTable"
     [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true" [(selection)]="featuresSelected"
@@ -336,27 +336,48 @@
 <p-dialog header="Ubicar coordenada" [(visible)]="modalCoordinate" [resizable]="false" [positionTop]="10"
   [positionLeft]="200">
   <div>
-    <p>1. Unidades de la coordenada:</p>
-    <p>2. Sistema de coordenadas</p>
+    <div>
+      <p>1. Unidades de la coordenada:</p>
+      <p-dropdown [options]="optionsCoordinates" optionLabel="name" [(ngModel)]="coordinateSystem"
+        (onChange)="onChangeCoordinateUnits()" [style]="{'width': '95%'}"></p-dropdown>
+    </div>
+    <div>
+      <p>2. Sistema de coordenadas</p>
+      <p-dropdown [options]="optionsCoordinateSystem" [style]="{'width': '80%'}"></p-dropdown>
+    </div>
     <div>
       <p>3. Ingrese coordenada</p>
-      <div class="ui-inputgroup">
-        <span class="ui-inputgroup-addon">Latitud</span>
-        <input type="text" pInputText>
+      <div style="display: grid; grid-template-columns: auto auto;">
+        <div class="ui-inputgroup">
+          <span class="ui-inputgroup-addon">{{coordinateSystem.x}}</span>
+          <p-inputMask mask="{{coordinateSystem.mask}}" [(ngModel)]="coordinateX"></p-inputMask>
+        </div>
+        <div style="padding: 5px;" *ngIf="coordinateSystem.geographical">
+          <p-radioButton name="group1" value="N" [(ngModel)]="lathem" label="Norte ( + )"></p-radioButton>
+          &nbsp;
+          <p-radioButton name="group1" value="S" [(ngModel)]="lathem" label="Sur ( - )"></p-radioButton>
+        </div>
       </div>
-      <div class="ui-inputgroup" style="margin-top: 5px;">
-        <span class="ui-inputgroup-addon">Longitud</span>
-        <input type="text" pInputText>
+      <div style="display: grid; grid-template-columns: auto auto; margin-top: 5px;">
+        <div class="ui-inputgroup">
+          <span class="ui-inputgroup-addon">{{coordinateSystem.y}}</span>
+          <p-inputMask mask="{{coordinateSystem.mask}}" [(ngModel)]="coordinateY"></p-inputMask>
+        </div>
+        <div style="padding: 5px;" *ngIf="coordinateSystem.geographical">
+          <p-radioButton name="group2" value="O" [(ngModel)]="lonhem" label="Oeste ( - )"></p-radioButton>
+        </div>
       </div>
     </div>
     <div style="margin-top: 5px;">
-      <p-button label="Limpiar" icon="pi pi-times"></p-button>
-      <p-button label="Ubicar" icon="pi pi-map-marker" [style]="{'margin-left': '5px'}"></p-button>
+      <p-button label="Borrar anteriores" icon="pi pi-times" (onClick)="clearGraphics()"></p-button>
+      <p-button label="Limpiar campos" icon="pi pi-pencil" (onClick)="coordinateX = ''; coordinateY = ''"
+        [style]="{'margin-left': '5px'}"></p-button>
+      <p-button label="Ubicar" icon="pi pi-map-marker" [style]="{'margin-left': '5px'}" (onClick)="locateCoordinate()">
+      </p-button>
     </div>
   </div>
   <br>
-  <p-message id="infoMedicion" severity="info"
-  text="Ingrese los datos solicitados para <b>crear un punto en la coordenada</b>
+  <p-message id="infoMedicion" severity="info" text="Ingrese los datos solicitados para <b>crear un punto en la coordenada</b>
   <br>que desea ubicar.
   <br>Al ingresar Longitud y Latitud se deben <b>llenar todos los espacios
   <br>subrayados</b> con dígitos entre 0 y 9. Para grados de un sólo dígito

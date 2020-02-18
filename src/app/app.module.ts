@@ -5,34 +5,35 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MapViewerComponent } from './map-viewer/map-viewer.component';
 import { HttpClientModule } from '@angular/common/http';
-import {SidebarModule} from 'primeng/sidebar';
+import { SidebarModule } from 'primeng/sidebar';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import {ButtonModule} from 'primeng/button';
+import { ButtonModule } from 'primeng/button';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import {PanelMenuModule} from 'primeng/panelmenu';
+import { PanelMenuModule } from 'primeng/panelmenu';
 import { DialogUrlServiceComponent } from './dialog-urlservice/dialog-urlservice.component';
-import {DynamicDialogModule} from 'primeng/dynamicdialog';
-import {InputTextModule} from 'primeng/inputtext';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { InputTextModule } from 'primeng/inputtext';
 import { DialogFileComponent } from './dialog-file/dialog-file.component';
-import {FileUploadModule} from 'primeng/fileupload';
-import {TooltipModule} from 'primeng/tooltip';
+import { FileUploadModule } from 'primeng/fileupload';
+import { TooltipModule } from 'primeng/tooltip';
 import { DialogTerminosComponent } from './dialog-terminos/dialog-terminos.component';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ToastModule } from 'primeng/toast';
-import {TableModule} from 'primeng/table';
-import {MessageModule} from 'primeng/message';
-import {RadioButtonModule} from 'primeng/radiobutton';
-import {SelectButtonModule} from 'primeng/selectbutton';
-import {ColorPickerModule} from 'primeng/colorpicker';
+import { TableModule } from 'primeng/table';
+import { MessageModule } from 'primeng/message';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { ColorPickerModule } from 'primeng/colorpicker';
 import { DialogSymbologyChangeComponent } from './dialog-symbology-change/dialog-symbology-change.component';
-import {OverlayPanelModule} from 'primeng/overlaypanel';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogAboutComponent } from './dialog-about/dialog-about.component';
 import { DialogGuideComponent } from './dialog-guide/dialog-guide.component';
 import { AccordionModule } from 'primeng/accordion';
-import {ProgressBarModule} from 'primeng/progressbar';
-import {TieredMenuModule} from 'primeng/tieredmenu';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { InputMaskModule } from 'primeng/inputmask';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import {TieredMenuModule} from 'primeng/tieredmenu';
     OverlayPanelModule,
     AccordionModule,
     ProgressBarModule,
-    TieredMenuModule
+    TieredMenuModule,
+    InputMaskModule,
   ],
   providers: [],
   entryComponents: [
