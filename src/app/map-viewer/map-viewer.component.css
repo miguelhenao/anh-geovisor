@@ -467,3 +467,21 @@ p-sidebar {
   font-size: 22px !important;
 }
 
+* >>> .ui-datatable-scrollable {
+  display: flex;
+  flex-direction: column;
+}
+
+* >>> .ui-datatable-scrollable-wrapper {
+  flex: 1 1 0;
+}
+
+* >>> .ui-datatable-scrollable-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+* >>> .ui-datatable-scrollable-body {
+  flex: 1 1 0;
+}
