@@ -94,6 +94,44 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     { name: 'Metros', value: 9001 },
     { name: 'Pies', value: 9002 },
   ];
+  optionsCoordinates = [
+    {
+      name: 'Grados, Minutos y Segundos ( ej. 04° 35\' 46.3215" )',
+      value: [{ label: 'MAGNA-SIRGAS (WGS84)', value: 4326 }],
+      x: 'Latitud', y: 'Longitud', geographical: true,
+      mask: '99° 99\' 99,9999"', code: 'dms'
+    },
+    {
+      name: 'Grados y Minutos Decimales ( ej. 04° 35.772025\' )',
+      value: [{ label: 'MAGNA-SIRGAS (WGS84)', value: 4326 }],
+      x: 'Latitud', y: 'Longitud', geographical: true,
+      mask: '99° 99,999999\'', code: 'ddm'
+    },
+    {
+      name: 'Grados decimales ( ej. 4.59620041° )',
+      value: [{ label: 'MAGNA-SIRGAS (WGS84)', value: 4326 }],
+      x: 'Latitud', y: 'Longitud', geographical: true,
+      mask: '99,99?999999°', code: 'dd'
+    },
+    {
+      name: 'Metros ( ej. 1106427 )',
+      value: [
+        { label: 'MAGNA-SIRGAS Origen Central', value: 3116 },
+        { label: 'MAGNA-SIRGAS Origen Este Central', value: 3117 },
+        { label: 'MAGNA-SIRGAS Origen Este Este', value: 3118 },
+        { label: 'MAGNA-SIRGAS Origen Oeste', value: 3115 },
+        { label: 'MAGNA-SIRGAS Origen Oeste Oeste', value: 3114 },
+      ],
+      x: 'X', y: 'Y', geographical: false, mask: '?9999999.99',
+      code: 'm'
+    }
+  ];
+  coordinateSystem = this.optionsCoordinates[0];
+  optionsCoordinateSystem = this.coordinateSystem.value;
+  lathem = 'N';
+  lonhem = 'O';
+  coordinateX: string;
+  coordinateY: string;
   featuresSelected: Array<any> = [];
   layerList: any;
   optionsLayers: SelectItem[] = [];
@@ -2344,5 +2382,54 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public viewAll(): void {
     this.view.center = [this.longitude, this.latitude];
     this.view.zoom = 6;
+  }
+
+  public onChangeCoordinateUnits() {
+    this.optionsCoordinateSystem = this.coordinateSystem.value;
+  }
+
+  public locateCoordinate(): void {
+    if (this.coordinateX === '' || this.coordinateY === '' || this.coordinateX === undefined || this.coordinateY === undefined) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: '',
+        detail: 'Ingrese las coordenadas.'
+      });
+    } else {
+      loadModules(['esri/widgets/CoordinateConversion/CoordinateConversionViewModel', 'esri/Graphic', 'esri/tasks/GeometryService',
+        'esri/geometry/Point'])
+      .then(([CoordinateVM, Graphic, GeometryService, Point]) => {
+        if (this.coordinateSystem.code !== 'm') {
+          const coordinateVM = new CoordinateVM();
+          const format = coordinateVM.formats.items.find(x => x.name === this.coordinateSystem.code);
+          const coor = this.coordinateX.toString() + this.lathem + ', ' + this.coordinateY.toString() + this.lonhem;
+          coordinateVM.reverseConvert(coor, format).then((e) => {
+            const symbol = {
+              type: 'picture-marker',  // autocasts as new PictureMarkerSymbol()
+              url: 'assets/marker.png',
+              width: '18px',
+              height: '32px',
+              yoffset: '16px'
+            };
+            this.view.graphics.add(new Graphic({
+              symbol,
+              geometry: e
+            }));
+            this.view.goTo(e);
+          }, (error) => {
+            this.messageService.add({
+              severity: 'warn',
+              summary: '',
+              detail: 'No es posible ubicar la coordenada.'
+            });
+          });
+        } else {
+          // Geometry Service
+          const geomSvc = new GeometryService(this.urlGeometryService);
+          console.log(this.coordinateY);
+          console.log(Number(this.coordinateY));
+        }
+      });
+    }
   }
 }
