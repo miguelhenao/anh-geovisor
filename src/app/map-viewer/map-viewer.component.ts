@@ -37,6 +37,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   heightTable: number;
   modalBuffer = false;
   modalSelection = false;
+  makingWorkFromAttr: boolean = false;
   modalCoordinate = false;
   layerSelected: any;
   layerSelectedSelection: string;
@@ -500,13 +501,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (this.modalTable) {
       let panel = document.getElementsByClassName('ui-dialog-content ui-widget-content');
       if (panel !== undefined && panel[0] !== undefined) {
-        console.log(panel[0].clientHeight)
-        if (panel[0].clientHeight >= 502) {
-          this.heightTable = panel[0].clientHeight - 250;
-        } else {
-          this.heightTable = 502
+        let height: number = panel[0].clientHeight;
+        if (height != 1249 && height !== 478 && height !== 728 && height !== 704 && height !== 680 && height !== 656 && height !== 632 && height !== 608 && height !== 584 && height !== 560 && height !== 536 && height !== 512 && height !== 488) {
+          if (panel[0].clientHeight >= 450) {
+            this.heightTable = panel[0].clientHeight - 200;
+          } else {
+            this.heightTable = 450
+          }
+          this.ref.detectChanges();
         }
-        this.ref.detectChanges();
       }
     }
   }
@@ -1413,7 +1416,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public changeColor(indexColor: number, colors: Array<any>): void {
-    document.getElementsByClassName('ui-progressbar')[0] != undefined ? document.getElementsByClassName('ui-progressbar')[0].setAttribute('style', `height: 6px; background: #${colors[indexColor]} !important; margin-top: 56px; margin-left: -72px;`) : null;
+    /* if (document.getElementsByClassName('ui-progressbar')[0] != undefined) {
+      let draw = document.getElementsByClassName('ui-progressbar')[0] as HTMLElement;
+      draw.style.background = `#${colors[indexColor]}`
+    } */
+    let elements = document.getElementsByClassName('ui-progressbar');
+    for (let index = 0; index < elements.length; index++) {
+      const element = elements[index] as HTMLElement;
+      element.style.background = `#${colors[indexColor]}`
+    }
   }
 
   public hex(c: any): string {
@@ -2164,6 +2175,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Genera archivo excel de los features de un layer seleccionado
    */
   public generateExcelFeaturesLayer(): void {
+    this.makingWork = true;
     const attribute: Array<any> = [];
     for (const r of this.featureDptos) {
       const object = r.attributes;
@@ -2176,6 +2188,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const dataBuffer: Blob = new Blob([excelBuffer], { type: EXCEL_TYPE });
     FileSaver.saveAs(dataBuffer, this.layerSelected.title + EXCEL_EXTENSION);
+    this.makingWork = false;
   }
 
   /**
@@ -2188,7 +2201,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * @param table -> Bandera para dialog Tabla de atributos
    */
   public visibleModal(about: boolean, analysis: boolean, buffer: boolean, extract: boolean,
-                      guide: boolean, measurement: boolean, table: boolean, selection: boolean, coordinate: boolean) {
+    guide: boolean, measurement: boolean, table: boolean, selection: boolean, coordinate: boolean) {
     this.modalAbout = about;
     this.modalAnalysis = analysis;
     this.modalBuffer = buffer;
