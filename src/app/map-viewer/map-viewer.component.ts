@@ -1416,10 +1416,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public changeColor(indexColor: number, colors: Array<any>): void {
-    /* if (document.getElementsByClassName('ui-progressbar')[0] != undefined) {
-      let draw = document.getElementsByClassName('ui-progressbar')[0] as HTMLElement;
-      draw.style.background = `#${colors[indexColor]}`
-    } */
     let elements = document.getElementsByClassName('ui-progressbar');
     for (let index = 0; index < elements.length; index++) {
       const element = elements[index] as HTMLElement;
