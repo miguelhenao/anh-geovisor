@@ -540,9 +540,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       let panel = document.getElementsByClassName('ui-dialog-content ui-widget-content');
       if (panel !== undefined && panel[0] !== undefined) {
         let height: number = panel[0].clientHeight;
-        if (height != 1249 && height !== 478 && height !== 728 && height !== 704 && height !== 680 && height !== 656 && height !== 632 && height !== 608 && height !== 584 && height !== 560 && height !== 536 && height !== 512 && height !== 488) {
+        if (this.validateHeight(height)) {
           if (panel[0].clientHeight >= 450) {
-            this.heightTable = panel[0].clientHeight - 200;
+            this.heightTable = panel[0].clientHeight - 220;
           } else {
             this.heightTable = 450
           }
@@ -552,6 +552,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  public validateHeight(height: number): boolean {
+    return height != 1249 && height !== 478 && height !== 728 && height !== 704 && height !== 680 && height !== 656 && height !== 632 && height !== 608
+      && height !== 584 && height !== 560 && height !== 536 && height !== 512 && height !== 488;
+  }
   buildOptionsLayers(): void {
     this.optionsLayers = [];
     this.map.layers.items.forEach((layer) => {
@@ -2398,38 +2402,38 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     } else {
       loadModules(['esri/widgets/CoordinateConversion/CoordinateConversionViewModel', 'esri/Graphic', 'esri/tasks/GeometryService',
         'esri/geometry/Point'])
-      .then(([CoordinateVM, Graphic, GeometryService, Point]) => {
-        if (this.coordinateSystem.code !== 'm') {
-          const coordinateVM = new CoordinateVM();
-          const format = coordinateVM.formats.items.find(x => x.name === this.coordinateSystem.code);
-          const coor = this.coordinateX.toString() + this.lathem + ', ' + this.coordinateY.toString() + this.lonhem;
-          coordinateVM.reverseConvert(coor, format).then((e) => {
-            const symbol = {
-              type: 'picture-marker',  // autocasts as new PictureMarkerSymbol()
-              url: 'assets/marker.png',
-              width: '18px',
-              height: '32px',
-              yoffset: '16px'
-            };
-            this.view.graphics.add(new Graphic({
-              symbol,
-              geometry: e
-            }));
-            this.view.goTo(e);
-          }, (error) => {
-            this.messageService.add({
-              severity: 'warn',
-              summary: '',
-              detail: 'No es posible ubicar la coordenada.'
+        .then(([CoordinateVM, Graphic, GeometryService, Point]) => {
+          if (this.coordinateSystem.code !== 'm') {
+            const coordinateVM = new CoordinateVM();
+            const format = coordinateVM.formats.items.find(x => x.name === this.coordinateSystem.code);
+            const coor = this.coordinateX.toString() + this.lathem + ', ' + this.coordinateY.toString() + this.lonhem;
+            coordinateVM.reverseConvert(coor, format).then((e) => {
+              const symbol = {
+                type: 'picture-marker',  // autocasts as new PictureMarkerSymbol()
+                url: 'assets/marker.png',
+                width: '18px',
+                height: '32px',
+                yoffset: '16px'
+              };
+              this.view.graphics.add(new Graphic({
+                symbol,
+                geometry: e
+              }));
+              this.view.goTo(e);
+            }, (error) => {
+              this.messageService.add({
+                severity: 'warn',
+                summary: '',
+                detail: 'No es posible ubicar la coordenada.'
+              });
             });
-          });
-        } else {
-          // Geometry Service
-          const geomSvc = new GeometryService(this.urlGeometryService);
-          console.log(this.coordinateY);
-          console.log(Number(this.coordinateY));
-        }
-      });
+          } else {
+            // Geometry Service
+            const geomSvc = new GeometryService(this.urlGeometryService);
+            console.log(this.coordinateY);
+            console.log(Number(this.coordinateY));
+          }
+        });
     }
   }
 }
