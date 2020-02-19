@@ -93,7 +93,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     { name: 'Metros', value: 9001 },
     { name: 'Pies', value: 9002 },
   ];
-  optionsCoordinates = [
+  optionsCoordinateUnits = [
     {
       name: 'Grados, Minutos y Segundos ( ej. 04° 35\' 46.3215" )',
       value: [{ label: 'MAGNA-SIRGAS (WGS84)', value: 4326 }],
@@ -125,8 +125,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       code: 'm'
     }
   ];
-  coordinateSystem = this.optionsCoordinates[0];
-  optionsCoordinateSystem = this.coordinateSystem.value;
+  coordinateUnits = this.optionsCoordinateUnits[0];
+  optionsCoordinateSystem = this.coordinateUnits.value;
+  coordinateSystem = this.optionsCoordinateSystem[0].value;
   lathem = 'N';
   lonhem = 'O';
   coordinateX: string;
@@ -2375,10 +2376,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.view.zoom = 6;
   }
 
+  /**
+   * Cambia las opciones de sistema de coordenada
+   * segun las unidades de la coordenada
+   */
   public onChangeCoordinateUnits() {
-    this.optionsCoordinateSystem = this.coordinateSystem.value;
+    this.optionsCoordinateSystem = this.coordinateUnits.value;
+    this.coordinateSystem = this.optionsCoordinateSystem[0].value;
+
   }
 
+  /**
+   *  Procesa la información para localizar una coordenada de entrada
+   */
   public locateCoordinate(): void {
     if (this.coordinateX === '' || this.coordinateY === '' || this.coordinateX === undefined || this.coordinateY === undefined) {
       this.messageService.add({
@@ -2388,39 +2398,59 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
     } else {
       loadModules(['esri/widgets/CoordinateConversion/CoordinateConversionViewModel', 'esri/Graphic', 'esri/tasks/GeometryService',
-        'esri/geometry/Point'])
-      .then(([CoordinateVM, Graphic, GeometryService, Point]) => {
-        if (this.coordinateSystem.code !== 'm') {
-          const coordinateVM = new CoordinateVM();
-          const format = coordinateVM.formats.items.find(x => x.name === this.coordinateSystem.code);
-          const coor = this.coordinateX.toString() + this.lathem + ', ' + this.coordinateY.toString() + this.lonhem;
-          coordinateVM.reverseConvert(coor, format).then((e) => {
-            const symbol = {
-              type: 'picture-marker',  // autocasts as new PictureMarkerSymbol()
-              url: 'assets/marker.png',
-              width: '18px',
-              height: '32px',
-              yoffset: '16px'
-            };
-            this.view.graphics.add(new Graphic({
-              symbol,
-              geometry: e
-            }));
-            this.view.goTo(e);
-          }, (error) => {
-            this.messageService.add({
-              severity: 'warn',
-              summary: '',
-              detail: 'No es posible ubicar la coordenada.'
+        'esri/geometry/Point', 'esri/geometry/SpatialReference', 'esri/tasks/support/ProjectParameters'])
+        .then(([CoordinateVM, Graphic, GeometryService, Point, SpatialReference, ProjectParameters]) => {
+          const symbol = {
+            type: 'picture-marker',  // autocasts as new PictureMarkerSymbol()
+            url: 'assets/marker.png',
+            width: '18px',
+            height: '32px',
+            yoffset: '16px'
+          };
+          if (this.coordinateUnits.code !== 'm') {
+            const coordinateVM = new CoordinateVM();
+            const format = coordinateVM.formats.items.find(x => x.name === this.coordinateUnits.code);
+            const coor = this.coordinateX.toString() + this.lathem + ', ' + this.coordinateY.toString() + this.lonhem;
+            coordinateVM.reverseConvert(coor, format).then((e) => {
+              this.view.graphics.add(new Graphic({
+                symbol,
+                geometry: e
+              }));
+              this.view.goTo(e);
+            }, (error) => {
+              this.messageService.add({
+                severity: 'warn',
+                summary: '',
+                detail: 'No es posible ubicar la coordenada.'
+              });
             });
-          });
-        } else {
-          // Geometry Service
-          const geomSvc = new GeometryService(this.urlGeometryService);
-          console.log(this.coordinateY);
-          console.log(Number(this.coordinateY));
-        }
-      });
+          } else {
+            // Geometry Service
+            const geomSvc = new GeometryService(this.urlGeometryService);
+            const sisRef = new SpatialReference({
+              wkid: this.coordinateSystem
+            });
+            const point = new Point({
+              x: this.coordinateX,
+              y: this.coordinateY,
+              spatialReference: sisRef
+            });
+            const outSR = new SpatialReference({ wkid: 4326 });
+            const params = new ProjectParameters({
+              geometries: [point],
+              outSpatialReference: outSR
+            });
+            geomSvc.project(params).then((response) => {
+              const pto = response[0];
+              this.view.graphics.add(new Graphic({
+                symbol,
+                geometry: pto
+              }));
+              this.view.goTo(response);
+            });
+          }
+          (window as any).ga('send', 'event', 'FORM', 'submit', 'locate-form');
+        });
     }
   }
 }

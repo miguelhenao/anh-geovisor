@@ -338,21 +338,21 @@
   <div>
     <div>
       <p>1. Unidades de la coordenada:</p>
-      <p-dropdown [options]="optionsCoordinates" optionLabel="name" [(ngModel)]="coordinateSystem"
+      <p-dropdown [options]="optionsCoordinateUnits" optionLabel="name" [(ngModel)]="coordinateUnits"
         (onChange)="onChangeCoordinateUnits()" [style]="{'width': '95%'}"></p-dropdown>
     </div>
     <div>
       <p>2. Sistema de coordenadas</p>
-      <p-dropdown [options]="optionsCoordinateSystem" [style]="{'width': '80%'}"></p-dropdown>
+      <p-dropdown [options]="optionsCoordinateSystem" [style]="{'width': '80%'}" [(ngModel)]="coordinateSystem"></p-dropdown>
     </div>
     <div>
       <p>3. Ingrese coordenada</p>
       <div style="display: grid; grid-template-columns: auto auto;">
         <div class="ui-inputgroup">
-          <span class="ui-inputgroup-addon">{{coordinateSystem.x}}</span>
-          <p-inputMask mask="{{coordinateSystem.mask}}" [(ngModel)]="coordinateX"></p-inputMask>
+          <span class="ui-inputgroup-addon">{{coordinateUnits.x}}</span>
+          <p-inputMask mask="{{coordinateUnits.mask}}" [(ngModel)]="coordinateX"></p-inputMask>
         </div>
-        <div style="padding: 5px;" *ngIf="coordinateSystem.geographical">
+        <div style="padding: 5px;" *ngIf="coordinateUnits.geographical">
           <p-radioButton name="group1" value="N" [(ngModel)]="lathem" label="Norte ( + )"></p-radioButton>
           &nbsp;
           <p-radioButton name="group1" value="S" [(ngModel)]="lathem" label="Sur ( - )"></p-radioButton>
@@ -360,10 +360,10 @@
       </div>
       <div style="display: grid; grid-template-columns: auto auto; margin-top: 5px;">
         <div class="ui-inputgroup">
-          <span class="ui-inputgroup-addon">{{coordinateSystem.y}}</span>
-          <p-inputMask mask="{{coordinateSystem.mask}}" [(ngModel)]="coordinateY"></p-inputMask>
+          <span class="ui-inputgroup-addon">{{coordinateUnits.y}}</span>
+          <p-inputMask mask="{{coordinateUnits.mask}}" [(ngModel)]="coordinateY"></p-inputMask>
         </div>
-        <div style="padding: 5px;" *ngIf="coordinateSystem.geographical">
+        <div style="padding: 5px;" *ngIf="coordinateUnits.geographical">
           <p-radioButton name="group2" value="O" [(ngModel)]="lonhem" label="Oeste ( - )"></p-radioButton>
         </div>
       </div>
