@@ -448,7 +448,7 @@ p-sidebar {
   }
 }
 
-::ng-deep .esri-button {
+::ng-deep #buttons .esri-button {
   padding: 0px 0px !important;
   width: 33px !important;
   height: 33px !important;

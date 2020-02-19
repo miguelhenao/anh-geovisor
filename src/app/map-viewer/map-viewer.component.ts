@@ -1137,7 +1137,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         view: this.view,
         sources: this.sourceSearch,
         includeDefaultSources: false,
-        maxSuggestions: 20
+        maxSuggestions: 100000000000
       });
 
       this.view.ui.add(this.search, {
