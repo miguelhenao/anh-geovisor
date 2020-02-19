@@ -216,7 +216,7 @@
 <!-- Modal de tabla de atributos -->
 <p-dialog id="attr-table" header="Tabla de Atributos" [(visible)]="modalTable" [resizable]="false"
   (onHide)="onHideDialogAtributos()" [maximizable]="true" [style]="{width: '500px'}">
-  <p-table class="esri-widget__table" [style]="{width: 'inherit'}" [paginator]="true" [rows]="100"
+  <p-table class="esri-widget__table" [style]="{'width': 'inherit', 'height': '500px'}" [paginator]="true" [rows]="100"
     [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple" #dt [columns]="columnsTable" *ngIf="modalTable"
     [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true" [(selection)]="featuresSelected"
     (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollHeight="{{heightTable}}px">
@@ -242,6 +242,11 @@
         <th *ngFor="let col of columns">
           <input pInputText type="text" (input)="dt.filter($event.target.value, attrFilter(col.name), 'contains')">
         </th>
+      </tr>
+      <tr style="background: transparent;">
+        <td style="padding: 0px; " [attr.colspan]="columns.length">
+          <p-progressBar mode="indeterminate" *ngIf="makingWork" [style]="{'height': '6px'}"></p-progressBar>
+        </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item let-columns="columns">
