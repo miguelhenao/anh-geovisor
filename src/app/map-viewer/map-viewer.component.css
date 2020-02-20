@@ -485,3 +485,10 @@ p-sidebar {
 * >>> .ui-datatable-scrollable-body {
   flex: 1 1 0;
 }
+
+::ng-deep #coordsWidget .esri-select {
+  border: none !important;
+  height: 20px;
+  background: none;
+  font-size: 14px;
+}

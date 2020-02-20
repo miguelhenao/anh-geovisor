@@ -180,6 +180,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   colorsFourth: Array<any> = [];
   colorsFiveth: Array<any> = [];
   flagSketch = false;
+  coordsModel = 'P';
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
     private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef) {
@@ -1357,11 +1358,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         group: 'expand',
         expandTooltip: 'Ayuda'
       });
-      this.coordsWidget = document.createElement('div');
-      this.coordsWidget.id = 'coordsWidget';
-      this.coordsWidget.className = 'esri-widget esri-component';
-      this.coordsWidget.style.padding = '7px 15px 5px';
-      this.view.ui.add(this.coordsWidget, 'bottom-right');
+      this.view.ui.add('coordsWidget', 'bottom-right');
       this.view.ui.add([this.expandPrint, expandBaseMapGallery, expandLegend, layerListExpand, help], 'top-right');
       return this.view;
     } catch (error) {
@@ -1370,7 +1367,24 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public showCoordinates(pt): void {
-    const coords = 'Lat/Lon ' + pt.latitude.toFixed(3) + ' ' + pt.longitude.toFixed(3);
+    this.coordsWidget = document.getElementById('coords');
+    let coords = '';
+    if (this.coordsModel === 'G') {
+      coords = pt.latitude.toFixed(3) + '°, ' + pt.longitude.toFixed(3) + '°';
+    } else {
+      loadModules(['esri/tasks/GeometryService', 'esri/geometry/SpatialReference', 'esri/tasks/support/ProjectParameters'])
+      .then(([GeometryService, SpatialReference, ProjectParameters]) => {
+        const geomSvc = new GeometryService(this.urlGeometryService);
+        const outSR = new SpatialReference({ wkid: 3116 });
+        const params = new ProjectParameters({
+          geometries: [pt],
+          outSpatialReference: outSR
+        });
+        geomSvc.project(params).then((response) => {
+          console.log(response);
+        });
+      });
+    }
     this.coordsWidget.innerHTML = coords;
   }
 
@@ -2359,10 +2373,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public openExtract(): void {
-    this.layerExtract = true;
-    this.buildOptionsLayers();
-    this.visibleModal(false, false, false, true, false, false, false, false, false);
-    this.view.popup.autoOpenEnabled = false;
+    if (!this.errorArcgisService) {
+      this.layerExtract = true;
+      this.buildOptionsLayers();
+      this.visibleModal(false, false, false, true, false, false, false, false, false);
+      this.view.popup.autoOpenEnabled = false;
+    }
   }
 
   public openMeasuringTools(): void {

@@ -348,7 +348,8 @@
     </div>
     <div>
       <p>2. Sistema de coordenadas</p>
-      <p-dropdown [options]="optionsCoordinateSystem" [style]="{'width': '80%'}" [(ngModel)]="coordinateSystem"></p-dropdown>
+      <p-dropdown [options]="optionsCoordinateSystem" [style]="{'width': '80%'}" [(ngModel)]="coordinateSystem">
+      </p-dropdown>
     </div>
     <div>
       <p>3. Ingrese coordenada</p>
@@ -390,3 +391,13 @@
 
   </p-message>
 </p-dialog>
+
+<div id="coordsWidget" class="esri-widget esri-component" style="padding: 7px 7px 5px;">
+  <div style="display: grid; grid-template-columns: auto auto;">
+    <select name="select" *ngIf="view.ready" class="esri-select" [(ngModel)]="coordsModel">
+      <option value="G" selected>Lat/Lon</option>
+      <option value="P">X/Y</option>
+    </select>
+    <div id="coords" style="margin-top: 1.5px;"></div>
+  </div>
+</div>
