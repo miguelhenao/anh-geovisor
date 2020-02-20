@@ -180,7 +180,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   colorsFourth: Array<any> = [];
   colorsFiveth: Array<any> = [];
   flagSketch = false;
-  coordsModel = 'P';
+  coordsModel = 'G';
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
     private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef) {
@@ -492,7 +492,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           {
             label: 'Ubicar coordenada',
             command: () => {
-              this.visibleModal(false, false, false, false, false, false, false, false, true);
+              if (!this.errorArcgisService) {
+                this.visibleModal(false, false, false, false, false, false, false, false, true);
+              }
             }
           }
         ]
