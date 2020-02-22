@@ -69,9 +69,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   // Url servidor ArcGIS.com para servicios de conversión (sharing)
   sharingUrl = 'https://www.arcgis.com'; // importante que sea https para evitar problemas de SSL
   // Url del servicio de impresión, por el momento no funciona
-  // printUrl = this.agsUrlBase + 'rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task';
+  printUrl = this.agsUrlBase + 'rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task';
   // Url del servicio de impresión por defecto de Arcgis. Comentar o eliminar cuando funcione el servicio de ANH
-  printUrl = 'https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task';
+  // printUrl = 'https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task';
   // Geometry Service
   urlGeometryService = this.agsUrlBase + 'rest/services/Utilities/Geometry/GeometryServer';
   // Url del servicio rest para generar un feature collection
@@ -1373,6 +1373,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     let coords = '';
     if (this.coordsModel === 'G') {
       coords = pt.latitude.toFixed(3) + '°, ' + pt.longitude.toFixed(3) + '°';
+      this.coordsWidget.innerHTML = coords;
     } else {
       loadModules(['esri/tasks/GeometryService', 'esri/geometry/SpatialReference', 'esri/tasks/support/ProjectParameters'])
       .then(([GeometryService, SpatialReference, ProjectParameters]) => {
@@ -1383,11 +1384,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           outSpatialReference: outSR
         });
         geomSvc.project(params).then((response) => {
-          console.log(response);
+          const pto = response[0];
+          coords = pto.x.toFixed(3).toString() + ', ' + pto.y.toFixed(3).toString();
+          this.coordsWidget.innerHTML = coords;
         });
       });
     }
-    this.coordsWidget.innerHTML = coords;
   }
 
   public symbologyChange(): void {
