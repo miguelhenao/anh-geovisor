@@ -1155,7 +1155,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       this.expandPrint = new Expand({
         expandIconClass: 'fa fa-file-export',
-        expandTooltip: 'Exportar',
+        expandTooltip: 'Exportar mapa',
         view: this.view,
         content: print,
         group: 'expand'
