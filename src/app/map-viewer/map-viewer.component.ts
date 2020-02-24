@@ -446,7 +446,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             }
           },
           {
-            label: 'Extraer capa',
+            label: 'Descargar capa general',
             command: () => {
               this.openExtract();
             }
@@ -1376,19 +1376,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.coordsWidget.innerHTML = coords;
     } else {
       loadModules(['esri/tasks/GeometryService', 'esri/geometry/SpatialReference', 'esri/tasks/support/ProjectParameters'])
-      .then(([GeometryService, SpatialReference, ProjectParameters]) => {
-        const geomSvc = new GeometryService(this.urlGeometryService);
-        const outSR = new SpatialReference({ wkid: 3116 });
-        const params = new ProjectParameters({
-          geometries: [pt],
-          outSpatialReference: outSR
+        .then(([GeometryService, SpatialReference, ProjectParameters]) => {
+          const geomSvc = new GeometryService(this.urlGeometryService);
+          const outSR = new SpatialReference({ wkid: 3116 });
+          const params = new ProjectParameters({
+            geometries: [pt],
+            outSpatialReference: outSR
+          });
+          geomSvc.project(params).then((response) => {
+            const pto = response[0];
+            coords = pto.x.toFixed(3).toString() + ', ' + pto.y.toFixed(3).toString();
+            this.coordsWidget.innerHTML = coords;
+          });
         });
-        geomSvc.project(params).then((response) => {
-          const pto = response[0];
-          coords = pto.x.toFixed(3).toString() + ', ' + pto.y.toFixed(3).toString();
-          this.coordsWidget.innerHTML = coords;
-        });
-      });
     }
   }
 

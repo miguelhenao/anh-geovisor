@@ -1,28 +1,4 @@
 <p-toast></p-toast>
-<!-- <div *ngIf="view.updating || makingWork" id="opacidad"></div> -->
-<!-- Menú con Accordion -->
-<!-- <div id="menu-info" *ngIf="view.ready">
-  <p-header>
-    <div class="logo-toggler display" id="menu"></div>
-    <div id="buttons">
-      <p-button icon="esri-icon-globe" [style]="{'background-color': '#F8C933', 'border-color': '#F8C933'}"
-        title="Ver todo" (onClick)="viewAll()">
-      </p-button>
-      <p-button icon="fa fa-ruler-horizontal" [style]="{'background-color': '#E18230', 'border-color': '#E18230'}"
-        title="Tomar medidas" (onClick)="openMeasuringTools()">
-      </p-button>
-      <p-button icon="esri-icon-cursor" [style]="{'background-color': '#D75C31', 'border-color': '#D75C31'}"
-        title="Seleccionar" (click)="openSelectionTool()"></p-button>
-      <p-button icon="esri-icon-description" [style]="{'background-color': '#CC3D36', 'border-color': '#CC3D36'}"
-        title="Identificar" (onClick)="openEnabledPopup()">
-      </p-button>
-    </div>
-  </p-header>
-  <div>
-    <p-tieredMenu [style]="{'width': 'auto'}" id="content-menu" [model]="menu"></p-tieredMenu>
-  </div>
-</div> -->
-<!-- Finaliza menú con Accordion -->
 
 <!-- Menú con Accordion -->
 <div id="menu-info" *ngIf="view.ready">
@@ -32,27 +8,12 @@
         <div title="Menú" class="logo-toggler" [ngClass]="{'display': visibleMenu}" id="menu"></div>
       </p-header>
       <div id="buttons">
-        <!-- <p-button icon="icofont-addons" [style]="{'background-color': '#F8C933', 'border-color': '#F8C933'}"
-          title="Ver todo" (onClick)="viewAll()">
-        </p-button>
-        <p-button icon="esri-icon-measure" [style]="{'background-color': '#E18230', 'border-color': '#E18230'}"
-          title="Tomar medidas" (onClick)="openMeasuringTools()">
-        </p-button>
-        <p-button icon="fa fa-hand-pointer-o" [style]="{'background-color': '#D75C31', 'border-color': '#D75C31'}"
-          title="Seleccionar" (click)="openSelectionTool()"></p-button>
-        <p-button icon="esri-icon-description" [style]="{'background-color': '#CC3D36', 'border-color': '#CC3D36'}"
-          title="Identificar" (onClick)="openEnabledPopup()">
-        </p-button>
-        <p-button icon="esri-icon-download" [style]="{'background-color': '#44546A', 'border-color': '#44546A'}"
-          title="Extraer capa general" (onClick)="openExtract()">
-        </p-button> -->
-        <!-- ----------------------------------------------------------------------------------------------------------- -->
         <button class="esri-button" style="background-color: #F8C933; border-color: #F8C933; border-radius: 4px;"
           title="Ver todo" (click)="viewAll()">
           <i class="icofont-world" align="center"></i>
         </button>
         <button class="esri-button" style="background-color: #E18230; border-color: #E18230; border-radius: 4px;"
-          title="Tomar medidas" (click)="openMeasuringTools()">
+          title="Herramientas de Medición" (click)="openMeasuringTools()">
           <i class="icofont-ruler-compass" align="center"></i>
         </button>
         <button class="esri-button" style="background-color: #D75C31; border-color: #D75C31; border-radius: 4px;"
@@ -64,7 +25,7 @@
           <i class="esri-icon-description" align="center"></i>
         </button>
         <button class="esri-button" style="background-color: #44546A; border-color: #44546A; border-radius: 4px;"
-          title="Extraer capa general" (click)="openExtract()">
+          title="Descargar capa general" (click)="openExtract()">
           <i class="esri-icon-download" align="center"></i>
         </button>
       </div>
@@ -356,7 +317,7 @@
       <div style="display: grid; grid-template-columns: auto auto;">
         <div class="ui-inputgroup">
           <span class="ui-inputgroup-addon">{{coordinateUnits.x}}</span>
-          <p-inputMask mask="{{coordinateUnits.mask}}" [(ngModel)]="coordinateX"></p-inputMask>
+          <p-inputMask mask="{{coordinateUnits.mask}}" [(ngModel)]="coordinateX" slotChar="0"></p-inputMask>
         </div>
         <div style="padding: 5px;" *ngIf="coordinateUnits.geographical">
           <p-radioButton name="group1" value="N" [(ngModel)]="lathem" label="Norte ( + )"></p-radioButton>
@@ -367,7 +328,7 @@
       <div style="display: grid; grid-template-columns: auto auto; margin-top: 5px;">
         <div class="ui-inputgroup">
           <span class="ui-inputgroup-addon">{{coordinateUnits.y}}</span>
-          <p-inputMask mask="{{coordinateUnits.mask}}" [(ngModel)]="coordinateY"></p-inputMask>
+          <p-inputMask mask="{{coordinateUnits.mask}}" [(ngModel)]="coordinateY" slotChar="0"></p-inputMask>
         </div>
         <div style="padding: 5px;" *ngIf="coordinateUnits.geographical">
           <p-radioButton name="group2" value="O" [(ngModel)]="lonhem" label="Oeste ( - )"></p-radioButton>
@@ -376,7 +337,7 @@
     </div>
     <div style="margin-top: 5px;">
       <p-button label="Borrar anteriores" icon="pi pi-times" (onClick)="clearGraphics()"></p-button>
-      <p-button label="Limpiar campos" icon="pi pi-pencil" (onClick)="coordinateX = ''; coordinateY = ''"
+      <p-button label="Limpiar campos" icon="fa fa-broom" (onClick)="coordinateX = ''; coordinateY = ''"
         [style]="{'margin-left': '5px'}"></p-button>
       <p-button label="Ubicar" icon="pi pi-map-marker" [style]="{'margin-left': '5px'}" (onClick)="locateCoordinate()">
       </p-button>

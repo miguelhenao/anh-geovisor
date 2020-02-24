@@ -25,7 +25,6 @@
 
 #menu-info {
   z-index: 5;
-  /* text-align: center; */
   position: absolute;
   width: auto;
 }
@@ -222,15 +221,6 @@ p-sidebar {
   width: 73px;
   position: fixed;
 }
-
-/* .loading-machin {
-    position: fixed;
-    width: 144px;
-    height: 90px;
-    background: url(../../assets/pozo.gif);
-    margin-top: -72px;
-    margin-left: -72px;
-} */
 
 .loading-machin {
   position: fixed;
@@ -491,4 +481,15 @@ p-sidebar {
   height: 20px;
   background: none;
   font-size: 14px;
+}
+
+::ng-deep .esri-icon-measure-area:before,
+::ng-deep .esri-icon-measure-line:before,
+::ng-deep .esri-icon-map-pin:before,
+::ng-deep .esri-icon-radio-checked:before,
+::ng-deep .esri-icon-minus:before,
+::ng-deep .esri-icon-polyline:before,
+::ng-deep .esri-icon-sketch-rectangle:before,
+::ng-deep .esri-icon-polygon:before {
+  color: initial;
 }
