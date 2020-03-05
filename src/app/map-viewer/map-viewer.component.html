@@ -182,11 +182,20 @@
     [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true" [(selection)]="featuresSelected"
     (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollHeight="{{heightTable}}px">
     <ng-template pTemplate="caption">
-      <button pButton type="button" (click)="previousLayer()" class="ui-button-rounded" icon="fas fa-arrow-circle-left"
-        title="Ver ant capa"></button>
-      {{layerSelected.title.substr(11)}}
-      <button pButton type="button" (click)="nextLayer()" class="ui-button-rounded" icon="fas fa-arrow-circle-right"
-        title="Ver sgte capa"></button>
+      <div style="display: grid; grid-template-columns: auto auto;">
+        <div>
+          <button pButton type="button" (click)="previousLayer()" class="ui-button-rounded"
+            icon="fas fa-arrow-circle-left" title="Ver ant capa"></button>
+          {{layerSelected.title.substr(11)}}
+          <button pButton type="button" (click)="nextLayer()" class="ui-button-rounded" icon="fas fa-arrow-circle-right"
+            title="Ver sgte capa"></button>
+        </div>
+        <div style="text-align: right">
+          <!-- <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+          <input type="text" pInputText size="30" placeholder="Filtro global"
+            (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto"> -->
+        </div>
+      </div>
     </ng-template>
     <ng-template pTemplate="colgroup" let-columns>
       <colgroup>
