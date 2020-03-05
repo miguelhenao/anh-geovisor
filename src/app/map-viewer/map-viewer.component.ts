@@ -2041,10 +2041,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public extractShapeFromAttr(): void {
-    this.layerExtract = true;
+    if (this.featuresSelected.length === 0) {
+      this.layerExtract = true;
+    }
     this.buildOptionsLayers();
     for (const option of this.optionsLayers) {
-      if (option.label == this.layerSelected.title.substr(11)) {
+      if (option.label === this.layerSelected.sourceJSON.name) {
         this.selectedLayers.push(option.label);
         break;
       }
@@ -2239,9 +2241,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public generateExcelFeaturesLayer(): void {
     this.makingWork = true;
     const attribute: Array<any> = [];
-    for (const r of this.featureDptos) {
-      const object = r.attributes;
-      attribute.push(object);
+    if (this.featuresSelected.length === 0) {
+      for (const r of this.featureDptos) {
+        const object = r.attributes;
+        attribute.push(object);
+      }
+    } else {
+      for (const r of this.featuresSelected) {
+        const object = r.attributes;
+        attribute.push(object);
+      }
     }
     const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     const EXCEL_EXTENSION = '.xlsx';
