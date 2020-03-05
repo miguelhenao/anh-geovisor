@@ -181,6 +181,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   colorsFiveth: Array<any> = [];
   flagSketch = false;
   coordsModel = 'G';
+  urlFeaturePozo: string;
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
     private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef) {
@@ -565,8 +566,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.map.layers.items.forEach((layer) => {
       if (layer.title !== null) {
         this.optionsLayers.push({
-          label: layer.title.substr(11),
-          value: layer.title.substr(11)
+          label: layer.sourceJSON.name,
+          value: layer.sourceJSON.name
         });
       }
     });
@@ -579,8 +580,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.map.layers.items.forEach((layer) => {
       if (layer.title !== null) {
         const sel: SelectItem = {
-          label: layer.title.substr(11),
-          value: layer.title.substr(11)
+          label: layer.sourceJSON.name,
+          value: layer.sourceJSON.name
         };
         if (layer.title === nameLayer) {
           this.layerSelectedSelection = sel.value;
@@ -593,7 +594,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   changeLayer(event: any): void {
     this.map.layers.items.forEach((layer) => {
-      if (layer.title != null && layer.title.substr(11) === event) {
+      if (layer.title != null && layer.sourceJSON.name === event) {
         this.layerSelected = layer;
       }
     });
@@ -666,7 +667,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       this.addSlider();
       // Carga de capa de pozo
-      const lyPozo = new FeatureLayer(this.mapRestUrl + '/1', {
+      const lyPozo = new FeatureLayer(this.urlFeaturePozo, {
         id: 'Pozo',
         opacity: 1.0,
         visible: true,
@@ -682,7 +683,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templatePozo = {
-          title: lyPozo.title,
+          title: lyPozo.sourceJSON.name,
           content: text,
           fieldInfos: []
         };
@@ -692,7 +693,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
-          name: lyPozo.title
+          name: lyPozo.sourceJSON.name
         });
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
@@ -717,7 +718,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateRezumadero = {
-          title: lyRezumadero.title,
+          title: lyRezumadero.sourceJSON.name,
           content: text,
           fieldInfos: []
         };
@@ -727,7 +728,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
-          name: lyRezumadero.title
+          name: lyRezumadero.sourceJSON.name
         });
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
@@ -752,7 +753,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateSismica = {
-          title: lySismica.title,
+          title: lySismica.sourceJSON.name,
           content: text,
           fieldInfos: []
         };
@@ -762,7 +763,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
-          name: lySismica.title
+          name: lySismica.sourceJSON.name
         });
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
@@ -787,7 +788,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateSismica3d = {
-          title: lySismica3d.title,
+          title: lySismica3d.sourceJSON.name,
           content: text,
           fieldInfos: []
         };
@@ -797,7 +798,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
-          name: lySismica3d.title
+          name: lySismica3d.sourceJSON.name
         });
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
@@ -822,7 +823,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateMunicipio = {
-          title: lyMunicipio.title,
+          title: lyMunicipio.sourceJSON.name,
           content: text,
           fieldInfos: []
         };
@@ -832,7 +833,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
-          name: lyMunicipio.title
+          name: lyMunicipio.sourceJSON.name
         });
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
@@ -863,14 +864,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
-          name: lyDepartamento.title,
+          name: lyDepartamento.sourceJSON.name,
           suggestionsEnabled: true,
         });
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
         this.search.sources = this.sourceSearch;
         const templateDepartamento = {
-          title: lyDepartamento.title,
+          title: lyDepartamento.sourceJSON.name,
           content: text,
           fieldInfos: []
         };
@@ -894,7 +895,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateCuencas = {
-          title: lyCuencas.title,
+          title: lyCuencas.sourceJSON.name,
           content: text,
           fieldInfos: []
         };
@@ -904,7 +905,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
-          name: lyCuencas.title,
+          name: lyCuencas.sourceJSON.name,
           suggestionsEnabled: true,
         });
         this.sourceSearch = null;
@@ -931,7 +932,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateTierras = {
-          title: lyTierras.title,
+          title: lyTierras.sourceJSON.name,
           content: text,
           fieldInfos: []
         };
@@ -941,7 +942,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
-          name: lyTierras.title,
+          name: lyTierras.sourceJSON.name,
           suggestionsEnabled: true,
         });
         this.sourceSearch = null;
@@ -982,7 +983,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
         const templateSensibilidad = {
-          title: lySensibilidad.title,
+          title: lySensibilidad.sourceJSON.name,
           content: text,
           fieldInfos: []
         };
@@ -992,7 +993,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
-          name: lySensibilidad.title,
+          name: lySensibilidad.sourceJSON.name,
           suggestionsEnabled: true,
         });
         this.sourceSearch = null;
@@ -1404,7 +1405,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       if (res !== undefined) {
         this.map.layers.items.forEach((layer) => {
           if (layer.title !== null) {
-            if (layer.title.substr(11) === res.layerSelected) {
+            if (layer.sourceJSON.name === res.layerSelected) {
               this.layerSelected = layer;
             }
           }
@@ -1472,6 +1473,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }, error => {
       this.errorArcgisService = true;
       console.error(error);
+    });
+    this.service.validateServices('http://srvags.sgc.gov.co/arcgis/rest/services/EPIS/EPIS_V2/MapServer/0').subscribe(success => {
+      this.urlFeaturePozo = this.mapRestUrl + '/1';
+    }, error => {
+      this.urlFeaturePozo = 'http://srvags.sgc.gov.co/arcgis/rest/services/EPIS/EPIS_V2/MapServer/0';
     });
     this.initializeMap();
   }
@@ -1791,7 +1797,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
             }
             const templateTierras = {
-              title: 'Información',
+              title: lyTierrasMdt.sourceJSON.name,
               content: text,
               fieldInfos: []
             };
