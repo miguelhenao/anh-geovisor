@@ -28,6 +28,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   loaded = false;
   eventLayer: any;
   modalTable = false;
+  modalFilter = false;
   modalMeasurement = false;
   modalAbout = false;
   modalGuide = false;
@@ -184,6 +185,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   coordsModel = 'G';
   urlFeaturePozo: string;
   filter: Array<string> = [];
+  objectFilter: Array<any> = [];
+  filterS: Array<string> = [];
+  quantityFields: number = 1;
+  values: Array<any> = [];
+  arrQuantity = Array;
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
     private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef) {
@@ -243,7 +249,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Shapefile',
             command: () => {
               if (!this.errorArcgisService) {
-                this.visibleModal(false, false, false, false, false, false, false, false, false);
+                this.visibleModal(false, false, false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogFileComponent, {
                   width: '400px',
                   baseZIndex: 20,
@@ -266,7 +272,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Archivo CSV',
             command: () => {
               if (!this.errorArcgisService) {
-                this.visibleModal(false, false, false, false, false, false, false, false, false);
+                this.visibleModal(false, false, false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogFileComponent, {
                   width: '400px',
                   baseZIndex: 20,
@@ -287,7 +293,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Archivo GPX',
             command: () => {
               if (!this.errorArcgisService) {
-                this.visibleModal(false, false, false, false, false, false, false, false, false);
+                this.visibleModal(false, false, false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogFileComponent, {
                   width: '400px',
                   baseZIndex: 20,
@@ -310,7 +316,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Archivo GeoJSON',
             command: () => {
               if (!this.errorArcgisService) {
-                this.visibleModal(false, false, false, false, false, false, false, false, false);
+                this.visibleModal(false, false, false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogFileComponent, {
                   width: '400px',
                   baseZIndex: 20,
@@ -331,7 +337,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Servicio KML',
             command: () => {
               if (!this.errorArcgisService) {
-                this.visibleModal(false, false, false, false, false, false, false, false, false);
+                this.visibleModal(false, false, false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
@@ -357,7 +363,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Servicio WMS',
             command: () => {
               if (!this.errorArcgisService) {
-                this.visibleModal(false, false, false, false, false, false, false, false, false);
+                this.visibleModal(false, false, false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
@@ -383,7 +389,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Servicio GeoJSON',
             command: () => {
               if (!this.errorArcgisService) {
-                this.visibleModal(false, false, false, false, false, false, false, false, false);
+                this.visibleModal(false, false, false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
@@ -409,7 +415,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Servicio CSV',
             command: () => {
               if (!this.errorArcgisService) {
-                this.visibleModal(false, false, false, false, false, false, false, false, false);
+                this.visibleModal(false, false, false, false, false, false, false, false, false, false);
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
@@ -443,7 +449,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               if (!this.errorArcgisService) {
                 this.buildOptionsLayers();
                 this.layerExtract = false;
-                this.visibleModal(false, false, false, true, false, false, false, false, false);
+                this.visibleModal(false, false, false, true, false, false, false, false, false, false);
                 this.view.popup.autoOpenEnabled = false;
               }
             }
@@ -465,7 +471,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             command: () => {
               if (!this.errorArcgisService) {
                 this.buildOptionsLayers();
-                this.visibleModal(false, false, true, false, false, false, false, false, false);
+                this.visibleModal(false, false, true, false, false, false, false, false, false, false);
                 this.view.popup.autoOpenEnabled = false;
               }
             }
@@ -496,7 +502,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Ubicar coordenada',
             command: () => {
               if (!this.errorArcgisService) {
-                this.visibleModal(false, false, false, false, false, false, false, false, true);
+                this.visibleModal(false, false, false, false, false, false, false, false, true, false);
               }
             }
           }
@@ -606,7 +612,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (!this.errorArcgisService) {
       const nameLayer = this.layerList.selectedItems.items[0] !== undefined ? this.layerList.selectedItems.items[0].title : null;
       this.buildOptionsLayersValue(nameLayer);
-      this.visibleModal(false, false, false, false, false, false, false, true, false);
+      this.visibleModal(false, false, false, false, false, false, false, true, false, false);
     }
   }
 
@@ -1123,7 +1129,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             layer.opacity -= 0.25;
           } else if (event.action.id === 'seleccion') {
             this.featureDptos = [];
-            this.visibleModal(false, false, false, false, false, false, false, true, false);
+            this.visibleModal(false, false, false, false, false, false, false, true, false, false);
             this.layerSelected = layer;
             layerListExpand.collapse();
           }
@@ -1334,7 +1340,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   });
                   this.clearGraphic = true;
                   this.makingWork = false;
-                  this.visibleModal(false, false, false, false, false, false, true, true, false);
+                  this.visibleModal(false, false, false, false, false, false, true, true, false, false);
                 });
             });
           } else {
@@ -1455,7 +1461,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.columnsTable = Object.keys(this.featureDptos[0].attributes);
       this.dptosSelected = [];
       this.layerSelected = this.departmentLayer;
-      this.visibleModal(false, true, false, false, false, false, false, false, false);
+      this.visibleModal(false, true, false, false, false, false, false, false, false, false);
     }, (err) => {
       console.error(err);
     });
@@ -1853,7 +1859,102 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.filter[index] = 'contains';
       }
       this.layerSelected = layer;
-      this.visibleModal(false, false, false, false, false, false, true, false, false);
+      this.visibleModal(false, false, false, false, false, false, true, false, false, false);
+    }, (err) => {
+      console.error(err);
+    });
+  }
+
+  getFeaturesLayerSelected(): void {
+    this.objectFilter = [];
+    this.filterS = [];
+    this.values = [];
+    this.quantityFields = 1;
+    const query = {
+      outFields: ['*'],
+      returnGeometry: false,
+      where: ''
+    };
+    this.layerSelected.queryFeatures(query).then((result) => {
+      this.featureDptos = result.features;
+      // this.columnsTable = Object.keys(this.featureDptos[0].attributes);
+      this.columnsTable = result.fields;
+      for (let index = 0; index < this.columnsTable.length; index++) {
+        this.filter[index] = 'contains';
+      }
+      this.visibleModal(false, false, false, false, false, false, true, false, false, false);
+    }, (err) => {
+      console.error(err);
+    });
+  }
+
+  public getTypeObject(name: string): string {
+    let type: string;
+    for (const col of this.columnsTable) {
+      if (col.name == name) {
+        type = col.type;
+        break;
+      }
+    }
+    return type;
+  }
+  public getFilterParams(): void {
+    let params: string = ''
+    for (let index = 0; index < this.objectFilter.length; index++) {
+      if (this.filterS[index] !== undefined && this.filterS[index] !== '' && this.values[index] !== undefined && this.values[index] !== '') {
+        if (index > 0) {
+          params = `${params} AND`;
+        }
+        switch (this.filterS[index]) {
+          case 'contains':
+            params = `${params} UPPER(${this.objectFilter[index]}) LIKE '%${this.values[index].toUpperCase()}%'`;
+            break;
+          case 'startsWith':
+            params = `${params} UPPER(${this.objectFilter[index]}) LIKE '${this.values[index].toUpperCase()}%'`;
+            break;
+          case 'endsWith':
+            params = `${params} UPPER(${this.objectFilter[index]}) LIKE '%${this.values[index].toUpperCase()}'`;
+            break;
+          case 'equals':
+            if (this.getTypeObject(this.objectFilter[index]) === 'string') {
+              params = `${params} ${this.objectFilter[index]} = '${this.values[index].toUpperCase()}'`;
+            } else {
+              params = `${params} ${this.objectFilter[index]} = ${this.values[index]}`;
+            }
+            break;
+          case 'notEquals':
+            if (this.getTypeObject(this.objectFilter[index]) === 'string') {
+              params = `${params} NOT ${this.objectFilter[index]} = '${this.values[index]}'`;
+            } else {
+              params = `${params} NOT ${this.objectFilter[index]} = ${this.values[index]}`;
+            }
+            break;
+          case 'lt':
+            params = `${params} ${this.objectFilter[index]} < ${this.values[index]}`;
+            break
+          case 'lte':
+            params = `${params} ${this.objectFilter[index]} <= ${this.values[index]}`;
+            break
+          case 'gt':
+            params = `${params} ${this.objectFilter[index]} > ${this.values[index]}`;
+            break
+          case 'gte':
+            params = `${params} ${this.objectFilter[index]} >= ${this.values[index]}`;
+            break
+          default:
+            break;
+        }
+      }
+    }
+    const query = {
+      outFields: ['*'],
+      returnGeometry: false,
+      where: params
+    };
+    this.layerSelected.queryFeatures(query).then((result) => {
+      this.featureDptos = result.features;
+      // this.columnsTable = Object.keys(this.featureDptos[0].attributes);
+      this.columnsTable = result.fields;
     }, (err) => {
       console.error(err);
     });
@@ -2220,7 +2321,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Muestra el "acerca de" del Geovisor
    */
   onShowAbout() {
-    this.visibleModal(true, false, false, false, false, false, false, false, false);
+    this.visibleModal(true, false, false, false, false, false, false, false, false, false);
   }
 
   /**
@@ -2228,7 +2329,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   onShowGuide() {
     this.sectionSelected = 'h-introduccion';
-    this.visibleModal(false, false, false, false, true, false, false, false, false);
+    this.visibleModal(false, false, false, false, true, false, false, false, false, false);
     (window as any).ga('send', 'event', 'BUTTON', 'click', 'ayuda');
   }
 
@@ -2277,7 +2378,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * @param table -> Bandera para dialog Tabla de atributos
    */
   public visibleModal(about: boolean, analysis: boolean, buffer: boolean, extract: boolean,
-    guide: boolean, measurement: boolean, table: boolean, selection: boolean, coordinate: boolean) {
+    guide: boolean, measurement: boolean, table: boolean, selection: boolean, coordinate: boolean, filter: boolean) {
     this.modalAbout = about;
     this.modalAnalysis = analysis;
     this.modalBuffer = buffer;
@@ -2287,6 +2388,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.modalTable = table;
     this.modalSelection = selection;
     this.modalCoordinate = coordinate;
+    this.modalFilter = filter;
   }
   /**
    *
@@ -2324,17 +2426,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     return this.layerSelected !== undefined || this.layerSelected != null ? this.layerSelected.title : null;
   }
 
+  public openFilter(): void {
+    this.visibleModal(false, false, false, false, false, false, true, false, false, true);
+  }
   public requestHelp(modal: string): void {
     this.sectionSelected = modal;
     switch (modal) {
       case 'buffer':
-        this.visibleModal(false, false, true, false, true, false, false, false, false);
+        this.visibleModal(false, false, true, false, true, false, false, false, false, false);
         break;
       case 'h-medir':
-        this.visibleModal(false, false, false, false, true, true, false, false, false);
+        this.visibleModal(false, false, false, false, true, true, false, false, false, false);
         break;
       case 'h-extraer':
-        this.visibleModal(false, false, false, true, true, false, false, false, false);
+        this.visibleModal(false, false, false, true, true, false, false, false, false, false);
         break;
       default:
         this.modalGuide = true;
@@ -2399,14 +2504,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (!this.errorArcgisService) {
       this.layerExtract = true;
       this.buildOptionsLayers();
-      this.visibleModal(false, false, false, true, false, false, false, false, false);
+      this.visibleModal(false, false, false, true, false, false, false, false, false, false);
       this.view.popup.autoOpenEnabled = false;
     }
   }
 
   public openMeasuringTools(): void {
     if (!this.errorArcgisService) {
-      this.visibleModal(false, false, false, false, false, true, false, false, false);
+      this.visibleModal(false, false, false, false, false, true, false, false, false, false);
       this.view.popup.autoOpenEnabled = false;
       (window as any).ga('send', 'event', 'BUTTON', 'click', 'open-measure-menu');
     }
@@ -2504,5 +2609,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           (window as any).ga('send', 'event', 'FORM', 'submit', 'locate-form');
         });
     }
+  }
+
+  public addFormField(): void {
+    this.quantityFields++;
   }
 }
