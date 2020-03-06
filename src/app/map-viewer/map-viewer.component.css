@@ -186,7 +186,7 @@ p-sidebar {
 }
 
 #excel {
-  margin-left: 80% !important;
+  margin-left: 70% !important;
 }
 
 #excel button {
@@ -481,6 +481,10 @@ p-sidebar {
   height: 20px;
   background: none;
   font-size: 14px;
+}
+
+::ng-deep .filter .esri-select {
+  background: none;
 }
 
 ::ng-deep .esri-icon-measure-area:before,

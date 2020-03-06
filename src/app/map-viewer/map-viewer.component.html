@@ -206,8 +206,22 @@
         </th>
       </tr>
       <tr>
-        <th *ngFor="let col of columns">
-          <input pInputText type="text" (input)="dt.filter($event.target.value, attrFilter(col.name), 'contains')">
+        <th *ngFor="let col of columns; let i = index">
+          <span style="display: grid; grid-template-columns: auto auto;" class="filter">
+            <select name="select" *ngIf="view.ready" class="esri-select" [(ngModel)]="filter[i]">
+              <option value="contains" selected>contiene</option>
+              <option value="startsWith">empiece por</option>
+              <option value="endsWith">termina por</option>
+              <option value="equals">igual</option>
+              <option value="notEquals">no igual a</option>
+              <option *ngIf="col.type !== 'string'" value="lt">menor que</option>
+              <option *ngIf="col.type !== 'string'" value="lte">menor o igual que</option>
+              <option *ngIf="col.type !== 'string'" value="gt">mayor que</option>
+              <option *ngIf="col.type !== 'string'" value="gte">mayor o igual que</option>
+            </select>
+            <input class="esri-input" type="text"
+              (input)="dt.filter($event.target.value, attrFilter(col.name), filter[i])">
+          </span>
         </th>
       </tr>
       <tr style="background: transparent;">
@@ -223,6 +237,8 @@
     </ng-template>
     <ng-template pTemplate="summary">
       <div id="excel">
+        <button pButton icon="pi pi-search" class="ui-button-rounded ui-button-secodnary"
+          pTooltip="Buscar información"></button>
         <button pButton icon="esri-icon-download" class="ui-button-rounded ui-button-warning"
           pTooltip="Exportar a Shapefile" (click)="extractShapeFromAttr()"></button>
         <button pButton icon="fas fa-file-excel" class="ui-button-rounded ui-button-success" pTooltip="Exportar a Excel"

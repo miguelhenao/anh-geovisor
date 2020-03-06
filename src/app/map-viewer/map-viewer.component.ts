@@ -11,6 +11,7 @@ import { DialogSymbologyChangeComponent } from '../dialog-symbology-change/dialo
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import { Router } from '@angular/router';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-map-viewer',
@@ -182,6 +183,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   flagSketch = false;
   coordsModel = 'G';
   urlFeaturePozo: string;
+  filter: Array<string> = [];
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
     private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef) {
@@ -667,7 +669,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       this.addSlider();
       // Carga de capa de pozo
-      const lyPozo = new FeatureLayer(this.urlFeaturePozo, {
+      const lyPozo = new FeatureLayer(this.mapRestUrl + '/1', {
         id: 'Pozo',
         opacity: 1.0,
         visible: true,
@@ -1847,6 +1849,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.featureDptos = result.features;
       // this.columnsTable = Object.keys(this.featureDptos[0].attributes);
       this.columnsTable = result.fields;
+      for (let index = 0; index < this.columnsTable.length; index++) {
+        this.filter[index] = 'contains';
+      }
       this.layerSelected = layer;
       this.visibleModal(false, false, false, false, false, false, true, false, false);
     }, (err) => {
