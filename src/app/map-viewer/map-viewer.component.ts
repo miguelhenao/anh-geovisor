@@ -181,7 +181,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   colorsFiveth: Array<any> = [];
   flagSketch = false;
   coordsModel = 'G';
-  urlFeaturePozo: string;
   filter: Array<string> = [];
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
@@ -236,7 +235,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.menu = [
       {
         label: 'Mis capas',
-        icon: 'icofont-location-pin',
+        icon: 'icofont-upload',
         items: [
           {
             label: 'Shapefile',
@@ -1474,11 +1473,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }, error => {
       this.errorArcgisService = true;
       console.error(error);
-    });
-    this.service.validateServices('http://srvags.sgc.gov.co/arcgis/rest/services/EPIS/EPIS_V2/MapServer/0').subscribe(success => {
-      this.urlFeaturePozo = this.mapRestUrl + '/1';
-    }, error => {
-      this.urlFeaturePozo = 'http://srvags.sgc.gov.co/arcgis/rest/services/EPIS/EPIS_V2/MapServer/0';
     });
     this.initializeMap();
   }
