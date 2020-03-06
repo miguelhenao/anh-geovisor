@@ -239,6 +239,27 @@
       <div id="excel">
         <button pButton icon="pi pi-search" class="ui-button-rounded ui-button-secodnary"
           pTooltip="Buscar información"></button>
+          <p-dialog [(visible)]="modalTable">
+            <div>
+              <button pButton icon="pi pi-plus"></button>
+              <select name="select" class="esri-select">
+                <option *ngFor="let item of columnsTable; let i = index" value="{{item.name}}">{{item.name}}</option>
+              </select>
+            </div>
+            <!-- <select name="select" *ngIf="view.ready" class="esri-select">
+              <option value="contains" selected>contiene</option>
+              <option value="startsWith">empiece por</option>
+              <option value="endsWith">termina por</option>
+              <option value="equals">igual</option>
+              <option value="notEquals">no igual a</option>
+              <option *ngIf="item.type !== 'string'" value="lt">menor que</option>
+              <option *ngIf="col.type !== 'string'" value="lte">menor o igual que</option>
+              <option *ngIf="col.type !== 'string'" value="gt">mayor que</option>
+              <option *ngIf="col.type !== 'string'" value="gte">mayor o igual que</option>
+            </select> -->
+            <input class="esri-input" type="text"
+                        (input)="dt.filter($event.target.value, attrFilter('FID'), 'startsWith')">
+          </p-dialog>
         <button pButton icon="esri-icon-download" class="ui-button-rounded ui-button-warning"
           pTooltip="Exportar a Shapefile" (click)="extractShapeFromAttr()"></button>
         <button pButton icon="fas fa-file-excel" class="ui-button-rounded ui-button-success" pTooltip="Exportar a Excel"
