@@ -235,7 +235,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.menu = [
       {
         label: 'Mis capas',
-        icon: 'icofont-location-pin',
+        icon: 'icofont-upload',
         items: [
           {
             label: 'Shapefile',
@@ -1995,7 +1995,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         dojo, Graphic]) => {
         const layer = this.layerSelected;
         const query = layer.createQuery();
-        query.where = `${this.columnsTable[0].name} = ${event.data.attributes[this.columnsTable[0].name]}`;
+        query.where = `${this.columnsTable[0]} = ${event.data.attributes[this.columnsTable[0]]}`;
         query.returnGeometry = true;
         query.outFields = ['*'];
         layer.queryFeatures(query).then((res) => {
