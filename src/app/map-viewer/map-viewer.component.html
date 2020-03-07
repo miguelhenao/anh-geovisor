@@ -187,6 +187,12 @@
       {{layerSelected.title.substr(11)}}
       <button pButton type="button" (click)="nextLayer()" class="ui-button-rounded" icon="fas fa-arrow-circle-right"
         title="Ver sgte capa"></button>
+      <!-- <div style="text-align: right">
+          <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+          <input type="text" pInputText size="30" placeholder="Filtro global"
+            (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
+        </div>
+      </div>-->
     </ng-template>
     <ng-template pTemplate="colgroup" let-columns>
       <colgroup>
@@ -212,7 +218,6 @@
               <option *ngIf="col.type !== 'string'" value="lte">menor o igual que</option>
               <option *ngIf="col.type !== 'string'" value="gt">mayor que</option>
               <option *ngIf="col.type !== 'string'" value="gte">mayor o igual que</option>
-
             </select>
             <input class="esri-input" type="text"
               (input)="dt.filter($event.target.value, attrFilter(col.name), filter[i])">
@@ -232,29 +237,38 @@
     </ng-template>
     <ng-template pTemplate="summary">
       <div id="excel">
-        <button pButton icon="pi pi-search" class="ui-button-rounded ui-button-secodnary"
-          pTooltip="Buscar información"></button>
-          <p-dialog [(visible)]="modalTable">
-            <div>
-              <button pButton icon="pi pi-plus"></button>
-              <select name="select" class="esri-select">
-                <option *ngFor="let item of columnsTable; let i = index" value="{{item.name}}">{{item.name}}</option>
+        <button pButton icon="pi pi-search" class="ui-button-rounded ui-button-secodnary" pTooltip="Buscar información"
+          (click)="openFilter()"></button>
+        <p-dialog [(visible)]="modalFilter" [style]="{width: '500px'}" (onHide)="getFeaturesLayerSelected()">
+          <div style="max-height: 250px; overflow-y: scroll;">
+            <button pButton icon="pi pi-plus" label="Añadir Criterio" (click)="addFormField()"></button>
+            <div *ngFor="let i of arrQuantity(quantityFields).fill(1); let p = index" style="margin-top: 10px;">
+              <select name="selectField" style="width: 146px; float: left;" class="esri-select"
+                [(ngModel)]="objectFilter[p]">
+                <option *ngFor="let item of columnsTable; let i = index" [ngValue]="item.name">{{item.name}}</option>
               </select>
+              <select name="selectType" (change)="getFilterParams()"
+                style="width: 146px; float: left; margin-left: 5px;" *ngIf="view.ready" [(ngModel)]="filterS[p]"
+                class="esri-select">
+                <option value="contains" selected>contiene</option>
+                <option value="startsWith">empiece por</option>
+                <option value="endsWith">termina por</option>
+                <option value="equals">igual</option>
+                <option value="notEquals">no igual a</option>
+                <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'" value="lt">menor que
+                </option>
+                <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'" value="lte">menor o
+                  igual que</option>
+                <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'" value="gt">mayor que
+                </option>
+                <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'" value="gte">mayor o
+                  igual que</option>
+              </select>
+              <input class="esri-input" [(ngModel)]="values[p]" type="text"
+                style="width: 146px; float: left; margin-left: 5px;" (input)="getFilterParams()">
             </div>
-            <!-- <select name="select" *ngIf="view.ready" class="esri-select">
-              <option value="contains" selected>contiene</option>
-              <option value="startsWith">empiece por</option>
-              <option value="endsWith">termina por</option>
-              <option value="equals">igual</option>
-              <option value="notEquals">no igual a</option>
-              <option *ngIf="item.type !== 'string'" value="lt">menor que</option>
-              <option *ngIf="col.type !== 'string'" value="lte">menor o igual que</option>
-              <option *ngIf="col.type !== 'string'" value="gt">mayor que</option>
-              <option *ngIf="col.type !== 'string'" value="gte">mayor o igual que</option>
-            </select> -->
-            <input class="esri-input" type="text"
-                        (input)="dt.filter($event.target.value, attrFilter('FID'), 'startsWith')">
-          </p-dialog>
+          </div>
+        </p-dialog>
         <button pButton icon="esri-icon-download" class="ui-button-rounded ui-button-warning"
           pTooltip="Exportar a Shapefile" (click)="extractShapeFromAttr()"></button>
         <button pButton icon="fas fa-file-excel" class="ui-button-rounded ui-button-success" pTooltip="Exportar a Excel"
