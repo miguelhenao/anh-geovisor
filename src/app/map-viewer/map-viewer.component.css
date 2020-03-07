@@ -457,6 +457,22 @@ p-sidebar {
   font-size: 22px !important;
 }
 
+::ng-deep .icofont-web,
+::ng-deep .icofont-file-psd,
+::ng-deep .icofont-file-excel,
+::ng-deep .icofont-file-zip,
+::ng-deep .esri-icon-download,
+::ng-deep .icofont-ruler-compass,
+::ng-deep .icofont-scroll-bubble-up,
+::ng-deep .icofont-location-pin,
+::ng-deep .icofont-focus,
+::ng-deep .icofont-map,
+::ng-deep .icofont-swirl,
+::ng-deep .icofont-paint,
+::ng-deep .icofont-color-bucket {
+  font-size: 23px !important;
+}
+
 * >>> .ui-datatable-scrollable {
   display: flex;
   flex-direction: column;

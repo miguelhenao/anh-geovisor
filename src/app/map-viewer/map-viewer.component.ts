@@ -239,6 +239,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         items: [
           {
             label: 'Shapefile',
+            icon: 'icofont-file-zip',
             command: () => {
               if (!this.errorArcgisService) {
                 this.visibleModal(false, false, false, false, false, false, false, false, false);
@@ -262,6 +263,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           {
             label: 'Archivo CSV',
+            icon: 'icofont-file-excel',
             command: () => {
               if (!this.errorArcgisService) {
                 this.visibleModal(false, false, false, false, false, false, false, false, false);
@@ -283,6 +285,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           {
             label: 'Archivo GPX',
+            icon: 'icofont-file-psd',
             command: () => {
               if (!this.errorArcgisService) {
                 this.visibleModal(false, false, false, false, false, false, false, false, false);
@@ -306,6 +309,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           {
             label: 'Archivo GeoJSON',
+            icon: 'icofont-file-psd',
             command: () => {
               if (!this.errorArcgisService) {
                 this.visibleModal(false, false, false, false, false, false, false, false, false);
@@ -327,6 +331,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           {
             label: 'Servicio KML',
+            icon: 'icofont-web',
             command: () => {
               if (!this.errorArcgisService) {
                 this.visibleModal(false, false, false, false, false, false, false, false, false);
@@ -353,6 +358,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           {
             label: 'Servicio WMS',
+            icon: 'icofont-web',
             command: () => {
               if (!this.errorArcgisService) {
                 this.visibleModal(false, false, false, false, false, false, false, false, false);
@@ -379,6 +385,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           {
             label: 'Servicio GeoJSON',
+            icon: 'icofont-web',
             command: () => {
               if (!this.errorArcgisService) {
                 this.visibleModal(false, false, false, false, false, false, false, false, false);
@@ -405,6 +412,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           {
             label: 'Servicio CSV',
+            icon: 'icofont-web',
             command: () => {
               if (!this.errorArcgisService) {
                 this.visibleModal(false, false, false, false, false, false, false, false, false);
@@ -436,7 +444,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         icon: 'icofont-download-alt',
         items: [
           {
-            label: 'A Shapefile',
+            label: 'Descargar capa',
+            icon: 'esri-icon-download',
+            command: () => {
+              this.openExtract();
+            }
+          },
+          {
+            label: 'Descargar información',
+            icon: 'icofont-file-zip',
             command: () => {
               if (!this.errorArcgisService) {
                 this.buildOptionsLayers();
@@ -444,12 +460,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 this.visibleModal(false, false, false, true, false, false, false, false, false);
                 this.view.popup.autoOpenEnabled = false;
               }
-            }
-          },
-          {
-            label: 'Descargar capa general',
-            command: () => {
-              this.openExtract();
             }
           }
         ]
@@ -460,6 +470,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         items: [
           {
             label: 'Zona de Influencia (Buffer)',
+            icon: 'icofont-scroll-bubble-up',
             command: () => {
               if (!this.errorArcgisService) {
                 this.buildOptionsLayers();
@@ -470,6 +481,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           {
             label: 'Herramientas de Medición',
+            icon: 'icofont-ruler-compass',
             command: () => {
               if (!this.errorArcgisService) {
                 this.openMeasuringTools();
@@ -484,6 +496,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           {
             label: 'Cambiar Simbología',
+            // icon: 'icofont-swirl',
+            // icon: 'icofont-color-bucket',
+            icon: 'icofont-paint',
             command: () => {
               this.layerSelected = null;
               this.layerSelectedSelection = null;
@@ -492,6 +507,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           {
             label: 'Ubicar coordenada',
+            // icon: 'icofont-location-pin',
+            icon: 'icofont-focus',
             command: () => {
               if (!this.errorArcgisService) {
                 this.visibleModal(false, false, false, false, false, false, false, false, true);
