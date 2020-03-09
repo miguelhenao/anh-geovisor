@@ -408,9 +408,10 @@
 <div id="coordsWidget" class="esri-widget esri-component" style="padding: 7px 7px 5px;">
   <div style="display: grid; grid-template-columns: auto auto;">
     <select name="select" *ngIf="view.ready" class="esri-select" [(ngModel)]="coordsModel">
-      <option value="G" selected>Lat/Lon</option>
-      <option value="P">X/Y</option>
+      <option value="G" selected>Grados decimales</option>
+      <option value="P">MAGNA-SIRGAS Origen Central</option>
     </select>
+    <br>
     <div id="coords" style="margin-top: 1.5px;"></div>
   </div>
 </div>

@@ -1417,7 +1417,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.coordsWidget = document.getElementById('coords');
     let coords = '';
     if (this.coordsModel === 'G') {
-      coords = pt.latitude.toFixed(3) + '°, ' + pt.longitude.toFixed(3) + '°';
+      coords = pt.latitude.toFixed(6) + '°, ' + pt.longitude.toFixed(6) + '°';
       this.coordsWidget.innerHTML = coords;
     } else {
       loadModules(['esri/tasks/GeometryService', 'esri/geometry/SpatialReference', 'esri/tasks/support/ProjectParameters'])
@@ -1430,7 +1430,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           });
           geomSvc.project(params).then((response) => {
             const pto = response[0];
-            coords = pto.x.toFixed(3).toString() + ', ' + pto.y.toFixed(3).toString();
+            coords = pto.x.toFixed(6).toString() + ', ' + pto.y.toFixed(6).toString();
             this.coordsWidget.innerHTML = coords;
           });
         });
