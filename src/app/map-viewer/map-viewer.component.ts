@@ -477,7 +477,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         items: [
           {
             label: 'Zona de Influencia (Buffer)',
-            icon: 'icofont-scroll-bubble-up',
+            icon: 'fas fa-bullseye',
             command: () => {
               if (!this.errorArcgisService) {
                 this.buildOptionsLayers();
@@ -496,15 +496,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             }
           },
           {
-            label: 'Analisis de Cobertura',
+            label: 'Analisis de Departamento',
+            icon: 'fas fa-clone',
             command: () => {
               !this.errorArcgisService ? this.analisis() : null;
             }
           },
           {
             label: 'Cambiar Simbología',
-            // icon: 'icofont-swirl',
-            // icon: 'icofont-color-bucket',
             icon: 'icofont-paint',
             command: () => {
               this.layerSelected = null;
@@ -514,8 +513,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           {
             label: 'Ubicar coordenada',
-            // icon: 'icofont-location-pin',
-            icon: 'icofont-focus',
+            icon: 'esri-icon-locate',
             command: () => {
               if (!this.errorArcgisService) {
                 this.visibleModal(false, false, false, false, false, false, false, false, true, false);
@@ -530,6 +528,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         items: [
           {
             label: 'Impresión rápida',
+            icon: 'icofont-print',
             command: () => {
               if (!this.errorArcgisService) {
                 (window as any).ga('send', 'event', 'BUTTON', 'click', 'print');
@@ -539,6 +538,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           {
             label: 'Exportar mapa',
+            icon: 'fa fa-file-export',
             command: () => {
               this.expandPrint.expand();
             }

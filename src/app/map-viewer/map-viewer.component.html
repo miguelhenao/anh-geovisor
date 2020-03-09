@@ -94,8 +94,8 @@
 </p-dialog>
 <!-- Fin del modal de extracción de datos -->
 
-<!-- Modal de analisis de cobertura -->
-<p-dialog header="Análisis de Cobertura de Entidades Territoriales" [(visible)]="modalAnalysis" [resizable]="false"
+<!-- Modal de analisis de departamento -->
+<p-dialog header="Análisis de Departamento" [(visible)]="modalAnalysis" [resizable]="false"
   (onHide)="onHideDialogAnalisis()" [positionTop]="10" [positionLeft]="200">
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
     (click)="requestHelp('h-cobertura')" icon="pi pi-question"></button>
@@ -106,7 +106,7 @@
     [options]="featureDptos" [(ngModel)]="dptosSelected" optionLabel="attributes.DEPARTAMEN"></p-multiSelect>
   <br>
   <p-button icon="pi pi-globe" [disabled]="dptosSelected.length == 0" (click)="generateAnalisisCobertura()"
-    label="Iniciar Analisis de Cobertura"></p-button>
+    label="Iniciar Analisis de Departamento"></p-button>
   <br>
   <br>
   <p-message id="infoMedicion" severity="info"
