@@ -1192,7 +1192,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       const print = new Print({
         view: this.view,
-        printServiceUrl: this.printUrl
+        printServiceUrl: this.printUrl,
+        templateOptions: {
+          copyright: 'Agencia Nacional de Hidrocarburos',
+        }
       });
       this.expandPrint = new Expand({
         expandIconClass: 'fa fa-file-export',
