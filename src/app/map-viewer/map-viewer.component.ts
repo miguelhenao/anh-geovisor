@@ -1245,9 +1245,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       this.sketchExtract.on('create', (event) => {
         this.flagSketch = true;
-        // if (this.view.graphics.length === 1) {
-        //   this.clearGraphics();
-        // }
         if (event.state === 'complete') {
           this.flagSketch = false;
           const symbolF = {
