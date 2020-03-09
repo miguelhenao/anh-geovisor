@@ -595,6 +595,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
       }
     });
+    this.optionsLayers = this.optionsLayers.reverse();
   }
 
   buildOptionsLayersValue(nameLayer: string): void {
@@ -614,6 +615,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.optionsLayers.push(sel);
       }
     });
+    this.optionsLayers = this.optionsLayers.reverse();
   }
 
   changeLayer(event: any): void {
@@ -700,6 +702,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
       lyPozo.load().then(() => {
+        lyPozo.title = lyPozo.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
         for (const field of lyPozo.fields) {
@@ -725,41 +728,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         lyPozo.popupTemplate = templatePozo;
       });
       this.map.add(lyPozo);
-      // Carga de capa rezumadero
-      const lyRezumadero = new FeatureLayer(this.mapRestUrl + '/0', {
-        id: 'Rezumadero',
-        opacity: 1.0,
-        visible: true,
-        outFields: ['*'],
-        showAttribution: true,
-        mode: FeatureLayer.MODE_ONDEMAND
-      });
-      lyRezumadero.load().then(() => {
-        let text = '';
-        const searchField: Array<any> = [];
-        for (const field of lyRezumadero.fields) {
-          field.type === 'string' || field.type === 'double' ? searchField.push(field.name) : null;
-          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
-        }
-        const templateRezumadero = {
-          title: lyRezumadero.sourceJSON.name,
-          content: text,
-          fieldInfos: []
-        };
-        const sourceSearch: Array<any> = this.sourceSearch.slice();
-        sourceSearch.push({
-          layer: lyRezumadero,
-          searchFields: searchField,
-          exactMatch: false,
-          outFields: ['*'],
-          name: lyRezumadero.sourceJSON.name
-        });
-        this.sourceSearch = null;
-        this.sourceSearch = sourceSearch;
-        this.search.sources = this.sourceSearch;
-        lyRezumadero.popupTemplate = templateRezumadero;
-      });
-      this.map.add(lyRezumadero);
+
       // Carga de capa sismica
       const lySismica = new FeatureLayer(this.mapRestUrl + '/2', {
         id: 'Sismica 2D',
@@ -770,6 +739,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
       lySismica.load().then(() => {
+        lySismica.title = lySismica.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
         for (const field of lySismica.fields) {
@@ -805,6 +775,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
       lySismica3d.load().then(() => {
+        lySismica3d.title = lySismica3d.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
         for (const field of lySismica3d.fields) {
@@ -840,6 +811,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
       lyMunicipio.load().then(() => {
+        lyMunicipio.title = lyMunicipio.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
         for (const field of lyMunicipio.fields) {
@@ -876,6 +848,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       this.departmentLayer = lyDepartamento;
       lyDepartamento.load().then(() => {
+        lyDepartamento.title = lyDepartamento.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
         for (const field of lyDepartamento.fields) {
@@ -902,78 +875,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         lyDepartamento.popupTemplate = templateDepartamento;
       });
       this.map.add(lyDepartamento);
-      // Carga de capa de cuencas
-      const lyCuencas = new FeatureLayer(this.mapRestUrl + '/6', {
-        id: 'Cuencas',
-        opacity: 1.0,
-        visible: true,
-        outFields: ['*'],
-        showAttribution: true,
-        mode: FeatureLayer.MODE_ONDEMAND
-      });
-      lyCuencas.load().then(() => {
-        let text = '';
-        const searchField: Array<any> = [];
-        for (const field of lyCuencas.fields) {
-          field.type === 'string' || field.type === 'double' ? searchField.push(field.name) : null;
-          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
-        }
-        const templateCuencas = {
-          title: lyCuencas.sourceJSON.name,
-          content: text,
-          fieldInfos: []
-        };
-        const sourceSearch: Array<any> = this.sourceSearch.slice();
-        sourceSearch.push({
-          layer: lyCuencas,
-          searchFields: searchField,
-          exactMatch: false,
-          outFields: ['*'],
-          name: lyCuencas.sourceJSON.name,
-          suggestionsEnabled: true,
-        });
-        this.sourceSearch = null;
-        this.sourceSearch = sourceSearch;
-        this.search.sources = this.sourceSearch;
-        lyCuencas.popupTemplate = templateCuencas;
-      });
-      this.map.add(lyCuencas);
-      // Carga de capa de tierras
-      const lyTierras = new FeatureLayer(this.mapRestUrl + '/8', {
-        id: 'Tierras',
-        opacity: 0.5,
-        visible: true,
-        outFields: ['*'],
-        showAttribution: true,
-        mode: FeatureLayer.MODE_ONDEMAND
-      });
-      lyTierras.load().then(() => {
-        const searchField: Array<any> = [];
-        let text = '';
-        this.layerSelected = lyTierras;
-        for (const field of lyTierras.fields) {
-          field.type === 'string' || field.type === 'double' ? searchField.push(field.name) : null;
-          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
-        }
-        const templateTierras = {
-          title: lyTierras.sourceJSON.name,
-          content: text,
-          fieldInfos: []
-        };
-        const sourceSearch: Array<any> = this.sourceSearch.slice();
-        sourceSearch.push({
-          layer: lyTierras,
-          searchFields: searchField,
-          exactMatch: false,
-          outFields: ['*'],
-          name: lyTierras.sourceJSON.name,
-          suggestionsEnabled: true,
-        });
-        this.sourceSearch = null;
-        this.sourceSearch = sourceSearch;
-        this.search.sources = this.sourceSearch;
-        lyTierras.popupTemplate = templateTierras;
-      });
+
       const statesLabelClass = new LabelClass({
         labelExpressionInfo: { expression: '$feature.CONTRATO_N' },
         symbol: {
@@ -986,8 +888,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           }
         }
       });
-      lyTierras.labelingInfo = [statesLabelClass];
-      this.map.add(lyTierras);
       // Carga de capa de sensibilidad
       const lySensibilidad = new FeatureLayer(this.mapRestUrl + '/7', {
         labelExpressionInfo: { expression: '$feature.CONTRATO_N' },
@@ -999,6 +899,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
       lySensibilidad.load().then(() => {
+        lySensibilidad.title = lySensibilidad.sourceJSON.name;
         const searchField: Array<any> = [];
         let text = '';
         this.layerSelected = lyTierras;
@@ -1027,6 +928,121 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       lySensibilidad.labelingInfo = [statesLabelClass];
       this.map.add(lySensibilidad);
+
+      // Carga de capa rezumadero
+      const lyRezumadero = new FeatureLayer(this.mapRestUrl + '/0', {
+        id: 'Rezumadero',
+        opacity: 1.0,
+        visible: true,
+        outFields: ['*'],
+        showAttribution: true,
+        mode: FeatureLayer.MODE_ONDEMAND
+      });
+      lyRezumadero.load().then(() => {
+        lyRezumadero.title = lyRezumadero.sourceJSON.name;
+        let text = '';
+        const searchField: Array<any> = [];
+        for (const field of lyRezumadero.fields) {
+          field.type === 'string' || field.type === 'double' ? searchField.push(field.name) : null;
+          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
+        }
+        const templateRezumadero = {
+          title: lyRezumadero.sourceJSON.name,
+          content: text,
+          fieldInfos: []
+        };
+        const sourceSearch: Array<any> = this.sourceSearch.slice();
+        sourceSearch.push({
+          layer: lyRezumadero,
+          searchFields: searchField,
+          exactMatch: false,
+          outFields: ['*'],
+          name: lyRezumadero.sourceJSON.name
+        });
+        this.sourceSearch = null;
+        this.sourceSearch = sourceSearch;
+        this.search.sources = this.sourceSearch;
+        lyRezumadero.popupTemplate = templateRezumadero;
+      });
+      this.map.add(lyRezumadero);
+
+      // Carga de capa de cuencas
+      const lyCuencas = new FeatureLayer(this.mapRestUrl + '/6', {
+        id: 'Cuencas',
+        opacity: 1.0,
+        visible: true,
+        outFields: ['*'],
+        showAttribution: true,
+        mode: FeatureLayer.MODE_ONDEMAND
+      });
+      lyCuencas.load().then(() => {
+        lyCuencas.title = lyCuencas.sourceJSON.name;
+        let text = '';
+        const searchField: Array<any> = [];
+        for (const field of lyCuencas.fields) {
+          field.type === 'string' || field.type === 'double' ? searchField.push(field.name) : null;
+          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
+        }
+        const templateCuencas = {
+          title: lyCuencas.sourceJSON.name,
+          content: text,
+          fieldInfos: []
+        };
+        const sourceSearch: Array<any> = this.sourceSearch.slice();
+        sourceSearch.push({
+          layer: lyCuencas,
+          searchFields: searchField,
+          exactMatch: false,
+          outFields: ['*'],
+          name: lyCuencas.sourceJSON.name,
+          suggestionsEnabled: true,
+        });
+        this.sourceSearch = null;
+        this.sourceSearch = sourceSearch;
+        this.search.sources = this.sourceSearch;
+        lyCuencas.popupTemplate = templateCuencas;
+      });
+      this.map.add(lyCuencas);
+
+      // Carga de capa de tierras
+      const lyTierras = new FeatureLayer(this.mapRestUrl + '/8', {
+        id: 'Tierras',
+        opacity: 0.5,
+        visible: true,
+        outFields: ['*'],
+        showAttribution: true,
+        mode: FeatureLayer.MODE_ONDEMAND
+      });
+      lyTierras.load().then(() => {
+        lyTierras.title = lyTierras.sourceJSON.name;
+        const searchField: Array<any> = [];
+        let text = '';
+        this.layerSelected = lyTierras;
+        for (const field of lyTierras.fields) {
+          field.type === 'string' || field.type === 'double' ? searchField.push(field.name) : null;
+          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
+        }
+        const templateTierras = {
+          title: lyTierras.sourceJSON.name,
+          content: text,
+          fieldInfos: []
+        };
+        const sourceSearch: Array<any> = this.sourceSearch.slice();
+        sourceSearch.push({
+          layer: lyTierras,
+          searchFields: searchField,
+          exactMatch: false,
+          outFields: ['*'],
+          name: lyTierras.sourceJSON.name,
+          suggestionsEnabled: true,
+        });
+        this.sourceSearch = null;
+        this.sourceSearch = sourceSearch;
+        this.search.sources = this.sourceSearch;
+        lyTierras.popupTemplate = templateTierras;
+      });
+      lyTierras.labelingInfo = [statesLabelClass];
+      this.map.add(lyTierras);
       this.view.on('click', (e) => {
         if (this.activeWidget !== undefined && this.activeWidget !== null && this.activeWidget.viewModel.mode !== undefined) {
           if (this.activeWidget.viewModel.mode === 'capture') {
