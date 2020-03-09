@@ -188,6 +188,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   filterS: Array<string> = [];
   quantityFields: number = 1;
   values: Array<any> = [];
+  logicalOperators: Array<any> = [];
   arrQuantity = Array;
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
@@ -1333,6 +1334,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               }
               this.clearGraphics();
               this.featureDptos = result.features;
+              print(result.features)
               this.messageService.add({
                 severity: 'info',
                 summary: '',
@@ -1358,6 +1360,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   this.makingWork = false;
                   this.visibleModal(false, false, false, false, false, false, true, true, false, false);
                 });
+            }, err => {
+              console.error(err);
             });
           } else {
             this.messageService.add({
@@ -1914,7 +1918,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     for (let index = 0; index < this.objectFilter.length; index++) {
       if (this.filterS[index] !== undefined && this.filterS[index] !== '' && this.values[index] !== undefined && this.values[index] !== '') {
         if (index > 0) {
-          params = `${params} AND`;
+          params = `${params} ${this.logicalOperators[index - 1]}`;
         }
         switch (this.filterS[index]) {
           case 'contains':
@@ -2112,7 +2116,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         dojo, Graphic]) => {
         const layer = this.layerSelected;
         const query = layer.createQuery();
-        query.where = `${this.columnsTable[0]} = ${event.data.attributes[this.columnsTable[0]]}`;
+        query.where = `${this.columnsTable[0].name} = ${event.data.attributes[this.columnsTable[0].name]}`;
         query.returnGeometry = true;
         query.outFields = ['*'];
         layer.queryFeatures(query).then((res) => {
@@ -2202,7 +2206,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   public onRowUnselect(event: any): void {
     for (const object of this.graphics) {
-      if (object.attr !== undefined && object.attr === event.data.attributes) {
+      if (object.attr !== undefined && JSON.stringify(object.attr) === JSON.stringify(event.data.attributes)) {
         this.view.graphics.remove(object.graphic);
         this.graphics.splice(this.graphics.indexOf(object), 1);
         break;
