@@ -701,6 +701,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
+      const waterWellLabelClass = new LabelClass({
+        labelExpressionInfo: { expression: '$feature.well_name' },
+        symbol: {
+          type: 'text',
+          color: 'black',
+          haloSize: 1,
+          haloColor: 'white',
+          font: {
+            size: 7.5
+          }
+        }
+      });
       lyPozo.load().then(() => {
         lyPozo.title = lyPozo.sourceJSON.name;
         let text = '';
@@ -727,6 +739,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.search.sources = this.sourceSearch;
         lyPozo.popupTemplate = templatePozo;
       });
+      lyPozo.labelingInfo = [waterWellLabelClass];
       this.map.add(lyPozo);
 
       // Carga de capa sismica
