@@ -1286,11 +1286,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                     geometry: key.geometry,
                     symbol: symbolF
                   });
-                  this.view.graphics.add(graphic);
+                  const graphicCreated = this.view.graphics.find((x) => {
+                    return JSON.stringify(x.geometry) === JSON.stringify(graphic.geometry);
+                  });
+                  graphicCreated === undefined ? this.view.graphics.add(graphic) : this.view.graphics.remove(graphicCreated);
                   this.clearGraphic = true;
                 });
               });
-              // debugger;
             });
           }
           this.onChangeSelect();
