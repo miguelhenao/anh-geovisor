@@ -450,6 +450,8 @@ p-sidebar {
   margin-left: 10%;
 }
 
+
+/* Íconos menú */
 ::ng-deep .icofont-tools-alt-2,
 ::ng-deep .icofont-download-alt,
 ::ng-deep .icofont-printer,
@@ -457,20 +459,28 @@ p-sidebar {
   font-size: 22px !important;
 }
 
+/* Íconos submenú */
 ::ng-deep .icofont-web,
 ::ng-deep .icofont-file-psd,
 ::ng-deep .icofont-file-excel,
 ::ng-deep .icofont-file-zip,
 ::ng-deep .esri-icon-download,
 ::ng-deep .icofont-ruler-compass,
-::ng-deep .icofont-scroll-bubble-up,
+::ng-deep .fa-bullseye,
+::ng-deep .fa-clone,
 ::ng-deep .icofont-location-pin,
-::ng-deep .icofont-focus,
+::ng-deep .esri-icon-locate,
 ::ng-deep .icofont-map,
 ::ng-deep .icofont-swirl,
 ::ng-deep .icofont-paint,
+::ng-deep .icofont-print,
 ::ng-deep .icofont-color-bucket {
-  font-size: 23px !important;
+  font-size: 18px !important;
+}
+
+::ng-deep #buttons .icofont-ruler-compass,
+::ng-deep #buttons .esri-icon-download {
+  font-size: 26px !important;
 }
 
 * >>> .ui-datatable-scrollable {

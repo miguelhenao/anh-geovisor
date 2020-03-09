@@ -94,8 +94,8 @@
 </p-dialog>
 <!-- Fin del modal de extracción de datos -->
 
-<!-- Modal de analisis de cobertura -->
-<p-dialog header="Análisis de Cobertura de Entidades Territoriales" [(visible)]="modalAnalysis" [resizable]="false"
+<!-- Modal de analisis de departamento -->
+<p-dialog header="Análisis de Departamento" [(visible)]="modalAnalysis" [resizable]="false"
   (onHide)="onHideDialogAnalisis()" [positionTop]="10" [positionLeft]="200">
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
     (click)="requestHelp('h-cobertura')" icon="pi pi-question"></button>
@@ -106,7 +106,7 @@
     [options]="featureDptos" [(ngModel)]="dptosSelected" optionLabel="attributes.DEPARTAMEN"></p-multiSelect>
   <br>
   <p-button icon="pi pi-globe" [disabled]="dptosSelected.length == 0" (click)="generateAnalisisCobertura()"
-    label="Iniciar Analisis de Cobertura"></p-button>
+    label="Iniciar Analisis de Departamento"></p-button>
   <br>
   <br>
   <p-message id="infoMedicion" severity="info"
@@ -184,7 +184,7 @@
     <ng-template pTemplate="caption">
       <button pButton type="button" (click)="previousLayer()" class="ui-button-rounded" icon="fas fa-arrow-circle-left"
         title="Ver ant capa"></button>
-      {{layerSelected.title.substr(11)}}
+      {{layerSelected.title}}
       <button pButton type="button" (click)="nextLayer()" class="ui-button-rounded" icon="fas fa-arrow-circle-right"
         title="Ver sgte capa"></button>
       <!-- <div style="text-align: right">
@@ -414,9 +414,10 @@
 <div id="coordsWidget" class="esri-widget esri-component" style="padding: 7px 7px 5px;">
   <div style="display: grid; grid-template-columns: auto auto;">
     <select name="select" *ngIf="view.ready" class="esri-select" [(ngModel)]="coordsModel">
-      <option value="G" selected>Lat/Lon</option>
-      <option value="P">X/Y</option>
+      <option value="G" selected>Grados decimales</option>
+      <option value="P">MAGNA-SIRGAS Origen Central</option>
     </select>
+    <br>
     <div id="coords" style="margin-top: 1.5px;"></div>
   </div>
 </div>
