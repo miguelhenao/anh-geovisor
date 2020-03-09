@@ -1326,6 +1326,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             );
           }
           this.view.graphics.add(graphic);
+          this.view.goTo(this.view.graphics);
         }
       });
 
