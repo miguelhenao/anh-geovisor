@@ -1364,16 +1364,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               if (result.features.length === 0) {
                 this.makingWork = false;
               }
-              this.clearGraphics();
-              this.featureDptos = result.features;
-              print(result.features)
               this.messageService.add({
                 severity: 'info',
                 summary: '',
                 detail: `Se seleccionaron ${result.features.length} elementos de la capa ${this.layerSelected.id}
-                          y se cargaron sus atributos.`
+                y se cargaron sus atributos.`
               });
-              this.columnsTable = Object.keys(this.featureDptos[0].attributes);
+              this.columnsTable = result.fields;
+              this.clearGraphics();
+              this.featureDptos = result.features;
               layerListExpand.collapse();
               loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
                 'esri/Color', 'dojo/_base/array', 'esri/Graphic']).then(([SimpleFillSymbol, SimpleLineSymbol, Color,
