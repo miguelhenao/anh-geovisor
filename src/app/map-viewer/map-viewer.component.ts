@@ -1899,8 +1899,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     };
     layer.queryFeatures(query).then((result) => {
       this.featureDptos = result.features;
-      // this.columnsTable = Object.keys(this.featureDptos[0].attributes);
-      this.columnsTable = result.fields;
+      this.columnsTable = result.fields[0] !== undefined ? result.fields : layer.fields;
       for (let index = 0; index < this.columnsTable.length; index++) {
         this.filter[index] = 'contains';
       }
