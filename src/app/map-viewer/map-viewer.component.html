@@ -180,7 +180,7 @@
   <p-table class="esri-widget__table" [style]="{'width': 'inherit', 'max-height': '500px'}" [paginator]="true" [rows]="100"
     [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple" #dt [columns]="columnsTable" *ngIf="modalTable"
     [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true" [(selection)]="featuresSelected"
-    (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollHeight="{{heightTable}}px">
+    (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollHeight="500px">
     <ng-template pTemplate="caption">
       <button pButton type="button" (click)="previousLayer()" class="ui-button-rounded" icon="fas fa-arrow-circle-left"
         title="Ver ant capa"></button>
