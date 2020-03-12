@@ -1904,6 +1904,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.filter[index] = 'contains';
       }
       this.layerSelected = layer;
+      this.makingWork = false;
       this.visibleModal(false, false, false, false, false, false, true, false, false, false);
     }, (err) => {
       console.error(err);
@@ -2206,6 +2207,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public nextLayer(): void {
+    this.makingWork = true;
     let index = this.map.layers.items.indexOf(this.layerSelected);
     if (index >= this.map.layers.items.length - 1) {
       index = 0;
@@ -2219,6 +2221,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public previousLayer(): void {
+    this.makingWork = true;
     let index = this.map.layers.items.indexOf(this.layerSelected);
     if (index === 0) {
       index = this.map.layers.items.length - 1;
