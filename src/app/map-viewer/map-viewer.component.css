@@ -1,41 +1,36 @@
 @import url('https://js.arcgis.com/4.12/esri/css/main.css');
 #menu {
-    background-image: url("../../assets/logo-anh-q.png");
-    height: 67px;
-    width: 188px;
+  background-image: url("../../assets/logo-anh-q.png");
+  height: 67px;
+  width: 188px;
 }
 
 #opacidad {
-    width: 100%;
-    height: 100%;
-    background-color: #888;
-    opacity: 0.5;
-    position: absolute;
-    z-index: 10;
+  width: 100%;
+  height: 100%;
+  background-color: #888;
+  opacity: 0.5;
+  position: absolute;
+  z-index: 10;
 }
 
 ::ng-deep body .ui-tieredmenu {
-    border: none;
-    border-radius: 0px;
+  border: none;
+  border-radius: 0px;
 }
+
 ::ng-deep body .ui-megamenu .ui-megamenu-panel {
-    margin-left: 50px;
+  margin-left: 50px;
 }
 
 #menu-info {
   z-index: 5;
-  /* text-align: center; */
   position: absolute;
   width: auto;
 }
 
-#footer {
-    position: absolute;
-    z-index: 5;
-    bottom: 11px;
-    right: 0px;
-}
 /* #region  Accordion*/
+
 ::ng-deep .ui-accordion .ui-accordion-content {
   padding: 0 !important;
 }
@@ -44,64 +39,70 @@
   outline: unset !important;
 }
 
-::ng-deep .ui-accordion .ui-accordion-header a{
+::ng-deep .ui-accordion .ui-accordion-header a {
   padding: 0 !important;
 }
 
-::ng-deep .ui-accordion .ui-accordion-header a, .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a{
+::ng-deep body .ui-accordion .ui-accordion-header a, ::ng-deep body .ui-accordion .ui-accordion-content {
+  border: none !important;
+  background-color: transparent;
+}
+
+::ng-deep .ui-accordion .ui-accordion-header a, .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a {
   background-color: white !important;
   border-color: #c8c8c8 !important;
 }
+
 /* #endregion */
 
 ::ng-deep .esri-scale-bar__line {
   z-index: 0 !important;
 }
 
-#logomenu img{
-    margin-left: 20px;
+#logomenu img {
+  margin-left: 20px;
 }
 
 #panel-selected-layer {
-    padding: 8px 0px 8px 0px;
+  padding: 8px 0px 8px 0px;
 }
 
 ::ng-deep .ui-sidebar-active {
-    padding: 0 !important;
+  padding: 0 !important;
 }
 
-::ng-deep body .ui-panelmenu .ui-panelmenu-header > a {
-    border: none;
+::ng-deep body .ui-panelmenu .ui-panelmenu-header>a {
+  border: none;
 }
 
 ::ng-deep body .ui-dialog .ui-dialog-titlebar {
-    border: none;
+  border: none;
 }
 
 ::ng-deep body .ui-dialog .ui-dialog-content {
-    border: none;
+  border: none;
 }
+
 /* width */
 
 ::-webkit-scrollbar {
-    width: 10px;
+  width: 10px;
 }
 
 /* Track */
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+  background: #f1f1f1;
 }
 
 /* Handle */
 
 ::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 5px;
+  background: #888;
+  border-radius: 5px;
 }
 
-@media only screen and (max-width: 991px) {
-}
+@media only screen and (max-width: 991px) {}
 
 .logo-toggler:before {
   border-top: 1px solid rgb(255, 237, 0);
@@ -119,8 +120,9 @@
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
-  }
-  .logo-toggler:after {
+}
+
+.logo-toggler:after {
   border-top: 1px solid rgb(240, 125, 0);
   border-bottom: 1px solid rgb(227, 6, 19);
   content: "";
@@ -135,166 +137,171 @@
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
-  }
-  .logo-toggler.display:before {
+}
+
+.logo-toggler.display:before {
   height: 4px;
   top: 8px;
   border-width: 2px;
-  }
-  .logo-toggler.display:after {
+}
+
+.logo-toggler.display:after {
   height: 4px;
   top: 20px;
   border-width: 2px;
-  }
+}
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #999;
+  background: #999;
 }
 
 p-sidebar {
-    overflow-y: scroll;
+  overflow-y: scroll;
 }
 
-
 #helps button {
-    margin-left: 25px;
+  margin-left: 25px;
 }
 
 #helps {
-    margin: 5px 0px 5px 0px;
-}
-
-#ts-tierras-wrapper {
-    background-color: rgba(255, 255, 255, 0.6) !important;
+  margin: 5px 0px 5px 0px;
 }
 
 ::ng-deep #infoMedicion .ui-message {
-    font-size: smaller;
-    width: 100%;
+  font-size: smaller;
+  width: 100%;
 }
 
 ::ng-deep .esri-widget--panel {
-    z-index: 3000;
-    padding: 10px;
+  z-index: 3000;
+  padding: 10px;
 }
 
 #topbar button {
-    float: left;
+  float: left;
 }
 
 #widgetMeasure {
-    clear: both;
+  clear: both;
 }
 
 #excel {
-    margin-left: 90% !important;
+  margin-left: 70% !important;
+}
+
+#excel button {
+  margin-right: 5%;
 }
 
 @media print {
-    ::ng-deep .esri-component {
-        display: none !important;
-    }
-    p-sidebar, p-dialog {
-        display: none;
-    }
-    #menu {
-        display: none;
-    }
-
-    #menu-info {
-      display: none;
-    }
-    #ts-tierras-wrapper {
-        display: none;
-    }
-    #footer {
-      display: none;
-    }
+  ::ng-deep .esri-component {
+    display: none !important;
+  }
+  p-sidebar, p-dialog {
+    display: none;
+  }
+  #menu {
+    display: none;
+  }
+  #menu-info {
+    display: none;
+  }
+  #ts-tierras-wrapper {
+    display: none;
+  }
+  #footer {
+    display: none;
+  }
 }
 
 #loading {
-    top: 50%;
-    left: 50%;
-    z-index: 1001;
-    width: 73px;
-    position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 1001;
+  width: 73px;
+  position: fixed;
 }
 
 .loading-machin {
-    position: fixed;
-    width: 144px;
-    height: 90px;
-    background: url(../../assets/pozo.gif);
-    margin-top: -72px;
-    margin-left: -72px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 144px;
+  height: 144px;
+  background: url(../../assets/machin144_sombra-suave.png) -5px -20px;
+  margin-top: -72px;
+  margin-left: -72px;
+  animation: mymove 1.6s steps(30, end) infinite;
+  z-index: 1001;
 }
 
 #attributeTable {
-    padding: 0.5em;
-    background-color: #fff;
+  padding: 0.5em;
+  background-color: #fff;
 }
 
 ::ng-deep body .ui-accordion-header {
-    border: none;
+  border: none;
 }
 
 /* Safari 4.0 - 8.0 */
 
 @-webkit-keyframes mymove {
-    from {
-        background-position: -4320px;
-    }
-    to {
-        background-position: 0px;
-    }
+  from {
+    background-position: -4320px;
+  }
+  to {
+    background-position: 0px;
+  }
 }
 
 @keyframes mymove {
-    from {
-        background-position: -4320px;
-    }
-    to {
-        background-position: 0px;
-    }
+  from {
+    background-position: -4320px;
+  }
+  to {
+    background-position: 0px;
+  }
 }
 
 #ts-tierras-wrapper {
-    position: absolute;
-    bottom: 25px;
-    top: auto;
-    width: 40%;
-    align-items: center;
-    margin: 0 auto;
-    left: 26.8%;
+  background-color: rgba(255, 255, 255, 0.6) !important;
+  position: absolute;
+  bottom: 25px;
+  top: auto;
+  width: 40%;
+  align-items: center;
+  margin: 0 auto;
+  left: 26.8%;
 }
 
 #ts-tierras-wrapper .ts-bg {
-    position: relative;
-    max-width: 100%;
-    background-color: white;
-    height: 45px;
-    padding: 0px 20px;
-    padding-top: 20px;
+  position: relative;
+  max-width: 100%;
+  background-color: white;
+  height: 45px;
+  padding: 0px 20px;
+  padding-top: 20px;
 }
 
 #ts-tierras {
-    position: relative;
-    opacity: 1.0;
-    text-align: center;
-    height: 20px;
+  position: relative;
+  opacity: 1.0;
+  text-align: center;
+  height: 20px;
 }
 
 #ts-tierras .ts-label {
-    bottom: 20px;
-    display: block;
-    position: absolute;
-    width: 100%;
-    text-align: center;
-    font-weight: bold;
+  bottom: 20px;
+  display: block;
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
 }
 
 .ui-slider-orange .esri-slider .esri-widget .esri-slider--horizontal {
-    background-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.6);
 }
 
 ::ng-deep .esri-slider__thumb {
@@ -324,16 +331,17 @@ p-sidebar {
   margin-left: 65px !important;
 }
 
-::ng-deep .ui-tieredmenu .ui-menuitem-icon{
+::ng-deep .ui-tieredmenu .ui-menuitem-icon {
   height: 18.89px !important;
 }
+
 #infoDiv {
-    padding: 5px;
+  padding: 5px;
 }
 
 .clearGraphics {
-    margin: 0px 5px;
-    padding-bottom: 0px;
+  margin: 0px 5px;
+  padding-bottom: 0px;
 }
 
 #help {
@@ -351,7 +359,6 @@ p-sidebar {
     width: 272px;
   }
 }
-
 
 .title-help {
   background-color: #0079C0;
@@ -396,10 +403,10 @@ p-sidebar {
 }
 
 #buttons {
-  /* justify-content: center; */
   padding: 4px;
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: auto auto auto auto auto;
+  grid-column-gap: 2px;
   background-color: white;
 }
 
@@ -407,9 +414,112 @@ p-sidebar {
   margin: 0 auto;
 }
 
-::ng-deep .esri-view-height-medium .esri-expand .esri-widget--panel, .esri-view-height-small .esri-expand .esri-widget--panel,
-::ng-deep .esri-view-height-medium .esri-expand .esri-widget--panel-height-only,
-::ng-deep .esri-view-height-small .esri-expand .esri-widget--panel,
-::ng-deep .esri-basemap-gallery__item-container {
-  max-height: 300px !important;
+@media only screen and (max-width: 544px) {
+  ::ng-deep .esri-view-height-medium .esri-expand .esri-widget--panel, .esri-view-height-small .esri-expand .esri-widget--panel, ::ng-deep .esri-view-height-medium .esri-expand .esri-widget--panel-height-only, ::ng-deep .esri-view-height-small .esri-expand .esri-widget--panel, ::ng-deep .esri-basemap-gallery__item-container {
+    max-height: 420px !important;
+  }
+}
+
+@media only screen and (min-width: 545px) {
+  ::ng-deep .esri-view-height-medium .esri-expand .esri-widget--panel, .esri-view-height-small .esri-expand .esri-widget--panel, ::ng-deep .esri-view-height-medium .esri-expand .esri-widget--panel-height-only, ::ng-deep .esri-view-height-small .esri-expand .esri-widget--panel, ::ng-deep .esri-basemap-gallery__item-container {
+    max-height: 300px !important;
+  }
+}
+
+@media only screen and (max-width: 799px) {
+  #ts-tierras-wrapper {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  #ts-tierras-wrapper {
+    display: initial;
+  }
+}
+
+::ng-deep #buttons .esri-button {
+  padding: 0px 0px !important;
+  width: 33px !important;
+  height: 33px !important;
+}
+
+::ng-deep .esri-button i {
+  font-size: 26px;
+  color: initial;
+  margin-left: 10%;
+}
+
+
+/* Íconos menú */
+::ng-deep .icofont-tools-alt-2,
+::ng-deep .icofont-download-alt,
+::ng-deep .icofont-printer,
+::ng-deep .icofont-upload {
+  font-size: 22px !important;
+}
+
+/* Íconos submenú */
+::ng-deep .icofont-web,
+::ng-deep .icofont-file-psd,
+::ng-deep .icofont-file-excel,
+::ng-deep .icofont-file-zip,
+::ng-deep .esri-icon-download,
+::ng-deep .icofont-ruler-compass,
+::ng-deep .fa-bullseye,
+::ng-deep .fa-clone,
+::ng-deep .icofont-location-pin,
+::ng-deep .esri-icon-locate,
+::ng-deep .icofont-map,
+::ng-deep .icofont-swirl,
+::ng-deep .icofont-paint,
+::ng-deep .icofont-print,
+::ng-deep .icofont-color-bucket {
+  font-size: 18px !important;
+}
+
+::ng-deep #buttons .icofont-ruler-compass,
+::ng-deep #buttons .esri-icon-download {
+  font-size: 26px !important;
+}
+
+* >>> .ui-datatable-scrollable {
+  display: flex;
+  flex-direction: column;
+}
+
+* >>> .ui-datatable-scrollable-wrapper {
+  flex: 1 1 0;
+}
+
+* >>> .ui-datatable-scrollable-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+* >>> .ui-datatable-scrollable-body {
+  flex: 1 1 0;
+}
+
+::ng-deep #coordsWidget .esri-select {
+  border: none !important;
+  height: 20px;
+  background: none;
+  font-size: 14px;
+}
+
+::ng-deep .filter .esri-select {
+  background: none;
+}
+
+::ng-deep .esri-icon-measure-area:before,
+::ng-deep .esri-icon-measure-line:before,
+::ng-deep .esri-icon-map-pin:before,
+::ng-deep .esri-icon-radio-checked:before,
+::ng-deep .esri-icon-minus:before,
+::ng-deep .esri-icon-polyline:before,
+::ng-deep .esri-icon-sketch-rectangle:before,
+::ng-deep .esri-icon-polygon:before {
+  color: initial;
 }
