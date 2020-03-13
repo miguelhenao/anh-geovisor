@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DynamicDialogRef } from 'primeng/api';
+import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/api';
 
 @Component({
   selector: 'app-dialog-urlservice',
@@ -10,12 +10,19 @@ import { DynamicDialogRef } from 'primeng/api';
 export class DialogUrlServiceComponent implements OnInit {
 
   serviceForm: FormGroup;
+  help: any;
   urlservice: string;
 
-  constructor(private formBuilder: FormBuilder, private dialogRef: DynamicDialogRef) { }
+  constructor(private formBuilder: FormBuilder, private dialogRef: DynamicDialogRef, private config: DynamicDialogConfig) {
+    this.help = config.data.help;
+  }
 
   ngOnInit() {
     this.validateForm();
+  }
+
+  requestHelp(modal: string): void {
+    this.help.requestHelp(modal);
   }
 
   public validateForm(): void {

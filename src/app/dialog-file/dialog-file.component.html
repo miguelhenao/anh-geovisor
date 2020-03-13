@@ -1,3 +1,5 @@
+<button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
+      (click)="requestHelp('h-importar')" icon="pi pi-question"></button>
 <form id="uploadForm" method="post" enctype="multipart/form-data" (ngSubmit)="onUpload($event)">
   <input type="file" name="file" id="upload-file-input" (change)="validateFormat($event)"/> &nbsp;
   <button type="submit" [disabled]="type === 'csv' && valueCoordenate === undefined || formatError">Cargar</button>

@@ -10,6 +10,7 @@ import { ImportCSV } from './ImportCSV';
 import { DialogSymbologyChangeComponent } from '../dialog-symbology-change/dialog-symbology-change.component';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-map-viewer',
@@ -29,10 +30,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   modalAbout = false;
   modalGuide = false;
   modalExtract = false;
+  layersOptionsList: Array<any> = [];
   modalAnalysis = false;
   modalBuffer = false;
   modalSelection = false;
   layerSelected: any;
+  layerSelectedSelection: string;
   columnsTable: Array<any> = [];
   latitude = 4.6486259;
   longitude = -74.2478963;
@@ -86,11 +89,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   layerList: any;
   optionsLayers: SelectItem[] = [];
   optionsDepartment: SelectItem[] = [];
-  sketch;
+  sketchExtract;
   sketchBuffer;
   sketchSelection;
   selectedPolygon: SelectItem;
   selectedSketch: any;
+  intervalChange: any;
+  levelColors = 0;
+  indexColor = 0;
+  items: MenuItem[];
   selectedBuffer: SelectItem = {
     value: 9036
   };
@@ -104,7 +111,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     y: null
   };
   magnaSirgasFlag = false;
-
+  sectionSelected: string;
   modesBuffer: SelectItem[] = [
     { value: 'point', title: 'Punto', icon: 'fa fa-fw fa-circle' },
     { value: 'line', title: 'Línea', icon: 'esri-icon-minus' },
@@ -118,9 +125,53 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     { value: 'distance', title: 'Distancia', icon: 'fas fa-ruler' },
     { value: 'coordinate', title: 'Ubicación', icon: 'esri-icon-map-pin' }
   ];
+  colorsFirst: Array<any> = [];
+  colorsSeconds: Array<any> = [];
+  colorsThirst: Array<any> = [];
+  colorsFourth: Array<any> = [];
+  colorsFiveth: Array<any> = [];
+  flagSketch = false;
 
-  constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService) {
+  constructor(private dialogService: DialogService, private service: MapViewerService, private messageService: MessageService, private router: Router) {
     this.setCurrentPosition();
+    this.colorsFirst = this.generateColor('#F8C933', '#FFE933', 50);
+    this.colorsSeconds = this.generateColor('#E18230', '#F8C933', 50);
+    this.colorsThirst = this.generateColor('#D75C31', '#E18230', 50);
+    this.colorsFourth = this.generateColor('#CC3D36', '#D75C31', 50);
+    this.colorsFiveth = this.generateColor('#44546A', '#FFE933', 50);
+    let _this = this;
+    this.changeColor(this.indexColor, this.colorsFirst);
+    this.indexColor++;
+    this.intervalChange = setInterval(() => {
+      if (_this.indexColor >= 50) {
+        _this.indexColor = 0;
+        if (_this.levelColors > 5) {
+          _this.levelColors = 1;
+        } else {
+          _this.levelColors++;
+        }
+      }
+      switch (_this.levelColors) {
+        case 1:
+          _this.changeColor(_this.indexColor, _this.colorsFirst);
+          break;
+        case 2:
+          _this.changeColor(_this.indexColor, _this.colorsSeconds);
+          break;
+        case 3:
+          _this.changeColor(_this.indexColor, _this.colorsThirst);
+          break;
+        case 4:
+          _this.changeColor(_this.indexColor, _this.colorsFourth);
+          break;
+        case 5:
+          _this.changeColor(_this.indexColor, _this.colorsFiveth);
+          break;
+        default:
+          break;
+      }
+      _this.indexColor++;
+    }, 10);
     if (localStorage.getItem('agreeTerms') === undefined || localStorage.getItem('agreeTerms') === null) {
       this.dialogService.open(DialogTerminosComponent, {
         width: '80%',
@@ -142,7 +193,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '400px',
                   baseZIndex: 20,
                   header: 'Cargar un archivo Shapefile',
-                  data: { type: 'zip' }
+                  data: { type: 'zip', help: this }
                 });
                 dialog.onClose.subscribe(res => {
                   if (res !== undefined) {
@@ -164,7 +215,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '400px',
                   baseZIndex: 20,
                   header: 'Cargar un archivo CSV',
-                  data: { type: 'csv' }
+                  data: { type: 'csv', help: this }
                 });
                 dialog.onClose.subscribe(res => {
                   if (res !== undefined) {
@@ -185,7 +236,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '400px',
                   baseZIndex: 20,
                   header: 'Cargar un archivo GPX',
-                  data: { type: 'gpx' }
+                  data: { type: 'gpx', help: this }
                 });
                 dialog.onClose.subscribe(res => {
                   if (res !== undefined) {
@@ -207,7 +258,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '400px',
                   baseZIndex: 20,
                   header: 'Cargar un archivo GeoJSON',
-                  data: { type: 'json' }
+                  data: { type: 'json', help: this }
                 });
                 dialog.onClose.subscribe(res => {
                   if (res !== undefined) {
@@ -227,6 +278,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '50%',
                   baseZIndex: 100,
                   header: 'Cargar servicio KML',
+                  data: { help: this }
                 });
                 dialog.onClose.subscribe(res => {
                   if (res !== undefined) {
@@ -251,6 +303,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '50%',
                   baseZIndex: 100,
                   header: 'Cargar servicio WMS',
+                  data: { help: this }
                 });
                 dialog.onClose.subscribe(res => {
                   if (res !== undefined) {
@@ -274,7 +327,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
-                  header: 'Cargar servicio GeoJSON'
+                  header: 'Cargar servicio GeoJSON',
+                  data: { help: this }
                 });
                 dialog.onClose.subscribe(res => {
                   if (res !== undefined) {
@@ -298,7 +352,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 const dialog = this.dialogService.open(DialogUrlServiceComponent, {
                   width: '50%',
                   baseZIndex: 100,
-                  header: 'Cargar servicio CSV'
+                  header: 'Cargar servicio CSV',
+                  data: { help: this }
                 });
                 dialog.onClose.subscribe(res => {
                   if (res !== undefined) {
@@ -325,15 +380,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'A Shapefile',
             command: () => {
               if (!this.errorArcgisService) {
-                this.optionsLayers = [];
-                this.map.layers.items.forEach((layer) => {
-                  if (layer.title !== null) {
-                    this.optionsLayers.push({
-                      label: layer.title.substr(11),
-                      value: layer.title.substr(11)
-                    });
-                  }
-                });
+                this.buildOptionsLayers();
                 this.visibleModal(false, false, false, true, false, false, false, false);
                 this.view.popup.autoOpenEnabled = false;
               }
@@ -343,7 +390,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       },
       {
         label: 'Herramientas',
-        icon: 'fa fa-gear',
+        icon: 'fa fa-wrench',
         items: [
           {
             label: 'Zona de Influencia (Buffer)',
@@ -358,9 +405,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             label: 'Herramientas de Medición',
             command: () => {
               if (!this.errorArcgisService) {
-                this.visibleModal(false, false, false, false, false, true, false, false);
-                this.view.popup.autoOpenEnabled = false;
-                (window as any).ga('send', 'event', 'BUTTON', 'click', 'open-measure-menu');
+                this.openMeasuringTools();
               }
             }
           }
@@ -375,6 +420,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             window.print();
           }
         }
+      },
+      {
+        icon: 'esri-icon-expand',
+        title: 'Expandir/Contraer',
+        command: () => {
+          this.retractMenu();
+          if (this.visibleMenu) {
+            document.getElementsByClassName('esri-icon-collapse')[0].classList.add('esri-icon-expand');
+            document.getElementsByClassName('esri-icon-expand')[0].classList.remove('esri-icon-collapse');
+          } else {
+            document.getElementsByClassName('esri-icon-expand')[0].classList.add('esri-icon-collapse');
+            document.getElementsByClassName('esri-icon-collapse')[0].classList.remove('esri-icon-expand');
+          }
+        }
       }
     ];
   }
@@ -384,6 +443,51 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     for (let index = 0; index < layerList.length; index++) {
       const element = layerList[index];
       element.addEventListener('click', this.clickItemExpand);
+    }
+  }
+
+  buildOptionsLayers(): void {
+    this.optionsLayers = [];
+    this.map.layers.items.forEach((layer) => {
+      if (layer.title !== null) {
+        this.optionsLayers.push({
+          label: layer.title.substr(11),
+          value: layer.title.substr(11)
+        });
+      }
+    });
+  }
+
+  buildOptionsLayersValue(nameLayer: string): void {
+    this.layersOptionsList = [];
+    this.optionsLayers = [];
+    this.layerSelectedSelection = null;
+    this.map.layers.items.forEach((layer) => {
+      if (layer.title !== null) {
+        const sel: SelectItem = {
+          label: layer.title.substr(11),
+          value: layer.title.substr(11)
+        };
+        if (layer.title === nameLayer) {
+          this.layerSelectedSelection = sel.value;
+        }
+        this.optionsLayers.push(sel);
+      }
+    });
+  }
+
+  changeLayer(event: any): void {
+    this.map.layers.items.forEach((layer) => {
+      if (layer.title != null && layer.title.substr(11) === event) {
+        this.layerSelected = layer;
+      }
+    });
+  }
+
+  public openSelectionTool(): void {
+    if (!this.errorArcgisService) {
+      this.buildOptionsLayersValue(null);
+      this.visibleModal(false, false, false, false, false, false, false, true);
     }
   }
 
@@ -416,11 +520,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, LabelClass, BasemapGallery, SketchViewModel,
-        GraphicsLayer, Graphic, Legend, ScaleBar, ListItem, geometryEngine, SpatialReference, ProjectParameters, GeometryService] =
+        GraphicsLayer, Graphic, Legend, ScaleBar, geometryEngine, SpatialReference, ProjectParameters, GeometryService] =
         await loadModules(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/LayerList', 'esri/widgets/Print',
           'esri/widgets/Search', 'esri/widgets/Expand', 'esri/layers/support/LabelClass', 'esri/widgets/BasemapGallery',
           'esri/widgets/Sketch/SketchViewModel', 'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend',
-          'esri/widgets/ScaleBar', 'esri/widgets/LayerList/ListItem', 'esri/geometry/geometryEngine', 'esri/geometry/SpatialReference',
+          'esri/widgets/ScaleBar', 'esri/geometry/geometryEngine', 'esri/geometry/SpatialReference',
           'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService']);
 
       // Geometry Service
@@ -437,7 +541,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       const mapViewProperties = {
         container: this.mapViewEl.nativeElement,
         center: [this.longitude, this.latitude],
-        zoom: 5,
+        zoom: 6,
         map: this.map
       };
 
@@ -872,7 +976,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.view.when(() => {
         layerList.on('trigger-action', (event) => {
           const layer = event.item.layer;
+          this.buildOptionsLayersValue(layer.title);
           if (event.action.id === 'attr-table') {
+            console.log('Hola');
             (window as any).ga('send', 'event', 'BUTTON', 'click', 'att-table-button');
             const query = {
               outFields: ['*'],
@@ -886,7 +992,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               layerListExpand.collapse();
               this.visibleModal(false, false, false, false, false, false, true, false);
             }, (err) => {
-              console.log(err);
+              console.error(err);
             });
           } else if (event.action.id === 'analisis') {
             const query = {
@@ -909,13 +1015,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               layerListExpand.collapse();
               this.visibleModal(false, true, false, false, false, false, false, false);
             }, (err) => {
-              console.log(err);
+              console.error(err);
             });
           } else if (event.action.id === 'simbologia') {
             layerListExpand.collapse();
             const dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
               width: '25%',
-              header: `Cambio de Simbología ${layer.title}`
+              header: `Cambio de Simbología ${layer.title}`,
+              data: { help: this }
             });
             dialog.onClose.subscribe(res => {
               if (res !== undefined) {
@@ -969,6 +1076,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         sources: this.sourceSearch,
         includeDefaultSources: false
       });
+
       this.view.ui.add(this.search, {
         position: 'top-right'
       });
@@ -980,7 +1088,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         printServiceUrl: this.printUrl
       });
       const expandPrint = new Expand({
-        expandIconClass: 'esri-icon-download',
+        expandIconClass: 'fa fa-file-export',
         expandTooltip: 'Exportar',
         view: this.view,
         content: print,
@@ -1008,15 +1116,17 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         group: 'expand'
       });
       const graphicsLayer = new GraphicsLayer();
-      const sketchVM = new SketchViewModel({
+      this.sketchExtract = new SketchViewModel({
         layer: graphicsLayer,
         view: this.view
       });
-      sketchVM.on('create', (event) => {
+      this.sketchExtract.on('create', (event) => {
+        this.flagSketch = true;
         if (this.view.graphics.length === 1) {
           this.clearGraphics();
         }
         if (event.state === 'complete') {
+          this.flagSketch = false;
           this.clearGraphic = true;
           const symbolF = {
             type: 'simple-fill',
@@ -1040,7 +1150,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         view: this.view
       });
       sketchVMBuffer.on('create', (event) => {
+        this.flagSketch = true;
         if (event.state === 'complete') {
+          this.flagSketch = false;
           this.clearGraphic = true;
           let symbolGeo;
           const geometry = event.graphic.geometry;
@@ -1088,47 +1200,57 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
 
       this.sketchSelection.on('create', (event) => {
+        this.flagSketch = true;
         if (event.state === 'complete') {
-          this.makingWork = true;
-          const spQry = this.layerSelected.createQuery();
-          spQry.maxAllowableOffset = 1;
-          spQry.geometry = event.graphic.geometry;
-          this.layerSelected.queryFeatures(spQry).then((result) => {
-            if (result.features.length === 0) {
-              this.makingWork = false;
-            }
-            this.clearGraphics();
-            this.featureDptos = result.features;
-            this.messageService.add({
-              severity: 'info',
-              summary: '',
-              detail: `Se seleccionaron ${result.features.length} elementos de la capa ${this.layerSelected.id}
-                        y se cargaron sus atributos.`
-            });
-            this.columnsTable = Object.keys(this.featureDptos[0].attributes);
-            layerListExpand.collapse();
-            loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
-              'esri/Color', 'dojo/_base/array', 'esri/Graphic']).then(([SimpleFillSymbol, SimpleLineSymbol, Color,
-                dojo, Graphic]) => {
-                const symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
-                  new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 255, 1.0]), 2),
-                  new Color([0, 0, 0, 0.5]));
-                dojo.forEach(result.features, (key) => {
-                  const graphic = new Graphic({
-                    geometry: key.geometry,
-                    symbol
-                  });
-                  this.view.graphics.add(graphic);
-                });
-                this.clearGraphic = true;
+          if (this.layerSelectedSelection !== null) {
+            this.flagSketch = false;
+            this.makingWork = true;
+            const spQry = this.layerSelected.createQuery();
+            spQry.maxAllowableOffset = 1;
+            spQry.geometry = event.graphic.geometry;
+            this.layerSelected.queryFeatures(spQry).then((result) => {
+              if (result.features.length === 0) {
                 this.makingWork = false;
-                this.visibleModal(false, false, false, false, false, false, true, true);
+              }
+              this.clearGraphics();
+              this.featureDptos = result.features;
+              this.messageService.add({
+                severity: 'info',
+                summary: '',
+                detail: `Se seleccionaron ${result.features.length} elementos de la capa ${this.layerSelected.id}
+                          y se cargaron sus atributos.`
               });
-          });
+              this.columnsTable = Object.keys(this.featureDptos[0].attributes);
+              layerListExpand.collapse();
+              loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
+                'esri/Color', 'dojo/_base/array', 'esri/Graphic']).then(([SimpleFillSymbol, SimpleLineSymbol, Color,
+                  dojo, Graphic]) => {
+                  const symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
+                    new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 255, 1.0]), 2),
+                    new Color([0, 0, 0, 0.5]));
+                  dojo.forEach(result.features, (key) => {
+                    const graphic = new Graphic({
+                      geometry: key.geometry,
+                      symbol
+                    });
+                    this.view.graphics.add(graphic);
+                  });
+                  this.clearGraphic = true;
+                  this.makingWork = false;
+                  this.visibleModal(false, false, false, false, false, false, true, true);
+                });
+            });
+          } else {
+            console.log(this.layerSelectedSelection);
+            this.messageService.add({
+              severity: 'warn',
+              summary: '',
+              detail: 'Debe seleccionar una capa.'
+            });
+          }
           this.onChangeSelectedSketchSelection();
         }
       });
-      this.sketch = sketchVM;
       this.sketchBuffer = sketchVMBuffer;
       const scaleBar = new ScaleBar({
         style: 'line',
@@ -1152,13 +1274,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         group: 'expand',
         expandTooltip: 'Ayuda'
       });
-      help.expand();
       this.attributeTable = attributeTable;
-      this.view.ui.add([expandLegend, layerListExpand, help], 'bottom-right');
-      this.view.ui.add([expandPrint, expandBaseMapGallery], 'top-right');
+      this.view.ui.add([expandPrint, expandBaseMapGallery, expandLegend, layerListExpand, help], 'top-right');
       return this.view;
     } catch (error) {
-      console.log('EsriLoader: ', error);
+      console.error('EsriLoader: ', error);
     }
   }
 
@@ -1175,9 +1295,56 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       // console.log(success);
     }, error => {
       this.errorArcgisService = true;
-      console.log(error);
+      console.error(error);
     });
     this.initializeMap();
+  }
+
+  public changeColor(indexColor: number, colors: Array<any>): void {
+    document.getElementsByClassName('ui-progressbar')[0] != undefined ? document.getElementsByClassName('ui-progressbar')[0].setAttribute('style', `height: 6px; background: #${colors[indexColor]} !important; margin-top: 18px; margin-left: -72px;`) : null;
+  }
+
+  public hex(c: any): string {
+    const s = '0123456789abcdef';
+    let i = parseInt(c);
+    if (i === 0 || isNaN(c)) {
+      return '00';
+    }
+    i = Math.round(Math.min(Math.max(0, i), 255));
+    return s.charAt((i - i % 16) / 16) + s.charAt(i % 16);
+  }
+
+  public convertToHex(rgb: any): string {
+    return this.hex(rgb[0]) + this.hex(rgb[1]) + this.hex(rgb[2]);
+  }
+
+  public trim(s): string {
+    return (s.charAt(0) === '#') ? s.substring(1, 7) : s;
+  }
+
+  public convertToRGB(hex): Array<any> {
+    const color = [];
+    color[0] = parseInt((this.trim(hex)).substring(0, 2), 16);
+    color[1] = parseInt((this.trim(hex)).substring(2, 4), 16);
+    color[2] = parseInt((this.trim(hex)).substring(4, 6), 16);
+    return color;
+  }
+
+  public generateColor(colorStart, colorEnd, colorCount): Array<any> {
+    const start = this.convertToRGB(colorStart);
+    const end = this.convertToRGB(colorEnd);
+    const len = colorCount;
+    let alpha = 0.0;
+    const salida = [];
+    for (let i = 0; i < len; i++) {
+      const c = [];
+      alpha += (1.0 / len);
+      c[0] = start[0] * alpha + (1 - alpha) * end[0];
+      c[1] = start[1] * alpha + (1 - alpha) * end[1];
+      c[2] = start[2] * alpha + (1 - alpha) * end[2];
+      salida.push(this.convertToHex(c));
+    }
+    return salida;
   }
 
   ngOnDestroy() {
@@ -1193,6 +1360,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.selectedMeasurement = null;
     this.setActiveWidget();
     this.view.popup.autoOpenEnabled = true;
+    this.flagSketch = false;
   }
 
   /**
@@ -1286,7 +1454,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }, (err) => {
       this.makingWork = false;
       console.error(err);
-      this.messageService.add({summary: 'Error de carga', detail: 'No se pudo realizar la petición de carga de capa', severity: 'error'});
+      this.messageService.add({ summary: 'Error de carga', detail: 'No se pudo realizar la petición de carga de capa', severity: 'error' });
     });
   }
 
@@ -1408,8 +1576,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         max: timeStops.length - 1,
         values: [timeStops.length - 1],
         steps: 1,
-        labelsVisible: false
+        labelsVisible: false,
+        rangeLabelsVisible: true
       });
+      const minValueSlider = document.getElementsByClassName('esri-slider__min')[0];
+      minValueSlider.textContent = timeStops[0][1].getFullYear();
+      const maxValueSlider = document.getElementsByClassName('esri-slider__max')[0];
+      maxValueSlider.textContent = timeStops[timeStops.length - 1][1].getFullYear();
       let d = timeStops[slider.values[0]][1];
       this.nameLayer = monthNames[d.getMonth()] + ' ' + d.getFullYear();
       let lyTierrasMdt;
@@ -1474,7 +1647,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       });
     }, error => {
-      console.log(error);
+      console.error(error);
     });
   }
 
@@ -1483,17 +1656,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   onChangeSelect() {
     if (this.selectedPolygon.value === 'free-pol') {
-      this.sketch.create('polygon', { mode: 'freehand' });
+      this.sketchExtract.create('polygon', { mode: 'freehand' });
     } else if (this.selectedPolygon.value === 'pol') {
-      this.sketch.create('polygon', { mode: 'click' });
+      this.sketchExtract.create('polygon', { mode: 'click' });
     }
   }
 
   /**
    * Método encargado de la funcionalidad de extraer datos a un archivo Shapefile
    */
-  async extratShape() {
-    this.makingWork = true;
+  async extractShape() {
     const [FeatureSet, Geoprocessor] = await loadModules(['esri/tasks/support/FeatureSet', 'esri/tasks/Geoprocessor']);
     const gpExtract = new Geoprocessor({
       url: this.urlExtractShape,
@@ -1524,6 +1696,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
       }
     } else {
+      this.makingWork = true;
       const features = this.view.graphics.items[0];
       const featureSet = new FeatureSet();
       featureSet.features = features;
@@ -1605,7 +1778,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           });
         }, (err) => {
           console.error(err);
-          this.messageService.add({summary: 'Error de selección', detail: `No se pudo seleccionar el objeto de la capa ${layer.id}`, severity: 'error'});
+          this.messageService.add(
+            { summary: 'Error de selección',
+            detail: `No se pudo seleccionar el objeto de la capa ${layer.id}`, severity: 'error'
+          });
         });
       });
   }
@@ -1703,8 +1879,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.clearGraphics();
     this.selectedLayers = [];
     this.selectedPolygon = undefined;
-    this.sketch.cancel();
+    this.sketchExtract.cancel();
     this.view.popup.autoOpenEnabled = true;
+    this.flagSketch = false;
   }
 
   changeAttrTable(event: any) {
@@ -1714,12 +1891,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
     };
     if (event.value.indexOf(event.itemValue) !== -1) {
-      // Añadir
-      console.log('Añadio');
       this.onRowSelect(ev);
     } else {
-      // Remover
-      console.log('Remover');
       this.onRowUnselect(ev);
     }
   }
@@ -1759,6 +1932,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.bufDistance = undefined;
     this.sketchBuffer.cancel();
     this.view.popup.autoOpenEnabled = true;
+    this.flagSketch = false;
   }
 
   /**
@@ -1772,6 +1946,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Muestra la guia del Geovisor
    */
   onShowGuide() {
+    this.sectionSelected = 'h-introduccion';
     this.visibleModal(false, false, false, false, true, false, false, false);
     (window as any).ga('send', 'event', 'BUTTON', 'click', 'ayuda');
   }
@@ -1852,7 +2027,90 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.selectedSketch = null;
   }
 
+
   public getNameLayer(): string {
     return this.layerSelected != undefined || this.layerSelected != null ? this.layerSelected.title : null;
+  }
+
+  public requestHelp(modal: string): void {
+    this.sectionSelected = modal;
+    switch (modal) {
+      case 'buffer':
+        this.visibleModal(false, false, true, false, true, false, false, false);
+        break;
+      case 'h-medir':
+        this.visibleModal(false, false, false, false, true, true, false, false);
+        break;
+      case 'h-extraer':
+        this.visibleModal(false, false, false, true, true, false, false, false);
+        break;
+      default:
+        this.modalGuide = true;
+        break;
+    }
+  }
+
+  /**
+   * Retracta menu dejando solo visibles los iconos
+   */
+  public retractMenu(): void {
+    this.visibleMenu = !this.visibleMenu;
+    const elements = document.getElementsByClassName('ui-menuitem-text');
+    const icons = document.getElementsByClassName('ui-submenu-icon pi pi-fw pi-caret-right ng-star-inserted');
+    const menu = document.getElementsByClassName('ui-tieredmenu')[0];
+    if (elements != null && elements != undefined) {
+      for (let index = 0; index < elements.length; index++) {
+        const element = elements[index];
+        if (this.validateHiddenElement(element.textContent)) {
+          if (this.visibleMenu) {
+            menu.setAttribute('style', 'padding: 0; background-color: #ffffff; border: none; width: auto;');
+            element.setAttribute('style', 'display: initial;');
+          } else {
+            menu.setAttribute('style', 'padding: 0; background-color: #ffffff; border: none; width: 45px;');
+            element.setAttribute('style', 'display: none;');
+          }
+        }
+      }
+    }
+    if (icons != null && icons != undefined) {
+      for (let index = 0; index < icons.length; index++) {
+        const element = icons[index];
+        if (this.visibleMenu) {
+          element.setAttribute('style', 'display: initial;');
+        } else {
+          element.setAttribute('style', 'display: none;');
+        }
+      }
+    }
+  }
+
+  public validateHiddenElement(menu: string): boolean {
+    let isValid = false;
+    for (const item of this.menu) {
+      if (item.label === menu) {
+        isValid = true;
+        break;
+      }
+    }
+    return isValid;
+  }
+
+  public openMeasuringTools(): void {
+    if (!this.errorArcgisService) {
+      this.visibleModal(false, false, false, false, false, true, false, false);
+      this.view.popup.autoOpenEnabled = false;
+      (window as any).ga('send', 'event', 'BUTTON', 'click', 'open-measure-menu');
+    }
+  }
+
+  public openEnabledPopup(): void {
+    if (!this.errorArcgisService) {
+      this.view.popup.autoOpenEnabled = !this.view.popup.autoOpenEnabled;
+      if (this.view.popup.autoOpenEnabled) {
+        this.messageService.add({ detail: `Se ha activado la selección de información`, summary: 'Información', severity: 'info' });
+      } else {
+        this.messageService.add({ detail: `Se ha desactivado la selección de información`, summary: 'Información', severity: 'info' });
+      }
+    }
   }
 }

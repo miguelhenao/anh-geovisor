@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DynamicDialogRef } from 'primeng/api';
+import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/api';
 
 export class ChangeSymbology {
   public borderColor: any;
@@ -16,9 +16,12 @@ export class ChangeSymbology {
 export class DialogSymbologyChangeComponent implements OnInit {
 
   changeForm: FormGroup;
+  help: any;
   changeObject: ChangeSymbology = new ChangeSymbology();
 
-  constructor(private formBuilder: FormBuilder, private ref: DynamicDialogRef) { }
+  constructor(private formBuilder: FormBuilder, private ref: DynamicDialogRef, private config: DynamicDialogConfig) { 
+    this.help = config.data.help;
+  }
 
   ngOnInit() {
     this.validateForm();
@@ -32,6 +35,10 @@ export class DialogSymbologyChangeComponent implements OnInit {
     });
   }
 
+  requestHelp(modal: string): void {
+    this.help.requestHelp(modal);
+  }
+  
   public setupChange(): void {
     this.ref.close(this.changeObject);
   }

@@ -31,6 +31,8 @@ import {OverlayPanelModule} from 'primeng/overlaypanel';
 import { DialogAboutComponent } from './dialog-about/dialog-about.component';
 import { DialogGuideComponent } from './dialog-guide/dialog-guide.component';
 import { AccordionModule } from 'primeng/accordion';
+import {ProgressBarModule} from 'primeng/progressbar';
+import {TieredMenuModule} from 'primeng/tieredmenu';
 
 @NgModule({
   declarations: [
@@ -67,7 +69,9 @@ import { AccordionModule } from 'primeng/accordion';
     MessageModule,
     ColorPickerModule,
     OverlayPanelModule,
-    AccordionModule
+    AccordionModule,
+    ProgressBarModule,
+    TieredMenuModule
   ],
   providers: [],
   entryComponents: [
