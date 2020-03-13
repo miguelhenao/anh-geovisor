@@ -2031,7 +2031,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         wkid: 4326
       }
     });
-    if (!this.layerExtract && (this.selectedLayers.length === 0 || this.view.graphics.length === 0)) {
+    if ((this.selectedLayers.length === 0 || this.view.graphics.length === 0)) {
       if (this.selectedLayers.length === 0) {
         this.messageService.add({
           severity: 'warn',
@@ -2039,14 +2039,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           detail: 'Debe seleccionar las capas que desea extraer.'
         });
       }
-      if (this.selectedPolygon === undefined) {
+      if (this.selectedPolygon === undefined && !this.layerExtract) {
         this.messageService.add({
           severity: 'warn',
           summary: '',
           detail: 'Debe seleccionar elementos de la capa actual para poder extraer datos.'
         });
       }
-      if (this.view.graphics.length === 0) {
+      if (this.view.graphics.length === 0 && !this.layerExtract) {
         this.messageService.add({
           severity: 'warn',
           summary: '',
