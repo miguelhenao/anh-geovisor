@@ -523,3 +523,9 @@ p-sidebar {
 ::ng-deep .esri-icon-polygon:before {
   color: initial;
 }
+
+
+::ng-deep .esri-print__author-info-container,
+::ng-deep .esri-print__copyright-info-container{
+  display: none !important;
+}

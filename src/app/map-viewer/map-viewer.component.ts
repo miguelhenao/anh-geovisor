@@ -1208,7 +1208,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         view: this.view,
         printServiceUrl: this.printUrl,
         templateOptions: {
-          copyright: 'Agencia Nacional de Hidrocarburos',
+          copyright: 'Propiedad de la ANH. Derechos Reservados Copyright © ANH 2020',
+          author: 'Prohibida la reproducción con fines comerciales'
         }
       });
       this.expandPrint = new Expand({
