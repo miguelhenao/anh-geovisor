@@ -185,7 +185,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   filter: Array<string> = [];
   objectFilter: Array<any> = [];
   filterS: Array<string> = [];
-  quantityFields: number = 1;
+  quantityFields = 1;
   values: Array<any> = [];
   logicalOperators: Array<any> = [];
   arrQuantity = Array;
@@ -568,14 +568,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.retractMenu();
     }
     if (this.modalTable) {
-      let panel = document.getElementsByClassName('ui-dialog-content ui-widget-content');
+      const panel = document.getElementsByClassName('ui-dialog-content ui-widget-content');
       if (panel !== undefined && panel[0] !== undefined) {
-        let height: number = panel[0].clientHeight;
+        const height: number = panel[0].clientHeight;
         if (this.validateHeight(height)) {
           if (panel[0].clientHeight >= 450) {
             this.heightTable = panel[0].clientHeight - 220;
           } else {
-            this.heightTable = 450
+            this.heightTable = 450;
           }
           this.ref.detectChanges();
         }
@@ -1393,9 +1393,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               this.clearGraphics();
               this.featureDptos = result.features;
               layerListExpand.collapse();
-              loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
-                'esri/Color', 'dojo/_base/array', 'esri/Graphic']).then(([SimpleFillSymbol, SimpleLineSymbol, Color,
-                  dojo, Graphic]) => {
+              loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/Color', 'dojo/_base/array',
+                'esri/Graphic']).then(([SimpleFillSymbol, SimpleLineSymbol, Color, dojo, Graphic]) => {
                   const symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
                     new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 255, 1.0]), 2),
                     new Color([0, 0, 0, 0.5]));
@@ -1559,7 +1558,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     let elements = document.getElementsByClassName('ui-progressbar');
     for (let index = 0; index < elements.length; index++) {
       const element = elements[index] as HTMLElement;
-      element.style.background = `#${colors[indexColor]}`
+      element.style.background = `#${colors[indexColor]}`;
     }
   }
 
@@ -1996,16 +1995,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             break;
           case 'lt':
             params = `${params} ${this.objectFilter[index]} < ${this.values[index]}`;
-            break
+            break;
           case 'lte':
             params = `${params} ${this.objectFilter[index]} <= ${this.values[index]}`;
-            break
+            break;
           case 'gt':
             params = `${params} ${this.objectFilter[index]} > ${this.values[index]}`;
-            break
+            break;
           case 'gte':
             params = `${params} ${this.objectFilter[index]} >= ${this.values[index]}`;
-            break
+            break;
           default:
             break;
         }
@@ -2444,8 +2443,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * @param measurement -> Bandera para dialog Herramientas de medición
    * @param table -> Bandera para dialog Tabla de atributos
    */
-  public visibleModal(about: boolean, analysis: boolean, buffer: boolean, extract: boolean,
-    guide: boolean, measurement: boolean, table: boolean, selection: boolean, coordinate: boolean, filter: boolean) {
+  public visibleModal(about: boolean, analysis: boolean, buffer: boolean, extract: boolean, guide: boolean, measurement: boolean,
+                      table: boolean, selection: boolean, coordinate: boolean, filter: boolean) {
     this.modalAbout = about;
     this.modalAnalysis = analysis;
     this.modalBuffer = buffer;
@@ -2597,7 +2596,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   public viewAll(): void {
     this.view.center = [this.longitude, this.latitude];
-    this.view.zoom = 6;
+    this.view.zoom = 5;
   }
 
   /**
