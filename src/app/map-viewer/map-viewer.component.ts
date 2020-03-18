@@ -11,7 +11,6 @@ import { DialogSymbologyChangeComponent } from '../dialog-symbology-change/dialo
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import { Router } from '@angular/router';
-import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-map-viewer',
@@ -190,6 +189,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   values: Array<any> = [];
   logicalOperators: Array<any> = [];
   arrQuantity = Array;
+  copyrightSGC: Array<string> = [];
+  copyrightIGAC: Array<string> = [];
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
     private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef) {
@@ -509,7 +510,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             command: () => {
               this.layerSelected = null;
               this.layerSelectedSelection = null;
-              !this.errorArcgisService ? this.symbologyChange() : null
+              !this.errorArcgisService ? this.symbologyChange() : null;
             }
           },
           {
@@ -588,10 +589,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
   buildOptionsLayers(): void {
     this.optionsLayers = [];
+    this.copyrightIGAC = [];
+    this.copyrightSGC = [];
     this.map.layers.items.forEach((layer) => {
       if (layer.title !== null) {
+        const label = layer.copyright.includes('SGC') ? layer.sourceJSON.name + '*' :
+          layer.copyright.includes('IGAC') ? layer.sourceJSON.name + '**' : layer.sourceJSON.name;
+        if (layer.copyright.includes('SGC')) {
+          this.copyrightSGC.push(layer.sourceJSON.name);
+        } else if (layer.copyright.includes('IGAC')) {
+          this.copyrightIGAC.push(layer.sourceJSON.name);
+        }
         this.optionsLayers.push({
-          label: layer.sourceJSON.name,
+          label,
           value: layer.sourceJSON.name
         });
       }
@@ -605,8 +615,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.layerSelectedSelection = null;
     this.map.layers.items.forEach((layer) => {
       if (layer.title !== null) {
+        const label = layer.copyright.includes('SGC') ? layer.sourceJSON.name + '*' :
+          layer.copyright.includes('IGAC') ? layer.sourceJSON.name + '**' : layer.sourceJSON.name;
+        if (layer.copyright.includes('SGC')) {
+          this.copyrightSGC.push(layer.sourceJSON.name);
+        } else if (layer.copyright.includes('IGAC')) {
+          this.copyrightIGAC.push(layer.sourceJSON.name);
+        }
         const sel: SelectItem = {
-          label: layer.sourceJSON.name,
+          label,
           value: layer.sourceJSON.name
         };
         if (layer.title === nameLayer) {
@@ -750,7 +767,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         visible: true,
         outFields: ['*'],
         showAttribution: true,
-        mode: FeatureLayer.MODE_ONDEMAND
+        mode: FeatureLayer.MODE_ONDEMAND,
+        copyright: 'SGC'
       });
       lySismica.load().then(() => {
         lySismica.title = lySismica.sourceJSON.name;
@@ -1457,7 +1475,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     const title: string = this.layerSelected != null && this.layerSelected !== undefined ? this.layerSelected.title : '';
     this.buildOptionsLayersValue(title);
     const dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
-      width: '25%',
+      width: '35%',
       header: `Cambio de Simbología ${title}`,
       data: { help: this, optionsLayers: this.optionsLayers, layerSelected: this.layerSelectedSelection }
     });
