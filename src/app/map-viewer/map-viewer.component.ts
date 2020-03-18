@@ -702,7 +702,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       const mapViewProperties = {
         container: this.mapViewEl.nativeElement,
         center: [this.longitude, this.latitude],
-        zoom: 6,
+        zoom: 5,
         map: this.map
       };
 
