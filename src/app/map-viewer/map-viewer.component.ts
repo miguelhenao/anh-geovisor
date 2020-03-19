@@ -186,7 +186,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   filter: Array<string> = [];
   objectFilter: Array<any> = [];
   filterS: Array<string> = [];
-  quantityFields = 1;
+  quantityFields = 0;
   values: Array<any> = [];
   logicalOperators: Array<any> = [];
   arrQuantity = Array;
@@ -1937,7 +1937,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.objectFilter = [];
     this.filterS = [];
     this.values = [];
-    this.quantityFields = 1;
+    this.quantityFields = 0;
     const query = {
       outFields: ['*'],
       returnGeometry: false,
@@ -2681,7 +2681,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
-  public addFormField(): void {
-    this.quantityFields++;
+  public addFormField(value: number): void {
+    this.quantityFields = this.quantityFields + value;
   }
 }

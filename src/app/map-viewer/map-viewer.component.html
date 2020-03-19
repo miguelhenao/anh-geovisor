@@ -244,11 +244,11 @@
         <div style="text-align: left; font-size: larger;">
           {{layerSelected.title}}
         </div>
-        <div style="text-align: right;">
-          <p-dialog header="Búsqueda" [(visible)]="modalFilter" [style]="{width: '500px'}"
-            (onHide)="getFeaturesLayerSelected()">
+        <div>
+          <p-dialog header="Búsqueda" [(visible)]="modalFilter" [style]="{width: '500px'}" [modal]="true"
+            (onHide)="getFeaturesLayerSelected()" [resizable]="false" [draggable]="false" position="topleft">
             <div style="max-height: 250px; overflow-y: scroll;">
-              <button pButton icon="pi pi-plus" label="Añadir Criterio" (click)="addFormField()"></button>
+              <button pButton icon="pi pi-plus" label="Añadir Criterio" (click)="addFormField(1)"></button>
               <div *ngFor="let i of arrQuantity(quantityFields).fill(1); let p = index" style="margin-top: 10px;">
                 <select name="selectField" style="width: 110px; float: left;" class="esri-select"
                   [(ngModel)]="objectFilter[p]">
@@ -258,13 +258,13 @@
                   style="width: 110px; float: left; margin-left: 5px;" *ngIf="view.ready" [(ngModel)]="filterS[p]"
                   class="esri-select">
                   <option
-                    *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'oid' && getTypeObject(objectFilter[p]) !== 'double'"
+                    *ngIf="objectFilter[p] !== undefined"
                     value="contains" selected>contiene</option>
                   <option
-                    *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'oid' && getTypeObject(objectFilter[p]) !== 'double'"
+                    *ngIf="objectFilter[p] !== undefined"
                     value="startsWith">empiece por</option>
                   <option
-                    *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'oid' && getTypeObject(objectFilter[p]) !== 'double'"
+                    *ngIf="objectFilter[p] !== undefined"
                     value="endsWith">termina por</option>
                   <option value="equals">igual</option>
                   <option value="notEquals">no igual a</option>
@@ -286,11 +286,12 @@
                 <input class="esri-input" [(ngModel)]="values[p]" type="text"
                   style="width: 110px; float: left; margin-left: 5px;" (input)="getFilterParams()">
                 <select name="selectOpe" (change)="getFilterParams()"
-                  style="width: 110px; float: left; margin-left: 5px;" *ngIf="view.ready"
+                  style="width: 50px; float: left; margin-left: 5px;" *ngIf="view.ready"
                   [(ngModel)]="logicalOperators[p]" class="esri-select">
                   <option value="AND" selected>Y</option>
                   <option value="OR">O</option>
                 </select>
+                <p-button icon="esri-icon-close" (onClick)="addFormField(-1)"></p-button>
               </div>
             </div>
           </p-dialog>
