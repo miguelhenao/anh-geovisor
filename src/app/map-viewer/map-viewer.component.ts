@@ -39,7 +39,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   heightTable: number;
   modalBuffer = false;
   modalSelection = false;
-  makingWorkFromAttr: boolean = false;
+  makingWorkFromAttr = false;
   modalCoordinate = false;
   layerSelected: any;
   layerSelectedSelection: string;
@@ -194,14 +194,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   copyrightIGAC: Array<string> = [];
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
-    private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef) {
+              private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef) {
     this.setCurrentPosition();
     this.colorsFirst = this.generateColor('#F8C933', '#FFE933', 50);
     this.colorsSeconds = this.generateColor('#E18230', '#F8C933', 50);
     this.colorsThirst = this.generateColor('#D75C31', '#E18230', 50);
     this.colorsFourth = this.generateColor('#CC3D36', '#D75C31', 50);
     this.colorsFiveth = this.generateColor('#44546A', '#FFE933', 50);
-    let _this = this;
+    const _this = this;
     this.changeColor(this.indexColor, this.colorsFirst);
     this.indexColor++;
     this.intervalChange = setInterval(() => {
@@ -585,8 +585,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public validateHeight(height: number): boolean {
-    return height != 1249 && height !== 478 && height !== 728 && height !== 704 && height !== 680 && height !== 656 && height !== 632 && height !== 608
-      && height !== 584 && height !== 560 && height !== 536 && height !== 512 && height !== 488;
+    return height !== 1249 && height !== 478 && height !== 728 && height !== 704 && height !== 680 && height !== 656 && height !== 632
+    && height !== 608 && height !== 584 && height !== 560 && height !== 536 && height !== 512 && height !== 488;
   }
   buildOptionsLayers(): void {
     this.optionsLayers = [];
@@ -1559,7 +1559,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public changeColor(indexColor: number, colors: Array<any>): void {
-    let elements = document.getElementsByClassName('ui-progressbar');
+    const elements = document.getElementsByClassName('ui-progressbar');
     for (let index = 0; index < elements.length; index++) {
       const element = elements[index] as HTMLElement;
       element.style.background = `#${colors[indexColor]}`;
@@ -1959,7 +1959,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public getTypeObject(name: string): string {
     let type: string;
     for (const col of this.columnsTable) {
-      if (col.name == name) {
+      if (col.name === name) {
         type = col.type;
         break;
       }
@@ -1967,7 +1967,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     return type;
   }
   public getFilterParams(): void {
-    let params: string = ''
+    let params = '';
     for (let index = 0; index < this.objectFilter.length; index++) {
       if (this.filterS[index] !== undefined && this.filterS[index] !== '' && this.values[index] !== undefined && this.values[index] !== '') {
         if (index > 0) {
@@ -2525,7 +2525,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     const elements = document.getElementsByClassName('ui-menuitem-text');
     const icons = document.getElementsByClassName('ui-submenu-icon pi pi-fw pi-caret-right ng-star-inserted');
     const menu = document.getElementsByClassName('ui-tieredmenu')[0];
-    if (elements != null && elements != undefined) {
+    if (elements != null && elements !== undefined) {
       for (let index = 0; index < elements.length; index++) {
         const element = elements[index];
         if (this.validateHiddenElement(element.textContent)) {
@@ -2539,7 +2539,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       }
     }
-    if (icons != null && icons != undefined) {
+    if (icons != null && icons !== undefined) {
       for (let index = 0; index < icons.length; index++) {
         const element = icons[index];
         if (this.contractMenu) {
