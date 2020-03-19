@@ -1922,6 +1922,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     layer.queryFeatures(query).then((result) => {
       this.featureDptos = result.features;
       this.columnsTable = result.fields[0] !== undefined ? result.fields : layer.fields;
+      const indexOID = this.columnsTable.findIndex( x => x.type === 'oid');
+      this.columnsTable.splice(indexOID, 1);
       for (let index = 0; index < this.columnsTable.length; index++) {
         this.filter[index] = 'contains';
       }
