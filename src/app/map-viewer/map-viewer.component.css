@@ -185,10 +185,6 @@ p-sidebar {
   clear: both;
 }
 
-#excel {
-  margin-left: 70% !important;
-}
-
 #excel button {
   margin-right: 5%;
 }
@@ -528,4 +524,16 @@ p-sidebar {
 ::ng-deep .esri-print__author-info-container,
 ::ng-deep .esri-print__copyright-info-container{
   display: none !important;
+}
+
+::ng-deep body .ui-tieredmenu .ui-menuitem-link:focus {
+  box-shadow: none !important;
+}
+
+::ng-deep body .ui-dialog .ui-dialog-titlebar {
+  padding: 0.5em;
+}
+
+.ui-button-rounded {
+  margin-right: 5px !important;
 }

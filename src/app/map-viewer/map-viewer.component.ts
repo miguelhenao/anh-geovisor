@@ -1,6 +1,6 @@
 import { MapViewerService } from './map-viewer.service';
 import { DialogUrlServiceComponent } from '../dialog-urlservice/dialog-urlservice.component';
-import { MenuItem, DialogService, SelectItem, MessageService } from 'primeng/api';
+import { MenuItem, SelectItem, MessageService } from 'primeng/api';
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { loadModules } from 'esri-loader';
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
@@ -11,6 +11,7 @@ import { DialogSymbologyChangeComponent } from '../dialog-symbology-change/dialo
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import { Router } from '@angular/router';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-map-viewer',
@@ -611,6 +612,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   buildOptionsLayersValue(nameLayer: string): void {
     this.layersOptionsList = [];
+    this.copyrightSGC = [];
+    this.copyrightIGAC = [];
     this.optionsLayers = [];
     this.layerSelectedSelection = null;
     this.map.layers.items.forEach((layer) => {

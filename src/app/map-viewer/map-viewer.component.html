@@ -62,8 +62,7 @@
 <!-- Fin del tierra slider del mapa -->
 
 <!-- Modal de extracción de datos -->
-<p-dialog header="Extracción de datos" [(visible)]="modalExtract" [resizable]="false" (onHide)="onHideDialogExtract()"
-  [positionTop]="10" [positionLeft]="200">
+<p-dialog header="Extracción de datos" [(visible)]="modalExtract" [resizable]="false" (onHide)="onHideDialogExtract()">
   <div id="infoDiv">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
       (click)="requestHelp('h-extraer')" icon="pi pi-question"></button>
@@ -73,33 +72,32 @@
     <br>
     <div *ngIf="!layerExtract">
       <p>2. Defina el área de interés</p>
-      <p-dropdown [options]="optionsPolygon" optionLabel="name" placeholder="Selección en la capa actual"
-        (onChange)="onChangeSelect()" [(ngModel)]="selectedPolygon"></p-dropdown>
-      <p-button label="Limpiar área" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
-      </p-button>
-      <!-- <p-button class="clearGraphics" [disabled]="selectedPolygon === undefined" icon="pi pi-undo"
-        (onClick)="onChangeSelect()" pTooltip="Volver a dibujar" tooltipPosition="bottom"></p-button> -->
-      <br>
+      <div style="display: grid; grid-template-columns: auto auto;">
+        <p-dropdown [options]="optionsPolygon" optionLabel="name" placeholder="Selección en la capa actual"
+          (onChange)="onChangeSelect()" [(ngModel)]="selectedPolygon"></p-dropdown>
+        <p-button label="Limpiar área" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
+        </p-button>
+      </div>
     </div>
     <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()" [style]="{'margin-top': '5px'}">
     </p-button>
   </div>
   <br>
-  <p-message id="infoMedicion" *ngIf="!layerExtract" severity="info"
+  <p-message [escape]="false" id="infoMedicion" *ngIf="!layerExtract" severity="info"
     text="Proceda con los poligonos ya <b>seleccionados en la capa actual</b>. Si no<br> hay una selección en la capa actual debe usar las <b>Herramientas de</b><br><b>Selección.</b><br><b>Seleccione las capas</b> que se incluirán en la extracción">
   </p-message>
-  <p-message id="infoMedicion" *ngIf="layerExtract" severity="info"
+  <p-message [escape]="false" id="infoMedicion" *ngIf="layerExtract" severity="info"
     text="<b>Seleccione las capas</b> que se incluirán en la extracción">
   </p-message>
   <br>
-  <p-message id="infoMedicion" severity="info"
+  <p-message [escape]="false" id="infoMedicion" severity="info"
     text="Fuentes de información: <br>*SGC: {{copyrightSGC}} <br>**IGAC: {{copyrightIGAC}}"></p-message>
 </p-dialog>
 <!-- Fin del modal de extracción de datos -->
 
 <!-- Modal de analisis de departamento -->
 <p-dialog header="Análisis de Departamento" [(visible)]="modalAnalysis" [resizable]="false"
-  (onHide)="onHideDialogAnalisis()" [positionTop]="10" [positionLeft]="200">
+  (onHide)="onHideDialogAnalisis()">
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
     (click)="requestHelp('h-cobertura')" icon="pi pi-question"></button>
   <p>
@@ -112,7 +110,7 @@
     label="Iniciar Analisis de Departamento"></p-button>
   <br>
   <br>
-  <p-message id="infoMedicion" severity="info"
+  <p-message [escape]="false" id="infoMedicion" severity="info"
     text="Con este análisis se obtienen los <b>Bloques Explorativos que se <br> encuentran en la jurisdicción del Departamento</b> seleccionado,<br>indicando el porcentaje de cobertura de cada bloque. <br>Use las <b>herramientas de selección</b> o la <b>tabla de atributos</b> para indicar<br>cuales departamentos desea usar para este análisis.">
   </p-message>
 </p-dialog>
@@ -120,20 +118,26 @@
 
 <!-- Modal de zona de influencia -->
 <p-dialog header="Zona de Influencia (Buffer)" [(visible)]="modalBuffer" [resizable]="false"
-  (onHide)="onHideDialogBuffer()" [positionTop]="10" [positionLeft]="200">
+  (onHide)="onHideDialogBuffer()">
   <div id="div">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
       (click)="requestHelp('buffer')" icon="pi pi-question"></button>
+    <!-- <button pButton class="ui-button-rounded ui-button-secondary" title="Info" style="color: #007ad8; float: right; margin-right: 5px;"
+     icon="pi pi-info"></button> -->
     <p>1. Defina la anchura deseada</p>
-    <input id="input" type="text" size="18" pInputText [(ngModel)]="bufDistance" placeholder="Ingrese un número">
-    <p-dropdown [options]="optionsBuffer" optionLabel="name" [(ngModel)]="selectedBuffer">
-    </p-dropdown>
+    <div style="display: grid; grid-template-columns: auto auto;">
+      <input id="input" type="text" size="10" pInputText [(ngModel)]="bufDistance" placeholder="Ingrese un número"
+        title="Ingrese un número">
+      <p-dropdown [options]="optionsBuffer" optionLabel="name" [(ngModel)]="selectedBuffer">
+      </p-dropdown>
+    </div>
     <p>2. Dibuje la geometría para la Zona de Influencia</p>
-    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch" (onChange)="onChangeSelectedSketchBuffer()">
-    </p-selectButton>
-    <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
-    </p-button>
-    <br>
+    <div style="display: grid; grid-template-columns: auto auto;">
+      <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch" (onChange)="onChangeSelectedSketchBuffer()">
+      </p-selectButton>
+      <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
+      </p-button>
+    </div>
     <p>3. Seleccione las capas a extraer</p>
     <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados"
       [(ngModel)]="selectedLayers"></p-multiSelect>
@@ -141,14 +145,14 @@
     <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()">
     </p-button>
   </div>
-  <p-message id="infoMedicion" severity="info" text="La <b>anchura del área de influencia (buffer)</b> se mide apartir del
+  <p-message [escape]="false" id="infoMedicion" severity="info" text="La <b>anchura del área de influencia (buffer)</b> se mide apartir del
       <br> contorno de la geometría. Cuando se usa un punto, la anchura equivale
       <br> al <b>radio</b> del círculo resultante.
       <br>Para dibujar un punto haga <b>clic</b> en el mapa.
       <br>Para las demás herramientas haga <b>clic</b> y sostenga mientras mueve
       <br>el mouse y suelte para finalizar."></p-message>
   <br>
-  <p-message id="infoMedicion" severity="info"
+  <p-message [escape]="false" id="infoMedicion" severity="info"
     text="Fuentes de información: <br>*SGC: {{copyrightSGC}} <br>**IGAC: {{copyrightIGAC}}"></p-message>
 </p-dialog>
 <!-- Fin del modal de zona de influencia -->
@@ -172,7 +176,7 @@
         <p>Y(Norte): {{magnaSirgas.y || ''}}</p>
       </div>
     </div>
-    <p-message id="infoMedicion" severity="info"
+    <p-message [escape]="false" id="infoMedicion" severity="info"
       text="Seleccione una herramienta y haga <b>clic</b> sobre el mapa para agregar puntos.
       <b>Doble clic</b> para terminar la medición.
       <br>Pulse <b>Ctrl</b> para activar la alineación automática (snapping) con la geometría del mapa mientras agrega puntos."></p-message>
@@ -181,22 +185,22 @@
 <!-- Fin del modal de herramientas de medición -->
 
 <!-- Modal de tabla de atributos -->
-<p-dialog id="attr-table" header="Tabla de Atributos" [(visible)]="modalTable" [resizable]="false"
-  (onHide)="onHideDialogAtributos()" [maximizable]="true" [style]="{'width': '500px'}">
-  <p-table class="esri-widget__table" [style]="{'width': 'inherit', 'max-height': '500px'}" [paginator]="true"
-    [rows]="100" [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple" #dt [columns]="columnsTable"
-    *ngIf="modalTable" [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true" [(selection)]="featuresSelected"
-    (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollHeight="{{heightTable}}px">
-    <ng-template pTemplate="caption">
+<p-dialog id="attr-table" header="Tabla de atributos" [(visible)]="modalTable" [resizable]="false" [draggable]="false"
+  (onHide)="onHideDialogAtributos()" [style]="{'width': '800px'}" position="bottomright">
+  <p-table class="esri-widget__table" [style]="{'width': 'inherit', 'height': '444px'}" [paginator]="true" [rows]="100"
+    [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple" #dt [columns]="columnsTable" *ngIf="modalTable"
+    [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true" [(selection)]="featuresSelected"
+    (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollHeight="270px">
+    <!-- <ng-template pTemplate="caption">
       <button pButton type="button" (click)="previousLayer()" class="ui-button-rounded" icon="fas fa-arrow-circle-left"
         title="Ver ant capa"></button>
       {{layerSelected.title}}
       <button pButton type="button" (click)="nextLayer()" class="ui-button-rounded" icon="fas fa-arrow-circle-right"
         title="Ver sgte capa"></button>
-    </ng-template>
+    </ng-template> -->
     <ng-template pTemplate="colgroup" let-columns>
       <colgroup>
-        <col *ngFor="let col of columns" style="width:250px">
+        <col *ngFor="let col of columns" style="width:180px">
       </colgroup>
     </ng-template>
     <ng-template pTemplate="header" let-columns>
@@ -207,7 +211,7 @@
       </tr>
       <tr>
         <th *ngFor="let col of columns; let i = index">
-          <span style="display: grid; grid-template-columns: auto auto;" class="filter">
+          <span style="display: grid; grid-template-columns: 20% 80%;" class="filter">
             <select name="select" *ngIf="view.ready" class="esri-select" [(ngModel)]="filter[i]">
               <option value="contains" selected>contiene</option>
               <option value="startsWith">empiece por</option>
@@ -236,59 +240,67 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="summary">
-      <div id="excel">
-        <button pButton icon="pi pi-search" class="ui-button-rounded ui-button-secodnary" pTooltip="Buscar información"
-          (click)="openFilter()"></button>
-        <p-dialog header="Búsqueda" [(visible)]="modalFilter" [style]="{width: '500px'}"
-          (onHide)="getFeaturesLayerSelected()">
-          <div style="max-height: 250px; overflow-y: scroll;">
-            <button pButton icon="pi pi-plus" label="Añadir Criterio" (click)="addFormField()"></button>
-            <div *ngFor="let i of arrQuantity(quantityFields).fill(1); let p = index" style="margin-top: 10px;">
-              <select name="selectField" style="width: 110px; float: left;" class="esri-select"
-                [(ngModel)]="objectFilter[p]">
-                <option *ngFor="let item of columnsTable; let i = index" [ngValue]="item.name">{{item.name}}</option>
-              </select>
-              <select name="selectType" (change)="getFilterParams()"
-                style="width: 110px; float: left; margin-left: 5px;" *ngIf="view.ready" [(ngModel)]="filterS[p]"
-                class="esri-select">
-                <option
-                  *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'oid' && getTypeObject(objectFilter[p]) !== 'double'"
-                  value="contains" selected>contiene</option>
-                <option
-                  *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'oid' && getTypeObject(objectFilter[p]) !== 'double'"
-                  value="startsWith">empiece por</option>
-                <option
-                  *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'oid' && getTypeObject(objectFilter[p]) !== 'double'"
-                  value="endsWith">termina por</option>
-                <option value="equals">igual</option>
-                <option value="notEquals">no igual a</option>
-                <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'" value="lt">
-                  menor que
-                </option>
-                <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'"
-                  value="lte">menor o
-                  igual que</option>
-                <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'" value="gt">
-                  mayor que
-                </option>
-                <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'"
-                  value="gte">mayor o
-                  igual que</option>
-              </select>
-              <input class="esri-input" [(ngModel)]="values[p]" type="text"
-                style="width: 110px; float: left; margin-left: 5px;" (input)="getFilterParams()">
-              <select name="selectOpe" (change)="getFilterParams()" style="width: 110px; float: left; margin-left: 5px;"
-                *ngIf="view.ready" [(ngModel)]="logicalOperators[p]" class="esri-select">
-                <option value="AND" selected>Y</option>
-                <option value="OR">O</option>
-              </select>
+      <div style="display: grid; grid-template-columns: auto auto;">
+        <div style="text-align: left; font-size: larger;">
+          {{layerSelected.title}}
+        </div>
+        <div style="text-align: right;">
+          <p-dialog header="Búsqueda" [(visible)]="modalFilter" [style]="{width: '500px'}"
+            (onHide)="getFeaturesLayerSelected()">
+            <div style="max-height: 250px; overflow-y: scroll;">
+              <button pButton icon="pi pi-plus" label="Añadir Criterio" (click)="addFormField()"></button>
+              <div *ngFor="let i of arrQuantity(quantityFields).fill(1); let p = index" style="margin-top: 10px;">
+                <select name="selectField" style="width: 110px; float: left;" class="esri-select"
+                  [(ngModel)]="objectFilter[p]">
+                  <option *ngFor="let item of columnsTable; let i = index" [ngValue]="item.name">{{item.name}}</option>
+                </select>
+                <select name="selectType" (change)="getFilterParams()"
+                  style="width: 110px; float: left; margin-left: 5px;" *ngIf="view.ready" [(ngModel)]="filterS[p]"
+                  class="esri-select">
+                  <option
+                    *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'oid' && getTypeObject(objectFilter[p]) !== 'double'"
+                    value="contains" selected>contiene</option>
+                  <option
+                    *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'oid' && getTypeObject(objectFilter[p]) !== 'double'"
+                    value="startsWith">empiece por</option>
+                  <option
+                    *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'oid' && getTypeObject(objectFilter[p]) !== 'double'"
+                    value="endsWith">termina por</option>
+                  <option value="equals">igual</option>
+                  <option value="notEquals">no igual a</option>
+                  <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'"
+                    value="lt">
+                    menor que
+                  </option>
+                  <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'"
+                    value="lte">menor o
+                    igual que</option>
+                  <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'"
+                    value="gt">
+                    mayor que
+                  </option>
+                  <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'"
+                    value="gte">mayor o
+                    igual que</option>
+                </select>
+                <input class="esri-input" [(ngModel)]="values[p]" type="text"
+                  style="width: 110px; float: left; margin-left: 5px;" (input)="getFilterParams()">
+                <select name="selectOpe" (change)="getFilterParams()"
+                  style="width: 110px; float: left; margin-left: 5px;" *ngIf="view.ready"
+                  [(ngModel)]="logicalOperators[p]" class="esri-select">
+                  <option value="AND" selected>Y</option>
+                  <option value="OR">O</option>
+                </select>
+              </div>
             </div>
-          </div>
-        </p-dialog>
-        <button pButton icon="esri-icon-download" class="ui-button-rounded ui-button-warning"
-          pTooltip="Exportar a Shapefile" (click)="extractShapeFromAttr()"></button>
-        <button pButton icon="fas fa-file-excel" class="ui-button-rounded ui-button-success" pTooltip="Exportar a Excel"
-          (click)="generateExcelFeaturesLayer()"></button>
+          </p-dialog>
+          <button pButton icon="pi pi-search" class="ui-button-rounded ui-button-secodnary"
+            pTooltip="Buscar información" (click)="openFilter()"></button>
+          <button pButton icon="esri-icon-download" class="ui-button-rounded ui-button-warning"
+            pTooltip="Exportar a Shapefile" (click)="extractShapeFromAttr()"></button>
+          <button pButton icon="fas fa-file-excel" class="ui-button-rounded ui-button-success"
+            pTooltip="Exportar a Excel" (click)="generateExcelFeaturesLayer()"></button>
+        </div>
       </div>
     </ng-template>
   </p-table>
@@ -341,30 +353,31 @@
 <!-- Fin del modal de ayuda -->
 
 <!-- Modal Herramientas de selección -->
-<p-dialog header="Herramientas de selección" [(visible)]="modalSelection" [resizable]="false" [positionTop]="10"
-  [positionLeft]="200" (onHide)="onHideDialogSelection()">
+<p-dialog header="Herramientas de selección" [(visible)]="modalSelection" [resizable]="false"
+  (onHide)="onHideDialogSelection()">
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
     (click)="requestHelp('h-seleccionar')" icon="pi pi-question"></button>
   <div style="margin-bottom: 5px;">
-
     <div>
       <label>Capa de Selección:</label>
       <p-dropdown (ngModelChange)="changeLayer($event)" [options]="optionsLayers" [(ngModel)]="layerSelectedSelection"
         placeholder="Seleccione una capa">
       </p-dropdown>
     </div>
-    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch" (onChange)="onChangeSelectedSketchSelection()"
-      [style]="{'margin-top': '5px'}">
-    </p-selectButton>
-    <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
-    </p-button>
+    <div style="display: grid; grid-template-columns: auto auto; margin-top: 5px;">
+      <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch"
+        (onChange)="onChangeSelectedSketchSelection()">
+      </p-selectButton>
+      <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
+      </p-button>
+    </div>
   </div>
-  <p-message id="infoMedicion" severity="info" text="La selección aplica a la capa selecccionada.
+  <p-message [escape]="false" id="infoMedicion" severity="info" text="La selección aplica a la capa selecccionada.
       <br> Para la selección con un punto <b>clic</b> en el mapa.
       <br>Para las demás herramientas haga <b>clic</b> y sostenga
       <br> mientras mueve el mouse, y suelte para finalizar."></p-message>
   <br>
-  <p-message id="infoMedicion" severity="info"
+  <p-message [escape]="false" id="infoMedicion" severity="info"
     text="Fuentes de información: <br>*SGC: {{copyrightSGC}} <br>**IGAC: {{copyrightIGAC}}"></p-message>
 </p-dialog>
 <!-- Fin de modal herramientas de selección -->
@@ -415,7 +428,7 @@
     </div>
   </div>
   <br>
-  <p-message id="infoMedicion" severity="info" text="Ingrese los datos solicitados para <b>crear un punto en la coordenada</b>
+  <p-message [escape]="false" id="infoMedicion" severity="info" text="Ingrese los datos solicitados para <b>crear un punto en la coordenada</b>
   <br>que desea ubicar.
   <br>Al ingresar Longitud y Latitud se deben <b>llenar todos los espacios
   <br>subrayados</b> con dígitos entre 0 y 9. Para grados de un sólo dígito
