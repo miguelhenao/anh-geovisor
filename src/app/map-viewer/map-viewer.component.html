@@ -118,12 +118,12 @@
 
 <!-- Modal de zona de influencia -->
 <p-dialog header="Zona de Influencia (Buffer)" [(visible)]="modalBuffer" [resizable]="false"
-  (onHide)="onHideDialogBuffer()">
+  (onHide)="onHideDialogBuffer()" [style]="{'width': '410px'}" [focusOnShow]="false">
   <div id="div">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
       (click)="requestHelp('buffer')" icon="pi pi-question"></button>
-    <!-- <button pButton class="ui-button-rounded ui-button-secondary" title="Info" style="color: #007ad8; float: right; margin-right: 5px;"
-     icon="pi pi-info"></button> -->
+    <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoBuffer = !infoBuffer"
+      style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
     <p>1. Defina la anchura deseada</p>
     <div style="display: grid; grid-template-columns: auto auto;">
       <input id="input" type="text" size="10" pInputText [(ngModel)]="bufDistance" placeholder="Ingrese un número"
@@ -139,20 +139,21 @@
       </p-button>
     </div>
     <p>3. Seleccione las capas a extraer</p>
-    <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados"
-      [(ngModel)]="selectedLayers"></p-multiSelect>
-    <br>
-    <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()">
-    </p-button>
+    <div style="display: grid; grid-template-columns: auto auto;">
+      <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados"
+        [(ngModel)]="selectedLayers"></p-multiSelect>
+      <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()">
+      </p-button>
+    </div>
   </div>
-  <p-message [escape]="false" id="infoMedicion" severity="info" text="La <b>anchura del área de influencia (buffer)</b> se mide apartir del
+  <p-message *ngIf="infoBuffer" [escape]="false" id="infoMedicion" severity="info" text="La <b>anchura del área de influencia (buffer)</b> se mide apartir del
       <br> contorno de la geometría. Cuando se usa un punto, la anchura equivale
       <br> al <b>radio</b> del círculo resultante.
       <br>Para dibujar un punto haga <b>clic</b> en el mapa.
       <br>Para las demás herramientas haga <b>clic</b> y sostenga mientras mueve
       <br>el mouse y suelte para finalizar."></p-message>
   <br>
-  <p-message [escape]="false" id="infoMedicion" severity="info"
+  <p-message *ngIf="infoBuffer" [escape]="false" id="infoMedicion" severity="info"
     text="Fuentes de información: <br>*SGC: {{copyrightSGC}} <br>**IGAC: {{copyrightIGAC}}"></p-message>
 </p-dialog>
 <!-- Fin del modal de zona de influencia -->
@@ -257,15 +258,9 @@
                 <select name="selectType" (change)="getFilterParams()"
                   style="width: 110px; float: left; margin-left: 5px;" *ngIf="view.ready" [(ngModel)]="filterS[p]"
                   class="esri-select">
-                  <option
-                    *ngIf="objectFilter[p] !== undefined"
-                    value="contains" selected>contiene</option>
-                  <option
-                    *ngIf="objectFilter[p] !== undefined"
-                    value="startsWith">empiece por</option>
-                  <option
-                    *ngIf="objectFilter[p] !== undefined"
-                    value="endsWith">termina por</option>
+                  <option *ngIf="objectFilter[p] !== undefined" value="contains" selected>contiene</option>
+                  <option *ngIf="objectFilter[p] !== undefined" value="startsWith">empiece por</option>
+                  <option *ngIf="objectFilter[p] !== undefined" value="endsWith">termina por</option>
                   <option value="equals">igual</option>
                   <option value="notEquals">no igual a</option>
                   <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'"
