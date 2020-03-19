@@ -1915,7 +1915,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   getFeaturesLayer(layer: any): void {
-    this.view.center = [this.longitude + 18, this.latitude + 2.4];
+    // this.view.center = [this.longitude + 18, this.latitude + 2.4];
     const query = {
       outFields: ['*'],
       returnGeometry: false,

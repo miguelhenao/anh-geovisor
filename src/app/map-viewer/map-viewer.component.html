@@ -188,10 +188,11 @@
 <!-- Modal de tabla de atributos -->
 <p-dialog id="attr-table" header="Tabla de atributos" [(visible)]="modalTable" [resizable]="false" [draggable]="false"
   (onHide)="onHideDialogAtributos()" [style]="{'width': '800px'}" position="bottomright">
-  <p-table class="esri-widget__table" [style]="{'width': 'inherit', 'height': '444px'}" [paginator]="true" [rows]="100"
+  <p-table class="esri-widget__table" [style]="{'width': 'inherit', 'height': '422px'}" [paginator]="true" [rows]="100"
     [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple" #dt [columns]="columnsTable" *ngIf="modalTable"
     [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true" [(selection)]="featuresSelected"
-    (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollHeight="270px">
+    (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollHeight="270px"
+    [resizableColumns]="true">
     <!-- <ng-template pTemplate="caption">
       <button pButton type="button" (click)="previousLayer()" class="ui-button-rounded" icon="fas fa-arrow-circle-left"
         title="Ver ant capa"></button>
@@ -201,12 +202,12 @@
     </ng-template> -->
     <ng-template pTemplate="colgroup" let-columns>
       <colgroup>
-        <col *ngFor="let col of columns" style="width:180px">
+        <col *ngFor="let col of columns" style="width:150px">
       </colgroup>
     </ng-template>
     <ng-template pTemplate="header" let-columns>
       <tr>
-        <th *ngFor="let col of columns">
+        <th *ngFor="let col of columns" pResizableColumn>
           {{col.alias}}
         </th>
       </tr>
@@ -237,7 +238,8 @@
     </ng-template>
     <ng-template pTemplate="body" let-item let-columns="columns">
       <tr [pSelectableRow]="item">
-        <td *ngFor="let col of columns">{{item.attributes[col.name]}}</td>
+        <td *ngFor="let col of columns" height="28px" title="{{item.attributes[col.name]}}">
+          {{item.attributes[col.name]}}</td>
       </tr>
     </ng-template>
     <ng-template pTemplate="summary">

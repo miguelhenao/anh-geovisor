@@ -537,3 +537,14 @@ p-sidebar {
 .ui-button-rounded {
   margin-right: 5px !important;
 }
+
+::ng-deep  body .ui-table .ui-table-tbody > tr > td,
+::ng-deep  body .ui-table .ui-table-thead > tr > th {
+  white-space: pre;
+  font-size: 11px;
+}
+
+.esri-select, .esri-input {
+  height: 25px;
+  font-size: 11px;
+}
