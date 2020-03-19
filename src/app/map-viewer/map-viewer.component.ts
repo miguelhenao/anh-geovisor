@@ -1914,6 +1914,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   getFeaturesLayer(layer: any): void {
+    this.view.center = [this.longitude + 18, this.latitude + 2.4];
     const query = {
       outFields: ['*'],
       returnGeometry: false,
@@ -1922,8 +1923,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     layer.queryFeatures(query).then((result) => {
       this.featureDptos = result.features;
       this.columnsTable = result.fields[0] !== undefined ? result.fields : layer.fields;
-      const indexOID = this.columnsTable.findIndex( x => x.type === 'oid');
-      this.columnsTable.splice(indexOID, 1);
+      // const indexOID = this.columnsTable.findIndex( x => x.type === 'oid');
+      // this.columnsTable.splice(indexOID, 1);
       for (let index = 0; index < this.columnsTable.length; index++) {
         this.filter[index] = 'contains';
       }
@@ -2183,12 +2184,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               geometry: key.geometry,
               symbol
             });
-            this.view.graphics.add(graphic);
             const objectGraphic = {
               attr: event.data.attributes,
               graphic
             };
             this.graphics.push(objectGraphic);
+            this.view.graphics.add(graphic);
+            this.view.goTo(graphic);
           });
         }, (err) => {
           console.error(err);
