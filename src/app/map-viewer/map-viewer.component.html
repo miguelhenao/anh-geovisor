@@ -62,7 +62,8 @@
 <!-- Fin del tierra slider del mapa -->
 
 <!-- Modal de extracción de datos -->
-<p-dialog header="Extracción de datos" [(visible)]="modalExtract" [resizable]="false" (onHide)="onHideDialogExtract()">
+<p-dialog header="Extracción de datos" [(visible)]="modalExtract" [resizable]="false" (onHide)="onHideDialogExtract()"
+  [focusOnShow]="false">
   <div id="infoDiv">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
       (click)="requestHelp('h-extraer')" icon="pi pi-question"></button>
@@ -97,7 +98,7 @@
 
 <!-- Modal de analisis de departamento -->
 <p-dialog header="Análisis de Departamento" [(visible)]="modalAnalysis" [resizable]="false"
-  (onHide)="onHideDialogAnalisis()">
+  (onHide)="onHideDialogAnalisis()" [focusOnShow]="false">
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
     (click)="requestHelp('h-cobertura')" icon="pi pi-question"></button>
   <p>
@@ -118,7 +119,7 @@
 
 <!-- Modal de zona de influencia -->
 <p-dialog header="Zona de Influencia (Buffer)" [(visible)]="modalBuffer" [resizable]="false"
-  (onHide)="onHideDialogBuffer()" [style]="{'width': '410px'}" [focusOnShow]="false">
+  (onHide)="onHideDialogBuffer()" [style]="{'width': '410px'}" [focusOnShow]="false" [focusOnShow]="false">
   <div id="div">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
       (click)="requestHelp('h-buffer')" icon="pi pi-question"></button>
@@ -160,7 +161,7 @@
 
 <!-- Modal de herramientas de medicion -->
 <p-dialog header="Herramientas de Medición" [(visible)]="modalMeasurement" [resizable]="false"
-  (onHide)="onHideDialogMedicion()" [positionTop]="10" [positionLeft]="200">
+  (onHide)="onHideDialogMedicion()" [positionTop]="10" [positionLeft]="200" [focusOnShow]="false">
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
     (click)="requestHelp('h-herramientas-medicion')" icon="pi pi-question"></button>
   <div style="width: 400px;">
@@ -187,19 +188,12 @@
 
 <!-- Modal de tabla de atributos -->
 <p-dialog id="attr-table" header="Tabla de atributos" [(visible)]="modalTable" [resizable]="false" [draggable]="false"
-  (onHide)="onHideDialogAtributos()" [style]="{'width': '800px'}" position="bottomright">
+  (onHide)="onHideDialogAtributos()" [style]="{'width': '800px'}" position="bottomright" [focusOnShow]="false">
   <p-table class="esri-widget__table" [style]="{'width': 'inherit', 'height': '422px'}" [paginator]="true" [rows]="100"
     [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple" #dt [columns]="columnsTable" *ngIf="modalTable"
     [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true" [(selection)]="featuresSelected"
     (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollHeight="270px"
     [resizableColumns]="true">
-    <!-- <ng-template pTemplate="caption">
-      <button pButton type="button" (click)="previousLayer()" class="ui-button-rounded" icon="fas fa-arrow-circle-left"
-        title="Ver ant capa"></button>
-      {{layerSelected.title}}
-      <button pButton type="button" (click)="nextLayer()" class="ui-button-rounded" icon="fas fa-arrow-circle-right"
-        title="Ver sgte capa"></button>
-    </ng-template> -->
     <ng-template pTemplate="colgroup" let-columns>
       <colgroup>
         <col *ngFor="let col of columns" style="width:150px">
@@ -249,7 +243,8 @@
         </div>
         <div>
           <p-dialog header="Búsqueda" [(visible)]="modalFilter" [style]="{width: '500px'}" [modal]="true"
-            (onHide)="getFeaturesLayerSelected()" [resizable]="false" [draggable]="false" position="topleft">
+            (onHide)="getFeaturesLayerSelected()" [resizable]="false" [draggable]="false" position="topleft"
+            [focusOnShow]="false">
             <div style="max-height: 250px; overflow-y: scroll;">
               <button pButton icon="pi pi-plus" label="Añadir Criterio" (click)="addFormField(1)"></button>
               <div *ngFor="let i of arrQuantity(quantityFields).fill(1); let p = index" style="margin-top: 10px;">
@@ -337,20 +332,21 @@
 <!-- Fin del div contenedor del widget de ayuda -->
 
 <!-- Modal de acerca de -->
-<p-dialog header="Acerca de..." [(visible)]="modalAbout" [resizable]="false">
+<p-dialog header="Acerca de..." [(visible)]="modalAbout" [resizable]="false" [focusOnShow]="false">
   <app-dialog-about></app-dialog-about>
 </p-dialog>
 <!-- Fin del modal de acerca de -->
 
 <!-- Modal de ayuda -->
-<p-dialog header="Ayuda del Geovisor ANH v3" [(visible)]="modalGuide" [resizable]="false" [style]="{'width': '808px'}">
+<p-dialog header="Ayuda del Geovisor ANH v3" [(visible)]="modalGuide" [resizable]="false" [style]="{'width': '808px'}"
+  [focusOnShow]="false">
   <app-dialog-guide [flag]="modalGuide" [elementId]="sectionSelected"></app-dialog-guide>
 </p-dialog>
 <!-- Fin del modal de ayuda -->
 
 <!-- Modal Herramientas de selección -->
 <p-dialog header="Herramientas de selección" [(visible)]="modalSelection" [resizable]="false"
-  (onHide)="onHideDialogSelection()">
+  (onHide)="onHideDialogSelection()" [focusOnShow]="false">
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
     (click)="requestHelp('h-seleccion')" icon="pi pi-question"></button>
   <div style="margin-bottom: 5px;">
@@ -379,8 +375,9 @@
 <!-- Fin de modal herramientas de selección -->
 
 <!-- Componente ubicar coordenada -->
-<p-dialog header="Ubicar coordenada" [(visible)]="modalCoordinate" [resizable]="false" [positionTop]="10"
-  [positionLeft]="200">
+<p-dialog header="Ubicar coordenada" [(visible)]="modalCoordinate" [resizable]="false" [focusOnShow]="false">
+  <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
+    (click)="requestHelp('h-ubicar-coordenada')" icon="pi pi-question"></button>
   <div>
     <div>
       <p>1. Unidades de la coordenada:</p>
