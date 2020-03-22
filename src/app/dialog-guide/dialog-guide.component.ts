@@ -14,11 +14,11 @@ export class DialogGuideComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    if (this.flag) {
-      setTimeout(() => {
-        document.getElementById(this.elementId).scrollIntoView({block: 'start', behavior: 'smooth'});
-      }, 500);
-    }
+    // if (this.flag) {
+    //   setTimeout(() => {
+    //     document.getElementById(this.elementId).scrollIntoView({block: 'start', behavior: 'smooth'});
+    //   }, 500);
+    // }
   }
 
 }

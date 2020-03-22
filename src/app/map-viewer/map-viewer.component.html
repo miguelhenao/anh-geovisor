@@ -121,7 +121,7 @@
   (onHide)="onHideDialogBuffer()" [style]="{'width': '410px'}" [focusOnShow]="false">
   <div id="div">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
-      (click)="requestHelp('buffer')" icon="pi pi-question"></button>
+      (click)="requestHelp('h-buffer')" icon="pi pi-question"></button>
     <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoBuffer = !infoBuffer"
       style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
     <p>1. Defina la anchura deseada</p>
@@ -162,7 +162,7 @@
 <p-dialog header="Herramientas de Medición" [(visible)]="modalMeasurement" [resizable]="false"
   (onHide)="onHideDialogMedicion()" [positionTop]="10" [positionLeft]="200">
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
-    (click)="requestHelp('h-medir')" icon="pi pi-question"></button>
+    (click)="requestHelp('h-herramientas-medicion')" icon="pi pi-question"></button>
   <div style="width: 400px;">
     <p-selectButton [options]="modesMeasurement" [(ngModel)]="selectedMeasurement" (onChange)="setActiveWidget()">
     </p-selectButton>
@@ -330,8 +330,6 @@
           (click)="onShowGuide()"></button>
         <button pButton type="button" label="Acerca de Geovisor ANH" class="ui-button-raised ui-button-secondary"
           icon="pi pi-info-circle" (click)="onShowAbout()"></button>
-        <!-- </div>
-      <div class="p-col"> -->
       </div>
     </div>
   </div>
@@ -354,7 +352,7 @@
 <p-dialog header="Herramientas de selección" [(visible)]="modalSelection" [resizable]="false"
   (onHide)="onHideDialogSelection()">
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
-    (click)="requestHelp('h-seleccionar')" icon="pi pi-question"></button>
+    (click)="requestHelp('h-seleccion')" icon="pi pi-question"></button>
   <div style="margin-bottom: 5px;">
     <div>
       <label>Capa de Selección:</label>
