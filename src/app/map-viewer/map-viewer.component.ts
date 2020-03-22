@@ -2401,7 +2401,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Muestra la guia del Geovisor
    */
   onShowGuide() {
-    this.sectionSelected = 'h';
+    this.sectionSelected = null;
     this.visibleModal(false, false, false, false, true, false, false, false, false, false);
     (window as any).ga('send', 'event', 'BUTTON', 'click', 'ayuda');
   }

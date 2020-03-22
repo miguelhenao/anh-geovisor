@@ -34,6 +34,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { InputMaskModule } from 'primeng/inputmask';
+import { ScrollSpyDirective } from './dialog-guide/scroll-spy.directive';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { InputMaskModule } from 'primeng/inputmask';
     DialogTerminosComponent,
     DialogSymbologyChangeComponent,
     DialogAboutComponent,
-    DialogGuideComponent
+    DialogGuideComponent,
+    ScrollSpyDirective
   ],
   imports: [
     BrowserModule,

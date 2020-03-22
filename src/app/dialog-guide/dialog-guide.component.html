@@ -1,38 +1,39 @@
 <div class="row">
   <div id="help-nav" class="col-sm-3 bs-docs-sidebar">
     <ul class="nav navbar-nav bs-docs-sidenav">
-      <li><a href="#h-introduccion" id="help-top">1. Introducción</a></li>
-      <li><a href="#h-acerca-de">2. Acerca del Geovisor ANH</a></li>
-      <li><a href="#h-terminos">2.1. Términos, Condiciones de Uso y Navegadores Compatibles</a></li>
-      <li><a href="#h-accesso-geovisor">2.2. Acceso al Geovisor</a></li>
-      <li><a href="#h-descripcion">3. Descripción del Geovisor ANH</a></li>
-      <li><a href="#h-herramientas-medicion">3.1. Herramientas de Medicion</a></li>
-      <li><a href="#h-medicion-area">3.1.1. Medición de Área</a></li>
-      <li><a href="#h-medicion-distancia">3.1.2. Medición de Distancia</a></li>
-      <li><a href="#h-medicion-ubicacion">3.1.3 Medición de Ubicación</a></li>
-      <li><a href="#h-seleccion">3.2. Herramientas de Selección</a></li>
-      <li><a href="#h-identificar">3.3. Botón Identificar</a></li>
-      <li><a href="#h-extraer-capa">3.4. Extracción de Datos</a></li>
-      <li><a href="#h-importar">3.5 Mis Capas</a></li>
-      <li><a href="#h-extraer">3.6 Extraer datos</a></li>
-      <li><a href="#h-herramientas">3.7. Herramientas</a></li>
-      <li><a href="#h-buffer">3.7.1. Zona de Influencia (Buffer)</a></li>
-      <li><a href="#h-cobertura">3.7.2. Análisis de Cobertura</a></li>
-      <li><a href="#h-simbologia">3.7.3. Cambiar Simbología</a></li>
-      <li><a href="#h-ubicar-coordenada">3.7.4. Ubicar Coordenada</a></li>
-      <li><a href="#h-impresion">3.8. Impresión</a></li>
-      <li><a href="#h-informacion">3.9. Búsqueda de Información</a></li>
-      <li><a href="#h-zoom">3.10. Aumentar Zoom, Disminuir Zoom, Exportar Mapa</a></li>
-      <li><a href="#h-mapa-base">3.11. Mapa base</a></li>
-      <li><a href="#h-convenciones">3.12. Convenciones</a></li>
-      <li><a href="#h-tabla-contenido">3.13. Tabla de Contenido</a></li>
-      <li><a href="#h-ayuda">3.14. Ayuda</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-introduccion'}" id="help-top"><a href="#h-introduccion">1. Introducción</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-acerca-de'}"><a href="#h-acerca-de">2. Acerca del Geovisor ANH</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-terminos'}"><a href="#h-terminos">2.1. Términos, Condiciones de Uso y Navegadores Compatibles</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-accesso-geovisor'}"><a href="#h-accesso-geovisor">2.2. Acceso al Geovisor</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-descripcion'}"><a href="#h-descripcion">3. Descripción del Geovisor ANH</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-herramientas-medicion'}"><a href="#h-herramientas-medicion">3.1. Herramientas de Medicion</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-medicion-area'}"><a href="#h-medicion-area">3.1.1. Medición de Área</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-medicion-distancia'}"><a href="#h-medicion-distancia">3.1.2. Medición de Distancia</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-medicion-ubicacion'}"><a href="#h-medicion-ubicacion">3.1.3 Medición de Ubicación</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-seleccion'}"><a href="#h-seleccion">3.2. Herramientas de Selección</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-identificar'}"><a href="#h-identificar">3.3. Botón Identificar</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-extraer-capa'}"><a href="#h-extraer-capa">3.4. Extracción de Datos</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-importar'}"><a href="#h-importar">3.5 Mis Capas</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-extraer'}"><a href="#h-extraer">3.6 Extraer datos</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-herramientas'}"><a href="#h-herramientas">3.7. Herramientas</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-buffer'}"><a href="#h-buffer">3.7.1. Zona de Influencia (Buffer)</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-cobertura'}"><a href="#h-cobertura">3.7.2. Análisis de Cobertura</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-simbologia'}"><a href="#h-simbologia">3.7.3. Cambiar Simbología</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-ubicar-coordenada'}"><a href="#h-ubicar-coordenada">3.7.4. Ubicar Coordenada</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-impresion'}"><a href="#h-impresion">3.8. Impresión</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-informacion'}"><a href="#h-informacion">3.9. Búsqueda de Información</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-zoom'}"><a href="#h-zoom">3.10. Aumentar Zoom, Disminuir Zoom, Exportar Mapa</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-mapa-base'}"><a href="#h-mapa-base">3.11. Mapa base</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-convenciones'}"><a href="#h-convenciones">3.12. Convenciones</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-tabla-contenido'}"><a href="#h-tabla-contenido">3.13. Tabla de Contenido</a></li>
+      <li [ngClass]="{'active': currentSection === 'h-ayuda'}"><a href="#h-ayuda">3.14. Ayuda</a></li>
+      <li><a href="#help-top">Volver arriba</a></li>
     </ul>
   </div>
-  <div id="help-content" class="col-sm-9" data-spy="scroll" data-target="#help-nav" data-offset="50">
-    <div class="bs-docs-section">
-      <!-- Introducción -->
-      <h2 id="h-introduccion">1. Introducción</h2>
+  <div id="help-content" class="col-sm-9" scrollSpy [spiedTags]="['DIV']" (sectionChange)="onSectionChange($event)">
+    <!-- Introducción -->
+    <div id="h-introduccion">
+      <h2>1. Introducción</h2>
       <p>El Geovisor ANH es una aplicación SIG-Web que permite consultar la información geográfica
         generada por la ANH y que conforma en su mayoría el Mapa de Tierras que continuamente es
         actualizado, además muestra las áreas que se encuentran en exploración y explotación, y las
@@ -43,17 +44,19 @@
         con sistemas operativos Android e iOS.</p><br>
     </div>
 
-    <div class="bs-docs-section">
-      <!-- Acerca del Geovisor ANH -->
-      <h2 id="h-acerca-de">2. Acerca del Geovisor ANH</h2>
+    <!-- Acerca del Geovisor ANH -->
+    <div id="h-acerca-de">
+      <h2>2. Acerca del Geovisor ANH</h2>
       <p>El Geovisor ANH fue desarrollado con el fin de visualizar la cartografía básica y temática del
         Mapa de Tierras de la Agencia Nacional de Hidrocarburos ANH, dicha visualización se realiza
         a partir de herramientas básicas de navegación que permiten la exploración de mapas, la
         medición de área, distancia y coordenadas, extraer datos en formato .zip de la zona solicitada
         y brindar información detallada de atributos de cada capa presente en el Geovisor.</p><br>
+    </div>
 
-      <!-- Términos, Condiciones de Uso y Navegadores Compatibles -->
-      <h3 id="h-terminos">2.1. Términos, Condiciones de Uso y Navegadores Compatibles</h3>
+    <!-- Términos, Condiciones de Uso y Navegadores Compatibles -->
+    <div id="h-terminos">
+      <h3>2.1. Términos, Condiciones de Uso y Navegadores Compatibles</h3>
       <p>Los términos y condiciones de uso se encuentran detallados al inicio del Geovisor ANH, al
         aceptarlos es posible acceder a la aplicación, de lo contrario se retornará a la página inicial de
         la Agencia Nacional de Hidrocarburos (ANH) y no será posible ingresar al Geovisor ANH.
@@ -100,9 +103,11 @@
       <br>
       <p>Adicionalmente se debe contar con una resolución para dispositivos móviles de 1024*768 y una
         conexión a internet mínimo de 1MB.</p><br>
+    </div>
 
-      <!-- Acceso al Geovisor -->
-      <h3 id="h-accesso-geovisor">2.2. Acceso al Geovisor</h3>
+    <!-- Acceso al Geovisor -->
+    <div id="h-accesso-geovisor">
+      <h3>2.2. Acceso al Geovisor</h3>
       <p>Para la ejecución del Geovisor se debe contar con un navegador web según los requisitos
         mínimos de ejecución, y acceder al portal web de la ANH
         <a href="http://www.anh.gov.co" target="_blank">(http://www.anh.gov.co)</a> en la sección
@@ -115,9 +120,9 @@
       <img src="assets//images/guide/Ilustración 2.png" alt=""><br><br>
     </div>
 
-    <div class="bs-docs-section">
-      <!-- Descripción del Geovisor ANH -->
-      <h2 id="h-descripcion">3. Descripción del Geovisor ANH</h2>
+    <!-- Descripción del Geovisor ANH -->
+    <div id="h-descripcion">
+      <h2>3. Descripción del Geovisor ANH</h2>
       <p>En esta sección se describe la interfaz de trabajo del Geovisor para comprender con mayor
         detalle el funcionamiento de la herramienta y su utilidad en la visualización de la cartografía
         básica y temática expuesta por la ANH.</p><br>
@@ -131,15 +136,19 @@
         geográfica en grados decimales que indique en el mapa el cursor del mouse del computador.</p><br>
       <img src="assets//images/guide/Ilustración 3.png" alt=""><br>
       <p>A continuación, se describe la funcionalidad de cada una de las herramientas:</p><br>
+    </div>
 
-      <!-- Herramientas de Medición -->
-      <h3 id="h-herramientas-medicion">3.1. Herramientas de Medición</h3>
+    <!-- Herramientas de Medición -->
+    <div id="h-herramientas-medicion">
+      <h3>3.1. Herramientas de Medición</h3>
       <p>Al seleccionar el botón se despliega una ventana que incluye tres herramientas que permiten
         hacer diferentes tipos de medición en el mapa: <b>Área, Distancia y Ubicación</b>: </p><br>
       <img src="assets//images/guide/Ilustración 4.png" alt=""><br><br>
+    </div>
 
-      <!-- Medición de Área -->
-      <h4 id="h-medicion-area">3.1.1. Medición de Área</h4>
+    <!-- Medición de Área -->
+    <div id="h-medicion-area">
+      <h4>3.1.1. Medición de Área</h4>
       <p>Para iniciar la medición se debe dibujar la geometría en el mapa, para esto es necesario hacer
         un clic en un punto deseado del mapa y sostener el cursor del ratón (mouse) mientras se mueve
         hasta el otro punto. Para terminar la medición se debe hacer doble clic en el segundo punto. El
@@ -147,9 +156,11 @@
         donde además se puede seleccionar la unidad de medida en la que se desee mostrar el
         resultado.</p><br>
       <img src="assets//images/guide/Ilustración 5.png" alt=""><br><br>
+    </div>
 
-      <!-- Medición de Distancia -->
-      <h4 id="h-medicion-distancia">3.1.2. Medición de Distancia</h4>
+    <!-- Medición de Distancia -->
+    <div id="h-medicion-distancia">
+      <h4>3.1.2. Medición de Distancia</h4>
       <p>Para iniciar la medición se debe dibujar la geometría en el mapa, para esto es necesario hacer
         un clic en un punto deseado del mapa y sostener el cursor del ratón (mouse) mientras se mueve
         hasta el otro punto. Para terminar la medición se debe hacer doble clic en el segundo punto. El
@@ -157,16 +168,20 @@
         donde además se puede seleccionar la unidad de medida en la que se desee mostrar el
         resultado. </p><br>
       <img src="assets//images/guide/Ilustración 6.png" alt=""><br><br>
+    </div>
 
-      <!-- Medición de Ubicación -->
-      <h4 id="h-medicion-ubicacion">3.1.3. Medición de Ubicación</h4>
+    <!-- Medición de Ubicación -->
+    <div id="h-medicion-ubicacion">
+      <h4>3.1.3. Medición de Ubicación</h4>
       <p>Al pasar el cursor del mouse por el mapa base, se van mostrando coordenadas que pueden
         verse a través de diferentes conversiones. También se puede agregar un punto fijo en el mapa
         el cual muestra otro tipo de coordenada denominada MAGNA-SIRGAS. </p><br>
       <img src="assets//images/guide/Ilustración 7.png" alt=""><br><br>
+    </div>
 
-      <!-- Herramientas de Selección  -->
-      <h3 id="h-seleccion">3.2. Herramientas de Selección</h3>
+    <!-- Herramientas de Selección  -->
+    <div id="h-seleccion">
+      <h3>3.2. Herramientas de Selección</h3>
       <p>Esta opción permite seleccionar una de las capas cargadas en el Geovisor (<b>Capas de
           selección</b>: Tierras 2019-09-17, Cuenca Sedimentaria, Rezumadero, Sensibilidad
         Socioambiental, Departamento, Municipio, Sísmica 2D, Sísmica 3D, y Pozo) y sobre la capa
@@ -182,20 +197,26 @@
         atributos. </p><br>
       <img src="assets//images/guide/Ilustración 9.png" alt=""><br>
       <img src="assets//images/guide/Ilustración 10.png" alt=""><br><br>
+    </div>
 
-      <!-- Botón Identificar -->
-      <h3 id="h-identificar">3.3. Botón Identificar</h3>
+    <!-- Botón Identificar -->
+    <div id="h-identificar">
+      <h3>3.3. Botón Identificar</h3>
       <p>Permite activar o desactivar la posibilidad de ver la información a través de pop-ups o ventanas
         emergentes. </p><br>
       <img src="assets//images/guide/Ilustración 11.png" alt=""><br><br>
+    </div>
 
-      <!-- Extracción de Datos -->
-      <h3 id="h-extraer-capa">3.4. Extracción de Datos</h3>
+    <!-- Extracción de Datos -->
+    <div id="h-extraer-capa">
+      <h3>3.4. Extracción de Datos</h3>
       <p>Esta herramienta permite extraer información en formato .zip de la capa seleccionada.</p><br>
       <img src="assets//images/guide/Ilustración 12.png" alt=""><br><br>
+    </div>
 
-      <!-- Mis Capas -->
-      <h3 id="h-importar">3.5. Mis Capas</h3>
+    <!-- Mis Capas -->
+    <div id="h-importar">
+      <h3>3.5. Mis Capas</h3>
       <p>A través de esta opción es posible seleccionar un archivo local para cargarlo como una capa
         sobre el mapa del Geovisor. En el Geovisor ANH se pueden incluir capas de diferentes formatos
         o servicios, permitiendo trabajar sobre capas propias y que éstas puedan ser visualizadas sobre
@@ -204,9 +225,11 @@
         los Servicios KML, WMS, GeoJSON, CSV, todos se encuentran a través del menú desplegable
         "Mis Capas". </p><br>
       <img src="assets//images/guide/Ilustración 13.png" alt=""><br><br>
+    </div>
 
-      <!-- Extraer Datos -->
-      <h3 id="h-extraer">3.6. Extraer Datos</h3>
+    <!-- Extraer Datos -->
+    <div id="h-extraer">
+      <h3>3.6. Extraer Datos</h3>
       <p>A través de esta opción es posible seleccionar y descargar una capa deseada o la información
         de un área determinada que se selecciones sobre el mapa a través de las herramientas de
         selección. Esta función permite la exportación de datos de una zona determinada de las capas
@@ -219,16 +242,20 @@
       <img src="assets//images/guide/Ilustración 14.png" alt=""><br>
       <img src="assets//images/guide/Ilustración 15.png" alt=""><br>
       <img src="assets//images/guide/Ilustración 16.png" alt=""><br><br>
+    </div>
 
-      <!-- Herramientas -->
-      <h3 id="h-herramientas">3.7. Herramientas</h3>
+    <!-- Herramientas -->
+    <div id="h-herramientas">
+      <h3>3.7. Herramientas</h3>
       <p>Las herramientas contenidas en este menú, brindan una opción de análisis espacial a partir de
         la ubicación de <b>Zona de Influencia (Buffer), Herramientas de medición, Análisis de
           Departamento, Cambiar Simbología y Ubicar Coordenada</b> como se detalla a continuación:</p><br>
       <img src="assets//images/guide/Ilustración 17.png" alt=""><br><br>
+    </div>
 
-      <!-- Zona de Influencia (Buffer) -->
-      <h4 id="h-buffer">3.7.1. Zona de Influencia (Buffer)</h4>
+    <!-- Zona de Influencia (Buffer) -->
+    <div id="h-buffer">
+      <h4>3.7.1. Zona de Influencia (Buffer)</h4>
       <p>Esta función permite dibujar un gráfico y aplicarle una simetría (buffer) alrededor a partir de una
         distancia determinada.</p><br>
       <p>Se digita un valor de distancia teniendo en cuenta la unidad de medida que se seleccione de la
@@ -238,9 +265,11 @@
         Como resultado se muestra una simetría (buffer) con otra tonalidad de color y según la distancia
         o radio elegido.</p><br>
       <img src="assets//images/guide/Ilustración 18.png" alt=""><br><br>
+    </div>
 
-      <!-- Análisis de Cobertura -->
-      <h4 id="h-cobertura">3.7.2. Análisis de Cobertura</h4>
+    <!-- Análisis de Cobertura -->
+    <div id="h-cobertura">
+      <h4>3.7.2. Análisis de Cobertura</h4>
       <p>Con este análisis se obtienen los Bloques Exploratorios que se encuentran en la jurisdicción del
         Departamento. Para la ejecución de este análisis se deben seleccionar los departamentos con
         los cuales se quiere trabajar, esto se puede hacer a partir de la Tabla de Atributos, o de la
@@ -249,18 +278,22 @@
         archivo .zip que contiene el Shapefile con la información del porcentaje de cobertura de cada
         bloque. </p><br>
       <img src="assets//images/guide/Ilustración 19.png" alt=""><br><br>
+    </div>
 
-      <!-- Cambiar Simbología -->
-      <h4 id="h-simbologia">3.7.3. Cambiar Simbología</h4>
+    <!-- Cambiar Simbología -->
+    <div id="h-simbologia">
+      <h4>3.7.3. Cambiar Simbología</h4>
       <p>Esta función permite modificar la simbología de las capas a partir del cambio del color del borde,
         el relleno y grosor del borde de la capa actual de trabajo. Se selecciona el color a partir del
         cuadro de colores, tanto para el borde como para el relleno. Luego se digita o escoge el grosor
         del borde en un intervalo de 0 a 10. Finalmente se hace clic en el botón "Aplicar Colores". Como
         resultado, se cambia la simbología del borde y relleno de capa actual. </p><br>
       <img src="assets//images/guide/Ilustración 20.png" alt=""><br><br>
+    </div>
 
-      <!-- Ubicar Coordenada -->
-      <h4 id="h-ubicar-coordenada">3.7.4. Ubicar Coordenada</h4>
+    <!-- Ubicar Coordenada -->
+    <div id="h-ubicar-coordenada">
+      <h4>3.7.4. Ubicar Coordenada</h4>
       <p>El Geovisor ANH permite realizar la ubicación de un punto a partir de su coordenada en
         Unidades de Coordenadas y sistemas de referencia establecidos por el administrador. Para tal
         fin, se debe seleccionar las Unidades de Coordenadas y luego el Sistema de Referencia. Paso
@@ -272,15 +305,19 @@
       <p>Para las unidades de Coordenadas en metros, los sistemas de referencia pueden ser: MAGNASIRGAS,
         Origen Bogotá, Este Central, Este Este, Oeste y Oeste Oeste.</p><br>
       <img src="assets//images/guide/Ilustración 21.png" alt=""><br><br>
+    </div>
 
-      <!-- Impresión -->
-      <h3 id="h-impresion">3.8. Impresión</h3>
+    <!-- Impresión -->
+    <div id="h-impresion">
+      <h3>3.8. Impresión</h3>
       <p>Esta función permite realizar una impresión del mapa que se muestre en pantalla en la escala
         actual, o exportar un mapa especifico para luego imprimirlo. </p><br>
       <img src="assets//images/guide/Ilustración 22.png" alt=""><br><br>
+    </div>
 
-      <!-- Búsqueda de Información -->
-      <h3 id="h-informacion">3.9. Búsqueda de Información</h3>
+    <!-- Búsqueda de Información -->
+    <div id="h-informacion">
+      <h3>3.9. Búsqueda de Información</h3>
       <p>En la parte superior derecha se encuentra la herramienta de búsqueda a través de la cual es
         posible hallar información con respecto a las capas cargadas inicialmente: Tierras 2019-09-17,
         Cuenca Sedimentaria, Rezumadero, Sensibilidad Socioambiental, Departamento, Municipio,
@@ -292,39 +329,50 @@
       <img src="assets//images/guide/Ilustración 23.png" alt=""><br>
       <img src="assets//images/guide/Ilustración 24.png" alt=""><br>
       <img src="assets//images/guide/Ilustración 25.png" alt=""><br><br>
+    </div>
 
-      <!-- Aumentar Zoom, Disminuir Zoom, Exportar Mapa -->
-      <h3 id="h-zoom">3.10. Aumentar Zoom, Disminuir Zoom, Exportar Mapa</h3>
+    <!-- Aumentar Zoom, Disminuir Zoom, Exportar Mapa -->
+    <div id="h-zoom">
+      <h3>3.10. Aumentar Zoom, Disminuir Zoom, Exportar Mapa</h3>
       <p>Los botones <b>+/-</b> permiten acercar o disminuir el mapa o la escala. El botón siguiente permite
         exportar el mapa en formato .PDF. </p><br>
       <img src="assets//images/guide/Ilustración 26.png" alt=""><br><br>
+    </div>
 
-      <!-- Mapa base -->
-      <h3 id="h-mapa-base">3.11. Mapa base</h3>
+    <!-- Mapa base -->
+    <div id="h-mapa-base">
+      <h3>3.11. Mapa base</h3>
       <p>Esta herramienta permite cambiar el mapa base, haciendo clic sobre la imagen que corresponda
         al nuevo mapa que se desea cargar.</p><br>
       <img src="assets//images/guide/Ilustración 27.png" alt=""><br>
       <img src="assets//images/guide/Ilustración 28.png" alt=""><br><br>
+    </div>
 
-      <!-- Convenciones -->
-      <h3 id="h-convenciones">3.12. Convenciones</h3>
+    <!-- Convenciones -->
+    <div id="h-convenciones">
+      <h3>3.12. Convenciones</h3>
       <p>Permite visualizar las convenciones de las capas cargadas en el Geovisor ANH.</p><br>
       <img src="assets//images/guide/Ilustración 29.png" alt=""><br>
       <img src="assets//images/guide/Ilustración 30.png" alt=""><br><br>
+    </div>
 
-      <!-- Tabla de Contenido -->
-      <h3 id="h-tabla-contenido">3.13. Tabla de Contenido</h3>
+    <!-- Tabla de Contenido -->
+    <div id="h-tabla-contenido">
+      <h3>3.13. Tabla de Contenido</h3>
       <p>Posibilita la elección de la capa de trabajo y aquellas que se deseen visualizar, además de
         graduar el nivel de opacidad. En esta tabla además se encuentra la Tabla de Atributos que
         permite explorar los datos de la consulta realizada.</p><br>
       <img src="assets//images/guide/Ilustración 31.png" alt=""><br>
       <img src="assets//images/guide/Ilustración 32.png" alt=""><br>
       <img src="assets//images/guide/Ilustración 33.png" alt=""><br><br>
+    </div>
 
-      <!-- Ayuda  -->
-      <h3 id="h-ayuda">3.14. Ayuda</h3>
+    <!-- Ayuda  -->
+    <div id="h-ayuda">
+      <h3>3.14. Ayuda</h3>
       <p>Contiene la Guía de Usuario para el adecuado manejo del Geovisor ANH. </p><br>
-      <img src="assets//images/guide/Ilustración 34.png" alt="">
+      <img src="assets//images/guide/Ilustración 34.png" alt=""><br>
+      <img src="assets//images/guide/Ilustración 35.png" alt=""><br>
     </div>
   </div>
 </div>
