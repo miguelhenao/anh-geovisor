@@ -1479,8 +1479,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.layerList.selectedItems.items[0] !== undefined ? this.layerList.selectedItems.items[0].title : '';
     this.buildOptionsLayersValue(title);
     const dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
-      width: '35%',
+      width: '400px',
       header: `Cambio de Simbología ${title}`,
+      baseZIndex: 20,
       data: { help: this, optionsLayers: this.optionsLayers, layerSelected: this.layerSelectedSelection }
     });
     dialog.onClose.subscribe(res => {
