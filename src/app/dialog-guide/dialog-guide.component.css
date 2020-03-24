@@ -13,6 +13,10 @@
   height: 500px;
 }
 
+h2, h3, h4 {
+  margin-top: 0;
+}
+
 p {
   font-size: 13px;
 }
