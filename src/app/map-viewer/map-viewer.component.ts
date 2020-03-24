@@ -1442,7 +1442,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         group: 'expand',
         expandTooltip: 'Ayuda'
       });
-      this.view.ui.add('coordsWidget', 'bottom-right');
+      this.view.ui.add(['coordsWidget', 'time-slider'], 'bottom-right');
       this.view.ui.add([this.expandPrint, expandBaseMapGallery, expandLegend, layerListExpand, help], 'top-right');
       return this.view;
     } catch (error) {

@@ -51,16 +51,6 @@
 <div #mapViewNode></div>
 <!-- Fin del div contenedor del mapa -->
 
-<!-- Tierra Slider del mapa -->
-<div id="ts-tierras-wrapper" class="esri-widget esri-component" *ngIf="!errorArcgisService" align="center">
-  <div class="ts-bg">
-    <div id="ts-tierras" class="ui-slider-orange">
-      <div class="ts-label">{{nameLayer}}</div>
-    </div>
-  </div>
-</div>
-<!-- Fin del tierra slider del mapa -->
-
 <!-- Modal de extracción de datos -->
 <p-dialog header="Extracción de datos" [(visible)]="modalExtract" [resizable]="false" (onHide)="onHideDialogExtract()"
   [focusOnShow]="false">
@@ -440,3 +430,21 @@
     <div id="coords" style="margin-top: 1.5px;"></div>
   </div>
 </div>
+
+<!-- Tierra Slider del mapa -->
+<div id="time-slider" class="esri-widget esri-component" *ngIf="!errorArcgisService" align="center">
+  <div class="ts-bg">
+    <div id="ts-tierras" class="ui-slider-orange">
+      <div class="ts-label">{{nameLayer}}</div>
+    </div>
+  </div>
+</div>
+<!-- Fin del tierra slider del mapa -->
+
+<!-- <div id="ts-tierras-wrapper" class="esri-widget esri-component" *ngIf="!errorArcgisService" align="center" style="z-index: -1;">
+  <div class="ts-bg">
+    <div id="ts-tierras" class="ui-slider-orange">
+      <div class="ts-label">{{nameLayer}}</div>
+    </div>
+  </div>
+</div> -->
