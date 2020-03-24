@@ -1,19 +1,15 @@
-@import url('https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css');
-
 #help-content {
-  width: initial;
   height: 490px;
   overflow-y: auto;
 }
 
 #help-nav {
-  width: inherit;
   height: 490px;
   overflow-y: auto;
 }
 
-.row {
-  width: 805px;
+.ui-g {
+  width: 795px;
   height: 500px;
 }
 
@@ -46,12 +42,22 @@ img {
 }
 
 /* sidebar */
-.bs-docs-sidebar {
+.sidebar {
   margin-bottom: 20px;
+  padding-top: 0;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+  margin-bottom: 0;
+  margin-top: 0;
+  list-style: none;
 }
 
 /* all links */
-.bs-docs-sidebar .nav > li > a {
+.sidebar .nav > li > a {
   color: #999;
   border-left: 2px solid transparent;
   padding: 4px 10px;
@@ -61,23 +67,17 @@ img {
 }
 
 /* active & hover links */
-.bs-docs-sidebar .nav > .active > a,
-.bs-docs-sidebar .nav > li > a:hover,
-.bs-docs-sidebar .nav > li > a:focus {
+.sidebar .nav > .active > a,
+.sidebar .nav > li > a:hover,
+.sidebar .nav > li > a:focus {
   color: #44546A;
   text-decoration: none;
   background-color: transparent;
   border-left-color: #44546A;
 }
 /* all active links */
-.bs-docs-sidebar .nav > .active > a,
-.bs-docs-sidebar .nav > .active:hover > a,
-.bs-docs-sidebar .nav > .active:focus > a {
+.sidebar .nav > .active > a,
+.sidebar .nav > .active:hover > a,
+.sidebar .nav > .active:focus > a {
   font-weight: 700;
-}
-/* nested active links */
-.bs-docs-sidebar .nav .nav > .active > a,
-.bs-docs-sidebar .nav .nav > .active:hover > a,
-.bs-docs-sidebar .nav .nav > .active:focus > a {
-  font-weight: 500;
 }

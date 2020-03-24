@@ -26,6 +26,7 @@ export class DialogGuideComponent implements OnInit, OnChanges {
   }
 
   onSectionChange(sectionId: string) {
+    sectionId = sectionId === undefined ? 'h-introduccion' : sectionId;
     this.currentSection = sectionId;
   }
 
