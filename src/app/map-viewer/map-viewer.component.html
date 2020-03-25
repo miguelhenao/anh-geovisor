@@ -179,10 +179,10 @@
 <!-- Modal de tabla de atributos -->
 <p-dialog id="attr-table" header="Tabla de atributos" [(visible)]="modalTable" [resizable]="false" [draggable]="false"
   (onHide)="onHideDialogAtributos()" [style]="{'width': '800px'}" position="bottomright" [focusOnShow]="false">
-  <p-table class="esri-widget__table" [style]="{'width': 'inherit', 'height': '422px'}" [paginator]="true" [rows]="100"
+  <p-table class="esri-widget__table" [style]="{'width': 'inherit', 'height': '380px'}" [paginator]="true" [rows]="100"
     [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple" #dt [columns]="columnsTable" *ngIf="modalTable"
     [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true" [(selection)]="featuresSelected"
-    (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollHeight="270px"
+    (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollHeight="228px"
     [resizableColumns]="true">
     <ng-template pTemplate="colgroup" let-columns>
       <colgroup>
