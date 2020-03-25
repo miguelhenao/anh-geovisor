@@ -988,7 +988,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           fieldInfos: []
         };
         const sourceSearch: Array<any> = this.sourceSearch.slice();
-        sourceSearch.push({
+        sourceSearch.unshift({
           layer: lyRezumadero,
           searchFields: searchField,
           exactMatch: false,
@@ -1025,7 +1025,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           fieldInfos: []
         };
         const sourceSearch: Array<any> = this.sourceSearch.slice();
-        sourceSearch.push({
+        sourceSearch.unshift({
           layer: lyCuencas,
           searchFields: searchField,
           exactMatch: false,
@@ -1064,7 +1064,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           fieldInfos: []
         };
         const sourceSearch: Array<any> = this.sourceSearch.slice();
-        sourceSearch.push({
+        sourceSearch.unshift({
           layer: lyTierras,
           searchFields: searchField,
           exactMatch: false,
