@@ -86,26 +86,26 @@
 </p-dialog>
 <!-- Fin del modal de extracción de datos -->
 
-<!-- Modal de analisis de departamento -->
-<p-dialog header="Análisis de Departamento" [(visible)]="modalAnalysis" [resizable]="false"
+<!-- Modal de análisis de departamento -->
+<p-dialog header="Análisis de Cobertura por Departamento" [(visible)]="modalAnalysis" [resizable]="false"
   (onHide)="onHideDialogAnalisis()" [focusOnShow]="false">
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
     (click)="requestHelp('h-cobertura')" icon="pi pi-question"></button>
   <p>
-    Departamentos seleccionados para el analisis:
+    Departamentos seleccionados para el análisis:
   </p>
   <p-multiSelect defaultLabel="Seleccione los departamentos para realizar análisis" (onChange)="changeAttrTable($event)"
     [options]="featureDptos" [(ngModel)]="dptosSelected" optionLabel="attributes.DEPARTAMEN"></p-multiSelect>
   <br>
   <p-button icon="pi pi-globe" [disabled]="dptosSelected.length == 0" (click)="generateAnalisisCobertura()"
-    label="Iniciar Analisis de Departamento"></p-button>
+    label="Iniciar Análisis de Cobertura"></p-button>
   <br>
   <br>
   <p-message [escape]="false" id="infoMedicion" severity="info"
     text="Con este análisis se obtienen los <b>Bloques Explorativos que se <br> encuentran en la jurisdicción del Departamento</b> seleccionado,<br>indicando el porcentaje de cobertura de cada bloque. <br>Use las <b>herramientas de selección</b> o la <b>tabla de atributos</b> para indicar<br>cuales departamentos desea usar para este análisis.">
   </p-message>
 </p-dialog>
-<!-- Fin del modal de analisis de cobertura -->
+<!-- Fin del modal de análisis de cobertura -->
 
 <!-- Modal de zona de influencia -->
 <p-dialog header="Zona de Influencia (Buffer)" [(visible)]="modalBuffer" [resizable]="false"

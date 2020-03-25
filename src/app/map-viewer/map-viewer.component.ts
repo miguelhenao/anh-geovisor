@@ -500,7 +500,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             }
           },
           {
-            label: 'Analisis de Departamento',
+            label: 'Análisis de Cobertura',
             icon: 'fas fa-clone',
             command: () => {
               !this.errorArcgisService ? this.analisis() : null;
@@ -1124,7 +1124,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 className: 'esri-icon-table',
                 id: 'attr-table'
               }, {
-                title: 'Analisis de Cobertura',
+                title: 'Análisis de Cobertura',
                 className: 'esri-icon-description',
                 id: 'analisis'
               },
@@ -2319,7 +2319,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   /**
-   * Retorna los nombres de los departamentos seleccionados en el analisis de cobertura
+   * Retorna los nombres de los departamentos seleccionados en el análisis de cobertura
    */
   public nameDptoSelected(): string {
     let nameDptos = '';
@@ -2355,7 +2355,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   /**
-   * Metodo que se realiza cuando se cierra el dialogo de analisis de cobertura
+   * Metodo que se realiza cuando se cierra el dialogo de análisis de cobertura
    */
   onHideDialogAnalisis() {
     this.featuresSelected = [];
@@ -2444,7 +2444,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   /**
    * @param about -> Bandera para dialog About
-   * @param analysis -> Bandera para dialog Analisis de cobertura
+   * @param analysis -> Bandera para dialog Análisis de cobertura
    * @param buffer -> Bandera para dialog Zona de influencia
    * @param extract -> Bandera para dialog Extraer capa
    * @param guide -> Bandera para dialog Guía
