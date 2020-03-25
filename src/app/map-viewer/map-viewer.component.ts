@@ -2167,8 +2167,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   public onRowSelect(event: any): void {
     loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
-      'esri/Color', 'dojo/_base/array', 'esri/Graphic']).then(([SimpleFillSymbol, SimpleLineSymbol, Color,
-        dojo, Graphic]) => {
+      'esri/Color', 'dojo/_base/array', 'esri/Graphic', 'esri/tasks/GeometryService',
+      'esri/geometry/SpatialReference', 'esri/tasks/support/ProjectParameters'])
+      .then(([SimpleFillSymbol, SimpleLineSymbol, Color, dojo, Graphic, GeometryService,
+        SpatialReference, ProjectParameters]) => {
+        console.log(event);
         const layer = this.layerSelected;
         const query = layer.createQuery();
         query.where = `${this.columnsTable[0].name} = ${event.data.attributes[this.columnsTable[0].name]}`;
@@ -2189,7 +2192,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             };
             this.graphics.push(objectGraphic);
             this.view.graphics.add(graphic);
-            this.view.goTo(graphic);
+            const geomSvc = new GeometryService(this.urlGeometryService);
+            const outSR = new SpatialReference({ wkid: 4326 });
+            const params = new ProjectParameters({
+              geometries: [key.geometry],
+              outSpatialReference: outSR
+            });
+            geomSvc.project(params).then((response) => {
+              this.view.goTo(response[0]);
+            });
           });
         }, (err) => {
           console.error(err);
