@@ -618,7 +618,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.optionsLayers = [];
     this.layerSelectedSelection = null;
     this.map.layers.items.forEach((layer) => {
-      if (layer.title !== null) {
+      if (layer.title !== null && layer.copyright !== null) {
         const label = layer.copyright.includes('SGC') ? layer.sourceJSON.name + '*' :
           layer.copyright.includes('IGAC') ? layer.sourceJSON.name + '**' : layer.sourceJSON.name;
         if (layer.copyright.includes('SGC')) {
@@ -1533,7 +1533,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         dptos.push(dpto);
       }
       this.featureDptos = dptos;
-      this.columnsTable = Object.keys(this.featureDptos[0].attributes);
+      this.columnsTable = result.fields;
       this.dptosSelected = [];
       this.layerSelected = this.departmentLayer;
       this.visibleModal(false, true, false, false, false, false, false, false, false, false);
@@ -1916,7 +1916,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   getFeaturesLayer(layer: any): void {
-    // this.view.center = [this.longitude + 18, this.latitude + 2.4];
     const query = {
       outFields: ['*'],
       returnGeometry: false,
