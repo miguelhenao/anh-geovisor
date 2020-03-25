@@ -263,19 +263,37 @@ p-sidebar {
 #time-slider {
   background-color: rgba(255, 255, 255, 0.6) !important;
   width: 40vw;
-  margin-right: 10vw;
+  margin-right: 16vw;
   align-items: center;
+}
+
+@media only screen and (max-width: 1286px){
+  #time-slider {
+    margin-right: 14vw;
+  }
+}
+
+@media only screen and (max-width: 1122px) {
+  #time-slider {
+    margin-right: 12vw;
+  }
+}
+
+@media only screen and (max-width: 958px) {
+  #time-slider {
+    margin-right: 10vw;
+  }
 }
 
 @media only screen and (max-width: 899px) {
   #time-slider {
-    margin-right: 7vw;
+    margin-right: 8vw;
   }
 }
 
-@media only screen and (min-width: 900px) {
+@media only screen and (max-width: 850px) {
   #time-slider {
-    margin-right: 10vw;
+    margin-right: 7vw;
   }
 }
 
@@ -358,7 +376,7 @@ p-sidebar {
 
 @media only screen and (max-height: 700px) {
   #help {
-    width: 430px;
+    width: 398px;
   }
 }
 

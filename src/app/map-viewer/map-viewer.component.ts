@@ -2384,8 +2384,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Metodo que se realiza cuando se cierra el dialogo de análisis de cobertura
    */
   onHideDialogAnalisis() {
-    this.featuresSelected = [];
-    this.clearGraphics();
+    // this.featuresSelected = [];
+    // this.clearGraphics();
     this.modalAnalysis = false;
   }
 
