@@ -28,6 +28,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   loaded = false;
   eventLayer: any;
   modalTable = false;
+  minimizeMaximize = true;
   modalFilter = false;
   modalMeasurement = false;
   modalAbout = false;
@@ -54,6 +55,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   menu: Array<MenuItem> = [];
   departmentLayer: any;
   graphics: Array<any> = [];
+  graphicGoTo: any;
   map: any;
   search: any;
   sourceSearch: Array<any> = [];
@@ -587,7 +589,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   public validateHeight(height: number): boolean {
     return height !== 1249 && height !== 478 && height !== 728 && height !== 704 && height !== 680 && height !== 656 && height !== 632
-    && height !== 608 && height !== 584 && height !== 560 && height !== 536 && height !== 512 && height !== 488;
+      && height !== 608 && height !== 584 && height !== 560 && height !== 536 && height !== 512 && height !== 488;
   }
   buildOptionsLayers(): void {
     this.optionsLayers = [];
@@ -2165,22 +2167,27 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Método que se ejecuta cuando un item de la tabla de atributos es seleccionado
    * @param event -> Evento con el item de la tabla seleccionado
    */
-  public onRowSelect(event: any): void {
+  public onRowSelect(event: any, goTo?: boolean): void {
     loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
       'esri/Color', 'dojo/_base/array', 'esri/Graphic', 'esri/tasks/GeometryService',
       'esri/geometry/SpatialReference', 'esri/tasks/support/ProjectParameters'])
       .then(([SimpleFillSymbol, SimpleLineSymbol, Color, dojo, Graphic, GeometryService,
         SpatialReference, ProjectParameters]) => {
-        console.log(event);
         const layer = this.layerSelected;
         const query = layer.createQuery();
         query.where = `${this.columnsTable[0].name} = ${event.data.attributes[this.columnsTable[0].name]}`;
         query.returnGeometry = true;
         query.outFields = ['*'];
         layer.queryFeatures(query).then((res) => {
-          const symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
+          const symbolX = new SimpleFillSymbol(SimpleFillSymbol.STYLE_NONE,
             new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 255, 1.0]), 2),
             new Color([0, 0, 0, 0.5]));
+          const symbolY = {
+            type: 'simple-line',  // autocasts as new SimpleLineSymbol()
+            color: 'red',
+            width: '2px',
+          };
+          const symbol = goTo ? symbolY : symbolX;
           dojo.forEach(res.features, (key) => {
             const graphic = new Graphic({
               geometry: key.geometry,
@@ -2190,17 +2197,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               attr: event.data.attributes,
               graphic
             };
-            this.graphics.push(objectGraphic);
+            this.graphicGoTo !== undefined ? this.view.graphics.remove(this.graphicGoTo) : null;
+            goTo ? this.graphicGoTo = graphic : this.graphics.push(objectGraphic);
+            if (goTo) {
+              const geomSvc = new GeometryService(this.urlGeometryService);
+              const outSR = new SpatialReference({ wkid: 4326 });
+              const params = new ProjectParameters({
+                geometries: [key.geometry],
+                outSpatialReference: outSR
+              });
+              geomSvc.project(params).then((response) => {
+                this.view.goTo(response[0]);
+              });
+            }
             this.view.graphics.add(graphic);
-            const geomSvc = new GeometryService(this.urlGeometryService);
-            const outSR = new SpatialReference({ wkid: 4326 });
-            const params = new ProjectParameters({
-              geometries: [key.geometry],
-              outSpatialReference: outSR
-            });
-            geomSvc.project(params).then((response) => {
-              this.view.goTo(response[0]);
-            });
           });
         }, (err) => {
           console.error(err);
@@ -2213,10 +2223,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
   }
 
+  public onRowSelectGoTo(item: any) {
+    const event = { data: item };
+    this.onRowSelect(event, true);
+  }
+
   /**
    * Método que se ejecuta cuando el dialogo de tabla de atributos es cerrado
    */
   public onHideDialogAtributos(): void {
+    this.minimizeMaximize = true;
     this.graphics = [];
     this.clearGraphics();
   }
@@ -2462,7 +2478,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * @param table -> Bandera para dialog Tabla de atributos
    */
   public visibleModal(about: boolean, analysis: boolean, buffer: boolean, extract: boolean, guide: boolean, measurement: boolean,
-                      table: boolean, selection: boolean, coordinate: boolean, filter: boolean) {
+    table: boolean, selection: boolean, coordinate: boolean, filter: boolean) {
     this.modalAbout = about;
     this.modalAnalysis = analysis;
     this.modalBuffer = buffer;

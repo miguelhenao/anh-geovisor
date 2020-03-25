@@ -177,25 +177,35 @@
 <!-- Fin del modal de herramientas de medición -->
 
 <!-- Modal de tabla de atributos -->
-<p-dialog id="attr-table" header="Tabla de atributos" [(visible)]="modalTable" [resizable]="false" [draggable]="false"
+<p-dialog id="attr-table" [(visible)]="modalTable" [resizable]="false" [draggable]="false"
   (onHide)="onHideDialogAtributos()" [style]="{'width': '800px'}" position="bottomright" [focusOnShow]="false">
+  <p-header>
+    <span>Tabla de Atributos</span>
+    <i class="pi pi-window-minimize" style="margin-left: 615px; padding-top: 2px; cursor: pointer;"
+      (click)="minimizeMaximize = false" *ngIf="minimizeMaximize" title="Minimizar"></i>
+    <i class="pi pi-window-maximize" style="margin-left: 615px; padding-top: 2px; cursor: pointer;"
+      (click)="minimizeMaximize = true" *ngIf="!minimizeMaximize" title="Maximizar"></i>
+  </p-header>
   <p-table class="esri-widget__table" [style]="{'width': 'inherit', 'height': '380px'}" [paginator]="true" [rows]="100"
-    [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple" #dt [columns]="columnsTable" *ngIf="modalTable"
-    [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true" [(selection)]="featuresSelected"
-    (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollHeight="228px"
-    [resizableColumns]="true">
+    [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple" #dt [columns]="columnsTable"
+    *ngIf="modalTable && minimizeMaximize" [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true"
+    [(selection)]="featuresSelected" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+    scrollHeight="228px" [resizableColumns]="true">
     <ng-template pTemplate="colgroup" let-columns>
       <colgroup>
+        <col style="width: 28px !important;">
         <col *ngFor="let col of columns" style="width:150px">
       </colgroup>
     </ng-template>
     <ng-template pTemplate="header" let-columns>
       <tr>
+        <th></th>
         <th *ngFor="let col of columns" pResizableColumn>
           {{col.alias}}
         </th>
       </tr>
       <tr>
+        <th></th>
         <th *ngFor="let col of columns; let i = index">
           <span style="display: grid; grid-template-columns: 20% 80%;" class="filter">
             <select name="select" *ngIf="view.ready" class="esri-select" [(ngModel)]="filter[i]">
@@ -222,6 +232,11 @@
     </ng-template>
     <ng-template pTemplate="body" let-item let-columns="columns">
       <tr [pSelectableRow]="item">
+        <td style="padding: 0px; width: 28px !important;" title="Acerca a">
+          <button class="esri-button" (click)="onRowSelectGoTo(item)">
+            <i class="esri-icon-zoom-in-magnifying-glass"></i>
+          </button>
+        </td>
         <td *ngFor="let col of columns" height="28px" title="{{item.attributes[col.name]}}">
           {{item.attributes[col.name]}}</td>
       </tr>

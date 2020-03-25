@@ -458,6 +458,22 @@ p-sidebar {
   margin-left: 10%;
 }
 
+::ng-deep td .esri-button {
+  height: 28px !important;
+  min-height: 28px !important;
+  width: 100% !important;
+  min-width: 28px !important;
+  background-color: transparent;
+  border: none;
+}
+
+::ng-deep td .esri-button i {
+  font-size: 16px;
+}
+::ng-deep .esri-button:hover {
+  background-color: transparent;
+  border-color: transparent;
+}
 
 /* Íconos menú */
 ::ng-deep .icofont-tools-alt-2,
