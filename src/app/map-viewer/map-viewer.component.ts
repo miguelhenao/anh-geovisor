@@ -195,6 +195,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   arrQuantity = Array;
   copyrightSGC: Array<string> = [];
   copyrightIGAC: Array<string> = [];
+  styleClassAttrTable: string;
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
               private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef) {
@@ -1184,6 +1185,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.buildOptionsLayersValue(layer.title);
           if (event.action.id === 'attr-table') {
             (window as any).ga('send', 'event', 'BUTTON', 'click', 'att-table-button');
+            layerListExpand.collapse();
             this.getFeaturesLayer(layer);
           } else if (event.action.id === 'analisis') {
             this.departmentLayer = layer;
@@ -1918,6 +1920,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   getFeaturesLayer(layer: any): void {
+    this.styleClassAttrTable = 'maxTable';
+    this.minimizeMaximize = true;
     const query = {
       outFields: ['*'],
       returnGeometry: false,
@@ -2713,5 +2717,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   public addFormField(value: number): void {
     this.quantityFields = this.quantityFields + value;
+  }
+
+  public minimizeMaximizeAttrTable(flag: boolean): void {
+    this.minimizeMaximize = flag;
+    this.minimizeMaximize ? this.styleClassAttrTable = 'maxTable' : this.styleClassAttrTable = 'minTable';
   }
 }

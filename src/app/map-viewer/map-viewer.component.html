@@ -178,13 +178,13 @@
 
 <!-- Modal de tabla de atributos -->
 <p-dialog id="attr-table" [(visible)]="modalTable" [resizable]="false" [draggable]="false"
-  (onHide)="onHideDialogAtributos()" [style]="{'width': '800px'}" position="bottomright" [focusOnShow]="false">
+  (onHide)="onHideDialogAtributos()" styleClass="{{styleClassAttrTable}}" position="bottomright" [focusOnShow]="false">
   <p-header>
     <span>Tabla de Atributos</span>
     <i class="pi pi-window-minimize" style="margin-left: 615px; padding-top: 2px; cursor: pointer;"
-      (click)="minimizeMaximize = false" *ngIf="minimizeMaximize" title="Minimizar"></i>
-    <i class="pi pi-window-maximize" style="margin-left: 615px; padding-top: 2px; cursor: pointer;"
-      (click)="minimizeMaximize = true" *ngIf="!minimizeMaximize" title="Maximizar"></i>
+      (click)="minimizeMaximizeAttrTable(false)" *ngIf="minimizeMaximize" title="Minimizar"></i>
+    <i class="pi pi-window-maximize" style="margin-left: 53px; padding-top: 2px; cursor: pointer;"
+      (click)="minimizeMaximizeAttrTable(true)" *ngIf="!minimizeMaximize" title="Maximizar"></i>
   </p-header>
   <p-table class="esri-widget__table" [style]="{'width': 'inherit', 'height': '380px'}" [paginator]="true" [rows]="100"
     [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple" #dt [columns]="columnsTable"
