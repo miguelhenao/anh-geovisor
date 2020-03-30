@@ -4,13 +4,17 @@
   clear: both;
 }
 
-#header div {
-  float: left;
+#header {
+  margin-bottom: 10px;
 }
 
-#header img {
-  margin-top: 10px;
-  float: right;
+#header {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+h2, h4 {
+  margin: 0;
 }
 
 /* Pixel 2 XL */

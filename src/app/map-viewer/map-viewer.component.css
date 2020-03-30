@@ -1,13 +1,10 @@
 @import url('https://js.arcgis.com/4.12/esri/css/main.css');
 #menu {
-  /* background-image: url("../../assets/logo-anh.svg"); */
-  height: 66px;
-  width: 181px;
-}
-
-.logo {
-  padding-left: 35px;
-  width: 175px;
+  background-image: url("../../assets/logo-anh-menu.png");
+  background-size: 195px 80px;
+  background-position: right;
+  height: 80px;
+  width: 185px;
 }
 
 #opacidad {
@@ -229,7 +226,7 @@ p-sidebar {
   left: 50%;
   width: 144px;
   height: 144px;
-  background: url(../../assets/machin144_sombra-suave.png) -5px -20px;
+  background: url(../../assets/loading-machin.png) -5px -20px;
   margin-top: -72px;
   margin-left: -72px;
   animation: mymove 1.6s steps(30, end) infinite;
@@ -473,14 +470,9 @@ p-sidebar {
   }
 
   #menu {
-    background: transparent;
     height: 51px;
-    width: 131px;
-  }
-
-  .logo {
-    padding-left: 22px;
     width: 130px;
+    background-size: 131px 51px;
   }
 
   .logo-toggler:before, .logo-toggler:after {

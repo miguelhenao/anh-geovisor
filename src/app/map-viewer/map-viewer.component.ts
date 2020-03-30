@@ -198,7 +198,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   styleClassAttrTable: string;
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
-    private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef) {
+              private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef) {
     this.setCurrentPosition();
     this.colorsFirst = this.generateColor('#F8C933', '#FFE933', 50);
     this.colorsSeconds = this.generateColor('#E18230', '#F8C933', 50);
