@@ -1,14 +1,63 @@
 #body {
-    overflow-y: scroll; 
-    height: 350px;
-    clear: both;
+  overflow-y: scroll;
+  height: 372px;
+  clear: both;
 }
 
 #header div {
-    float: left;
+  float: left;
 }
 
 #header img {
-    margin-top: 10px;
-    float: right;
+  margin-top: 10px;
+  float: right;
+}
+
+/* Pixel 2 XL */
+@media screen and (max-height: 823px) and (max-width: 411px) {
+  #body {
+    height: 382px;
+  }
+}
+
+/* iPhone X */
+@media screen and (max-height: 812px) and (max-width: 375px) {
+  #body {
+    height: 372px;
+  }
+}
+
+/* Pixel 2 */
+@media screen and (max-height: 731px) and (max-width: 411px) {
+  #body {
+    height: 350px;
+  }
+}
+
+/* iPhone 6/7/8 Plus */
+@media screen and (max-height: 736px) and (max-width: 414px) {
+  #body {
+    height: 335px;
+  }
+}
+
+/* iPhone 6/7/8 */
+@media screen and (max-height: 667px) and (max-width: 375px) {
+  #body {
+    height: 265px;
+  }
+}
+
+/* Galaxy S5 */
+@media screen and (max-height: 640px) and (max-width: 360px) {
+  #body {
+    height: 265px;
+  }
+}
+
+/* iPhone 5/SE */
+@media screen and (max-height: 568px) and (max-width: 320px) {
+  #body {
+    height: 190px;
+  }
 }
