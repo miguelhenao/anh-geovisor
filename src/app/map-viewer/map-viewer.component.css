@@ -1,8 +1,13 @@
 @import url('https://js.arcgis.com/4.12/esri/css/main.css');
 #menu {
-  background-image: url("../../assets/logo-anh-q.png");
-  height: 67px;
-  width: 188px;
+  /* background-image: url("../../assets/logo-anh.svg"); */
+  height: 66px;
+  width: 181px;
+}
+
+.logo {
+  padding-left: 35px;
+  width: 175px;
 }
 
 #opacidad {
@@ -428,16 +433,60 @@ p-sidebar {
   margin: 2px;
 }
 
+#buttons .button1 {
+  grid-area: 'button1';
+}
+#buttons .button2 {
+  grid-area: 'button2';
+}
+#buttons .button3 {
+  grid-area: 'button3';
+}
+#buttons .button4 {
+  grid-area: 'button4';
+}
+#buttons .button5 {
+  grid-area: 'button5';
+}
+
 #buttons {
   padding: 4px;
   display: grid;
-  grid-template-columns: auto auto auto auto auto;
-  grid-column-gap: 2px;
-  background-color: white;
+  grid-template-areas: 'button1 button2 button3 button4 button5';
+  grid-gap: 2px;
+  background-color:white;
 }
 
 #buttons p-button {
   margin: 0 auto;
+}
+
+@media only screen and (max-width: 445px) {
+  #buttons {
+    grid-template-areas:
+    'button1'
+    'button2'
+    'button3'
+    'button4'
+    'button5';
+    width: 45px;
+  }
+
+  #menu {
+    background: transparent;
+    height: 51px;
+    width: 131px;
+  }
+
+  .logo {
+    padding-left: 22px;
+    width: 130px;
+  }
+
+  .logo-toggler:before, .logo-toggler:after {
+    width: 12px;
+    height: 1px;
+  }
 }
 
 @media only screen and (max-width: 544px) {
@@ -596,7 +645,7 @@ p-sidebar {
 }
 
 ::ng-deep .maxTable {
-  width: 800px;
+  width: 100vh;
 }
 
 ::ng-deep .minTable {

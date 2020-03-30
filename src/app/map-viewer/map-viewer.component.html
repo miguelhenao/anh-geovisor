@@ -5,26 +5,28 @@
   <p-accordion [expandIcon]="null" [collapseIcon]="null" (onOpen)="onAccordion(true)" (onClose)="onAccordion(false)">
     <p-accordionTab [selected]="true" [transitionOptions]="'200ms'">
       <p-header>
-        <div title="Menú" class="logo-toggler" [ngClass]="{'display': visibleMenu}" id="menu"></div>
+        <div title="Menú" class="logo-toggler" [ngClass]="{'display': visibleMenu}" id="menu">
+          <img src="../../assets/logo-anh-colombia.png" class="logo">
+        </div>
       </p-header>
       <div id="buttons">
-        <button class="esri-button" style="background-color: #F8C933; border-color: #F8C933; border-radius: 4px;"
+        <button class="esri-button button1" style="background-color: #F8C933; border-color: #F8C933; border-radius: 4px;"
           title="Ver todo" (click)="viewAll()">
           <i class="icofont-world" align="center"></i>
         </button>
-        <button class="esri-button" style="background-color: #E18230; border-color: #E18230; border-radius: 4px;"
+        <button class="esri-button button2" style="background-color: #E18230; border-color: #E18230; border-radius: 4px;"
           title="Herramientas de Medición" (click)="openMeasuringTools()">
           <i class="icofont-ruler-compass" align="center"></i>
         </button>
-        <button class="esri-button" style="background-color: #D75C31; border-color: #D75C31; border-radius: 4px;"
+        <button class="esri-button button3" style="background-color: #D75C31; border-color: #D75C31; border-radius: 4px;"
           title="Seleccionar" (click)="openSelectionTool()">
           <i class="icofont-hand-drag1" align="center"></i>
         </button>
-        <button class="esri-button" style="background-color: #CC3D36; border-color: #CC3D36; border-radius: 4px;"
+        <button class="esri-button button4" style="background-color: #CC3D36; border-color: #CC3D36; border-radius: 4px;"
           title="Identificar" (click)="openEnabledPopup()">
           <i class="esri-icon-description" align="center"></i>
         </button>
-        <button class="esri-button" style="background-color: #44546A; border-color: #44546A; border-radius: 4px;"
+        <button class="esri-button button5" style="background-color: #44546A; border-color: #44546A; border-radius: 4px;"
           title="Descargar capa" (click)="openExtract()">
           <i class="esri-icon-download" align="center"></i>
         </button>
