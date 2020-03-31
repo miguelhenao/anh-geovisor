@@ -2,7 +2,7 @@
   <input type="file" name="file" id="upload-file-input" (change)="validateFormat($event)"/> &nbsp;
   <button type="submit" [disabled]="type === 'csv' && valueCoordenate === undefined || formatError">Cargar</button>
 </form>
-<div class="ui-g" style="width:250px;margin-bottom:10px" *ngIf="type === 'csv'">
+<div class="ui-g" style="width:250px;margin-bottom:10px" *ngIf="type === '.csv'">
   <div class="ui-g-12">
     <p-radioButton name="group1" value="G" label="Geográficas (grados decimales)" [(ngModel)]="valueCoordenate" inputId="opt1">
     </p-radioButton>
