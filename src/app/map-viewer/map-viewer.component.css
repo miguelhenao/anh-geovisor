@@ -637,7 +637,7 @@ p-sidebar {
 }
 
 ::ng-deep .maxTable {
-  width: 100vh;
+  width: 800px;
 }
 
 ::ng-deep .minTable {
