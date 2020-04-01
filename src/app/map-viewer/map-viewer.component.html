@@ -201,8 +201,9 @@
     <ng-template pTemplate="header" let-columns>
       <tr>
         <th></th>
-        <th *ngFor="let col of columns" pResizableColumn>
+        <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="keySort(col.name)">
           {{col.alias}}
+          <p-sortIcon [field]="keySort(col.name)"></p-sortIcon>
         </th>
       </tr>
       <tr>
