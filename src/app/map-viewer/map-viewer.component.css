@@ -39,6 +39,7 @@
 
 ::ng-deep :focus {
   outline: unset !important;
+  box-shadow: none !important;
 }
 
 ::ng-deep .ui-accordion .ui-accordion-header a {
@@ -644,4 +645,14 @@ p-sidebar {
   width: 238px;
   height: 71px;
   background-color: white;
+}
+
+::ng-deep .pi-sort-up:before,
+::ng-deep .pi-sort-down:before {
+  color: initial;
+}
+
+::ng-deep body .ui-table .ui-sortable-column.ui-state-highlight {
+  background: none;
+  color: initial;
 }
