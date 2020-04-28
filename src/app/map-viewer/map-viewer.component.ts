@@ -931,45 +931,45 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       });
       // Carga de capa de sensibilidad
-      const lySensibilidad = new FeatureLayer(this.mapRestUrl + '/7', {
-        labelExpressionInfo: { expression: '$feature.CONTRATO_N' },
-        id: 'Sensibilidad',
-        opacity: 0.5,
-        visible: false,
-        outFields: ['*'],
-        showAttribution: true,
-        mode: FeatureLayer.MODE_ONDEMAND
-      });
-      lySensibilidad.load().then(() => {
-        lySensibilidad.title = lySensibilidad.sourceJSON.name;
-        const searchField: Array<any> = [];
-        let text = '';
-        this.layerSelected = lyTierras;
-        for (const field of lySensibilidad.fields) {
-          searchField.push(field.name);
-          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
-        }
-        const templateSensibilidad = {
-          title: lySensibilidad.sourceJSON.name,
-          content: text,
-          fieldInfos: []
-        };
-        const sourceSearch: Array<any> = this.sourceSearch.slice();
-        sourceSearch.push({
-          layer: lySensibilidad,
-          searchFields: searchField,
-          exactMatch: false,
-          outFields: ['*'],
-          name: lySensibilidad.sourceJSON.name,
-          suggestionsEnabled: true,
-        });
-        this.sourceSearch = null;
-        this.sourceSearch = sourceSearch;
-        this.search.sources = this.sourceSearch;
-        lySensibilidad.popupTemplate = templateSensibilidad;
-      });
-      lySensibilidad.labelingInfo = [statesLabelClass];
-      this.map.add(lySensibilidad);
+      // const lySensibilidad = new FeatureLayer(this.mapRestUrl + '/7', {
+      //   labelExpressionInfo: { expression: '$feature.CONTRATO_N' },
+      //   id: 'Sensibilidad',
+      //   opacity: 0.5,
+      //   visible: false,
+      //   outFields: ['*'],
+      //   showAttribution: true,
+      //   mode: FeatureLayer.MODE_ONDEMAND
+      // });
+      // lySensibilidad.load().then(() => {
+      //   lySensibilidad.title = lySensibilidad.sourceJSON.name;
+      //   const searchField: Array<any> = [];
+      //   let text = '';
+      //   // this.layerSelected = lyTierras;
+      //   for (const field of lySensibilidad.fields) {
+      //     searchField.push(field.name);
+      //     text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
+      //   }
+      //   const templateSensibilidad = {
+      //     title: lySensibilidad.sourceJSON.name,
+      //     content: text,
+      //     fieldInfos: []
+      //   };
+      //   const sourceSearch: Array<any> = this.sourceSearch.slice();
+      //   sourceSearch.push({
+      //     layer: lySensibilidad,
+      //     searchFields: searchField,
+      //     exactMatch: false,
+      //     outFields: ['*'],
+      //     name: lySensibilidad.sourceJSON.name,
+      //     suggestionsEnabled: true,
+      //   });
+      //   this.sourceSearch = null;
+      //   this.sourceSearch = sourceSearch;
+      //   this.search.sources = this.sourceSearch;
+      //   lySensibilidad.popupTemplate = templateSensibilidad;
+      // });
+      // lySensibilidad.labelingInfo = [statesLabelClass];
+      // this.map.add(lySensibilidad);
 
       // Carga de capa rezumadero
       const lyRezumadero = new FeatureLayer(this.mapRestUrl + '/0', {
@@ -1047,7 +1047,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.map.add(lyCuencas);
 
       // Carga de capa de tierras
-      const lyTierras = new FeatureLayer(this.mapRestUrl + '/8', {
+      // const lyTierras = new FeatureLayer(this.mapRestUrl + '/8', {
+      const lyTierras = new FeatureLayer(this.mapRestUrl + '/7', {
         id: 'Tierras',
         opacity: 0.5,
         visible: true,
@@ -1862,8 +1863,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         d = timeStops[index][1];
         this.nameLayer = monthNames[d.getMonth()] + ' ' + d.getFullYear();
         const layerTierras = this.map.layers.items.find(x => x.id === 'Tierras');
+        lyTierrasMdt = this.map.layers.items.find(x => x.id === 'Tierras_MDT');
         if (lyTierrasMdt !== undefined) {
           this.map.remove(lyTierrasMdt);
+          console.log('Borró');
         }
         if (slider.values[0] < timeStops.length - 1) {
           layerTierras.visible = false;
@@ -1877,6 +1880,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             mode: FeatureLayer.MODE_ONDEMAND,
           });
           lyTierrasMdt.load().then(() => {
+            lyTierrasMdt.title = lyTierrasMdt.sourceJSON.name;
             let text = '';
             for (const field of lyTierrasMdt.fields) {
               text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
@@ -1900,19 +1904,41 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             this.sourceSearch = null;
             this.sourceSearch = sourceSearch;
             this.search.sources = this.sourceSearch;
+            const query = {
+              outFields: ['*'],
+              returnGeometry: false,
+              where: ''
+            };
+            let labelExpression;
+            lyTierrasMdt.queryFeatures(query).then((result) => {
+              const fields = result.fields;
+              if (fields.find(x => x.name === 'CONTRAT_N')) {
+                labelExpression = '$feature.CONTRAT_N';
+              } else if (fields.find(x => x.name === 'CONTRATO_N')) {
+                labelExpression = '$feature.CONTRATO_N';
+              }
+              console.log(lyTierrasMdt.displayField);
+              const statesLabelClass = new LabelClass({
+                labelExpressionInfo: { expression: labelExpression },
+                symbol: {
+                  type: 'text',
+                  color: 'black',
+                  haloSize: 1,
+                  haloColor: 'white',
+                  font: {
+                    size: 7.5
+                  }
+                }
+              });
+              lyTierrasMdt.labelingInfo = [statesLabelClass];
+              this.map.add(lyTierrasMdt);
+              (window as any).ga('send', 'event', 'TOOL', 'slide', 'ts-tierras');
+            }, error => {
+              this.map.add(lyTierrasMdt);
+              (window as any).ga('send', 'event', 'TOOL', 'slide', 'ts-tierras');
+            });
           });
-          const statesLabelClass = new LabelClass({
-            labelExpressionInfo: { expression: '$feature.TIERRAS_ID' },
-            symbol: {
-              type: 'text',
-              color: 'black',
-              haloSize: 1,
-              haloColor: 'white'
-            }
-          });
-          lyTierrasMdt.labelingInfo = [statesLabelClass];
-          this.map.add(lyTierrasMdt);
-          (window as any).ga('send', 'event', 'TOOL', 'slide', 'ts-tierras');
+          console.log('Afuera');
         } else {
           layerTierras.visible = true;
         }
