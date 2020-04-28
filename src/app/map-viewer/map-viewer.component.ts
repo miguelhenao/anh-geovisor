@@ -1957,7 +1957,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.layerSelected.queryFeatures(query).then((result) => {
       this.featureDptos = result.features;
       // this.columnsTable = Object.keys(this.featureDptos[0].attributes);
-      this.columnsTable = result.fields;
+      result.fields !== undefined && result.fields !== null && result.fields[0] !== undefined ? this.columnsTable = result.fields : null;
       for (let index = 0; index < this.columnsTable.length; index++) {
         this.filter[index] = 'contains';
       }
@@ -2033,7 +2033,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.layerSelected.queryFeatures(query).then((result) => {
       this.featureDptos = result.features;
       // this.columnsTable = Object.keys(this.featureDptos[0].attributes);
-      this.columnsTable = result.fields;
+      //this.columnsTable = result.fields;
     }, (err) => {
       console.error(err);
     });
