@@ -1737,13 +1737,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * @param featureCollection -> Lista de features para construir el layer
    */
   async addShapefileToMap(featureCollection) {
-    const [FeatureLayer, Graphic, Field] = await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/layers/support/Field']);
-    const layerName = featureCollection.data.featureCollection.layers[0].layerDefinition.name;
+    const [FeatureLayer, Graphic, Field, SimpleRenderer] =
+      await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/layers/support/Field', 'esri/renderers/SimpleRenderer']);
     let sourceGraphics = [];
     const layers = featureCollection.data.featureCollection.layers.map((layer) => {
+      const layerName = layer.layerDefinition.name;
       const graphics = layer.featureSet.features.map((feature) => {
         return Graphic.fromJSON(feature);
       });
+      const renderer = SimpleRenderer.fromJSON(layer.layerDefinition.drawingInfo.renderer);
       sourceGraphics = sourceGraphics.concat(graphics);
       const featureLayer = new FeatureLayer({
         title: layerName,
@@ -1751,7 +1753,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         source: graphics,
         fields: layer.layerDefinition.fields.map((field) => {
           return Field.fromJSON(field);
-        })
+        }),
+        renderer
       });
       return featureLayer;
     });
@@ -2092,7 +2095,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         wkid: 4326
       }
     });
-    debugger;
     if (!this.layerExtract && (this.selectedLayers.length === 0 || this.view.graphics.length === 0)) {
       if (this.selectedLayers.length === 0) {
         this.messageService.add({
@@ -2122,7 +2124,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         detail: 'Debe seleccionar las capas que desea extraer.'
       });
     } else {
-      debugger;
       this.makingWork = true;
       let sourceLayer: any;
       sourceLayer = {
