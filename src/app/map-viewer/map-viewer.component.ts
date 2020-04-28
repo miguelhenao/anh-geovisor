@@ -601,17 +601,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.copyrightSGC = [];
     this.map.layers.items.forEach((layer) => {
       if (layer.title !== null) {
-        const label = layer.copyright.includes('SGC') ? layer.sourceJSON.name + '*' :
-          layer.copyright.includes('IGAC') ? layer.sourceJSON.name + '**' : layer.sourceJSON.name;
-        if (layer.copyright.includes('SGC')) {
-          this.copyrightSGC.push(layer.sourceJSON.name);
-        } else if (layer.copyright.includes('IGAC')) {
-          this.copyrightIGAC.push(layer.sourceJSON.name);
+        if (layer.copyright !== null) {
+          const label = layer.copyright.includes('SGC') ? layer.sourceJSON.name + '*' :
+            layer.copyright.includes('IGAC') ? layer.sourceJSON.name + '**' : layer.sourceJSON.name;
+          if (layer.copyright.includes('SGC')) {
+            this.copyrightSGC.push(layer.sourceJSON.name);
+          } else if (layer.copyright.includes('IGAC')) {
+            this.copyrightIGAC.push(layer.sourceJSON.name);
+          }
+          this.optionsLayers.push({
+            label,
+            value: layer.sourceJSON.name
+          });
         }
-        this.optionsLayers.push({
-          label,
-          value: layer.sourceJSON.name
-        });
       }
     });
     this.optionsLayers = this.optionsLayers.reverse();
@@ -2090,7 +2092,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         wkid: 4326
       }
     });
-    if ((this.selectedLayers.length === 0 || this.view.graphics.length === 0)) {
+    debugger;
+    if (!this.layerExtract && (this.selectedLayers.length === 0 || this.view.graphics.length === 0)) {
       if (this.selectedLayers.length === 0) {
         this.messageService.add({
           severity: 'warn',
@@ -2112,40 +2115,45 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           detail: 'Debe dibujar el área de interes para poder extraer datos.'
         });
       }
+    } else if (this.layerExtract && this.selectedLayers.length === 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: '',
+        detail: 'Debe seleccionar las capas que desea extraer.'
+      });
     } else {
+      debugger;
       this.makingWork = true;
       let sourceLayer: any;
-      if (this.layerExtract) {
-        sourceLayer = {
-          geometry: new Polygon({
-            spatialReference: {
-              wkid: 102100
-            },
-            rings: [
-              [
-                [-9618186.050867643, 1884309.6297609266],
-                [-7622262.368285651, 1982149.0259659262],
-                [-7250472.662706653, -498079.6678308132],
-                [-9412723.318837143, -566567.245174313],
-                [-9618186.050867643, 1884309.6297609266]
-              ]
-            ]
-          }),
-          symbol: {
-            type: 'simple-fill',
-            color: [255, 255, 0, 64],
-            outline: {
-              type: 'simple-line',
-              color: [255, 0, 0, 255],
-              width: 2,
-              style: 'dash-dot'
-            },
-            style: 'solid'
+      sourceLayer = {
+        geometry: new Polygon({
+          spatialReference: {
+            wkid: 102100
           },
-          attributes: {},
-          popupTemplate: null
-        };
-      }
+          rings: [
+            [
+              [-9618186.050867643, 1884309.6297609266],
+              [-7622262.368285651, 1982149.0259659262],
+              [-7250472.662706653, -498079.6678308132],
+              [-9412723.318837143, -566567.245174313],
+              [-9618186.050867643, 1884309.6297609266]
+            ]
+          ]
+        }),
+        symbol: {
+          type: 'simple-fill',
+          color: [255, 255, 0, 64],
+          outline: {
+            type: 'simple-line',
+            color: [255, 0, 0, 255],
+            width: 2,
+            style: 'dash-dot'
+          },
+          style: 'solid'
+        },
+        attributes: {},
+        popupTemplate: null
+      };
       const features = !this.layerExtract ? this.view.graphics.items : sourceLayer;
       const featureSet = new FeatureSet();
       featureSet.features = features;
