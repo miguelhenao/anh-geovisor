@@ -1433,6 +1433,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   });
                   this.clearGraphic = true;
                   this.makingWork = false;
+                  this.styleClassAttrTable = 'maxTable';
                   this.visibleModal(false, false, false, false, false, false, true, true, false, false);
                 });
             }, err => {
@@ -2178,8 +2179,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       };
       gpExtract.submitJob(params).then((jobInfo) => {
         const options = {
-          statusCallback: () => {
-          }
+          statusCallback: () => { }
         };
         gpExtract.waitForJobCompletion(jobInfo.jobId, options).then((jobInfo2) => {
           if (!jobInfo2.jobStatus.includes('fail')) {
