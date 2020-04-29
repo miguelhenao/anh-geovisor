@@ -9,24 +9,29 @@
         </div>
       </p-header>
       <div id="buttons">
-        <button class="esri-button button1" style="background-color: #F8C933; border-color: #F8C933; border-radius: 4px;"
-          title="Ver todo" (click)="viewAll()">
+        <button class="esri-button button1"
+          style="background-color: #F8C933; border-color: #F8C933; border-radius: 4px;" title="Ver todo"
+          (click)="viewAll()">
           <i class="icofont-world" align="center"></i>
         </button>
-        <button class="esri-button button2" style="background-color: #E18230; border-color: #E18230; border-radius: 4px;"
-          title="Herramientas de Medición" (click)="openMeasuringTools()">
+        <button class="esri-button button2"
+          style="background-color: #E18230; border-color: #E18230; border-radius: 4px;" title="Herramientas de Medición"
+          (click)="openMeasuringTools()">
           <i class="icofont-ruler-compass" align="center"></i>
         </button>
-        <button class="esri-button button3" style="background-color: #D75C31; border-color: #D75C31; border-radius: 4px;"
-          title="Seleccionar" (click)="openSelectionTool()">
+        <button class="esri-button button3"
+          style="background-color: #D75C31; border-color: #D75C31; border-radius: 4px;" title="Seleccionar"
+          (click)="openSelectionTool()">
           <i class="icofont-hand-drag1" align="center"></i>
         </button>
-        <button class="esri-button button4" style="background-color: #CC3D36; border-color: #CC3D36; border-radius: 4px;"
-          title="Identificar" (click)="openEnabledPopup()">
+        <button class="esri-button button4"
+          style="background-color: #CC3D36; border-color: #CC3D36; border-radius: 4px;" title="Identificar"
+          (click)="openEnabledPopup()">
           <i class="esri-icon-description" align="center"></i>
         </button>
-        <button class="esri-button button5" style="background-color: #44546A; border-color: #44546A; border-radius: 4px;"
-          title="Descargar capa" (click)="openExtract()">
+        <button class="esri-button button5"
+          style="background-color: #44546A; border-color: #44546A; border-radius: 4px;" title="Descargar capa"
+          (click)="openExtract()">
           <i class="esri-icon-download" align="center"></i>
         </button>
       </div>
@@ -352,7 +357,7 @@
 <!-- Fin del modal de ayuda -->
 
 <!-- Modal Herramientas de selección -->
-<p-dialog header="Herramientas de selección" [(visible)]="modalSelection" [resizable]="false"
+<p-dialog header="Herramientas de Selección" [(visible)]="modalSelection" [resizable]="false"
   (onHide)="onHideDialogSelection()" [focusOnShow]="false">
   <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
     (click)="requestHelp('h-seleccion')" icon="pi pi-question"></button>
@@ -377,7 +382,8 @@
       <br> mientras mueve el mouse, y suelte para finalizar."></p-message>
   <br>
   <p-message [escape]="false" id="infoMedicion" severity="info"
-    text="Fuentes de información: <br>*SGC: {{copyrightSGC}} <br>**IGAC: {{copyrightIGAC}}"></p-message>
+    text="Fuentes de información: <br><b>*Servicio Geológico Colombiano - SGC:</b> {{copyrightSGC}} <br><b>**Instituto Geográfico Agustín Codazzi - IGAC:</b> {{copyrightIGAC}}">
+  </p-message>
 </p-dialog>
 <!-- Fin de modal herramientas de selección -->
 

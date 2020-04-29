@@ -458,14 +458,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         icon: 'icofont-download-alt',
         items: [
           {
-            label: 'Descargar capa',
+            label: 'Extraer Capa',
             icon: 'esri-icon-download',
             command: () => {
               this.openExtract();
             }
           },
           {
-            label: 'Descargar información',
+            label: 'Extraer Área',
             icon: 'icofont-file-zip',
             command: () => {
               if (!this.errorArcgisService) {
@@ -503,7 +503,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             }
           },
           {
-            label: 'Análisis de Cobertura',
+            label: 'Análisis de Departamento',
             icon: 'fas fa-clone',
             command: () => {
               !this.errorArcgisService ? this.analisis() : null;
@@ -1653,14 +1653,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         case 'distance':
           this.activeWidget = new DistanceMeasurement2D({
             view: this.view,
-            container: document.getElementById('divWidget')
+            container: document.getElementById('divWidget'),
           });
           this.activeWidget.viewModel.newMeasurement();
           break;
         case 'area':
           this.activeWidget = new AreaMeasurement2D({
             view: this.view,
-            container: document.getElementById('divWidget')
+            container: document.getElementById('divWidget'),
+            unit: 'hectares'
           });
           this.activeWidget.viewModel.newMeasurement();
           break;
