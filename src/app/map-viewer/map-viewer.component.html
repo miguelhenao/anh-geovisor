@@ -262,7 +262,7 @@
               <div *ngFor="let i of arrQuantity(quantityFields).fill(1); let p = index" style="margin-top: 10px;">
                 <select name="selectField" style="width: 110px; float: left;" class="esri-select"
                   [(ngModel)]="objectFilter[p]">
-                  <option *ngFor="let item of columnsTable; let i = index" [ngValue]="item.name">{{item.name}}</option>
+                  <option *ngFor="let item of columnsTable; let i = index" [ngValue]="item.name">{{item.alias}}</option>
                 </select>
                 <select name="selectType" (change)="getFilterParams()"
                   style="width: 110px; float: left; margin-left: 5px;" *ngIf="view.ready" [(ngModel)]="filterS[p]"
