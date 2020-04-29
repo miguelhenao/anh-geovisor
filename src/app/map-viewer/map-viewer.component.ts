@@ -589,6 +589,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       }
     }
+    const paginationPrevious: HTMLCollection = document.getElementsByClassName('esri-popup__pagination-previous');
+    const newTextPrevious = 'Ver anterior capa';
+    if (paginationPrevious.length > 0) {
+      paginationPrevious.item(0).getAttribute('title') !== newTextPrevious ?
+        paginationPrevious.item(0).setAttribute('title', newTextPrevious) : null;
+    }
+
+    const paginationNext: HTMLCollection = document.getElementsByClassName('esri-popup__pagination-next');
+    const newTextNext = 'Ver siguiente capa';
+    if (paginationNext.length > 0) {
+      paginationNext.item(0).getAttribute('title') !== newTextNext ? paginationNext.item(0).setAttribute('title', newTextNext) : null;
+    }
   }
 
   public validateHeight(height: number): boolean {
