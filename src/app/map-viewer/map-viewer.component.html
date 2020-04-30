@@ -192,7 +192,7 @@
     <i class="pi pi-window-maximize" style="margin-left: 53px; padding-top: 2px; cursor: pointer;"
       (click)="minimizeMaximizeAttrTable(true)" *ngIf="!minimizeMaximize" title="Maximizar"></i>
   </p-header>
-  <p-table class="esri-widget__table" [style]="{'width': 'inherit', 'height': '380px'}" [paginator]="true" [rows]="100"
+  <p-table class="esri-widget__table" [style]="{'width': 'inherit', 'height': 'inherit', 'max-height': '380px'}" [paginator]="true" [rows]="100"
     [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple" #dt [columns]="columnsTable"
     *ngIf="modalTable && minimizeMaximize" [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true"
     [(selection)]="featuresSelected" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"

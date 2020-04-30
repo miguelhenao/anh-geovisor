@@ -1412,36 +1412,48 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             this.layerSelected.queryFeatures(spQry).then((result) => {
               if (result.features.length === 0) {
                 this.makingWork = false;
-              }
-              this.messageService.add({
-                severity: 'info',
-                summary: '',
-                detail: `Se seleccionaron ${result.features.length} elementos de la capa ${this.layerSelected.id}
-                y se cargaron sus atributos.`
-              });
-              this.columnsTable = result.fields;
-              this.clearGraphics();
-              this.featureDptos = result.features;
-              layerListExpand.collapse();
-              loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/Color', 'dojo/_base/array',
-                'esri/Graphic']).then(([SimpleFillSymbol, SimpleLineSymbol, Color, dojo, Graphic]) => {
-                  const symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
-                    new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 255, 1.0]), 2),
-                    new Color([0, 0, 0, 0.5]));
-                  dojo.forEach(result.features, (key) => {
-                    const graphic = new Graphic({
-                      geometry: key.geometry,
-                      symbol
-                    });
-                    this.view.graphics.add(graphic);
-                  });
-                  this.clearGraphic = true;
-                  this.makingWork = false;
-                  this.styleClassAttrTable = 'maxTable';
-                  this.visibleModal(false, false, false, false, false, false, true, true, false, false);
+                this.messageService.add({
+                  severity: 'info',
+                  summary: '',
+                  detail: `No se seleccionaron elementos de la capa ${this.layerSelected.id}`
                 });
+              } else {
+                this.messageService.add({
+                  severity: 'info',
+                  summary: '',
+                  detail: `Se seleccionaron ${result.features.length} elementos de la capa ${this.layerSelected.id}
+                  y se cargaron sus atributos.`
+                });
+                this.columnsTable = result.fields;
+                this.clearGraphics();
+                this.featureDptos = result.features;
+                layerListExpand.collapse();
+                loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/Color', 'dojo/_base/array',
+                  'esri/Graphic']).then(([SimpleFillSymbol, SimpleLineSymbol, Color, dojo, Graphic]) => {
+                    const symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
+                      new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 255, 1.0]), 2),
+                      new Color([0, 0, 0, 0.5]));
+                    dojo.forEach(result.features, (key) => {
+                      const graphic = new Graphic({
+                        geometry: key.geometry,
+                        symbol
+                      });
+                      this.view.graphics.add(graphic);
+                    });
+                    this.clearGraphic = true;
+                    this.makingWork = false;
+                    this.styleClassAttrTable = 'maxTable';
+                    this.visibleModal(false, false, false, false, false, false, true, true, false, false);
+                  });
+              }
             }, err => {
               console.error(err);
+              this.makingWork = false;
+              this.messageService.add({
+                severity: 'error',
+                summary: '',
+                detail: err.message
+              });
             });
           } else {
             this.messageService.add({
@@ -2316,8 +2328,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
     this.buildOptionsLayers();
     for (const option of this.optionsLayers) {
-      if (option.label === this.layerSelected.sourceJSON.name) {
-        this.selectedLayers.push(option.label);
+      if (option.value === this.layerSelected.sourceJSON.name) {
+        this.selectedLayers.push(option.value);
         break;
       }
     }
