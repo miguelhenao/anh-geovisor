@@ -12,6 +12,7 @@ import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import { Router } from '@angular/router';
 import { DialogService } from 'primeng/dynamicdialog';
+import { Table } from "primeng/table";
 
 @Component({
   selector: 'app-map-viewer',
@@ -25,6 +26,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   view: any = {
     ready: false
   };
+  @ViewChild('dt', { static: false }) attrTable: Table;
   loaded = false;
   eventLayer: any;
   modalTable = false;
@@ -36,6 +38,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   modalExtract = false;
   layersOptionsList: Array<any> = [];
   layerExtract = false;
+  sourceLayer: Array<any> = [];
   modalAnalysis = false;
   heightTable: number;
   modalBuffer = false;
@@ -146,6 +149,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   sketchBuffer;
   sketchSelection;
   selectedPolygon: SelectItem;
+  shapeAttr: boolean = false;
   selectedSketch: any;
   intervalChange: any;
   levelColors = 0;
@@ -1972,7 +1976,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.minimizeMaximize = true;
     const query = {
       outFields: ['*'],
-      returnGeometry: false,
+      returnGeometry: true,
       where: ''
     };
     layer.queryFeatures(query).then((result) => {
@@ -2101,15 +2105,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Método encargado de la funcionalidad de extraer datos a un archivo Shapefile
    */
   async extractShape() {
-    const [FeatureSet, Geoprocessor, Polygon] = await loadModules(['esri/tasks/support/FeatureSet',
-      'esri/tasks/Geoprocessor', 'esri/geometry/Polygon']);
+    const [FeatureSet, Geoprocessor, Polygon, GraphicsLayer, dojo, Graphic] = await loadModules(['esri/tasks/support/FeatureSet',
+      'esri/tasks/Geoprocessor', 'esri/geometry/Polygon', 'esri/layers/GraphicsLayer', 'dojo/_base/array', 'esri/Graphic']);
     const gpExtract = new Geoprocessor({
       url: this.urlExtractShape,
       outSpatialReference: {
         wkid: 4326
       }
     });
-    if (!this.layerExtract && (this.selectedLayers.length === 0 || this.view.graphics.length === 0)) {
+    if (!this.layerExtract && (this.selectedLayers.length === 0 || this.view.graphics.length === 0) && !this.shapeAttr) {
       if (this.selectedLayers.length === 0) {
         this.messageService.add({
           severity: 'warn',
@@ -2131,7 +2135,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           detail: 'Debe dibujar el área de interes para poder extraer datos.'
         });
       }
-    } else if (this.layerExtract && this.selectedLayers.length === 0) {
+    } else if (this.layerExtract && this.selectedLayers.length === 0 && !this.shapeAttr) {
       this.messageService.add({
         severity: 'warn',
         summary: '',
@@ -2139,37 +2143,52 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
     } else {
       this.makingWork = true;
-      let sourceLayer: any;
-      sourceLayer = {
-        geometry: new Polygon({
-          spatialReference: {
-            wkid: 102100
-          },
-          rings: [
-            [
-              [-9618186.050867643, 1884309.6297609266],
-              [-7622262.368285651, 1982149.0259659262],
-              [-7250472.662706653, -498079.6678308132],
-              [-9412723.318837143, -566567.245174313],
-              [-9618186.050867643, 1884309.6297609266]
+      if (this.layerExtract) {
+        this.sourceLayer.push({
+          geometry: new Polygon({
+            spatialReference: {
+              wkid: 102100
+            },
+            rings: [
+              [
+                [-9618186.050867643, 1884309.6297609266],
+                [-7622262.368285651, 1982149.0259659262],
+                [-7250472.662706653, -498079.6678308132],
+                [-9412723.318837143, -566567.245174313],
+                [-9618186.050867643, 1884309.6297609266]
+              ]
             ]
-          ]
-        }),
-        symbol: {
-          type: 'simple-fill',
-          color: [255, 255, 0, 64],
-          outline: {
-            type: 'simple-line',
-            color: [255, 0, 0, 255],
-            width: 2,
-            style: 'dash-dot'
+          }),
+          symbol: {
+            type: 'simple-fill',
+            color: [255, 255, 0, 64],
+            outline: {
+              type: 'simple-line',
+              color: [255, 0, 0, 255],
+              width: 2,
+              style: 'dash-dot'
+            },
+            style: 'solid'
           },
-          style: 'solid'
-        },
-        attributes: {},
-        popupTemplate: null
-      };
-      const features = !this.layerExtract ? this.view.graphics.items : sourceLayer;
+          attributes: {},
+          popupTemplate: null
+        });
+      } else if (this.shapeAttr) {
+        for (const filter of this.attrTable.filteredValue) {
+          this.sourceLayer.push(
+            new Graphic({
+              geometry: filter.geometry,
+              symbol: {
+                type: 'simple-line',  // autocasts as new SimpleLineSymbol()
+                color: 'red',
+                width: '2px',
+              }
+            })
+          );
+        }
+      }
+      const features = this.layerExtract || this.shapeAttr ? this.sourceLayer : this.view.graphics.items;
+      console.log(features)
       const featureSet = new FeatureSet();
       featureSet.features = features;
       const params = {
@@ -2216,6 +2235,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       (window as any).ga('send', 'event', 'FORM', 'submit', 'extract');
     }
+    this.sourceLayer = [];
+    this.layerExtract = false;
+    this.shapeAttr = false;
   }
 
   /**
@@ -2223,58 +2245,43 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * @param event -> Evento con el item de la tabla seleccionado
    */
   public onRowSelect(event: any, goTo?: boolean): void {
+    console.log(event.data)
     loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
       'esri/Color', 'dojo/_base/array', 'esri/Graphic', 'esri/tasks/GeometryService',
       'esri/geometry/SpatialReference', 'esri/tasks/support/ProjectParameters'])
       .then(([SimpleFillSymbol, SimpleLineSymbol, Color, dojo, Graphic, GeometryService,
         SpatialReference, ProjectParameters]) => {
-        const layer = this.layerSelected;
-        const query = layer.createQuery();
-        query.where = `${this.columnsTable[0].name} = ${event.data.attributes[this.columnsTable[0].name]}`;
-        query.returnGeometry = true;
-        query.outFields = ['*'];
-        layer.queryFeatures(query).then((res) => {
-          const symbolX = new SimpleFillSymbol(SimpleFillSymbol.STYLE_NONE,
-            new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 255, 1.0]), 2),
-            new Color([0, 0, 0, 0.5]));
-          const symbolY = {
-            type: 'simple-line',  // autocasts as new SimpleLineSymbol()
-            color: 'red',
-            width: '2px',
-          };
-          const symbol = goTo ? symbolY : symbolX;
-          dojo.forEach(res.features, (key) => {
-            const graphic = new Graphic({
-              geometry: key.geometry,
-              symbol
-            });
-            const objectGraphic = {
-              attr: event.data.attributes,
-              graphic
-            };
-            this.graphicGoTo !== undefined ? this.view.graphics.remove(this.graphicGoTo) : null;
-            goTo ? this.graphicGoTo = graphic : this.graphics.push(objectGraphic);
-            if (goTo) {
-              const geomSvc = new GeometryService(this.urlGeometryService);
-              const outSR = new SpatialReference({ wkid: 4326 });
-              const params = new ProjectParameters({
-                geometries: [key.geometry],
-                outSpatialReference: outSR
-              });
-              geomSvc.project(params).then((response) => {
-                this.view.goTo(response[0]);
-              });
-            }
-            this.view.graphics.add(graphic);
-          });
-        }, (err) => {
-          console.error(err);
-          this.messageService.add(
-            {
-              summary: 'Error de selección',
-              detail: `No se pudo seleccionar el objeto de la capa ${layer.id}`, severity: 'error'
-            });
+        const symbolX = new SimpleFillSymbol(SimpleFillSymbol.STYLE_NONE,
+          new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 255, 1.0]), 2),
+          new Color([0, 0, 0, 0.5]));
+        const symbolY = {
+          type: 'simple-line',  // autocasts as new SimpleLineSymbol()
+          color: 'red',
+          width: '2px',
+        };
+        const symbol = goTo ? symbolY : symbolX;
+        const graphic = new Graphic({
+          geometry: event.data.geometry,
+          symbol
         });
+        const objectGraphic = {
+          attr: event.data.attributes,
+          graphic
+        };
+        this.graphicGoTo !== undefined ? this.view.graphics.remove(this.graphicGoTo) : null;
+        goTo ? this.graphicGoTo = graphic : this.graphics.push(objectGraphic);
+        if (goTo) {
+          const geomSvc = new GeometryService(this.urlGeometryService);
+          const outSR = new SpatialReference({ wkid: 4326 });
+          const params = new ProjectParameters({
+            geometries: [event.data.geometry],
+            outSpatialReference: outSR
+          });
+          geomSvc.project(params).then((response) => {
+            this.view.goTo(response[0]);
+          });
+        }
+        this.view.graphics.add(graphic);
       });
   }
 
@@ -2300,8 +2307,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public extractShapeFromAttr(): void {
-    if (this.featuresSelected.length === 0) {
+    if (this.featuresSelected.length === 0 && (this.attrTable.filteredValue === undefined || this.attrTable.filteredValue === null || this.attrTable.filteredValue.length === 0)) {
       this.layerExtract = true;
+      this.shapeAttr = false;
+    } else if (this.featuresSelected.length === 0 && (this.attrTable.filteredValue !== undefined && this.attrTable.filteredValue !== null && this.attrTable.filteredValue.length > 0)) {
+      this.layerExtract = false;
+      this.shapeAttr = true;
     }
     this.buildOptionsLayers();
     for (const option of this.optionsLayers) {
