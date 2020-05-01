@@ -1072,6 +1072,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         visible: true,
         outFields: ['*'],
         showAttribution: true,
+        displayField: 'CONTRATO_N',
         mode: FeatureLayer.MODE_ONDEMAND
       });
       lyTierras.load().then(() => {
