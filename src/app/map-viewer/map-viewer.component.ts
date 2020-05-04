@@ -148,6 +148,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   sketchExtract;
   sketchBuffer;
   sketchSelection;
+  advancedSearchShape: boolean = false;
   selectedPolygon: SelectItem;
   shapeAttr: boolean = false;
   selectedSketch: any;
@@ -674,6 +675,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   public openSelectionTool(): void {
     if (!this.errorArcgisService) {
+      this.advancedSearchShape = true;
       const nameLayer = this.layerList.selectedItems.items[0] !== undefined ? this.layerList.selectedItems.items[0].title : null;
       this.buildOptionsLayersValue(nameLayer);
       this.visibleModal(false, false, false, false, false, false, false, true, false, false);
@@ -2007,6 +2009,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   getFeaturesLayerSelected(): void {
+    this.advancedSearchShape = false;
     this.objectFilter = [];
     this.filterS = [];
     this.values = [];
@@ -2089,7 +2092,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
     const query = {
       outFields: ['*'],
-      returnGeometry: false,
+      returnGeometry: true,
       where: params
     };
     this.layerSelected.queryFeatures(query).then((result) => {
@@ -2126,7 +2129,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         wkid: 4326
       }
     });
-    if (!this.layerExtract && (this.selectedLayers.length === 0 || this.view.graphics.length === 0) && !this.shapeAttr) {
+    debugger;
+    if (!this.layerExtract && (this.selectedLayers.length === 0 || this.view.graphics.length === 0) && !this.shapeAttr && !this.advancedSearchShape) {
       if (this.selectedLayers.length === 0) {
         this.messageService.add({
           severity: 'warn',
@@ -2199,8 +2203,21 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             })
           );
         }
+      } else if (this.advancedSearchShape) {
+        for (const value of this.featureDptos) {
+          this.sourceLayer.push(
+            new Graphic({
+              geometry: value.geometry,
+              symbol: {
+                type: 'simple-line',  // autocasts as new SimpleLineSymbol()
+                color: 'red',
+                width: '2px',
+              }
+            })
+          )
+        }
       }
-      const features = this.layerExtract || this.shapeAttr ? this.sourceLayer : this.view.graphics.items;
+      const features = this.layerExtract || this.shapeAttr || this.advancedSearchShape ? this.sourceLayer : this.view.graphics.items;
       console.log(features)
       const featureSet = new FeatureSet();
       featureSet.features = features;
@@ -2320,7 +2337,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public extractShapeFromAttr(): void {
-    if (this.featuresSelected.length === 0 && (this.attrTable.filteredValue === undefined || this.attrTable.filteredValue === null || this.attrTable.filteredValue.length === 0)) {
+    if (!this.advancedSearchShape && this.featuresSelected.length === 0 && (this.attrTable.filteredValue === undefined || this.attrTable.filteredValue === null || this.attrTable.filteredValue.length === 0)) {
       this.layerExtract = true;
       this.shapeAttr = false;
     } else if (this.featuresSelected.length === 0 && (this.attrTable.filteredValue !== undefined && this.attrTable.filteredValue !== null && this.attrTable.filteredValue.length > 0)) {
@@ -2598,6 +2615,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.clearGraphics();
     this.sketchSelection.cancel();
     this.selectedSketch = null;
+    this.advancedSearchShape = false;
   }
 
 
@@ -2606,6 +2624,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public openFilter(): void {
+    this.advancedSearchShape = true;
     this.visibleModal(false, false, false, false, false, false, true, false, false, true);
   }
   public requestHelp(modal: string): void {
