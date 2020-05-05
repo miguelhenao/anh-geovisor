@@ -1505,9 +1505,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       this.ccViewModel.convert(format, pt).then((success) => {
         const s = success.coordinate.split(' ');
-        const lat = s[0] + '° ' + s[1] + '\' ' + parseFloat(s[2].slice(0, -1)).toFixed(3) + '"';
-        const long = s[3] + '° ' + s[4] + '\' ' + parseFloat(s[5].slice(0, -1)).toFixed(3) + '"';
-        this.coordsWidget.innerHTML = lat + ', ' + long;
+        const lat = s[0] + '° ' + s[1] + '\' ' + parseFloat(s[2]).toFixed(3) + '"';
+        const long = s[3] + '° ' + s[4] + '\' ' + parseFloat(s[5]).toFixed(3) + '"';
+        this.coordsWidget.innerHTML = 'Lat ' + lat + ', Long ' + long;
       }, error => {
         console.log(error);
       });
