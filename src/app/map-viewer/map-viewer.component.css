@@ -588,9 +588,15 @@ p-sidebar {
 
 ::ng-deep #coordsWidget .esri-select {
   border: none !important;
-  height: 20px;
+  height: auto;
   background: none;
-  font-size: 14px;
+  font-size: 11.5px;
+  padding: unset;
+}
+
+::ng-deep #coordsWidget {
+  width: 250px !important;
+  max-width: 250px !important;
 }
 
 ::ng-deep .filter .esri-select {

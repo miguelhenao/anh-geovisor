@@ -201,6 +201,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   copyrightSGC: Array<string> = [];
   copyrightIGAC: Array<string> = [];
   styleClassAttrTable: string;
+  ccViewModel: any;
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
     private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef) {
@@ -711,12 +712,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, LabelClass, BasemapGallery, SketchViewModel,
-        GraphicsLayer, Graphic, Legend, ScaleBar, geometryEngine, SpatialReference, ProjectParameters, GeometryService] =
+        GraphicsLayer, Graphic, Legend, ScaleBar, geometryEngine, SpatialReference, ProjectParameters, GeometryService,
+        CoordinateVM] =
         await loadModules(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/LayerList', 'esri/widgets/Print',
           'esri/widgets/Search', 'esri/widgets/Expand', 'esri/layers/support/LabelClass', 'esri/widgets/BasemapGallery',
           'esri/widgets/Sketch/SketchViewModel', 'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend',
           'esri/widgets/ScaleBar', 'esri/geometry/geometryEngine', 'esri/geometry/SpatialReference',
-          'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService']);
+          'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService',
+          'esri/widgets/CoordinateConversion/CoordinateConversionViewModel']);
 
       // Geometry Service
       const geomSvc = new GeometryService(this.urlGeometryService);
@@ -738,6 +741,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       this.view = new MapView(mapViewProperties);
 
+      this.ccViewModel = new CoordinateVM();
 
       this.addSlider();
       // Carga de capa de pozo
@@ -1496,8 +1500,17 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.coordsWidget = document.getElementById('coords');
     let coords = '';
     if (this.coordsModel === 'G') {
-      coords = pt.latitude.toFixed(6) + '°, ' + pt.longitude.toFixed(6) + '°';
-      this.coordsWidget.innerHTML = coords;
+      const format = this.ccViewModel.formats.find((frmt) => {
+        return frmt.name === 'dms';
+      });
+      this.ccViewModel.convert(format, pt).then((success) => {
+        const s = success.coordinate.split(' ');
+        const lat = s[0] + '° ' + s[1] + '\' ' + parseFloat(s[2].slice(0, -1)).toFixed(3) + '"';
+        const long = s[3] + '° ' + s[4] + '\' ' + parseFloat(s[5].slice(0, -1)).toFixed(3) + '"';
+        this.coordsWidget.innerHTML = lat + ', ' + long;
+      }, error => {
+        console.log(error);
+      });
     } else {
       loadModules(['esri/tasks/GeometryService', 'esri/geometry/SpatialReference', 'esri/tasks/support/ProjectParameters'])
         .then(([GeometryService, SpatialReference, ProjectParameters]) => {
@@ -1509,7 +1522,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           });
           geomSvc.project(params).then((response) => {
             const pto = response[0];
-            coords = pto.x.toFixed(6).toString() + ', ' + pto.y.toFixed(6).toString();
+            coords = 'N ' + pto.x.toFixed(4).toString() + ', E ' + pto.y.toFixed(4).toString();
             this.coordsWidget.innerHTML = coords;
           });
         });
