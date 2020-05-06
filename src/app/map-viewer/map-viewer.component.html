@@ -35,6 +35,14 @@
           <i class="esri-icon-download" align="center"></i>
         </button>
       </div>
+      <div id="layerSelected" class="layerSelected" title="Capa actual">
+        <div *ngIf="view.ready">
+          <i class="esri-icon-checkbox-unchecked" *ngIf="!currentLayerExist"></i>
+          <i class="esri-icon-checkbox-checked" *ngIf="currentLayerExist"></i>
+          <span *ngIf="currentLayerExist">{{layerSelected.title}}</span>
+          <span *ngIf="!currentLayerExist">...</span>
+        </div>
+      </div>
       <div>
         <p-tieredMenu [style]="{'width': 'auto'}" id="content-menu" [model]="menu"></p-tieredMenu>
       </div>
@@ -192,11 +200,11 @@
     <i class="pi pi-window-maximize" style="margin-left: 53px; padding-top: 2px; cursor: pointer;"
       (click)="minimizeMaximizeAttrTable(true)" *ngIf="!minimizeMaximize" title="Maximizar"></i>
   </p-header>
-  <p-table class="esri-widget__table" [style]="{'width': 'inherit', 'height': 'inherit', 'max-height': '380px'}" [paginator]="true" [rows]="100"
-    [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple" #dt [columns]="columnsTable"
-    *ngIf="modalTable && minimizeMaximize" [dataKey]="dataKey()" [value]="featureDptos" [scrollable]="true"
-    [(selection)]="featuresSelected" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
-    scrollHeight="228px" [resizableColumns]="true">
+  <p-table class="esri-widget__table" [style]="{'width': 'inherit', 'height': 'inherit', 'max-height': '380px'}"
+    [paginator]="true" [rows]="100" [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple" #dt
+    [columns]="columnsTable" *ngIf="modalTable && minimizeMaximize" [dataKey]="dataKey()" [value]="featureDptos"
+    [scrollable]="true" [(selection)]="featuresSelected" (onRowSelect)="onRowSelect($event)"
+    (onRowUnselect)="onRowUnselect($event)" scrollHeight="228px" [resizableColumns]="true">
     <ng-template pTemplate="colgroup" let-columns>
       <colgroup>
         <col style="width: 28px !important;">
