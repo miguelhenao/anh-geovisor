@@ -2142,7 +2142,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         wkid: 4326
       }
     });
-    debugger;
     if (!this.layerExtract && (this.selectedLayers.length === 0 || this.view.graphics.length === 0) && !this.shapeAttr && !this.advancedSearchShape) {
       if (this.selectedLayers.length === 0) {
         this.messageService.add({
@@ -2822,8 +2821,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
-  public addFormField(value: number): void {
-    this.quantityFields = this.quantityFields + value;
+  public addFormField(): void {
+    this.quantityFields += 1;
+  }
+
+  public removeFormField(index: number): void {
+    this.objectFilter.splice(index, 1);
+    this.values.splice(index, 1);
+    this.logicalOperators.splice(index, 1);
+    this.quantityFields -= 1;
+    this.getFilterParams();
   }
 
   public minimizeMaximizeAttrTable(flag: boolean): void {

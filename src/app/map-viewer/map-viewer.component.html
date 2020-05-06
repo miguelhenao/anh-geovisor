@@ -258,7 +258,7 @@
             (onHide)="getFeaturesLayerSelected()" [resizable]="false" [draggable]="false" position="topleft"
             [focusOnShow]="false">
             <div style="max-height: 250px; overflow-y: scroll;">
-              <button pButton icon="pi pi-plus" label="Añadir Criterio" (click)="addFormField(1)"></button>
+              <button pButton icon="pi pi-plus" label="Añadir Criterio" (click)="addFormField()"></button>
               <div *ngFor="let i of arrQuantity(quantityFields).fill(1); let p = index" style="margin-top: 10px;">
                 <select name="selectField" style="width: 110px; float: left;" class="esri-select"
                   [(ngModel)]="objectFilter[p]">
@@ -295,7 +295,7 @@
                   <option value="AND" selected>Y</option>
                   <option value="OR">O</option>
                 </select>
-                <p-button icon="esri-icon-close" (onClick)="addFormField(-1)"></p-button>
+                <p-button icon="esri-icon-close" (onClick)="removeFormField(p)"></p-button>
               </div>
             </div>
           </p-dialog>
