@@ -69,10 +69,12 @@
 <!-- Modal de extracción de datos -->
 <div *ngIf="modalExtract">
   <p-dialog header="Extracción de datos" [(visible)]="modalExtract" [resizable]="false" (onHide)="onHideDialogExtract()"
-    [focusOnShow]="false">
+    [focusOnShow]="false" [style]="{'width': '390px'}">
     <div id="infoDiv">
       <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
         (click)="requestHelp('h-extraer')" icon="pi pi-question"></button>
+      <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoTool = !infoTool"
+        style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
       <p>1. Seleccione las capas a extraer</p>
       <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados"
         [(ngModel)]="selectedLayers"></p-multiSelect>
@@ -90,14 +92,14 @@
       </p-button>
     </div>
     <br>
-    <p-message [escape]="false" id="infoMedicion" *ngIf="!layerExtract" severity="info"
+    <p-message [escape]="false" id="infoMedicion" *ngIf="!layerExtract && infoTool" severity="info"
       text="Proceda con los poligonos ya <b>seleccionados en la capa actual</b>. Si no<br> hay una selección en la capa actual debe usar las <b>Herramientas de</b><br><b>Selección.</b><br><b>Seleccione las capas</b> que se incluirán en la extracción">
     </p-message>
-    <p-message [escape]="false" id="infoMedicion" *ngIf="layerExtract" severity="info"
+    <p-message [escape]="false" id="infoMedicion" *ngIf="layerExtract && infoTool" severity="info"
       text="<b>Seleccione las capas</b> que se incluirán en la extracción">
     </p-message>
     <br>
-    <p-message [escape]="false" id="infoMedicion" severity="info"
+    <p-message [escape]="false" id="infoMedicion" severity="info" *ngIf="infoTool"
       text="Fuentes de información: <br><b>*Servicio Geológico Colombiano - SGC:</b> {{copyrightSGC}} <br><b>**Instituto Geográfico Agustín Codazzi - IGAC:</b> {{copyrightIGAC}}">
     </p-message>
   </p-dialog>
@@ -107,9 +109,11 @@
 <!-- Modal de análisis de departamento -->
 <div *ngIf="modalAnalysis">
   <p-dialog header="Análisis de Cobertura por Departamento" [(visible)]="modalAnalysis" [resizable]="false"
-    (onHide)="onHideDialogAnalisis()" [focusOnShow]="false">
+    (onHide)="onHideDialogAnalisis()" [focusOnShow]="false" [style]="{'width': '390px'}">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
       (click)="requestHelp('h-cobertura')" icon="pi pi-question"></button>
+    <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoTool = !infoTool"
+      style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
     <p>
       Departamentos seleccionados para el análisis:
     </p>
@@ -121,7 +125,7 @@
       label="Iniciar Análisis de Cobertura"></p-button>
     <br>
     <br>
-    <p-message [escape]="false" id="infoMedicion" severity="info"
+    <p-message [escape]="false" id="infoMedicion" severity="info" *ngIf="infoTool"
       text="Con este análisis se obtienen los <b>Bloques Explorativos que se <br> encuentran en la jurisdicción del Departamento</b> seleccionado,<br>indicando el porcentaje de cobertura de cada bloque. <br>Use las <b>herramientas de selección</b> o la <b>tabla de atributos</b> para indicar<br>cuales departamentos desea usar para este análisis.">
     </p-message>
   </p-dialog>
@@ -134,7 +138,7 @@
     (onHide)="onHideDialogBuffer()" [style]="{'width': '400px'}" [focusOnShow]="false" [focusOnShow]="false">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
       (click)="requestHelp('h-buffer')" icon="pi pi-question"></button>
-    <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoBuffer = !infoBuffer"
+    <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoTool = !infoTool"
       style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
     <p>1. Defina la anchura deseada</p>
     <div style="display: grid; grid-template-columns: auto auto;">
@@ -161,12 +165,12 @@
         </p-button>
       </div>
     </div>
-    <p-message *ngIf="infoBuffer" [escape]="false" id="infoMedicion" severity="info" text="La <b>anchura del área de influencia (buffer)</b> se mide apartir del
+    <p-message *ngIf="infoTool" [escape]="false" id="infoMedicion" severity="info" text="La <b>anchura del área de influencia (buffer)</b> se mide apartir del
     contorno de la geometría. Cuando se usa un punto, la anchura equivale al <b>radio</b> del círculo resultante.
     Para dibujar un punto haga <b>clic</b> en el mapa. Para las demás herramientas haga <b>clic</b> y sostenga mientras mueve
     el mouse y suelte para finalizar."></p-message>
     <br>
-    <p-message *ngIf="infoBuffer" [escape]="false" id="infoMedicion" severity="info"
+    <p-message *ngIf="infoTool" [escape]="false" id="infoMedicion" severity="info"
       text="Fuentes de información: <br><b>*Servicio Geológico Colombiano - SGC:</b> {{copyrightSGC}} <br><b>**Instituto Geográfico Agustín Codazzi - IGAC:</b> {{copyrightIGAC}}">
     </p-message>
   </p-dialog>
@@ -179,6 +183,8 @@
     (onHide)="onHideDialogMedicion()" [positionTop]="10" [positionLeft]="200" [focusOnShow]="false">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
       (click)="requestHelp('h-herramientas-medicion')" icon="pi pi-question"></button>
+    <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoTool = !infoTool"
+      style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
     <div style="width: 373px">
       <p-selectButton [options]="modesMeasurement" [(ngModel)]="selectedMeasurement" (onChange)="setActiveWidget()">
       </p-selectButton>
@@ -193,7 +199,7 @@
           <p>Y(Norte): {{magnaSirgas.y || ''}}</p>
         </div>
       </div>
-      <p-message [escape]="false" id="infoMedicion" severity="info"
+      <p-message [escape]="false" id="infoMedicion" severity="info" *ngIf="infoTool"
         text="Seleccione una herramienta y haga <b>clic</b> sobre el mapa para agregar puntos.
     <b>Doble clic</b> para terminar la medición.
     <br>Pulse <b>Ctrl</b> para activar la alineación automática (snapping) con la geometría del mapa mientras agrega puntos."></p-message>
@@ -391,10 +397,12 @@
 <!-- Modal Herramientas de selección -->
 <div *ngIf="modalSelection">
   <p-dialog header="Herramientas de Selección" [(visible)]="modalSelection" [resizable]="false"
-    (onHide)="onHideDialogSelection()" [focusOnShow]="false">
-    <div style="max-width: 390px;">
+    (onHide)="onHideDialogSelection()" [focusOnShow]="false" [style]="{'width': '400px'}">
+    <div>
       <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
         (click)="requestHelp('h-seleccion')" icon="pi pi-question"></button>
+      <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoTool = !infoTool"
+        style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
       <div style="margin-bottom: 5px;">
         <div>
           <label>Capa de Selección:</label>
@@ -410,11 +418,11 @@
           </p-button>
         </div>
       </div>
-      <p-message [escape]="false" id="infoMedicion" severity="info" text="La selección aplica a la capa selecccionada. Para la selección con un punto <b>clic</b> en el mapa.
+      <p-message [escape]="false" id="infoMedicion" severity="info" *ngIf="infoTool" text="La selección aplica a la capa selecccionada. Para la selección con un punto <b>clic</b> en el mapa.
         Para las demás herramientas haga <b>clic</b> y sostenga mientras mueve el mouse, y suelte para finalizar.">
       </p-message>
       <br>
-      <p-message [escape]="false" id="infoMedicion" severity="info"
+      <p-message [escape]="false" id="infoMedicion" severity="info" *ngIf="infoTool"
         text="Fuentes de información: <br><b>*Servicio Geológico Colombiano - SGC:</b> {{copyrightSGC}} <br><b>**Instituto Geográfico Agustín Codazzi - IGAC:</b> {{copyrightIGAC}}">
       </p-message>
     </div>
@@ -424,9 +432,11 @@
 
 <!-- Componente ubicar coordenada -->
 <div *ngIf="modalCoordinate">
-  <p-dialog header="Ubicar coordenada" [(visible)]="modalCoordinate" [resizable]="false" [focusOnShow]="false">
+  <p-dialog header="Ubicar coordenada" [(visible)]="modalCoordinate" [resizable]="false" [focusOnShow]="false" [style]="{'width': '411px'}">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
       (click)="requestHelp('h-ubicar-coordenada')" icon="pi pi-question"></button>
+    <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoTool = !infoTool"
+      style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
     <div>
       <div>
         <p>1. Unidades de la coordenada:</p>
@@ -471,7 +481,8 @@
       </div>
     </div>
     <br>
-    <p-message [escape]="false" id="infoMedicion" severity="info" text="Ingrese los datos solicitados para <b>crear un punto en la coordenada</b>
+    <p-message [escape]="false" id="infoMedicion" severity="info" *ngIf="infoTool"
+    text="Ingrese los datos solicitados para <b>crear un punto en la coordenada</b>
       <br>que desea ubicar.
       <br>Al ingresar Longitud y Latitud se deben <b>llenar todos los espacios
         <br>subrayados</b> con dígitos entre 0 y 9. Para grados de un sólo dígito

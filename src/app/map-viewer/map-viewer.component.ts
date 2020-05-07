@@ -43,7 +43,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   modalAnalysis = false;
   heightTable: number;
   modalBuffer = false;
-  infoBuffer = true;
+  infoTool = true;
   modalSelection = false;
   selectDpto: Array<any> = [];
   makingWorkFromAttr = false;
