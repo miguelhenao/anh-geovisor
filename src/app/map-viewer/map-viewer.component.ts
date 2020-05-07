@@ -105,25 +105,25 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   ];
   optionsCoordinateUnits = [
     {
-      name: 'Grados, Minutos y Segundos ( ej. 04° 35\' 46.3215" )',
+      name: 'Grados, Minutos y Segundos ( ej. 04° 35\' 46,3215" )',
       value: [{ label: 'MAGNA-SIRGAS (WGS84)', value: 4326 }],
       x: 'Latitud', y: 'Longitud', geographical: true,
       mask: '99° 99\' 99,9999"', code: 'dms'
     },
     {
-      name: 'Grados y Minutos Decimales ( ej. 04° 35.772025\' )',
+      name: 'Grados y Minutos Decimales ( ej. 04° 35,772025\' )',
       value: [{ label: 'MAGNA-SIRGAS (WGS84)', value: 4326 }],
       x: 'Latitud', y: 'Longitud', geographical: true,
       mask: '99° 99,999999\'', code: 'ddm'
     },
     {
-      name: 'Grados decimales ( ej. 4.59620041° )',
+      name: 'Grados decimales ( ej. 4,59620041° )',
       value: [{ label: 'MAGNA-SIRGAS (WGS84)', value: 4326 }],
       x: 'Latitud', y: 'Longitud', geographical: true,
       mask: '99,99?999999°', code: 'dd'
     },
     {
-      name: 'Metros ( ej. 1106427 )',
+      name: 'Metros ( ej. 1.106.427 )',
       value: [
         { label: 'MAGNA-SIRGAS Origen Central', value: 3116 },
         { label: 'MAGNA-SIRGAS Origen Este Central', value: 3117 },
@@ -131,7 +131,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         { label: 'MAGNA-SIRGAS Origen Oeste', value: 3115 },
         { label: 'MAGNA-SIRGAS Origen Oeste Oeste', value: 3114 },
       ],
-      x: 'X', y: 'Y', geographical: false, mask: '?9999999.99',
+      x: 'X', y: 'Y', geographical: false, mask: '?9.999.999,9999',
       code: 'm'
     }
   ];
@@ -1157,8 +1157,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             params.geometries = [e.mapPoint];
             params.outSR = outSR;
             geomSvc.project(params).then((response) => {
-              this.magnaSirgas.x = response[0].x.toFixed(4);
-              this.magnaSirgas.y = response[0].y.toFixed(4);
+              this.magnaSirgas.x = this.formatNumber(response[0].x, 4);
+              this.magnaSirgas.y = this.formatNumber(response[0].y, 4);
               this.magnaSirgasFlag = true;
             });
           }
@@ -1547,9 +1547,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       this.ccViewModel.convert(format, pt).then((success) => {
         const s = success.coordinate.split(' ');
-        const lat = s[0] + '° ' + s[1] + '\' ' + parseFloat(s[2]).toFixed(3) + '"';
-        const long = s[3] + '° ' + s[4] + '\' ' + parseFloat(s[5]).toFixed(3) + '"';
-        this.coordsWidget.innerHTML = 'Lat ' + lat + ', Long ' + long;
+        const lat = s[0] + '° ' + s[1] + '\' ' + this.formatNumber(parseFloat(s[2]), 3) + '"' + s[2].charAt(s[2].length - 1);
+        s[3] = s[3].charAt(0) !== '0' ? s[3] : s[3].substr(1);
+        const long = s[3] + '° ' + s[4] + '\' ' + this.formatNumber(parseFloat(s[5]), 3) + '"'
+          + s[5].charAt(s[2].length - 1);
+        coords = lat + ', ' + long;
+        coords = coords.replace('W', 'O');
+        this.coordsWidget.innerHTML = coords;
       }, error => {
         console.log(error);
       });
@@ -1564,11 +1568,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           });
           geomSvc.project(params).then((response) => {
             const pto = response[0];
-            coords = 'N ' + pto.x.toFixed(4).toString() + ', E ' + pto.y.toFixed(4).toString();
+            coords = 'N ' + this.formatNumber(pto.y, 4) + ', E ' + this.formatNumber(pto.x, 4);
             this.coordsWidget.innerHTML = coords;
           });
         });
     }
+  }
+
+  public formatNumber(n, min) {
+    return n.toLocaleString('de-DE', {minimumFractionDigits: min, maximumFractionDigits: min});
   }
 
   public symbologyChange(): void {
@@ -2837,7 +2845,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public onChangeCoordinateUnits() {
     this.optionsCoordinateSystem = this.coordinateUnits.value;
     this.coordinateSystem = this.optionsCoordinateSystem[0].value;
-
+    this.coordinateX = '';
+    this.coordinateY = '';
   }
 
   /**
@@ -2885,8 +2894,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               wkid: this.coordinateSystem
             });
             const point = new Point({
-              x: this.coordinateX,
-              y: this.coordinateY,
+              x: this.coordinateX.split('.').join('').replace(',', '.'),
+              y: this.coordinateY.split('.').join('').replace(',', '.'),
               spatialReference: sisRef
             });
             const outSR = new SpatialReference({ wkid: 4326 });
