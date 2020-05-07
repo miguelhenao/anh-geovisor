@@ -40,7 +40,7 @@
         <div *ngIf="view.ready">
           <i class="esri-icon-checkbox-unchecked" *ngIf="!currentLayerExist"></i>
           <i class="esri-icon-checkbox-checked" *ngIf="currentLayerExist"></i>
-          <span *ngIf="currentLayerExist">{{layerSelected.title}}</span>
+          <span *ngIf="currentLayerExist">{{currentLayer.title}}</span>
           <span *ngIf="!currentLayerExist">...</span>
         </div>
       </div>
@@ -369,31 +369,33 @@
 <!-- Modal Herramientas de selección -->
 <p-dialog header="Herramientas de Selección" [(visible)]="modalSelection" [resizable]="false"
   (onHide)="onHideDialogSelection()" [focusOnShow]="false">
-  <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
-    (click)="requestHelp('h-seleccion')" icon="pi pi-question"></button>
-  <div style="margin-bottom: 5px;">
-    <div>
-      <label>Capa de Selección:</label>
-      <p-dropdown (ngModelChange)="changeLayer($event)" [options]="optionsLayers" [(ngModel)]="layerSelectedSelection"
-        placeholder="Seleccione una capa">
-      </p-dropdown>
+  <div style="max-width: 390px;">
+    <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
+      (click)="requestHelp('h-seleccion')" icon="pi pi-question"></button>
+    <div style="margin-bottom: 5px;">
+      <div>
+        <label>Capa de Selección:</label>
+        <p-dropdown (ngModelChange)="changeLayer($event)" [options]="optionsLayers" [(ngModel)]="layerSelectedSelection"
+          placeholder="Seleccione una capa">
+        </p-dropdown>
+      </div>
+      <div style="display: grid; grid-template-columns: auto auto; margin-top: 5px;">
+        <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch"
+          (onChange)="onChangeSelectedSketchSelection()">
+        </p-selectButton>
+        <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
+        </p-button>
+      </div>
     </div>
-    <div style="display: grid; grid-template-columns: auto auto; margin-top: 5px;">
-      <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch"
-        (onChange)="onChangeSelectedSketchSelection()">
-      </p-selectButton>
-      <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
-      </p-button>
-    </div>
+    <p-message [escape]="false" id="infoMedicion" severity="info" text="La selección aplica a la capa selecccionada.
+        Para la selección con un punto <b>clic</b> en el mapa.
+        Para las demás herramientas haga <b>clic</b> y sostenga
+        mientras mueve el mouse, y suelte para finalizar."></p-message>
+    <br>
+    <p-message [escape]="false" id="infoMedicion" severity="info"
+      text="Fuentes de información: <br><b>*Servicio Geológico Colombiano - SGC:</b> {{copyrightSGC}} <br><b>**Instituto Geográfico Agustín Codazzi - IGAC:</b> {{copyrightIGAC}}">
+    </p-message>
   </div>
-  <p-message [escape]="false" id="infoMedicion" severity="info" text="La selección aplica a la capa selecccionada.
-      <br> Para la selección con un punto <b>clic</b> en el mapa.
-      <br>Para las demás herramientas haga <b>clic</b> y sostenga
-      <br> mientras mueve el mouse, y suelte para finalizar."></p-message>
-  <br>
-  <p-message [escape]="false" id="infoMedicion" severity="info"
-    text="Fuentes de información: <br><b>*Servicio Geológico Colombiano - SGC:</b> {{copyrightSGC}} <br><b>**Instituto Geográfico Agustín Codazzi - IGAC:</b> {{copyrightIGAC}}">
-  </p-message>
 </p-dialog>
 <!-- Fin de modal herramientas de selección -->
 

@@ -50,6 +50,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   modalCoordinate = false;
   layerSelected: any;
   layerAttrTable: any;
+  currentLayer: any;
   layerSelectedSelection: string;
   columnsTable: Array<any> = [];
   latitude = 4.6486259;
@@ -613,10 +614,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (paginationNext.length > 0) {
       paginationNext.item(0).getAttribute('title') !== newTextNext ? paginationNext.item(0).setAttribute('title', newTextNext) : null;
     }
-    this.layerSelected = this.layerList !== undefined && this.layerList.selectedItems.length > 0 &&
+    this.currentLayer = this.layerList !== undefined && this.layerList.selectedItems.length > 0 &&
       this.layerList.selectedItems.items[0] !== null ? this.layerList.selectedItems.items[0].layer :
       this.lyTierrasCreate !== undefined ? this.lyTierrasCreate : null;
-    this.currentLayerExist = this.layerSelected !== null ? true : false;
+    this.currentLayerExist = this.currentLayer !== null ? true : false;
     this.ref.detectChanges();
   }
 
@@ -1478,6 +1479,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 this.columnsTable = result.fields;
                 this.clearGraphics();
                 this.featureDptos = result.features;
+                this.layerAttrTable = this.layerSelected;
                 layerListExpand.collapse();
                 loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/Color', 'dojo/_base/array',
                   'esri/Graphic']).then(([SimpleFillSymbol, SimpleLineSymbol, Color, dojo, Graphic]) => {
@@ -2736,7 +2738,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    *  Metodo que se realiza cuando se cierra el dialog de Herramientas de selección
    */
   public onHideDialogSelection() {
-    this.clearGraphics();
+    // this.clearGraphics();
     this.sketchSelection.cancel();
     this.selectedSketch = null;
     this.advancedSearchShape = false;
