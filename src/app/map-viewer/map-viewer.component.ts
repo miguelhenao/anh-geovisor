@@ -1,6 +1,6 @@
 import { MapViewerService } from './map-viewer.service';
 import { DialogUrlServiceComponent } from '../dialog-urlservice/dialog-urlservice.component';
-import { MenuItem, SelectItem, MessageService } from 'primeng/api';
+import { MenuItem, SelectItem, MessageService, ConfirmationService } from 'primeng/api';
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { loadModules } from 'esri-loader';
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
@@ -202,9 +202,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   copyrightIGAC: Array<string> = [];
   styleClassAttrTable: string;
   ccViewModel: any;
+  hideSearch: boolean = false;
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
-    private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef) {
+    private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef, private confirmationService: ConfirmationService) {
     this.setCurrentPosition();
     this.colorsFirst = this.generateColor('#F8C933', '#FFE933', 50);
     this.colorsSeconds = this.generateColor('#E18230', '#F8C933', 50);
@@ -2021,28 +2022,55 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
+  hideAdvancedSearch(event) {
+    if (this.objectFilter.length === 0 && this.values.length === 0 && this.logicalOperators.length === 0) {
+      this.hideSearch = true;
+      this.getFeaturesLayerSelected();
+      this.hideSearch = false;
+      this.modalFilter = false;
+    }
+  }
+
+  onBeforeHide(): boolean {
+    if (this.objectFilter.length === 0 && this.values.length === 0 && this.logicalOperators.length === 0) {
+      return true;
+    } else {
+      this.confirmationService.confirm({
+        message: 'Si cierra la ventana de búsqueda perderá los filtros realizados sobre la tabla de atributos',
+        accept: () => {
+          return true;
+        },
+        reject: () => {
+          return false;
+        }
+      });
+    }
+  }
+
   getFeaturesLayerSelected(): void {
-    this.advancedSearchShape = false;
-    this.objectFilter = [];
-    this.filterS = [];
-    this.values = [];
-    this.quantityFields = 0;
-    const query = {
-      outFields: ['*'],
-      returnGeometry: false,
-      where: ''
-    };
-    this.layerSelected.queryFeatures(query).then((result) => {
-      this.featureDptos = result.features;
-      // this.columnsTable = Object.keys(this.featureDptos[0].attributes);
-      result.fields !== undefined && result.fields !== null && result.fields[0] !== undefined ? this.columnsTable = result.fields : null;
-      for (let index = 0; index < this.columnsTable.length; index++) {
-        this.filter[index] = 'contains';
-      }
-      this.visibleModal(false, false, false, false, false, false, true, false, false, false);
-    }, (err) => {
-      console.error(err);
-    });
+    if (this.hideSearch) {
+      this.advancedSearchShape = false;
+      this.objectFilter = [];
+      this.filterS = [];
+      this.values = [];
+      this.quantityFields = 0;
+      const query = {
+        outFields: ['*'],
+        returnGeometry: false,
+        where: ''
+      };
+      this.layerSelected.queryFeatures(query).then((result) => {
+        this.featureDptos = result.features;
+        // this.columnsTable = Object.keys(this.featureDptos[0].attributes);
+        result.fields !== undefined && result.fields !== null && result.fields[0] !== undefined ? this.columnsTable = result.fields : null;
+        for (let index = 0; index < this.columnsTable.length; index++) {
+          this.filter[index] = 'contains';
+        }
+        this.visibleModal(false, false, false, false, false, false, true, false, false, false);
+      }, (err) => {
+        console.error(err);
+      });
+    }
   }
 
   public getTypeObject(name: string): string {
@@ -2556,9 +2584,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.makingWork = true;
     const attribute: Array<any> = [];
     if (this.featuresSelected.length === 0) {
-      for (const r of this.featureDptos) {
-        const object = r.attributes;
-        attribute.push(object);
+      if (this.attrTable.filteredValue !== undefined && this.attrTable.filteredValue !== null) {
+        for (const r of this.attrTable.filteredValue) {
+          const object = r.attributes;
+          attribute.push(object)
+        }
+      } else {
+        for (const r of this.featureDptos) {
+          const object = r.attributes;
+          attribute.push(object);
+        }
       }
     } else {
       for (const r of this.featuresSelected) {
@@ -2574,6 +2609,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     const dataBuffer: Blob = new Blob([excelBuffer], { type: EXCEL_TYPE });
     FileSaver.saveAs(dataBuffer, this.layerSelected.title + EXCEL_EXTENSION);
     this.makingWork = false;
+  }
+
+  public cleanFilters(): void {
+    this.objectFilter = [];
+    this.values = [];
+    this.logicalOperators = [];
+    this.quantityFields = 0;
+    this.getFilterParams();
   }
 
   /**

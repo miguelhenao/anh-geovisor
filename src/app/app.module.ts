@@ -34,6 +34,8 @@ import { AccordionModule } from 'primeng/accordion';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { InputMaskModule } from 'primeng/inputmask';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 import { ScrollSpyDirective } from './dialog-guide/scroll-spy.directive';
 
 @NgModule({
@@ -75,9 +77,12 @@ import { ScrollSpyDirective } from './dialog-guide/scroll-spy.directive';
     AccordionModule,
     ProgressBarModule,
     TieredMenuModule,
+    ConfirmDialogModule,
     InputMaskModule,
   ],
-  providers: [],
+  providers: [
+    ConfirmationService
+  ],
   entryComponents: [
     DialogUrlServiceComponent,
     DialogFileComponent,
