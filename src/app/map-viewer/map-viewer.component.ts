@@ -81,7 +81,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   // Url servidor ArcGIS.com para servicios de conversión (sharing)
   sharingUrl = 'https://www.arcgis.com'; // importante que sea https para evitar problemas de SSL
   // Url del servicio de impresión, por el momento no funciona
-  printUrl = this.agsUrlBase + 'rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task';
+  printUrl = this.agsUrlBase + 'rest/services/ExportWebMap_10/GPServer/Export%20Web%20Map';
   // Url del servicio de impresión por defecto de Arcgis. Comentar o eliminar cuando funcione el servicio de ANH
   // printUrl = 'https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task';
   // Geometry Service
@@ -180,7 +180,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     { value: 'line', title: 'Línea', icon: 'esri-icon-minus' },
     { value: 'polyline', title: 'Polilínea', icon: 'esri-icon-polyline' },
     { value: 'rectangle', title: 'Rectángulo', icon: 'esri-icon-sketch-rectangle' },
-    { value: 'polygon', title: 'Polígono', icon: 'esri-icon-polygon' }
+    { value: 'polygon', title: 'Polígono Libre', icon: 'esri-icon-polygon' }
   ];
   selectedMeasurement: any;
   modesMeasurement: SelectItem[] = [
@@ -754,7 +754,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.view = new MapView(mapViewProperties);
 
       this.ccViewModel = new CoordinateVM();
-
+      document.getElementsByClassName('esri-view-root')[0].classList.add('help-cursor')
       this.addSlider();
       // Carga de capa de pozo
       const lyPozo = new FeatureLayer(this.mapRestUrl + '/1', {
@@ -1658,6 +1658,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   clearGraphics() {
     this.view.graphics.removeAll();
     this.clearGraphic = false;
+    if (this.modalSelection) {
+      this.advancedSearchShape = true;
+      this.featureDptos = []
+    }
   }
 
   ngOnInit() {
@@ -2370,6 +2374,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.sourceLayer = [];
     this.layerExtract = false;
     this.shapeAttr = false;
+    this.advancedSearchShape = false;
   }
 
   /**
@@ -2845,8 +2850,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (!this.errorArcgisService) {
       this.view.popup.autoOpenEnabled = !this.view.popup.autoOpenEnabled;
       if (this.view.popup.autoOpenEnabled) {
+        document.getElementsByClassName('esri-view-root')[0].classList.remove('normal-cursor');
+        document.getElementsByClassName('esri-view-root')[0].classList.add('help-cursor')
         this.messageService.add({ detail: `Se ha activado la selección de información`, summary: 'Información', severity: 'info' });
       } else {
+        document.getElementsByClassName('esri-view-root')[0].classList.remove('help-cursor');
+        document.getElementsByClassName('esri-view-root')[0].classList.add('normal-cursor')
         this.messageService.add({ detail: `Se ha desactivado la selección de información`, summary: 'Información', severity: 'info' });
       }
     }

@@ -235,6 +235,14 @@ p-sidebar {
   position: fixed;
 }
 
+::ng-deep .help-cursor {
+  cursor: help !important;
+}
+
+::ng-deep .normal-cursor {
+  cursor: default !important;
+}
+
 .loading-machin {
   position: fixed;
   top: 50%;
