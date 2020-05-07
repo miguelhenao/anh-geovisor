@@ -676,3 +676,7 @@ p-sidebar {
   background: none;
   color: initial;
 }
+
+::ng-deep .esri-coordinate-conversion__tools .esri-widget--button {
+  background-color: #f4f4f4;
+}
