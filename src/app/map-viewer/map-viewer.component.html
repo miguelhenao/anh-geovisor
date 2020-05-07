@@ -205,7 +205,8 @@
     [paginator]="true" [rows]="100" [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple" #dt
     [columns]="columnsTable" *ngIf="modalTable && minimizeMaximize" [dataKey]="dataKey()" [value]="featureDptos"
     [scrollable]="true" [(selection)]="featuresSelected" (onRowSelect)="onRowSelect($event)"
-    (onRowUnselect)="onRowUnselect($event)" scrollHeight="228px" [resizableColumns]="true">
+    (onRowUnselect)="onRowUnselect($event)" scrollHeight="228px" [resizableColumns]="true"
+    [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords}">
     <ng-template pTemplate="colgroup" let-columns>
       <colgroup>
         <col style="width: 28px !important;">
@@ -275,18 +276,21 @@
   </p-table>
 </p-dialog>
 <p-dialog header="Búsqueda" [(visible)]="modalFilter" [style]="{width: '500px'}" [modal]="true"
-  (onHide)="hideAdvancedSearch($event)" [dismissableMask]="true" [baseZIndex]=20 [resizable]="false" [draggable]="true" [focusOnShow]="false">
+  (onHide)="hideAdvancedSearch($event)" [dismissableMask]="true" [baseZIndex]=20 [resizable]="false" [draggable]="true"
+  [focusOnShow]="false">
   <div style="max-height: 250px; overflow-y: scroll;">
     <button pButton icon="pi pi-plus" class="ui-button-rounded ui-button-success" style="float: left;"
       label="Añadir Criterio" (click)="addFormField()"></button>
     <button pButton icon="pi pi-times" class="ui-button-rounded ui-button-warning" style="float: right;"
       label="Limpiar Filtros" (click)="cleanFilters()"></button>
     <div *ngFor="let i of arrQuantity(quantityFields).fill(1); let p = index" style="margin-top: 20px; clear: both;">
-      <select name="selectField" style="width: 110px; float: left; margin-top: 3px;" class="esri-select" [(ngModel)]="objectFilter[p]">
+      <select name="selectField" style="width: 110px; float: left; margin-top: 3px;" class="esri-select"
+        [(ngModel)]="objectFilter[p]">
         <option *ngFor="let item of columnsTable; let i = index" [ngValue]="item.name">{{item.alias}}</option>
       </select>
-      <select name="selectType" (change)="getFilterParams()" style="width: 110px; float: left; margin-left: 5px; margin-top: 3px;"
-        *ngIf="view.ready" [(ngModel)]="filterS[p]" class="esri-select">
+      <select name="selectType" (change)="getFilterParams()"
+        style="width: 110px; float: left; margin-left: 5px; margin-top: 3px;" *ngIf="view.ready"
+        [(ngModel)]="filterS[p]" class="esri-select">
         <option *ngIf="objectFilter[p] !== undefined" value="contains" selected>contiene</option>
         <option *ngIf="objectFilter[p] !== undefined" value="startsWith">empiece por</option>
         <option *ngIf="objectFilter[p] !== undefined" value="endsWith">termina por</option>
@@ -303,10 +307,11 @@
         <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'" value="gte">mayor o
           igual que</option>
       </select>
-      <input class="esri-input" [(ngModel)]="values[p]" type="text" style="width: 110px; float: left; margin-left: 5px; margin-top: 3px;"
-        (input)="getFilterParams()">
-      <select name="selectOpe" (change)="getFilterParams()" style="width: 50px; float: left; margin-left: 5px; margin-top: 3px;"
-        *ngIf="view.ready" [(ngModel)]="logicalOperators[p]" class="esri-select">
+      <input class="esri-input" [(ngModel)]="values[p]" type="text"
+        style="width: 110px; float: left; margin-left: 5px; margin-top: 3px;" (input)="getFilterParams()">
+      <select name="selectOpe" (change)="getFilterParams()"
+        style="width: 50px; float: left; margin-left: 5px; margin-top: 3px;" *ngIf="view.ready"
+        [(ngModel)]="logicalOperators[p]" class="esri-select">
         <option value="AND" selected>Y</option>
         <option value="OR">O</option>
       </select>
