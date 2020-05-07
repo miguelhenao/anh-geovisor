@@ -13,6 +13,7 @@ import * as FileSaver from 'file-saver';
 import { Router } from '@angular/router';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Table } from "primeng/table";
+import { format } from 'url';
 
 @Component({
   selector: 'app-map-viewer',
@@ -1774,6 +1775,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             height: '32px',
             yoffset: '16px'
           };
+          let formatXY = this.activeWidget.formats.find((f) => {
+            return f.name === 'xy';
+          });
+          this.activeWidget.formats.remove(formatXY);
+          formatXY.name = 'grados';
+          this.activeWidget.formats.push(formatXY);
+          console.log(formatXY);
           this.activeWidget.viewModel.locationSymbol = symbol;
           break;
         case null:
