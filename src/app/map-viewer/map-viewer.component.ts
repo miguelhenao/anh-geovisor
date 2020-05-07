@@ -47,6 +47,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   makingWorkFromAttr = false;
   modalCoordinate = false;
   layerSelected: any;
+  layerAttrTable: any;
   layerSelectedSelection: string;
   columnsTable: Array<any> = [];
   latitude = 4.6486259;
@@ -2025,7 +2026,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       for (let index = 0; index < this.columnsTable.length; index++) {
         this.filter[index] = 'contains';
       }
-      this.layerSelected = layer;
+      this.layerAttrTable = null;
+      this.layerAttrTable = layer;
+      debugger;
       this.makingWork = false;
       this.visibleModal(false, false, false, false, false, false, true, false, false, false);
     }, (err) => {
@@ -2070,7 +2073,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         returnGeometry: false,
         where: ''
       };
-      this.layerSelected.queryFeatures(query).then((result) => {
+      this.layerAttrTable.queryFeatures(query).then((result) => {
         this.featureDptos = result.features;
         // this.columnsTable = Object.keys(this.featureDptos[0].attributes);
         result.fields !== undefined && result.fields !== null && result.fields[0] !== undefined ? this.columnsTable = result.fields : null;
@@ -2147,7 +2150,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       returnGeometry: true,
       where: params
     };
-    this.layerSelected.queryFeatures(query).then((result) => {
+    debugger;
+    this.layerAttrTable.queryFeatures(query).then((result) => {
       this.featureDptos = result.features;
       // this.columnsTable = Object.keys(this.featureDptos[0].attributes);
       //this.columnsTable = result.fields;
