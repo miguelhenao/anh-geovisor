@@ -2067,7 +2067,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
       this.layerAttrTable = null;
       this.layerAttrTable = layer;
-      debugger;
       this.makingWork = false;
       this.visibleModal(false, false, false, false, false, false, true, false, false, false);
     }, (err) => {
@@ -2189,7 +2188,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       returnGeometry: true,
       where: params
     };
-    debugger;
     this.layerAttrTable.queryFeatures(query).then((result) => {
       this.featureDptos = result.features;
       // this.columnsTable = Object.keys(this.featureDptos[0].attributes);
@@ -2933,7 +2931,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public removeFormField(index: number): void {
-    debugger;
     this.objectFilter.splice(index, 1);
     this.values.splice(index, 1);
     this.logicalOperators.splice(index, 1);
