@@ -44,6 +44,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   modalBuffer = false;
   infoBuffer = true;
   modalSelection = false;
+  selectDpto: Array<any> = [];
   makingWorkFromAttr = false;
   modalCoordinate = false;
   layerSelected: any;
@@ -1618,18 +1619,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public analisis(): void {
     const query = {
       outFields: ['*'],
-      returnGeometry: false,
+      returnGeometry: true,
       where: ''
     };
     this.departmentLayer.queryFeatures(query).then((result) => {
       const dptos: Array<any> = [];
       for (const r of result.features) {
         const dpto = {
-          attributes: Object.assign({}, r.attributes)
+          attributes: Object.assign({}, r.attributes),
         };
         dptos.push(dpto);
       }
-      this.featureDptos = dptos;
+      this.selectDpto = dptos;
+      this.featureDptos = result.features;
       this.columnsTable = result.fields;
       this.dptosSelected = [];
       this.layerSelected = this.departmentLayer;
@@ -2550,9 +2552,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   changeAttrTable(event: any) {
     const ev = {
       data: {
-        attributes: event.itemValue.attributes
+        attributes: event.itemValue.attributes,
+        geometry: null
       }
     };
+    if (this.modalAnalysis) {
+      for (const r of this.featureDptos) {
+        if (r.attributes.DEPARTAMEN === ev.data.attributes.DEPARTAMEN) {
+          ev.data.geometry = r.geometry;
+          break;
+        }
+      }
+    }
     if (event.value.indexOf(event.itemValue) !== -1) {
       this.onRowSelect(ev);
     } else {
@@ -2913,9 +2924,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public removeFormField(index: number): void {
+    debugger;
     this.objectFilter.splice(index, 1);
     this.values.splice(index, 1);
     this.logicalOperators.splice(index, 1);
+    this.filterS.splice(index, 1);
     this.quantityFields -= 1;
     this.getFilterParams();
   }

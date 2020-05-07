@@ -110,7 +110,7 @@
     Departamentos seleccionados para el análisis:
   </p>
   <p-multiSelect defaultLabel="Seleccione los departamentos para realizar análisis" (onChange)="changeAttrTable($event)"
-    [options]="featureDptos" [(ngModel)]="dptosSelected" optionLabel="attributes.DEPARTAMEN"></p-multiSelect>
+    [options]="selectDpto" [(ngModel)]="dptosSelected" optionLabel="attributes.DEPARTAMEN"></p-multiSelect>
   <br>
   <p-button icon="pi pi-globe" [disabled]="dptosSelected.length == 0" (click)="generateAnalisisCobertura()"
     label="Iniciar Análisis de Cobertura"></p-button>
@@ -316,7 +316,7 @@
         <option value="OR">O</option>
       </select>
       <button pButton icon="pi pi-times" style="margin-left: 5px;" class="ui-button-rounded ui-button-danger"
-        (onClick)="removeFormField(p)"></button>
+        (click)="removeFormField(p)"></button>
     </div>
   </div>
 </p-dialog>
