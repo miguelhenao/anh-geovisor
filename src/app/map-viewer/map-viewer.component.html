@@ -36,6 +36,14 @@
           <i class="esri-icon-download" align="center"></i>
         </button>
       </div>
+      <div id="layerSelected" class="layerSelected" title="Capa actual">
+        <div *ngIf="view.ready">
+          <i class="esri-icon-checkbox-unchecked" *ngIf="!currentLayerExist"></i>
+          <i class="esri-icon-checkbox-checked" *ngIf="currentLayerExist"></i>
+          <span *ngIf="currentLayerExist">{{layerSelected.title}}</span>
+          <span *ngIf="!currentLayerExist">...</span>
+        </div>
+      </div>
       <div>
         <p-tieredMenu [style]="{'width': 'auto'}" id="content-menu" [model]="menu"></p-tieredMenu>
       </div>

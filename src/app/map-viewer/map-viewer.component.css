@@ -31,6 +31,19 @@
   width: auto;
 }
 
+.layerSelected {
+  height: 40px;
+  background-color: white;
+  padding: 10px;
+  font-size: large;
+  font-family: "Avenir Next W00", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.layerSelected span {
+  margin-left: 5px;
+}
+
+
 /* #region  Accordion*/
 
 ::ng-deep .ui-accordion .ui-accordion-content {
