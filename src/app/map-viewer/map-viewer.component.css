@@ -97,6 +97,7 @@
 
 ::ng-deep body .ui-dialog .ui-dialog-content {
   border: none;
+  padding: 5px;
 }
 
 /* width */
@@ -543,10 +544,10 @@ p-sidebar {
 ::ng-deep td .esri-button i {
   font-size: 16px;
 }
-::ng-deep .esri-button:hover {
+/* ::ng-deep .esri-button:hover {
   background-color: transparent;
   border-color: transparent;
-}
+} */
 
 /* Íconos menú */
 ::ng-deep .icofont-tools-alt-2,
@@ -679,4 +680,32 @@ p-sidebar {
 
 ::ng-deep .esri-coordinate-conversion__tools .esri-widget--button {
   background-color: #f4f4f4;
+}
+
+::ng-deep .esri-coordinate-conversion {
+  width: 373px !important;
+}
+
+::ng-deep .esri-area-measurement-2d__container {
+  padding: unset;
+}
+
+::ng-deep .esri-coordinate-conversion__row {
+  padding: 0px 5px;
+}
+
+::ng-deep .esri-area-measurement-2d__settings,
+::ng-deep .esri-distance-measurement-2d__settings {
+  padding: 5px;
+}
+
+::ng-deep .esri-area-measurement-2d .esri-widget .esri-widget--panel,
+::ng-deep .esri-distance-measurement-2d .esri-widget .esri-widget--panel {
+  padding: 5px;
+}
+
+::ng-deep .esri-area-measurement-2d__measurement,
+::ng-deep .esri-distance-measurement-2d__measurement {
+  padding: 5px;
+  margin: 5px;
 }
