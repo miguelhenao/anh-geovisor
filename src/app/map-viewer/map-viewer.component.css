@@ -441,10 +441,6 @@ p-sidebar {
   color: green;
 }
 
-#div {
-  margin: 2px;
-}
-
 #buttons .button1 {
   grid-area: 'button1';
 }
@@ -641,6 +637,7 @@ p-sidebar {
 
 ::ng-deep body .ui-dialog .ui-dialog-titlebar {
   padding: 0.5em;
+  font-weight: 400;
 }
 
 .ui-button-rounded {
@@ -708,4 +705,8 @@ p-sidebar {
 ::ng-deep .esri-distance-measurement-2d__measurement {
   padding: 5px;
   margin: 5px;
+}
+
+::ng-deep body .ui-widget {
+  font-size: 13px;
 }

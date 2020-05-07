@@ -97,7 +97,8 @@
   </p-message>
   <br>
   <p-message [escape]="false" id="infoMedicion" severity="info"
-    text="Fuentes de información: <br>*SGC: {{copyrightSGC}} <br>**IGAC: {{copyrightIGAC}}"></p-message>
+    text="Fuentes de información: <br><b>*Servicio Geológico Colombiano - SGC:</b> {{copyrightSGC}} <br><b>**Instituto Geográfico Agustín Codazzi - IGAC:</b> {{copyrightIGAC}}">
+  </p-message>
 </p-dialog>
 <!-- Fin del modal de extracción de datos -->
 
@@ -124,43 +125,44 @@
 
 <!-- Modal de zona de influencia -->
 <p-dialog header="Zona de Influencia (Buffer)" [(visible)]="modalBuffer" [resizable]="false"
-  (onHide)="onHideDialogBuffer()" [style]="{'width': '410px'}" [focusOnShow]="false" [focusOnShow]="false">
-  <div id="div">
-    <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
-      (click)="requestHelp('h-buffer')" icon="pi pi-question"></button>
-    <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoBuffer = !infoBuffer"
-      style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
-    <p>1. Defina la anchura deseada</p>
-    <div style="display: grid; grid-template-columns: auto auto;">
-      <input id="input" type="text" size="10" pInputText [(ngModel)]="bufDistance" placeholder="Ingrese un número"
-        title="Ingrese un número">
-      <p-dropdown [options]="optionsBuffer" optionLabel="name" [(ngModel)]="selectedBuffer">
-      </p-dropdown>
-    </div>
-    <p>2. Dibuje la geometría para la Zona de Influencia</p>
-    <div style="display: grid; grid-template-columns: auto auto;">
-      <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch" (onChange)="onChangeSelectedSketchBuffer()">
-      </p-selectButton>
+  (onHide)="onHideDialogBuffer()" [style]="{'width': '400px'}" [focusOnShow]="false" [focusOnShow]="false">
+  <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
+    (click)="requestHelp('h-buffer')" icon="pi pi-question"></button>
+  <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoBuffer = !infoBuffer"
+    style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
+  <p>1. Defina la anchura deseada</p>
+  <div style="display: grid; grid-template-columns: auto auto;">
+    <input id="input" type="text" size="10" pInputText [(ngModel)]="bufDistance" placeholder="Ingrese un número"
+      title="Ingrese un número">
+    <p-dropdown [options]="optionsBuffer" optionLabel="name" [(ngModel)]="selectedBuffer">
+    </p-dropdown>
+  </div>
+  <p>2. Dibuje la geometría para la Zona de Influencia</p>
+  <div style="display: grid; grid-template-columns: auto auto;">
+    <p-selectButton [options]="modesBuffer" [(ngModel)]="selectedSketch" (onChange)="onChangeSelectedSketchBuffer()">
+    </p-selectButton>
+    <div align="right">
       <p-button label="Limpiar" class="clearGraphics" [disabled]="!clearGraphic" (onClick)="clearGraphics()">
       </p-button>
     </div>
-    <p>3. Seleccione las capas a extraer</p>
-    <div style="display: grid; grid-template-columns: auto auto;">
-      <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados"
-        [(ngModel)]="selectedLayers"></p-multiSelect>
+  </div>
+  <p>3. Seleccione las capas a extraer</p>
+  <div style="display: grid; grid-template-columns: auto auto;">
+    <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados"
+      [(ngModel)]="selectedLayers"></p-multiSelect>
+    <div align="right">
       <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()">
       </p-button>
     </div>
   </div>
   <p-message *ngIf="infoBuffer" [escape]="false" id="infoMedicion" severity="info" text="La <b>anchura del área de influencia (buffer)</b> se mide apartir del
-      <br> contorno de la geometría. Cuando se usa un punto, la anchura equivale
-      <br> al <b>radio</b> del círculo resultante.
-      <br>Para dibujar un punto haga <b>clic</b> en el mapa.
-      <br>Para las demás herramientas haga <b>clic</b> y sostenga mientras mueve
-      <br>el mouse y suelte para finalizar."></p-message>
+      contorno de la geometría. Cuando se usa un punto, la anchura equivale al <b>radio</b> del círculo resultante.
+      Para dibujar un punto haga <b>clic</b> en el mapa. Para las demás herramientas haga <b>clic</b> y sostenga mientras mueve
+      el mouse y suelte para finalizar."></p-message>
   <br>
   <p-message *ngIf="infoBuffer" [escape]="false" id="infoMedicion" severity="info"
-    text="Fuentes de información: <br>*SGC: {{copyrightSGC}} <br>**IGAC: {{copyrightIGAC}}"></p-message>
+    text="Fuentes de información: <br><b>*Servicio Geológico Colombiano - SGC:</b> {{copyrightSGC}} <br><b>**Instituto Geográfico Agustín Codazzi - IGAC:</b> {{copyrightIGAC}}">
+  </p-message>
 </p-dialog>
 <!-- Fin del modal de zona de influencia -->
 
