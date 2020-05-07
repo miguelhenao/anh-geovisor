@@ -202,6 +202,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   copyrightIGAC: Array<string> = [];
   styleClassAttrTable: string;
   ccViewModel: any;
+  currentLayerExist = false;
+  lyTierrasCreate: any = undefined;
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
     private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef) {
@@ -607,6 +609,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (paginationNext.length > 0) {
       paginationNext.item(0).getAttribute('title') !== newTextNext ? paginationNext.item(0).setAttribute('title', newTextNext) : null;
     }
+    this.layerSelected = this.layerList !== undefined && this.layerList.selectedItems.length > 0 &&
+      this.layerList.selectedItems.items[0] !== null ? this.layerList.selectedItems.items[0].layer :
+      this.lyTierrasCreate !== undefined ? this.lyTierrasCreate : null;
+    this.currentLayerExist = this.layerSelected !== null ? true : false;
+    this.ref.detectChanges();
   }
 
   public validateHeight(height: number): boolean {
@@ -1085,7 +1092,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         lyTierras.title = lyTierras.sourceJSON.name;
         const searchField: Array<any> = [];
         let text = '';
-        this.layerSelected = lyTierras;
         for (const field of lyTierras.fields) {
           field.type === 'string' || field.type === 'double' ? searchField.push(field.name) : null;
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
@@ -1111,6 +1117,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       lyTierras.labelingInfo = [statesLabelClass];
       this.map.add(lyTierras);
+      this.lyTierrasCreate = lyTierras;
       this.view.on('click', (e) => {
         if (this.activeWidget !== undefined && this.activeWidget !== null && this.activeWidget.viewModel.mode !== undefined) {
           if (this.activeWidget.viewModel.mode === 'capture') {
