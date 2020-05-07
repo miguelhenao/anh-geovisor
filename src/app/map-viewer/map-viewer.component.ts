@@ -759,6 +759,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         visible: true,
         outFields: ['*'],
         showAttribution: true,
+        minScale: 1155600,
         mode: FeatureLayer.MODE_ONDEMAND
       });
       const waterWellLabelClass = new LabelClass({
@@ -809,8 +810,21 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         visible: true,
         outFields: ['*'],
         showAttribution: true,
+        minScale: 1155600,
         mode: FeatureLayer.MODE_ONDEMAND,
         copyright: 'SGC'
+      });
+      const sismicaLabelClass = new LabelClass({
+        labelExpressionInfo: { expression: '$feature.LINE_NAME' },
+        symbol: {
+          type: 'text',
+          color: 'black',
+          haloSize: 1,
+          haloColor: 'white',
+          font: {
+            size: 7.5
+          }
+        }
       });
       lySismica.load().then(() => {
         lySismica.title = lySismica.sourceJSON.name;
@@ -838,6 +852,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.search.sources = this.sourceSearch;
         lySismica.popupTemplate = templateSismica;
       });
+      lySismica.labelingInfo = [sismicaLabelClass];
       this.map.add(lySismica);
       // Carga de capa sismica 3D
       const lySismica3d = new FeatureLayer(this.mapRestUrl + '/3', {
@@ -846,7 +861,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         visible: true,
         outFields: ['*'],
         showAttribution: true,
+        minScale: 1155600,
         mode: FeatureLayer.MODE_ONDEMAND
+      });
+      const sismica3DLabelClass = new LabelClass({
+        labelExpressionInfo: { expression: '$feature.NOMBRE' },
+        symbol: {
+          type: 'text',
+          color: 'black',
+          haloSize: 1,
+          haloColor: 'white',
+          font: {
+            size: 7.5
+          }
+        }
       });
       lySismica3d.load().then(() => {
         lySismica3d.title = lySismica3d.sourceJSON.name;
@@ -874,6 +902,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.search.sources = this.sourceSearch;
         lySismica3d.popupTemplate = templateSismica3d;
       });
+      lySismica3d.labelingInfo = [sismica3DLabelClass];
       this.map.add(lySismica3d);
       // Carga de capa de municipio
       const lyMunicipio = new FeatureLayer(this.mapRestUrl + '/5', {
