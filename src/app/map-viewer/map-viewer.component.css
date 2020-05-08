@@ -718,3 +718,7 @@ p-sidebar {
 ::ng-deep body .ui-widget {
   font-size: 13px;
 }
+
+::ng-deep .esri-coordinate-conversion__settings-group-horizontal {
+  pointer-events: none;
+}

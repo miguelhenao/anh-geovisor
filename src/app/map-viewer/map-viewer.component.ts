@@ -1736,7 +1736,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Método que se realiza cuando el dialogo de medición es cerrado
    */
   public onHideDialogMedicion(): void {
-    this.selectedMeasurement = null;
+    this.selectedMeasurement = '';
     this.setActiveWidget();
     this.view.popup.autoOpenEnabled = true;
     this.flagSketch = false;
@@ -1782,14 +1782,25 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             height: '32px',
             yoffset: '16px'
           };
-          let formatXY = this.activeWidget.formats.find((f) => {
+          const formatXY = this.activeWidget.formats.find((f) => {
             return f.name === 'xy';
           });
           this.activeWidget.formats.remove(formatXY);
           formatXY.name = 'grados';
+          const xy = formatXY.currentPattern.split(',');
+          formatXY.currentPattern = xy[1] + ', ' + xy[0];
           this.activeWidget.formats.push(formatXY);
-          console.log(formatXY);
+          const formatBasemap = this.activeWidget.formats.find((f) => {
+            return f.name === 'basemap';
+          });
+          this.activeWidget.formats.remove(formatBasemap);
+          const basemap = formatBasemap.currentPattern.split(',');
+          formatBasemap.currentPattern = xy[1] + ', ' + xy[0];
+          this.activeWidget.formats.push(formatBasemap);
+
           this.activeWidget.viewModel.locationSymbol = symbol;
+          const ul = document.getElementsByClassName('esri-coordinate-conversion__tools')[0] as HTMLElement;
+          ul.getElementsByTagName('li')[0].click();
           break;
         case null:
           if (this.activeWidget) {
