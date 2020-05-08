@@ -1801,10 +1801,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.activeWidget.viewModel.locationSymbol = symbol;
           const ul = document.getElementsByClassName('esri-coordinate-conversion__tools')[0] as HTMLElement;
           ul.getElementsByTagName('li')[0].click();
-          this.sleep(2000).then(() => {
+          this.sleep(500).then(() => {
             const rowTools = document.getElementsByClassName('esri-coordinate-conversion__row')[1] as HTMLElement;
             const tools = rowTools.getElementsByClassName('esri-coordinate-conversion__tools')[0] as HTMLElement;
-            debugger;
             tools.getElementsByTagName('li')[0].addEventListener('click', (e: Event) => this.visibleModal(false, false, false, false, false, false, false, false, true, false));
           })
           break;
