@@ -1581,7 +1581,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public formatNumber(n, min) {
-    return n.toLocaleString('de-DE', {minimumFractionDigits: min, maximumFractionDigits: min});
+    return n.toLocaleString('de-DE', { minimumFractionDigits: min, maximumFractionDigits: min });
   }
 
   public symbologyChange(): void {
