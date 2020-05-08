@@ -1794,8 +1794,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             return f.name === 'basemap';
           });
           this.activeWidget.formats.remove(formatBasemap);
-          const basemap = formatBasemap.currentPattern.split(',');
-          formatBasemap.currentPattern = xy[1] + ', ' + xy[0];
+          const basemap = formatBasemap.defaultPattern.split(',');
+          formatBasemap.currentPattern = basemap[1] + ', ' + basemap[0];
           this.activeWidget.formats.push(formatBasemap);
 
           this.activeWidget.viewModel.locationSymbol = symbol;

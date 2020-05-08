@@ -199,10 +199,8 @@
           <p>Y(Norte): {{magnaSirgas.y || ''}}</p>
         </div>
       </div>
-      <p-message [escape]="false" id="infoMedicion" severity="info" *ngIf="infoTool"
-        text="Seleccione una herramienta y haga <b>clic</b> sobre el mapa para agregar puntos.
-    <b>Doble clic</b> para terminar la medición.
-    <br>Pulse <b>Ctrl</b> para activar la alineación automática (snapping) con la geometría del mapa mientras agrega puntos."></p-message>
+      <p-message [escape]="false" id="infoMedicion" severity="info" *ngIf="infoTool" text="Seleccione una herramienta y haga <b>clic</b> sobre el mapa para agregar puntos.
+    <b>Doble clic</b> para terminar la medición."></p-message>
     </div>
   </p-dialog>
 </div>
@@ -432,7 +430,8 @@
 
 <!-- Componente ubicar coordenada -->
 <div *ngIf="modalCoordinate">
-  <p-dialog header="Ubicar coordenada" [(visible)]="modalCoordinate" [resizable]="false" [focusOnShow]="false" [style]="{'width': '411px'}">
+  <p-dialog header="Ubicar coordenada" [(visible)]="modalCoordinate" [resizable]="false" [focusOnShow]="false"
+    [style]="{'width': '411px'}">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
       (click)="requestHelp('h-ubicar-coordenada')" icon="pi pi-question"></button>
     <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoTool = !infoTool"
@@ -481,8 +480,7 @@
       </div>
     </div>
     <br>
-    <p-message [escape]="false" id="infoMedicion" severity="info" *ngIf="infoTool"
-    text="Ingrese los datos solicitados para <b>crear un punto en la coordenada</b>
+    <p-message [escape]="false" id="infoMedicion" severity="info" *ngIf="infoTool" text="Ingrese los datos solicitados para <b>crear un punto en la coordenada</b>
       <br>que desea ubicar.
       <br>Al ingresar Longitud y Latitud se deben <b>llenar todos los espacios
         <br>subrayados</b> con dígitos entre 0 y 9. Para grados de un sólo dígito
