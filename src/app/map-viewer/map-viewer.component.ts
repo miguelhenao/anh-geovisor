@@ -13,7 +13,7 @@ import * as FileSaver from 'file-saver';
 import { Router } from '@angular/router';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Table } from "primeng/table";
-import { format } from 'url';
+import { format, resolve } from 'url';
 
 @Component({
   selector: 'app-map-viewer',
@@ -1581,7 +1581,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public formatNumber(n, min) {
-    return n.toLocaleString('de-DE', {minimumFractionDigits: min, maximumFractionDigits: min});
+    return n.toLocaleString('de-DE', { minimumFractionDigits: min, maximumFractionDigits: min });
   }
 
   public symbologyChange(): void {
@@ -1801,6 +1801,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.activeWidget.viewModel.locationSymbol = symbol;
           const ul = document.getElementsByClassName('esri-coordinate-conversion__tools')[0] as HTMLElement;
           ul.getElementsByTagName('li')[0].click();
+          this.sleep(500).then(() => {
+            const rowTools = document.getElementsByClassName('esri-coordinate-conversion__row')[1] as HTMLElement;
+            const tools = rowTools.getElementsByClassName('esri-coordinate-conversion__tools')[0] as HTMLElement;
+            tools.getElementsByTagName('li')[0].addEventListener('click', (e: Event) => this.visibleModal(false, false, false, false, false, false, false, false, true, false));
+          })
           break;
         case null:
           if (this.activeWidget) {
@@ -1812,6 +1817,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
   /**
    * Genera colección a partir de la información encontrada en el archivo fuente
    * @param fileName -> Nombre del archivo
