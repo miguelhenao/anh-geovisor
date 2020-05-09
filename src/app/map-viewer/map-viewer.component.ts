@@ -262,8 +262,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
     this.menu = [
       {
-        label: 'Mis capas',
-        icon: 'icofont-upload',
+        label: 'Cargar capas',
+        icon: 'esri-icon-upload',
         items: [
           {
             label: 'Shapefile',
@@ -468,11 +468,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         ]
       },
       {
-        label: 'Extraer datos',
+        label: 'Extraer información',
         icon: 'icofont-download-alt',
         items: [
           {
-            label: 'Extraer Capa',
+            label: 'Descargar Capa',
             icon: 'esri-icon-download',
             command: () => {
               this.openExtract();
@@ -480,7 +480,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           {
             label: 'Extraer Área',
-            icon: 'icofont-file-zip',
+            icon: 'esri-icon-maps',
             command: () => {
               if (!this.errorArcgisService) {
                 this.buildOptionsLayers();
