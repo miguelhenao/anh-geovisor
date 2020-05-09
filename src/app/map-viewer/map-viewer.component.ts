@@ -210,6 +210,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   hideSearch: boolean = false;
   currentLayerExist = false;
   lyTierrasCreate: any = undefined;
+  headerExtract = '';
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
     private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef, private confirmationService: ConfirmationService) {
@@ -483,6 +484,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             icon: 'esri-icon-maps',
             command: () => {
               if (!this.errorArcgisService) {
+                this.headerExtract = 'Extraer área';
                 this.buildOptionsLayers();
                 this.layerExtract = false;
                 this.visibleModal(false, false, false, true, false, false, false, false, false, false);
@@ -2392,7 +2394,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       (window as any).ga('send', 'event', 'FORM', 'submit', 'extract');
     }
     this.sourceLayer = [];
-    this.layerExtract = false;
+    // this.layerExtract = false;
     this.shapeAttr = false;
     this.advancedSearchShape = false;
   }
@@ -2851,6 +2853,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   public openExtract(): void {
     if (!this.errorArcgisService) {
+      this.headerExtract = 'Descargar capa';
       this.layerExtract = true;
       this.buildOptionsLayers();
       this.visibleModal(false, false, false, true, false, false, false, false, false, false);
