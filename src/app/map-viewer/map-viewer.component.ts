@@ -95,7 +95,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   urlAnalisisCobertura = this.agsUrlBase + 'rest/services/AnalisisCobertura/GPServer/AnalisisCobertura';
   nameLayer: string;
   optionsPolygon = [
-    { name: 'Polígono', value: 'pol' },
+    { name: 'Polígono Rectangular', value: 'rectangle' },
     { name: 'Polígono Libre', value: 'free-pol' },
     { name: 'Entidad', value: 'entity' }
   ];
@@ -2239,10 +2239,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   onChangeSelect() {
     if (this.selectedPolygon.value === 'free-pol') {
       this.sketchExtract.create('polygon', { mode: 'freehand' });
-    } else if (this.selectedPolygon.value === 'pol') {
-      this.sketchExtract.create('polygon', { mode: 'click' });
-    } else if (this.selectedPolygon.value === 'entity') {
+    }  else if (this.selectedPolygon.value === 'entity') {
       this.sketchExtract.create('point');
+    } else {
+      this.sketchExtract.create(this.selectedPolygon.value);
     }
   }
 
