@@ -2239,7 +2239,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   onChangeSelect() {
     if (this.selectedPolygon.value === 'free-pol') {
       this.sketchExtract.create('polygon', { mode: 'freehand' });
-    }  else if (this.selectedPolygon.value === 'entity') {
+    } else if (this.selectedPolygon.value === 'entity') {
       this.sketchExtract.create('point');
     } else {
       this.sketchExtract.create(this.selectedPolygon.value);
@@ -2924,7 +2924,23 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           if (this.coordinateUnits.code !== 'm') {
             const coordinateVM = new CoordinateVM();
             const format = coordinateVM.formats.items.find(x => x.name === this.coordinateUnits.code);
-            const coor = this.coordinateX.toString() + this.lathem + ', ' + this.coordinateY.toString() + this.lonhem;
+            let x;
+            let y;
+            switch (this.coordinateUnits.code) {
+              case 'dms':
+                x = this.coordinateX.toString().replace(',0000', '');
+                y = this.coordinateY.toString().replace(',0000', '');
+                break;
+              case 'ddm':
+                x = this.coordinateX.toString().replace(',000000', '');
+                y = this.coordinateY.toString().replace(',000000', '');
+                break;
+              default:
+                x = this.coordinateX.toString();
+                y = this.coordinateY.toString();
+                break;
+            }
+            const coor = x + this.lathem + ', ' + y + this.lonhem;
             coordinateVM.reverseConvert(coor, format).then((e) => {
               this.view.graphics.add(new Graphic({
                 symbol,
