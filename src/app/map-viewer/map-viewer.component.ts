@@ -635,16 +635,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.map.layers.items.forEach((layer) => {
       if (layer.title !== null) {
         if (layer.copyright !== null) {
-          const label = layer.copyright.includes('SGC') ? layer.sourceJSON.name + '*' :
-            layer.copyright.includes('IGAC') ? layer.sourceJSON.name + '**' : layer.sourceJSON.name;
+          const label = layer.copyright.includes('SGC') ? layer.title + '*' :
+            layer.copyright.includes('IGAC') ? layer.title + '**' : layer.title;
           if (layer.copyright.includes('SGC')) {
-            this.copyrightSGC.push(layer.sourceJSON.name);
+            this.copyrightSGC.push(layer.title);
           } else if (layer.copyright.includes('IGAC')) {
-            this.copyrightIGAC.push(layer.sourceJSON.name);
+            this.copyrightIGAC.push(layer.title);
           }
           this.optionsLayers.push({
             label,
-            value: layer.sourceJSON.name
+            value: layer.title
           });
         }
       }
@@ -659,17 +659,17 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.optionsLayers = [];
     this.layerSelectedSelection = null;
     this.map.layers.items.forEach((layer) => {
-      if (layer.title !== null && layer.copyright !== null) {
-        const label = layer.copyright.includes('SGC') ? layer.sourceJSON.name + '*' :
-          layer.copyright.includes('IGAC') ? layer.sourceJSON.name + '**' : layer.sourceJSON.name;
+      if (layer.title !== null) {
+        const label = layer.copyright.includes('SGC') ? layer.title + '*' :
+          layer.copyright.includes('IGAC') ? layer.title + '**' : layer.title;
         if (layer.copyright.includes('SGC')) {
-          this.copyrightSGC.push(layer.sourceJSON.name);
+          this.copyrightSGC.push(layer.title);
         } else if (layer.copyright.includes('IGAC')) {
-          this.copyrightIGAC.push(layer.sourceJSON.name);
+          this.copyrightIGAC.push(layer.title);
         }
         const sel: SelectItem = {
           label,
-          value: layer.sourceJSON.name
+          value: layer.title
         };
         if (layer.title === nameLayer) {
           this.layerSelectedSelection = sel.value;
@@ -1200,7 +1200,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 className: 'esri-icon-table',
                 id: 'attr-table'
               }, {
-                title: 'Análisis de Cobertura',
+                title: 'Análisis de Departamento',
                 className: 'esri-icon-description',
                 id: 'analisis'
               },
@@ -1875,6 +1875,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/layers/support/Field', 'esri/renderers/SimpleRenderer']);
     let sourceGraphics = [];
     const layers = featureCollection.data.featureCollection.layers.map((layer) => {
+      console.log(layer);
       const layerName = layer.layerDefinition.name;
       const graphics = layer.featureSet.features.map((feature) => {
         return Graphic.fromJSON(feature);
@@ -1882,6 +1883,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       const renderer = SimpleRenderer.fromJSON(layer.layerDefinition.drawingInfo.renderer);
       sourceGraphics = sourceGraphics.concat(graphics);
       const featureLayer = new FeatureLayer({
+        id: 'local',
+        copyright: layer.layerDefinition.copyrightText,
         title: layerName,
         objectIdField: 'FID',
         source: graphics,
@@ -2870,6 +2873,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public openEnabledPopup(): void {
+    console.log(this.map);
     if (!this.errorArcgisService) {
       this.view.popup.autoOpenEnabled = !this.view.popup.autoOpenEnabled;
       if (this.view.popup.autoOpenEnabled) {

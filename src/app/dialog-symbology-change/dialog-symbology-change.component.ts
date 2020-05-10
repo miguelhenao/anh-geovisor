@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 
 export class ChangeSymbology {
@@ -34,10 +34,10 @@ export class DialogSymbologyChangeComponent implements OnInit {
 
   public validateForm(): void {
     this.changeForm = this.formBuilder.group({
-      feature: [this.changeObject.layerSelected, [Validators.required]],
-      borderColor: [this.changeObject.borderColor, [Validators.required]],
-      fillColor: [this.changeObject.fillColor, [Validators.required]],
-      borderSize: [this.changeObject.borderSize, [Validators.required]]
+      feature: new FormControl(this.changeObject.layerSelected, Validators.required),
+      borderColor: new FormControl({ r: 0, g: 0, b: 0 }, Validators.required),
+      fillColor: new FormControl({ r: 255, g: 0, b: 0 }, Validators.required),
+      borderSize: new FormControl(1, Validators.required)
     });
   }
 
@@ -46,6 +46,6 @@ export class DialogSymbologyChangeComponent implements OnInit {
   }
 
   public setupChange(): void {
-    this.ref.close(this.changeObject);
+    this.ref.close(this.changeForm.value);
   }
 }
