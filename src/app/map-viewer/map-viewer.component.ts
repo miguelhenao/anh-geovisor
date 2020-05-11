@@ -1901,8 +1901,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/layers/support/Field', 'esri/renderers/SimpleRenderer']);
     let sourceGraphics = [];
     const layers = featureCollection.data.featureCollection.layers.map((layer) => {
-      console.log(layer);
-      const layerName = layer.layerDefinition.name;
+      let quantityType: number = 1;
+      this.map.layers.items.forEach((lay) => {
+        if (lay.title.startsWith('Shape')) {
+          quantityType += 1;
+        }
+      });
+      const layerName = `Shape${quantityType} - ${layer.layerDefinition.name}`;
       const graphics = layer.featureSet.features.map((feature) => {
         return Graphic.fromJSON(feature);
       });
@@ -1933,7 +1938,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     const [FeatureLayer, PopupTemplate, Graphic, Field, SimpleRenderer] =
       await loadModules([
         'esri/layers/FeatureLayer', 'esri/PopupTemplate', 'esri/Graphic', 'esri/layers/support/Field', 'esri/renderers/SimpleRenderer']);
-    const filename = featureCollection.layers[0].featureSet.features[0].attributes.name;
+    let quantityType: number = 1;
+    this.map.layers.items.forEach((lay) => {
+      if (lay.title.startsWith('GPX')) {
+        quantityType += 1;
+      }
+    });
+    const filename = `GPX${quantityType} - ${featureCollection.layers[0].featureSet.features[0].attributes.name}`;
     let sourceGraphics = [];
     const layers = featureCollection.layers.map((layer) => {
       const graphics = layer.featureSet.features.map((feature) => {
@@ -1970,6 +1981,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     const graphics = featureCollection.features.map((feature) => {
       return Graphic.fromJSON(geojsonToArcGIS(feature));
     });
+    let quantityType: number = 1;
+    this.map.layers.items.forEach((lay) => {
+      if (lay.title.startsWith('GeoJSON')) {
+        quantityType += 1;
+      }
+    });
     sourceGraphics = sourceGraphics.concat(graphics);
     const fields = [
       new Field({
@@ -1979,7 +1996,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       })
     ];
     const featureLayer = new FeatureLayer({
-      title: 'GeoJSON',
+      title: `GeoJSON ${quantityType}`,
       source: graphics,
       fields
     });
@@ -2186,6 +2203,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
   public getFilterParams(): void {
     let params = '';
+    debugger;
     for (let index = 0; index < this.objectFilter.length; index++) {
       if (this.filterS[index] !== undefined && this.filterS[index] !== '' && this.values[index] !== undefined && this.values[index] !== '') {
         if (index > 0) {
