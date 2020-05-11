@@ -208,7 +208,7 @@
 
 <!-- Modal de tabla de atributos -->
 <p-dialog id="attr-table" [(visible)]="modalTable" [resizable]="false" [draggable]="false" [closable]="false"
-  styleClass="{{styleClassAttrTable}}" position="bottomright" [focusOnShow]="false" [showHeader]="false">
+  styleClass="{{styleClassAttrTable}}" (onHide)="onHideDialogAtributos()" position="bottomright" [focusOnShow]="false">
   <div *ngIf="modalTable">
     <p-header>
       <span>Tabla de Atributos</span>
