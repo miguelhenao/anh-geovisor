@@ -1794,6 +1794,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         case 'coordinate':
           this.activeWidget = new CoordinateConversion({
             view: this.view,
+            orientation: 'expand-up',
             container: document.getElementById('divWidget')
           });
           const symbol = {
