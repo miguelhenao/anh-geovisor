@@ -309,7 +309,8 @@
       <select name="selectType" (change)="getFilterParams()"
         style="width: 110px; float: left; margin-left: 5px; margin-top: 3px;" *ngIf="view.ready"
         [(ngModel)]="filterS[p]" class="esri-select">
-        <option *ngIf="objectFilter[p] !== undefined" value="contains" selected>contiene</option>
+        <option value='' disabled>Seleccione un matcher</option>
+        <option *ngIf="objectFilter[p] !== undefined" value="contains">contiene</option>
         <option *ngIf="objectFilter[p] !== undefined" value="startsWith">empiece por</option>
         <option *ngIf="objectFilter[p] !== undefined" value="endsWith">termina por</option>
         <option value="equals">igual</option>

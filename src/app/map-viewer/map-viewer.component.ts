@@ -2196,6 +2196,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
   public getFilterParams(): void {
     let params = '';
+    debugger;
     for (let index = 0; index < this.objectFilter.length; index++) {
       if (this.filterS[index] !== undefined && this.filterS[index] !== '' && this.values[index] !== undefined && this.values[index] !== '') {
         if (index > 0) {
