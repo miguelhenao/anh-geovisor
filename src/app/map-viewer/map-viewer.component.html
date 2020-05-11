@@ -67,8 +67,8 @@
 <!-- Fin del div contenedor del mapa -->
 
 <!-- Modal de extracción de datos -->
-<p-dialog [(visible)]="modalExtract" [resizable]="false" (onHide)="onHideDialogExtract()"
-  [focusOnShow]="false" [style]="{'width': '390px'}">
+<p-dialog [(visible)]="modalExtract" [resizable]="false" (onHide)="onHideDialogExtract()" [focusOnShow]="false"
+  [style]="{'width': '390px'}">
   <p-header>
     {{headerExtract}}
   </p-header>
@@ -207,8 +207,8 @@
 <!-- Fin del modal de herramientas de medición -->
 
 <!-- Modal de tabla de atributos -->
-<p-dialog id="attr-table" [(visible)]="modalTable" [resizable]="false" [draggable]="false"
-  (onHide)="onHideDialogAtributos()" styleClass="{{styleClassAttrTable}}" position="bottomright" [focusOnShow]="false">
+<p-dialog id="attr-table" [(visible)]="modalTable" [resizable]="false" [draggable]="false" [closable]="false"
+  styleClass="{{styleClassAttrTable}}" position="bottomright" [focusOnShow]="false" [showHeader]="false">
   <div *ngIf="modalTable">
     <p-header>
       <span>Tabla de Atributos</span>
@@ -216,6 +216,7 @@
         (click)="minimizeMaximizeAttrTable(false)" *ngIf="minimizeMaximize" title="Minimizar"></i>
       <i class="pi pi-window-maximize" style="margin-left: 53px; padding-top: 2px; cursor: pointer;"
         (click)="minimizeMaximizeAttrTable(true)" *ngIf="!minimizeMaximize" title="Maximizar"></i>
+      <i class="pi pi-times" style="cursor: pointer;" (click)="closeDialogAttr()" title="Cerrar"></i>
     </p-header>
     <p-table class="esri-widget__table" [style]="{'width': 'inherit', 'height': 'inherit', 'max-height': '380px'}"
       [paginator]="true" [rows]="100" [rowsPerPageOptions]="[100,200,500]" selectionMode="multiple" #dt
