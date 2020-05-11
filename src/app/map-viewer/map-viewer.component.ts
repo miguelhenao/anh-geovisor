@@ -1781,6 +1781,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             this.activeWidget = new DistanceMeasurement2D({
               view: this.view,
               container: document.getElementById('divWidget'),
+              unit: 'kilometers'
             });
             this.activeWidget.viewModel.newMeasurement();
             break;
