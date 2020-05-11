@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Table } from "primeng/table";
 import { format, resolve } from 'url';
+import { Dialog } from 'primeng/dialog/dialog';
 
 @Component({
   selector: 'app-map-viewer',
@@ -28,6 +29,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     ready: false
   };
   @ViewChild('dt', { static: false }) attrTable: Table;
+  @ViewChild('attr', { static: false }) attr: Dialog;
   loaded = false;
   eventLayer: any;
   modalTable = false;
@@ -1677,6 +1679,23 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.initializeMap();
   }
 
+  public closeDialogAttr(): void {
+    if (this.values.length > 0) {
+      this.confirmationService.confirm({
+        message: 'Al cerrar la tabla de atributos perderá todos los datos filtrados. ¿Está seguro de cerrar la tabla de atributos?',
+        acceptLabel: 'Si',
+        rejectLabel: 'No',
+        accept: () => {
+          this.modalTable = false;
+          this.onHideDialogAnalisis();
+        }
+      })
+    } else {
+      this.modalTable = false;
+      this.onHideDialogAnalisis();
+    }
+  }
+
   public changeColor(indexColor: number, colors: Array<any>): void {
     const elements = document.getElementsByClassName('ui-progressbar');
     for (let index = 0; index < elements.length; index++) {
@@ -2119,22 +2138,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.getFeaturesLayerSelected();
       this.hideSearch = false;
       this.modalFilter = false;
-    }
-  }
-
-  onBeforeHide(): boolean {
-    if (this.objectFilter.length === 0 && this.values.length === 0 && this.logicalOperators.length === 0) {
-      return true;
-    } else {
-      this.confirmationService.confirm({
-        message: 'Si cierra la ventana de búsqueda perderá los filtros realizados sobre la tabla de atributos',
-        accept: () => {
-          return true;
-        },
-        reject: () => {
-          return false;
-        }
-      });
     }
   }
 
@@ -2990,14 +2993,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   public addFormField(): void {
     this.quantityFields += 1;
+    this.objectFilter.push('');
+    this.values.push('');
+    this.logicalOperators.push('');
+    this.filterS.push('');
   }
 
   public removeFormField(index: number): void {
+    this.quantityFields -= 1;
     this.objectFilter.splice(index, 1);
     this.values.splice(index, 1);
     this.logicalOperators.splice(index, 1);
     this.filterS.splice(index, 1);
-    this.quantityFields -= 1;
     this.getFilterParams();
   }
 
