@@ -1767,76 +1767,82 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Método con el cual se identifica cual fue el tipo de medición seleccionado por el usuario
    */
   public setActiveWidget() {
-    loadModules(['esri/widgets/DistanceMeasurement2D', 'esri/widgets/AreaMeasurement2D', 'esri/widgets/CoordinateConversion']).then((
-      [DistanceMeasurement2D, AreaMeasurement2D, CoordinateConversion]) => {
-      this.activeWidget != null ? this.activeWidget.destroy() : null;
-      this.activeWidget = null;
-      const container = document.createElement('div');
-      container.id = 'divWidget';
-      document.getElementById('widgetMeasure') != null ? document.getElementById('widgetMeasure').appendChild(container) : null;
-      this.magnaSirgasFlag = false;
-      switch (this.selectedMeasurement) {
-        case 'distance':
-          this.activeWidget = new DistanceMeasurement2D({
-            view: this.view,
-            container: document.getElementById('divWidget'),
-          });
-          this.activeWidget.viewModel.newMeasurement();
-          break;
-        case 'area':
-          this.activeWidget = new AreaMeasurement2D({
-            view: this.view,
-            container: document.getElementById('divWidget'),
-            unit: 'hectares'
-          });
-          this.activeWidget.viewModel.newMeasurement();
-          break;
-        case 'coordinate':
-          this.activeWidget = new CoordinateConversion({
-            view: this.view,
-            orientation: 'expand-up',
-            container: document.getElementById('divWidget')
-          });
-          const symbol = {
-            type: 'picture-marker',  // autocasts as new PictureMarkerSymbol()
-            url: 'assets/marker.png',
-            width: '18px',
-            height: '32px',
-            yoffset: '16px'
-          };
-          const formatXY = this.activeWidget.formats.find((f) => {
-            return f.name === 'xy';
-          });
-          this.activeWidget.formats.remove(formatXY);
-          formatXY.name = 'grados';
-          const xy = formatXY.currentPattern.split(',');
-          formatXY.currentPattern = xy[1] + ', ' + xy[0];
-          this.activeWidget.formats.push(formatXY);
-          const formatBasemap = this.activeWidget.formats.find((f) => {
-            return f.name === 'basemap';
-          });
-          this.activeWidget.formats.remove(formatBasemap);
-          const basemap = formatBasemap.defaultPattern.split(',');
-          formatBasemap.currentPattern = basemap[1] + ', ' + basemap[0];
-          this.activeWidget.formats.push(formatBasemap);
+    loadModules(['esri/widgets/DistanceMeasurement2D', 'esri/widgets/AreaMeasurement2D', 'esri/widgets/CoordinateConversion',
+      'esri/widgets/CoordinateConversion/support/Conversion']).then((
+        [DistanceMeasurement2D, AreaMeasurement2D, CoordinateConversion, Conversion]) => {
+        this.activeWidget != null ? this.activeWidget.destroy() : null;
+        this.activeWidget = null;
+        const container = document.createElement('div');
+        container.id = 'divWidget';
+        document.getElementById('widgetMeasure') != null ? document.getElementById('widgetMeasure').appendChild(container) : null;
+        this.magnaSirgasFlag = false;
+        switch (this.selectedMeasurement) {
+          case 'distance':
+            this.activeWidget = new DistanceMeasurement2D({
+              view: this.view,
+              container: document.getElementById('divWidget'),
+            });
+            this.activeWidget.viewModel.newMeasurement();
+            break;
+          case 'area':
+            this.activeWidget = new AreaMeasurement2D({
+              view: this.view,
+              container: document.getElementById('divWidget'),
+              unit: 'hectares'
+            });
+            this.activeWidget.viewModel.newMeasurement();
+            break;
+          case 'coordinate':
+            this.activeWidget = new CoordinateConversion({
+              view: this.view,
+              orientation: 'expand-up',
+              container: document.getElementById('divWidget')
+            });
+            const symbol = {
+              type: 'picture-marker',  // autocasts as new PictureMarkerSymbol()
+              url: 'assets/marker.png',
+              width: '18px',
+              height: '32px',
+              yoffset: '16px'
+            };
+            const formatXY = this.activeWidget.formats.find((f) => {
+              return f.name === 'xy';
+            });
+            this.activeWidget.formats.remove(formatXY);
+            formatXY.name = 'grados';
+            const xy = formatXY.currentPattern.split(',');
+            formatXY.currentPattern = xy[1] + ', ' + xy[0];
+            this.activeWidget.formats.push(formatXY);
+            const formatBasemap = this.activeWidget.formats.find((f) => {
+              return f.name === 'basemap';
+            });
+            this.activeWidget.formats.remove(formatBasemap);
+            const basemap = formatBasemap.defaultPattern.split(',');
+            formatBasemap.currentPattern = basemap[1] + ', ' + basemap[0];
+            this.activeWidget.formats.push(formatBasemap);
 
-          this.activeWidget.viewModel.locationSymbol = symbol;
-          const ul = document.getElementsByClassName('esri-coordinate-conversion__tools')[0] as HTMLElement;
-          ul.getElementsByTagName('li')[0].click();
-          this.sleep(500).then(() => {
-            const rowTools = document.getElementsByClassName('esri-coordinate-conversion__row')[1] as HTMLElement;
-            const tools = rowTools.getElementsByClassName('esri-coordinate-conversion__tools')[0] as HTMLElement;
-            tools.getElementsByTagName('li')[0].addEventListener('click', (e: Event) => this.visibleModal(false, false, false, false, false, false, false, false, true, false));
-          })
-          break;
-        case null:
-          if (this.activeWidget) {
-            this.activeWidget.destroy();
-            this.activeWidget = null;
-          }
-          break;
-      }
-    });
+            this.activeWidget.viewModel.locationSymbol = symbol;
+            const ul = document.getElementsByClassName('esri-coordinate-conversion__tools')[0] as HTMLElement;
+            ul.getElementsByTagName('li')[0].click();
+            this.sleep(500).then(() => {
+              const rowTools = document.getElementsByClassName('esri-coordinate-conversion__row')[1] as HTMLElement;
+              const tools = rowTools.getElementsByClassName('esri-coordinate-conversion__tools')[0] as HTMLElement;
+              tools.getElementsByTagName('li')[0].addEventListener('click', (e: Event) => this.visibleModal(false, false, false, false, false, false, false, false, true, false));
+            });
+            const formatDMS = this.activeWidget.formats.find((f) => {
+              return f.name === 'dms';
+            });
+            this.activeWidget.conversions.removeAll();
+            this.activeWidget.conversions.add(new Conversion({ format: formatDMS }));
+            break;
+          case null:
+            if (this.activeWidget) {
+              this.activeWidget.destroy();
+              this.activeWidget = null;
+            }
+            break;
+        }
+      });
   }
 
   sleep(ms) {
