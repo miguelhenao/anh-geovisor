@@ -1163,11 +1163,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             const outSR = new SpatialReference({ wkid: 3116 }); // MAGNA-SIRGAS / Colombia Bogota zone
             const params = new ProjectParameters();
             params.geometries = [e.mapPoint];
-            params.outSR = outSR;
+            params.outSpatialReference = outSR;
             geomSvc.project(params).then((response) => {
               this.magnaSirgas.x = this.formatNumber(response[0].x, 4);
               this.magnaSirgas.y = this.formatNumber(response[0].y, 4);
               this.magnaSirgasFlag = true;
+            });
+            this.view.goTo({
+              target: e.mapPoint,
+              zoom: 9
             });
           }
         }
@@ -2978,7 +2982,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 symbol,
                 geometry: e
               }));
-              this.view.goTo(e);
+              this.view.goTo({
+                target: e,
+                zoom: 9
+              });
             }, (error) => {
               this.messageService.add({
                 severity: 'warn',
