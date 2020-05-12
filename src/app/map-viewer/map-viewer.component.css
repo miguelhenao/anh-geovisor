@@ -235,6 +235,36 @@ p-sidebar {
   position: fixed;
 }
 
+::ng-deep .anh-icon {
+  width: 20px;
+  height: 20px;
+  float: left;
+}
+
+::ng-deep .is7 {
+  background: url(../../assets/is7.png);
+  background-repeat: no-repeat;
+  background-size: 150px;
+}
+
+::ng-deep .map {
+  background: url(../../assets/map.png);
+  background-repeat: no-repeat;
+  background-size: 400px;
+}
+
+::ng-deep .gpx-icon {
+  background-position: 95% 84%;
+}
+
+::ng-deep .geojson-icon {
+  background-position: 50% 61%;
+}
+
+::ng-deep .influence-zone-icon {
+  background-position: 95% 50%;
+}
+
 ::ng-deep .help-cursor {
   cursor: help !important;
 }

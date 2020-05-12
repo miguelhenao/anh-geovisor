@@ -1,6 +1,5 @@
 <p-toast></p-toast>
 <p-confirmDialog header="Confirmar" icon="pi pi-exclamation-triangle"></p-confirmDialog>
-
 <!-- Menú con Accordion -->
 <div id="menu-info" *ngIf="view.ready">
   <p-accordion [expandIcon]="null" [collapseIcon]="null" (onOpen)="onAccordion(true)" (onClose)="onAccordion(false)">
@@ -208,7 +207,8 @@
 
 <!-- Modal de tabla de atributos -->
 <p-dialog id="attr-table" [(visible)]="modalTable" [resizable]="false" [draggable]="false" [closable]="false"
-  styleClass="{{styleClassAttrTable}}" (onHide)="onHideDialogAtributos()" position="bottomright" [focusOnShow]="false" [showHeader]="true">
+  styleClass="{{styleClassAttrTable}}" (onHide)="onHideDialogAtributos()" position="bottomright" [focusOnShow]="false"
+  [showHeader]="true">
   <p-header>
     <span>Tabla de Atributos</span>
     <i class="pi pi-window-minimize" style="margin-left: 635px; padding-top: 2px; cursor: pointer;"
@@ -297,6 +297,9 @@
   (onHide)="hideAdvancedSearch($event)" [dismissableMask]="true" [baseZIndex]=20 [resizable]="false" [draggable]="true"
   [focusOnShow]="false">
   <div *ngIf="modalFilter" style="max-height: 250px; overflow-y: scroll;">
+    <p-progressBar mode="indeterminate" *ngIf="makingSearch" [style]="{'height': '6px'}">
+    </p-progressBar>
+    <br>
     <button pButton icon="pi pi-plus" class="ui-button-rounded ui-button-success" style="float: left;"
       label="Añadir Criterio" (click)="addFormField()"></button>
     <button pButton icon="pi pi-times" class="ui-button-rounded ui-button-warning" style="float: right;"
@@ -306,8 +309,7 @@
         [(ngModel)]="objectFilter[p]">
         <option *ngFor="let item of columnsTable; let i = index" [ngValue]="item.name">{{item.alias}}</option>
       </select>
-      <select name="selectType" (change)="getFilterParams()"
-        style="width: 110px; float: left; margin-left: 5px; margin-top: 3px;" *ngIf="view.ready"
+      <select name="selectType" style="width: 110px; float: left; margin-left: 5px; margin-top: 3px;" *ngIf="view.ready"
         [(ngModel)]="filterS[p]" class="esri-select">
         <option value='' disabled>Seleccione un matcher</option>
         <option *ngIf="objectFilter[p] !== undefined" value="contains">contiene</option>
@@ -329,9 +331,8 @@
           igual que</option>
       </select>
       <input class="esri-input" [(ngModel)]="values[p]" type="text"
-        style="width: 110px; float: left; margin-left: 5px; margin-top: 3px;" (input)="getFilterParams()">
-      <select name="selectOpe" (change)="getFilterParams()"
-        style="width: 50px; float: left; margin-left: 5px; margin-top: 3px;" *ngIf="view.ready"
+        style="width: 110px; float: left; margin-left: 5px; margin-top: 3px;">
+      <select name="selectOpe" style="width: 50px; float: left; margin-left: 5px; margin-top: 3px;" *ngIf="view.ready"
         [(ngModel)]="logicalOperators[p]" class="esri-select">
         <option value="AND" selected>Y</option>
         <option value="OR">O</option>
@@ -339,6 +340,8 @@
       <button pButton icon="pi pi-times" style="margin-left: 5px;" class="ui-button-rounded ui-button-danger"
         (click)="removeFormField(p)"></button>
     </div>
+    <button pButton *ngIf="quantityFields > 0" style="margin-left: 43%;" icon="pi pi-filter" label="Filtrar"
+      (click)="getFilterParams()" class="ui-button-rounded"></button>
   </div>
 </p-dialog>
 <!-- Fin del modal de tabla de atributos -->

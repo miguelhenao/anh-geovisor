@@ -60,6 +60,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   errorArcgisService = false;
   dptosSelected: Array<any> = [];
   makingWork = false;
+  isFilteringAttrTab: boolean = false;
   featureDptos: Array<any> = [];
   menu: Array<MenuItem> = [];
   departmentLayer: any;
@@ -213,6 +214,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   currentLayerExist = false;
   lyTierrasCreate: any = undefined;
   headerExtract = '';
+  makingSearch: boolean = false;
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
     private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef, private confirmationService: ConfirmationService) {
@@ -316,7 +318,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           {
             label: 'Archivo GPX',
-            icon: 'icofont-file-psd',
+            icon: 'anh-icon is7 gpx-icon',
             command: () => {
               if (!this.errorArcgisService) {
                 this.visibleModal(false, false, false, false, false, false, false, false, false, false);
@@ -340,7 +342,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           {
             label: 'Archivo GeoJSON',
-            icon: 'icofont-file-psd',
+            icon: 'anh-icon is7 geojson-icon',
             command: () => {
               if (!this.errorArcgisService) {
                 this.visibleModal(false, false, false, false, false, false, false, false, false, false);
@@ -502,7 +504,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         items: [
           {
             label: 'Zona de Influencia (Buffer)',
-            icon: 'fas fa-bullseye',
+            icon: 'anh-icon map influence-zone-icon',
             command: () => {
               if (!this.errorArcgisService) {
                 this.buildOptionsLayers();
@@ -624,7 +626,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.lyTierrasCreate !== undefined ? this.lyTierrasCreate : null;
     this.currentLayerExist = this.currentLayer !== null ? true : false;
     this.ref.detectChanges();
+    /* debugger;
+    let gpxMenu = document.getElementsByClassName('ui-menuitem-icon gpx-icon ng-star-inserted')[0] as HTMLElement;
+    if (gpxMenu !== undefined && gpxMenu.childNodes.length === 0) {
+      let iconGpx = document.createElement('div');
+      iconGpx.className = 'gpx-icon';
+      gpxMenu.appendChild(iconGpx);
+    } */
   }
+
 
   public validateHeight(height: number): boolean {
     return height !== 1249 && height !== 478 && height !== 728 && height !== 704 && height !== 680 && height !== 656 && height !== 632
@@ -1680,19 +1690,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public closeDialogAttr(): void {
-    if (this.values.length > 0) {
+    if (this.isFilteringAttrTab) {
       this.confirmationService.confirm({
         message: 'Al cerrar la tabla de atributos perderá todos los datos filtrados. ¿Está seguro de cerrar la tabla de atributos?',
         acceptLabel: 'Si',
         rejectLabel: 'No',
         accept: () => {
           this.modalTable = false;
-          this.onHideDialogAnalisis();
+          this.onHideDialogAtributos();
         }
       })
     } else {
       this.modalTable = false;
-      this.onHideDialogAnalisis();
+      this.onHideDialogAtributos();
     }
   }
 
@@ -2204,6 +2214,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
   public getFilterParams(): void {
     let params = '';
+    this.makingSearch = true;
     for (let index = 0; index < this.objectFilter.length; index++) {
       if (this.filterS[index] !== undefined && this.filterS[index] !== '' && this.values[index] !== undefined && this.values[index] !== '') {
         if (index > 0) {
@@ -2250,6 +2261,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       }
     }
+    if (params === '') {
+      this.isFilteringAttrTab = false;
+    } else {
+      this.isFilteringAttrTab = true;
+    }
     const query = {
       outFields: ['*'],
       returnGeometry: true,
@@ -2257,10 +2273,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     };
     this.layerAttrTable.queryFeatures(query).then((result) => {
       this.featureDptos = result.features;
+      this.makingSearch = false;
       // this.columnsTable = Object.keys(this.featureDptos[0].attributes);
       //this.columnsTable = result.fields;
     }, (err) => {
       console.error(err);
+      this.makingSearch = false;
     });
   }
 
@@ -2486,6 +2504,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public onHideDialogAtributos(): void {
     this.minimizeMaximize = true;
     this.graphics = [];
+    this.isFilteringAttrTab = false;
     this.clearGraphics();
   }
 
