@@ -1449,6 +1449,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           }
           this.view.graphics.add(graphic);
           this.view.goTo(this.view.graphics);
+          this.onChangeSelectedSketchBuffer();
         }
       });
 
@@ -2674,7 +2675,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   onHideDialogBuffer() {
     this.clearGraphics();
-    this.selectedBuffer = undefined;
     this.selectedSketch = undefined;
     this.bufDistance = undefined;
     this.sketchBuffer.cancel();
