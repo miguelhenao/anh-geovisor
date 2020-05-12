@@ -778,7 +778,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         visible: true,
         outFields: ['*'],
         showAttribution: true,
-        minScale: 1155600,
         mode: FeatureLayer.MODE_ONDEMAND
       });
       const waterWellLabelClass = new LabelClass({
@@ -829,7 +828,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         visible: true,
         outFields: ['*'],
         showAttribution: true,
-        minScale: 1155600,
         mode: FeatureLayer.MODE_ONDEMAND,
         copyright: 'SGC'
       });
@@ -880,7 +878,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         visible: true,
         outFields: ['*'],
         showAttribution: true,
-        minScale: 1155600,
         mode: FeatureLayer.MODE_ONDEMAND
       });
       const sismica3DLabelClass = new LabelClass({
