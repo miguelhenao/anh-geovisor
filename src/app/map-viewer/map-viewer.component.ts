@@ -379,10 +379,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                     loadModules(['esri/layers/KMLLayer']).then(([KMLLayer]) => {
                       this.makingWork = true;
                       (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-kml');
-                      const geo = new KMLLayer({
+                      const kml = new KMLLayer({
                         url: res
                       });
-                      this.map.add(geo);
+                      let count = 1;
+                      this.map.layers.map(layer => { layer.type === 'kml' ? count++ : null });
+                      kml.title = 'KML ' + count.toString() + kml.title;
+                      this.map.add(kml);
                     });
                   }
                 });
@@ -409,6 +412,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                       const wms = new WMSLayer({
                         url: res
                       });
+                      let count = 1;
+                      this.map.layers.map(layer => { layer.type === 'wms' ? count++ : null });
+                      wms.title = 'WMS ' + count.toString() + wms.title;
                       this.map.add(wms);
                     });
                   }
@@ -436,6 +442,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                       const geo = new GeoJSONLayer({
                         url: res
                       });
+                      let count = 1;
+                      this.map.layers.map(layer => { layer.type === 'geojson' ? count++ : null });
+                      geo.title = 'S-JSON ' + count.toString() + geo.title;
                       this.map.add(geo);
                     });
                   }
@@ -463,6 +472,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                       const csv = new CSVLayer({
                         url: res
                       });
+                      let count = 1;
+                      this.map.layers.map(layer => { layer.type === 'csv' ? count++ : null });
+                      csv.title = 'S-CSV ' + count.toString() + csv.title;
                       this.map.add(csv);
                     });
                   }
@@ -646,19 +658,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.copyrightSGC = [];
     this.map.layers.items.forEach((layer) => {
       if (layer.title !== null) {
-        if (layer.copyright !== null) {
-          const label = layer.copyright.includes('SGC') ? layer.title + '*' :
-            layer.copyright.includes('IGAC') ? layer.title + '**' : layer.title;
-          if (layer.copyright.includes('SGC')) {
-            this.copyrightSGC.push(layer.title);
-          } else if (layer.copyright.includes('IGAC')) {
-            this.copyrightIGAC.push(layer.title);
-          }
-          this.optionsLayers.push({
-            label,
-            value: layer.title
-          });
+        layer.copyright = layer.copyright !== null ? layer.copyright : '';
+        const label = layer.copyright.includes('SGC') ? layer.title + '*' :
+          layer.copyright.includes('IGAC') ? layer.title + '**' : layer.title;
+        if (layer.copyright.includes('SGC')) {
+          this.copyrightSGC.push(layer.title);
+        } else if (layer.copyright.includes('IGAC')) {
+          this.copyrightIGAC.push(layer.title);
         }
+        this.optionsLayers.push({
+          label,
+          value: layer.title
+        });
       }
     });
     this.optionsLayers = this.optionsLayers.reverse();
@@ -672,6 +683,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.layerSelectedSelection = null;
     this.map.layers.items.forEach((layer) => {
       if (layer.title !== null) {
+        layer.copyright = layer.copyright !== null ? layer.copyright : '';
         const label = layer.copyright.includes('SGC') ? layer.title + '*' :
           layer.copyright.includes('IGAC') ? layer.title + '**' : layer.title;
         if (layer.copyright.includes('SGC')) {
@@ -1614,7 +1626,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       if (res !== undefined) {
         this.map.layers.items.forEach((layer) => {
           if (layer.title !== null) {
-            if (layer.sourceJSON.name === res.layerSelected) {
+            if (layer.title === res.layerSelected) {
               this.layerSelected = layer;
             }
           }
