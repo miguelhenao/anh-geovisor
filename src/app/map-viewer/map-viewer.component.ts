@@ -992,8 +992,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
-          name: lyDepartamento.sourceJSON.name,
-          suggestionsEnabled: true,
+          name: lyDepartamento.sourceJSON.name
         });
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
@@ -1125,8 +1124,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
-          name: lyCuencas.sourceJSON.name,
-          suggestionsEnabled: true,
+          name: lyCuencas.sourceJSON.name
         });
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
@@ -1165,8 +1163,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           searchFields: searchField,
           exactMatch: false,
           outFields: ['*'],
-          name: lyTierras.sourceJSON.name,
-          suggestionsEnabled: true,
+          name: lyTierras.sourceJSON.name
         });
         this.sourceSearch = null;
         this.sourceSearch = sourceSearch;
@@ -1323,6 +1320,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         view: this.view,
         sources: this.sourceSearch,
         includeDefaultSources: false,
+        locationEnabled: false,
         maxSuggestions: 100000000000
       });
 
@@ -2933,7 +2931,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public openEnabledPopup(): void {
-    console.log(this.map);
     if (!this.errorArcgisService) {
       this.view.popup.autoOpenEnabled = !this.view.popup.autoOpenEnabled;
       if (this.view.popup.autoOpenEnabled) {
