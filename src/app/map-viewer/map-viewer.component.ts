@@ -218,8 +218,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   supportsAttachment = false;
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
-              private messageService: MessageService, private router: Router,
-              private ref: ChangeDetectorRef, private confirmationService: ConfirmationService) {
+    private messageService: MessageService, private router: Router,
+    private ref: ChangeDetectorRef, private confirmationService: ConfirmationService) {
     this.setCurrentPosition();
     this.colorsFirst = this.generateColor('#F8C933', '#FFE933', 50);
     this.colorsSeconds = this.generateColor('#E18230', '#F8C933', 50);
@@ -858,6 +858,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       });
       lySismica.load().then(() => {
+        lySismica.displayField = this.getDisplayField(lySismica.displayField, lySismica.fields);
         lySismica.title = lySismica.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
@@ -907,6 +908,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       });
       lySismica3d.load().then(() => {
+        lySismica3d.displayField = this.getDisplayField(lySismica3d.displayField, lySismica3d.fields);
         lySismica3d.title = lySismica3d.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
@@ -944,6 +946,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
       lyMunicipio.load().then(() => {
+        lyMunicipio.displayField = this.getDisplayField(lyMunicipio.displayField, lyMunicipio.fields);
         lyMunicipio.title = lyMunicipio.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
@@ -981,6 +984,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       this.departmentLayer = lyDepartamento;
       lyDepartamento.load().then(() => {
+        lyDepartamento.displayField = this.getDisplayField(lyDepartamento.displayField, lyDepartamento.fields);
         lyDepartamento.title = lyDepartamento.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
@@ -1071,6 +1075,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
       lyRezumadero.load().then(() => {
+        lyRezumadero.displayField = this.getDisplayField(lyRezumadero.displayField, lyRezumadero.fields);
         lyRezumadero.title = lyRezumadero.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
@@ -1108,6 +1113,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
       lyCuencas.load().then(() => {
+        lyCuencas.displayField = this.getDisplayField(lyCuencas.displayField, lyCuencas.fields);
         lyCuencas.title = lyCuencas.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
@@ -1147,6 +1153,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
       lyTierras.load().then(() => {
+        lyTierras.displayField = this.getDisplayField(lyTierras.displayField, lyTierras.fields);
         lyTierras.title = lyTierras.sourceJSON.name;
         const searchField: Array<any> = [];
         let text = '';
@@ -1580,6 +1587,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     } catch (error) {
       console.error('EsriLoader: ', error);
     }
+  }
+
+  getDisplayField(displayField: string, fields): string {
+    let dField = fields.find(x => (x.name.toLowerCase() === displayField.toLowerCase()) && (x.type !== 'oid'));
+    if (dField === undefined) {
+      dField = fields.find(x => (x.type === 'oid'));
+    }
+    return dField.name;
   }
 
   public showCoordinates(pt): void {
@@ -2100,6 +2115,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             mode: FeatureLayer.MODE_ONDEMAND,
           });
           lyTierrasMdt.load().then(() => {
+            lyTierrasMdt.displayField = this.getDisplayField(lyTierrasMdt.displayField, lyTierrasMdt.fields);
             lyTierrasMdt.title = lyTierrasMdt.sourceJSON.name;
             let text = '';
             for (const field of lyTierrasMdt.fields) {
@@ -2115,7 +2131,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             sourceSearch.push({
               layer: lyTierrasMdt,
               searchFields: ['TIERRAS_ID'],
-              displayField: 'TIERRAS_ID',
               exactMatch: false,
               outFields: ['*'],
               name: lyTierrasMdt.title,
