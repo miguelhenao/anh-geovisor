@@ -457,24 +457,42 @@
       </div>
       <div>
         <p>3. Ingrese coordenada</p>
-        <div style="display: grid; grid-template-columns: auto auto;">
-          <div class="ui-inputgroup">
-            <span class="ui-inputgroup-addon">{{coordinateUnits.x}}</span>
-            <p-inputMask mask="{{coordinateUnits.mask}}" [(ngModel)]="coordinateX" slotChar="0"></p-inputMask>
+        <div *ngIf="coordinateUnits.geographical">
+          <div style="display: grid; grid-template-columns: auto auto;">
+            <div class="ui-inputgroup">
+              <span class="ui-inputgroup-addon">{{coordinateUnits.x}}</span>
+              <p-inputMask mask="{{coordinateUnits.mask}}" [(ngModel)]="coordinateX" slotChar="0"></p-inputMask>
+            </div>
+            <div style="padding: 5px;">
+              <p-radioButton name="group1" value="N" [(ngModel)]="lathem" label="Norte ( + )"></p-radioButton>
+              &nbsp;
+              <p-radioButton name="group1" value="S" [(ngModel)]="lathem" label="Sur ( - )"></p-radioButton>
+            </div>
           </div>
-          <div style="padding: 5px;" *ngIf="coordinateUnits.geographical">
-            <p-radioButton name="group1" value="N" [(ngModel)]="lathem" label="Norte ( + )"></p-radioButton>
-            &nbsp;
-            <p-radioButton name="group1" value="S" [(ngModel)]="lathem" label="Sur ( - )"></p-radioButton>
+          <div style="display: grid; grid-template-columns: auto auto; margin-top: 5px;">
+            <div class="ui-inputgroup">
+              <span class="ui-inputgroup-addon">{{coordinateUnits.y}}</span>
+              <p-inputMask mask="{{coordinateUnits.mask}}" [(ngModel)]="coordinateY" slotChar="0"></p-inputMask>
+            </div>
+            <div style="padding: 5px;">
+              <p-radioButton name="group2" value="O" [(ngModel)]="lonhem" label="Oeste ( - )"></p-radioButton>
+            </div>
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: auto auto; margin-top: 5px;">
+        <div *ngIf="!coordinateUnits.geographical">
           <div class="ui-inputgroup">
-            <span class="ui-inputgroup-addon">{{coordinateUnits.y}}</span>
-            <p-inputMask mask="{{coordinateUnits.mask}}" [(ngModel)]="coordinateY" slotChar="0"></p-inputMask>
+            <span class="ui-inputgroup-addon">{{coordinateUnits.x}}</span>
+            <input type="text" pInputText [(ngModel)]="coordinateX"
+              oninput="this.value=this.value.replace(/[^0-9\,]/g, '');" (ngModelChange)="formatCoordinatePlane(coordinateX, 'X')"
+              autofocus (keypress)="keypress($event)">
           </div>
-          <div style="padding: 5px;" *ngIf="coordinateUnits.geographical">
-            <p-radioButton name="group2" value="O" [(ngModel)]="lonhem" label="Oeste ( - )"></p-radioButton>
+          <div style="margin-top: 5px;">
+            <div class="ui-inputgroup">
+              <span class="ui-inputgroup-addon">{{coordinateUnits.y}}</span>
+              <input type="text" pInputText [(ngModel)]="coordinateY"
+                oninput="this.value=this.value.replace(/[^0-9\,]/g, '');" (ngModelChange)="formatCoordinatePlane(coordinateY, 'Y')"
+                autofocus (keypress)="keypress($event)">
+            </div>
           </div>
         </div>
       </div>

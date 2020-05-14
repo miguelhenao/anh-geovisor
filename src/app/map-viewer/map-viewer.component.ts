@@ -1607,8 +1607,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
-  public formatNumber(n, min) {
-    return n.toLocaleString('de-DE', { minimumFractionDigits: min, maximumFractionDigits: min });
+  public formatNumber(n, min?) {
+    return n.toLocaleString('de-DE', { minimumFractionDigits: min, maximumFractionDigits: 4 });
   }
 
   public symbologyChange(): void {
@@ -3076,7 +3076,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 symbol,
                 geometry: pto
               }));
-              this.view.goTo(response);
+              this.view.goTo({
+                target: pto,
+                zoom: 9
+              });
             });
           }
           (window as any).ga('send', 'event', 'FORM', 'submit', 'locate-form');
@@ -3108,5 +3111,30 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   public keySort(object: any): string {
     return `attributes.${object}`;
+  }
+
+  formatCoordinatePlane(value, xy) {
+    value = value.replace(',', '.') as string;
+    value = parseFloat(value);
+    value = this.formatNumber(value, 0);
+    value = value !== 'NaN' ? value : '';
+    if (xy === 'X') {
+      this.coordinateX = value;
+    } else if (xy === 'Y') {
+      this.coordinateY = value;
+    }
+  }
+
+  keypress(event) {
+    let value = event.target.value.split(',') as Array<string>;
+    if (value.length > 1 && value[1].length === 4) {
+      event.preventDefault();
+    }
+    if (value.length === 1 && event.key !== ',') {
+      const valueInt = parseInt(value[0].split('.').join(''));
+      if ((valueInt * 10) > 2000000 || value[0].length === 9) {
+        event.preventDefault();
+      }
+    }
   }
 }
