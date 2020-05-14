@@ -215,6 +215,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   lyTierrasCreate: any = undefined;
   headerExtract = '';
   makingSearch: boolean = false;
+  supportsAttachment = false;
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
     private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef, private confirmationService: ConfirmationService) {
@@ -2158,6 +2159,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   getFeaturesLayer(layer: any): void {
     this.styleClassAttrTable = 'maxTable';
+    this.supportsAttachment = layer.capabilities.data.supportsAttachment;
     this.minimizeMaximize = true;
     const query = {
       outFields: ['*'],
@@ -2511,7 +2513,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public downloadAttachment(item: any) {
-    console.log(item);
     const url = this.mapRestUrl + '/' + item.layer.layerId + '/' + item.attributes.objectid + '/attachments?f=json';
     this.service.getAttachment(url).subscribe(success => {
       if (success.attachmentInfos.length < 1) {
@@ -2522,7 +2523,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
       } else {
         const attachments = success.attachmentInfos;
-        console.log(attachments);
         attachments.forEach(attachment => {
           const name = attachment.name.split('.')[0];
           const url2 = this.mapRestUrl + '/' + item.layer.layerId + '/' + item.attributes.objectid + '/attachments/' + attachment.id;
