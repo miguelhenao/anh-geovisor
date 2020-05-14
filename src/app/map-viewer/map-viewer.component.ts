@@ -1325,6 +1325,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         maxSuggestions: 100000000000
       });
 
+      this.search.on('select-result', (event) => {
+        console.log(event);
+        if (event.source.layer.id === 'Pozo' || event.source.layer.id === 'Sismica 2D' || event.source.layer.id === 'Sismica 3D') {
+          this.view.goTo({
+            target: event.result.feature.geometry,
+            zoom: 9
+          });
+        }
+      });
+
       this.view.ui.add(this.search, {
         position: 'top-right'
       });
