@@ -12,7 +12,7 @@ import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import { Router } from '@angular/router';
 import { DialogService } from 'primeng/dynamicdialog';
-import { Table } from "primeng/table";
+import { Table } from 'primeng/table';
 import { format, resolve } from 'url';
 import { Dialog } from 'primeng/dialog/dialog';
 
@@ -60,7 +60,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   errorArcgisService = false;
   dptosSelected: Array<any> = [];
   makingWork = false;
-  isFilteringAttrTab: boolean = false;
+  isFilteringAttrTab = false;
   featureDptos: Array<any> = [];
   menu: Array<MenuItem> = [];
   departmentLayer: any;
@@ -85,7 +85,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   sharingUrl = 'https://www.arcgis.com'; // importante que sea https para evitar problemas de SSL
   // Url del servicio de impresión, por el momento no funciona
   printUrl = this.agsUrlBase + 'rest/services/ExportWebMap_10/GPServer/Export%20Web%20Map';
-  //printUrl = this.agsUrlBase + 'rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task';
+  // printUrl = this.agsUrlBase + 'rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task';
   // Url del servicio de impresión por defecto de Arcgis. Comentar o eliminar cuando funcione el servicio de ANH
   // printUrl = 'https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task';
   // Geometry Service
@@ -156,9 +156,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   sketchExtract;
   sketchBuffer;
   sketchSelection;
-  advancedSearchShape: boolean = false;
+  advancedSearchShape = false;
   selectedPolygon: SelectItem;
-  shapeAttr: boolean = false;
+  shapeAttr = false;
   selectedSketch: any;
   intervalChange: any;
   levelColors = 0;
@@ -210,15 +210,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   copyrightIGAC: Array<string> = [];
   styleClassAttrTable: string;
   ccViewModel: any;
-  hideSearch: boolean = false;
+  hideSearch = false;
   currentLayerExist = false;
   lyTierrasCreate: any = undefined;
   headerExtract = '';
-  makingSearch: boolean = false;
+  makingSearch = false;
   supportsAttachment = false;
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
-    private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef, private confirmationService: ConfirmationService) {
+              private messageService: MessageService, private router: Router,
+              private ref: ChangeDetectorRef, private confirmationService: ConfirmationService) {
     this.setCurrentPosition();
     this.colorsFirst = this.generateColor('#F8C933', '#FFE933', 50);
     this.colorsSeconds = this.generateColor('#E18230', '#F8C933', 50);
@@ -1585,10 +1586,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.coordsWidget = document.getElementById('coords');
     let coords = '';
     if (this.coordsModel === 'G') {
-      const format = this.ccViewModel.formats.find((frmt) => {
+      const fmt = this.ccViewModel.formats.find((frmt) => {
         return frmt.name === 'dms';
       });
-      this.ccViewModel.convert(format, pt).then((success) => {
+      this.ccViewModel.convert(fmt, pt).then((success) => {
         const s = success.coordinate.split(' ');
         const lat = s[0] + '° ' + s[1] + '\' ' + this.formatNumber(parseFloat(s[2]), 3) + '"' + s[2].charAt(s[2].length - 1);
         s[3] = s[3].charAt(0) !== '0' ? s[3] : s[3].substr(1);
