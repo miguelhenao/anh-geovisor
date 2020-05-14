@@ -1326,7 +1326,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
 
       this.search.on('select-result', (event) => {
-        console.log(this.view);
         if (this.view.zoom < 9) {
           if (event.source.layer.id === 'Pozo' || event.source.layer.id === 'Sismica 2D' || event.source.layer.id === 'Sismica 3D') {
             this.view.goTo({
@@ -2087,7 +2086,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         lyTierrasMdt = this.map.layers.items.find(x => x.id === 'Tierras_MDT');
         if (lyTierrasMdt !== undefined) {
           this.map.remove(lyTierrasMdt);
-          console.log('Borró');
         }
         if (slider.values[0] < timeStops.length - 1) {
           layerTierras.visible = false;
@@ -2138,7 +2136,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               } else if (fields.find(x => x.name === 'CONTRATO_N')) {
                 labelExpression = '$feature.CONTRATO_N';
               }
-              console.log(lyTierrasMdt.displayField);
               const statesLabelClass = new LabelClass({
                 labelExpressionInfo: { expression: labelExpression },
                 symbol: {
@@ -2159,7 +2156,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               (window as any).ga('send', 'event', 'TOOL', 'slide', 'ts-tierras');
             });
           });
-          console.log('Afuera');
         } else {
           layerTierras.visible = true;
         }
@@ -2421,7 +2417,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       }
       const features = this.layerExtract || this.shapeAttr || this.advancedSearchShape ? this.sourceLayer : this.view.graphics.items;
-      console.log(features)
       const featureSet = new FeatureSet();
       featureSet.features = features;
       const params = {
@@ -2479,7 +2474,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * @param event -> Evento con el item de la tabla seleccionado
    */
   public onRowSelect(event: any, goTo?: boolean): void {
-    console.log(event.data)
     loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
       'esri/Color', 'dojo/_base/array', 'esri/Graphic', 'esri/tasks/GeometryService',
       'esri/geometry/SpatialReference', 'esri/tasks/support/ProjectParameters'])
@@ -2978,7 +2972,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public openEnabledPopup(): void {
-    console.log(this.map.layers);
     if (!this.errorArcgisService) {
       this.view.popup.autoOpenEnabled = !this.view.popup.autoOpenEnabled;
       if (this.view.popup.autoOpenEnabled) {
