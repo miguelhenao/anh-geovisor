@@ -77,7 +77,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   agsHost = 'anh-gisserver.anh.gov.co';
   // agsHost = 'services6.arcgis.com/QNcm0ph3xAgJ1Ghk';
   agsProtocol = 'https';
-  mapRestUrl = this.agsProtocol + '://' + this.agsHost + '/arcgis/rest/services/Tierras/Mapa_ANH/MapServer';
+  mapRestUrl = this.agsProtocol + '://' + this.agsHost + '/arcgis/rest/services/Tierras/Mapa_ANH/FeatureServer';
   // mapRestUrl = this.agsProtocol + '://' + this.agsHost + '/arcgis/rest/services/Tierras_2019_09_17/FeatureServer';
   agsDir = 'arcgis';
   agsUrlBase = this.agsProtocol + '://' + this.agsHost + '/' + this.agsDir + '/';
@@ -2510,6 +2510,41 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.onRowSelect(event, true);
   }
 
+  public downloadAttachment(item: any) {
+    console.log(item);
+    const url = this.mapRestUrl + '/' + item.layer.layerId + '/' + item.attributes.objectid + '/attachments?f=json';
+    this.service.getAttachment(url).subscribe(success => {
+      if (success.attachmentInfos.length < 1) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: '',
+          detail: 'Sin archivos adjuntos.'
+        });
+      } else {
+        const attachments = success.attachmentInfos;
+        console.log(attachments);
+        attachments.forEach(attachment => {
+          const name = attachment.name.split('.')[0];
+          const url2 = this.mapRestUrl + '/' + item.layer.layerId + '/' + item.attributes.objectid + '/attachments/' + attachment.id;
+          this.downloadFile(url2, name);
+        });
+      }
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  public downloadFile(url, name) {
+    let link = document.createElement('a');
+    link.target = '_blank';
+    link.download = name;
+    link.href = url;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    link.remove();
+  }
+
   /**
    * Método que se ejecuta cuando el dialogo de tabla de atributos es cerrado
    */
@@ -2931,6 +2966,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public openEnabledPopup(): void {
+    console.log(this.map.layers);
     if (!this.errorArcgisService) {
       this.view.popup.autoOpenEnabled = !this.view.popup.autoOpenEnabled;
       if (this.view.popup.autoOpenEnabled) {

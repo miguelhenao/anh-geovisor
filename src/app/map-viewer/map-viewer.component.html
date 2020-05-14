@@ -227,11 +227,13 @@
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col style="width: 28px !important;">
+          <col style="width: 28px !important;">
           <col *ngFor="let col of columns" style="width:150px">
         </colgroup>
       </ng-template>
       <ng-template pTemplate="header" let-columns>
         <tr>
+          <th></th>
           <th></th>
           <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="keySort(col.name)">
             {{col.alias}}
@@ -239,6 +241,7 @@
           </th>
         </tr>
         <tr>
+          <th></th>
           <th></th>
           <th *ngFor="let col of columns; let i = index">
             <span style="display: grid; grid-template-columns: 20% 80%;" class="filter">
@@ -269,6 +272,11 @@
           <td style="padding: 0px; width: 28px !important;" title="Acerca a">
             <button class="esri-button" (click)="onRowSelectGoTo(item)">
               <i class="esri-icon-zoom-in-magnifying-glass"></i>
+            </button>
+          </td>
+          <td style="padding: 0px; width: 28px !important;">
+            <button class="esri-button" (click)="downloadAttachment(item)">
+              <i class="esri-icon-documentation"></i>
             </button>
           </td>
           <td *ngFor="let col of columns" height="28px" title="{{item.attributes[col.name]}}">
