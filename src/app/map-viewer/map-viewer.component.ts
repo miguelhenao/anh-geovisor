@@ -216,6 +216,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   headerExtract = '';
   makingSearch = false;
   supportsAttachment = false;
+  identifyTask: any;
+  identifyParameters: any;
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
     private messageService: MessageService, private router: Router,
@@ -754,13 +756,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, LabelClass, BasemapGallery, SketchViewModel,
         GraphicsLayer, Graphic, Legend, ScaleBar, geometryEngine, SpatialReference, ProjectParameters, GeometryService,
-        TextContent, CoordinateVM, AttachmentsContent] =
+        TextContent, CoordinateVM, AttachmentsContent, IdentifyTask, IdentifyParameters] =
         await loadModules(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/LayerList', 'esri/widgets/Print',
           'esri/widgets/Search', 'esri/widgets/Expand', 'esri/layers/support/LabelClass', 'esri/widgets/BasemapGallery',
           'esri/widgets/Sketch/SketchViewModel', 'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend',
           'esri/widgets/ScaleBar', 'esri/geometry/geometryEngine', 'esri/geometry/SpatialReference',
           'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService', 'esri/popup/content/TextContent',
-          'esri/widgets/CoordinateConversion/CoordinateConversionViewModel', 'esri/popup/content/AttachmentsContent']);
+          'esri/widgets/CoordinateConversion/CoordinateConversionViewModel', 'esri/popup/content/AttachmentsContent',
+          'esri/tasks/IdentifyTask', 'esri/tasks/support/IdentifyParameters']);
 
       // Geometry Service
       const geomSvc = new GeometryService(this.urlGeometryService);
@@ -1207,6 +1210,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             });
           }
         }
+        if (this.view.popup.autoOpenEnabled) {
+          this.identifyParameters.geometry = e.mapPoint;
+          this.identifyParameters.mapExtent = this.view.extent;
+          this.identifyTask.execute(this.identifyParameters).then((success) => {
+            console.log(success);
+          });
+        }
       });
       this.view.on('layerview-create', () => {
         if (this.makingWork) {
@@ -1321,6 +1331,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             layerListExpand.collapse();
           }
         });
+
+        this.identifyTask = new IdentifyTask(this.mapRestUrl);
+        this.identifyParameters = new IdentifyParameters({
+          layerOption: 'top',
+          layerIds: [0, 1, 2, 3, 4, 5, 6, 7],
+          tolerance: 3,
+          width: this.view.width,
+          height: this.view.height
+        });
+        console.log(this.identifyParameters);
       });
 
       this.layerList = layerList;
