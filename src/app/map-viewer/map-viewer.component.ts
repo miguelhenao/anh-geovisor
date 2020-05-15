@@ -2406,6 +2406,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           )
         }
       }
+      debugger;
       const features = this.layerExtract || this.shapeAttr || this.advancedSearchShape ? this.sourceLayer : this.view.graphics.items;
       console.log(features)
       const featureSet = new FeatureSet();
@@ -2498,7 +2499,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             outSpatialReference: outSR
           });
           geomSvc.project(params).then((response) => {
-            this.view.goTo(response[0]);
+            this.layerAttrTable.title === 'Pozo' || this.layerAttrTable.title.startsWith('Sísmica') ? this.view.goTo({target: response[0], zoom: 9}) : this.view.goTo(response[0]);
           });
         }
         this.view.graphics.add(graphic);
