@@ -754,13 +754,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, LabelClass, BasemapGallery, SketchViewModel,
         GraphicsLayer, Graphic, Legend, ScaleBar, geometryEngine, SpatialReference, ProjectParameters, GeometryService,
-        CoordinateVM] =
+        TextContent, CoordinateVM, AttachmentsContent] =
         await loadModules(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/LayerList', 'esri/widgets/Print',
           'esri/widgets/Search', 'esri/widgets/Expand', 'esri/layers/support/LabelClass', 'esri/widgets/BasemapGallery',
           'esri/widgets/Sketch/SketchViewModel', 'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend',
           'esri/widgets/ScaleBar', 'esri/geometry/geometryEngine', 'esri/geometry/SpatialReference',
-          'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService',
-          'esri/widgets/CoordinateConversion/CoordinateConversionViewModel']);
+          'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService', 'esri/popup/content/TextContent',
+          'esri/widgets/CoordinateConversion/CoordinateConversionViewModel', 'esri/popup/content/AttachmentsContent']);
 
       // Geometry Service
       const geomSvc = new GeometryService(this.urlGeometryService);
@@ -985,6 +985,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.departmentLayer = lyDepartamento;
       lyDepartamento.load().then(() => {
         lyDepartamento.displayField = this.getDisplayField(lyDepartamento.displayField, lyDepartamento.fields);
+        lyDepartamento.sourceJSON.name = 'Departamento';
         lyDepartamento.title = lyDepartamento.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
@@ -1157,13 +1158,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         lyTierras.title = lyTierras.sourceJSON.name;
         const searchField: Array<any> = [];
         let text = '';
+        const textContent = new TextContent();
         for (const field of lyTierras.fields) {
           field.type === 'string' || field.type === 'double' ? searchField.push(field.name) : null;
           text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
         }
+        textContent.text = text;
+
+        const attachmentsElement = new AttachmentsContent({
+          displayType: 'list'
+        });
+
         const templateTierras = {
           title: lyTierras.sourceJSON.name,
-          content: text,
+          content: [textContent, attachmentsElement],
           fieldInfos: []
         };
         const sourceSearch: Array<any> = this.sourceSearch.slice();
