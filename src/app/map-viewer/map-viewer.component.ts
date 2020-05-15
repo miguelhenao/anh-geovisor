@@ -3161,7 +3161,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
     if (value.length === 1 && event.key !== ',') {
       const valueInt = parseInt(value[0].split('.').join(''));
-      if ((valueInt * 10) > 2000000 || value[0].length === 9) {
+      if ((valueInt * 10) >= 2000000 || value[0].length === 9) {
         event.preventDefault();
       }
     }
