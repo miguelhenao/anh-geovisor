@@ -12,7 +12,7 @@ import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import { Router } from '@angular/router';
 import { DialogService } from 'primeng/dynamicdialog';
-import { Table } from "primeng/table";
+import { Table } from 'primeng/table';
 import { format, resolve } from 'url';
 import { Dialog } from 'primeng/dialog/dialog';
 
@@ -60,7 +60,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   errorArcgisService = false;
   dptosSelected: Array<any> = [];
   makingWork = false;
-  isFilteringAttrTab: boolean = false;
+  isFilteringAttrTab = false;
   featureDptos: Array<any> = [];
   menu: Array<MenuItem> = [];
   departmentLayer: any;
@@ -85,7 +85,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   sharingUrl = 'https://www.arcgis.com'; // importante que sea https para evitar problemas de SSL
   // Url del servicio de impresión, por el momento no funciona
   printUrl = this.agsUrlBase + 'rest/services/ExportWebMap_10/GPServer/Export%20Web%20Map';
-  //printUrl = this.agsUrlBase + 'rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task';
+  // printUrl = this.agsUrlBase + 'rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task';
   // Url del servicio de impresión por defecto de Arcgis. Comentar o eliminar cuando funcione el servicio de ANH
   // printUrl = 'https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task';
   // Geometry Service
@@ -156,9 +156,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   sketchExtract;
   sketchBuffer;
   sketchSelection;
-  advancedSearchShape: boolean = false;
+  advancedSearchShape = false;
   selectedPolygon: SelectItem;
-  shapeAttr: boolean = false;
+  shapeAttr = false;
   selectedSketch: any;
   intervalChange: any;
   levelColors = 0;
@@ -210,14 +210,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   copyrightIGAC: Array<string> = [];
   styleClassAttrTable: string;
   ccViewModel: any;
-  hideSearch: boolean = false;
+  hideSearch = false;
   currentLayerExist = false;
   lyTierrasCreate: any = undefined;
   headerExtract = '';
-  makingSearch: boolean = false;
+  makingSearch = false;
+  supportsAttachment = false;
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
-    private messageService: MessageService, private router: Router, private ref: ChangeDetectorRef, private confirmationService: ConfirmationService) {
+    private messageService: MessageService, private router: Router,
+    private ref: ChangeDetectorRef, private confirmationService: ConfirmationService) {
     this.setCurrentPosition();
     this.colorsFirst = this.generateColor('#F8C933', '#FFE933', 50);
     this.colorsSeconds = this.generateColor('#E18230', '#F8C933', 50);
@@ -856,6 +858,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       });
       lySismica.load().then(() => {
+        lySismica.displayField = this.getDisplayField(lySismica.displayField, lySismica.fields);
         lySismica.title = lySismica.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
@@ -905,6 +908,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       });
       lySismica3d.load().then(() => {
+        lySismica3d.displayField = this.getDisplayField(lySismica3d.displayField, lySismica3d.fields);
         lySismica3d.title = lySismica3d.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
@@ -942,6 +946,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
       lyMunicipio.load().then(() => {
+        lyMunicipio.displayField = this.getDisplayField(lyMunicipio.displayField, lyMunicipio.fields);
         lyMunicipio.title = lyMunicipio.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
@@ -979,6 +984,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       this.departmentLayer = lyDepartamento;
       lyDepartamento.load().then(() => {
+        lyDepartamento.displayField = this.getDisplayField(lyDepartamento.displayField, lyDepartamento.fields);
         lyDepartamento.title = lyDepartamento.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
@@ -1069,6 +1075,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
       lyRezumadero.load().then(() => {
+        lyRezumadero.displayField = this.getDisplayField(lyRezumadero.displayField, lyRezumadero.fields);
         lyRezumadero.title = lyRezumadero.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
@@ -1106,6 +1113,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
       lyCuencas.load().then(() => {
+        lyCuencas.displayField = this.getDisplayField(lyCuencas.displayField, lyCuencas.fields);
         lyCuencas.title = lyCuencas.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
@@ -1145,6 +1153,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         mode: FeatureLayer.MODE_ONDEMAND
       });
       lyTierras.load().then(() => {
+        lyTierras.displayField = this.getDisplayField(lyTierras.displayField, lyTierras.fields);
         lyTierras.title = lyTierras.sourceJSON.name;
         const searchField: Array<any> = [];
         let text = '';
@@ -1322,6 +1331,17 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         includeDefaultSources: false,
         locationEnabled: false,
         maxSuggestions: 100000000000
+      });
+
+      this.search.on('select-result', (event) => {
+        if (this.view.zoom < 9) {
+          if (event.source.layer.id === 'Pozo' || event.source.layer.id === 'Sismica 2D' || event.source.layer.id === 'Sismica 3D') {
+            this.view.goTo({
+              target: event.result.feature.geometry,
+              zoom: 9
+            });
+          }
+        }
       });
 
       this.view.ui.add(this.search, {
@@ -1569,14 +1589,22 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  getDisplayField(displayField: string, fields): string {
+    let dField = fields.find(x => (x.name.toLowerCase() === displayField.toLowerCase()) && (x.type !== 'oid'));
+    if (dField === undefined) {
+      dField = fields.find(x => (x.type === 'oid'));
+    }
+    return dField.name;
+  }
+
   public showCoordinates(pt): void {
     this.coordsWidget = document.getElementById('coords');
     let coords = '';
     if (this.coordsModel === 'G') {
-      const format = this.ccViewModel.formats.find((frmt) => {
+      const fmt = this.ccViewModel.formats.find((frmt) => {
         return frmt.name === 'dms';
       });
-      this.ccViewModel.convert(format, pt).then((success) => {
+      this.ccViewModel.convert(fmt, pt).then((success) => {
         const s = success.coordinate.split(' ');
         const lat = s[0] + '° ' + s[1] + '\' ' + this.formatNumber(parseFloat(s[2]), 3) + '"' + s[2].charAt(s[2].length - 1);
         s[3] = s[3].charAt(0) !== '0' ? s[3] : s[3].substr(1);
@@ -1606,8 +1634,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
-  public formatNumber(n, min) {
-    return n.toLocaleString('de-DE', { minimumFractionDigits: min, maximumFractionDigits: min });
+  public formatNumber(n, min?) {
+    return n.toLocaleString('de-DE', { minimumFractionDigits: min, maximumFractionDigits: 4 });
   }
 
   public symbologyChange(): void {
@@ -2074,7 +2102,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         lyTierrasMdt = this.map.layers.items.find(x => x.id === 'Tierras_MDT');
         if (lyTierrasMdt !== undefined) {
           this.map.remove(lyTierrasMdt);
-          console.log('Borró');
         }
         if (slider.values[0] < timeStops.length - 1) {
           layerTierras.visible = false;
@@ -2088,6 +2115,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             mode: FeatureLayer.MODE_ONDEMAND,
           });
           lyTierrasMdt.load().then(() => {
+            lyTierrasMdt.displayField = this.getDisplayField(lyTierrasMdt.displayField, lyTierrasMdt.fields);
             lyTierrasMdt.title = lyTierrasMdt.sourceJSON.name;
             let text = '';
             for (const field of lyTierrasMdt.fields) {
@@ -2103,7 +2131,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             sourceSearch.push({
               layer: lyTierrasMdt,
               searchFields: ['TIERRAS_ID'],
-              displayField: 'TIERRAS_ID',
               exactMatch: false,
               outFields: ['*'],
               name: lyTierrasMdt.title,
@@ -2125,7 +2152,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               } else if (fields.find(x => x.name === 'CONTRATO_N')) {
                 labelExpression = '$feature.CONTRATO_N';
               }
-              console.log(lyTierrasMdt.displayField);
               const statesLabelClass = new LabelClass({
                 labelExpressionInfo: { expression: labelExpression },
                 symbol: {
@@ -2146,7 +2172,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               (window as any).ga('send', 'event', 'TOOL', 'slide', 'ts-tierras');
             });
           });
-          console.log('Afuera');
         } else {
           layerTierras.visible = true;
         }
@@ -2158,6 +2183,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   getFeaturesLayer(layer: any): void {
     this.styleClassAttrTable = 'maxTable';
+    this.supportsAttachment = layer.capabilities.data.supportsAttachment;
     this.minimizeMaximize = true;
     const query = {
       outFields: ['*'],
@@ -2408,7 +2434,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
       debugger;
       const features = this.layerExtract || this.shapeAttr || this.advancedSearchShape ? this.sourceLayer : this.view.graphics.items;
-      console.log(features)
       const featureSet = new FeatureSet();
       featureSet.features = features;
       const params = {
@@ -2466,7 +2491,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * @param event -> Evento con el item de la tabla seleccionado
    */
   public onRowSelect(event: any, goTo?: boolean): void {
-    console.log(event.data)
     loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol',
       'esri/Color', 'dojo/_base/array', 'esri/Graphic', 'esri/tasks/GeometryService',
       'esri/geometry/SpatialReference', 'esri/tasks/support/ProjectParameters'])
@@ -2512,7 +2536,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public downloadAttachment(item: any) {
-    console.log(item);
     const url = this.mapRestUrl + '/' + item.layer.layerId + '/' + item.attributes.objectid + '/attachments?f=json';
     this.service.getAttachment(url).subscribe(success => {
       if (success.attachmentInfos.length < 1) {
@@ -2523,7 +2546,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
       } else {
         const attachments = success.attachmentInfos;
-        console.log(attachments);
         attachments.forEach(attachment => {
           const name = attachment.name.split('.')[0];
           const url2 = this.mapRestUrl + '/' + item.layer.layerId + '/' + item.attributes.objectid + '/attachments/' + attachment.id;
@@ -2967,7 +2989,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public openEnabledPopup(): void {
-    console.log(this.map.layers);
     if (!this.errorArcgisService) {
       this.view.popup.autoOpenEnabled = !this.view.popup.autoOpenEnabled;
       if (this.view.popup.autoOpenEnabled) {
@@ -3077,7 +3098,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 symbol,
                 geometry: pto
               }));
-              this.view.goTo(response);
+              this.view.goTo({
+                target: pto,
+                zoom: 9
+              });
             });
           }
           (window as any).ga('send', 'event', 'FORM', 'submit', 'locate-form');
@@ -3109,5 +3133,30 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   public keySort(object: any): string {
     return `attributes.${object}`;
+  }
+
+  formatCoordinatePlane(value, xy) {
+    value = value.replace(',', '.') as string;
+    value = parseFloat(value);
+    value = this.formatNumber(value, 0);
+    value = value !== 'NaN' ? value : '';
+    if (xy === 'X') {
+      this.coordinateX = value;
+    } else if (xy === 'Y') {
+      this.coordinateY = value;
+    }
+  }
+
+  keypress(event) {
+    let value = event.target.value.split(',') as Array<string>;
+    if (value.length > 1 && value[1].length === 4) {
+      event.preventDefault();
+    }
+    if (value.length === 1 && event.key !== ',') {
+      const valueInt = parseInt(value[0].split('.').join(''));
+      if ((valueInt * 10) > 2000000 || value[0].length === 9) {
+        event.preventDefault();
+      }
+    }
   }
 }
