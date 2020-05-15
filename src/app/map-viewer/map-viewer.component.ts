@@ -985,7 +985,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.departmentLayer = lyDepartamento;
       lyDepartamento.load().then(() => {
         lyDepartamento.displayField = this.getDisplayField(lyDepartamento.displayField, lyDepartamento.fields);
-        lyDepartamento.sourceJSON.name = 'Departamento';
         lyDepartamento.title = lyDepartamento.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
