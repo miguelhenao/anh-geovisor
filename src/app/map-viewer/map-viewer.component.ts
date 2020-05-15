@@ -2439,7 +2439,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           )
         }
       }
-      debugger;
+
       const features = this.layerExtract || this.shapeAttr || this.advancedSearchShape ? this.sourceLayer : this.view.graphics.items;
       const featureSet = new FeatureSet();
       featureSet.features = features;
