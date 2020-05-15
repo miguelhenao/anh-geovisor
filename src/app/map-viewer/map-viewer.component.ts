@@ -2531,7 +2531,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             outSpatialReference: outSR
           });
           geomSvc.project(params).then((response) => {
-            this.layerAttrTable.title === 'Pozo' || this.layerAttrTable.title.startsWith('Sísmica') ? this.view.goTo({target: response[0], zoom: 9}) : this.view.goTo(response[0]);
+            this.layerAttrTable.title === 'Pozo' || this.layerAttrTable.title.startsWith('Sísmica') ? this.view.goTo({ target: response[0], zoom: 9 }) : this.view.goTo(response[0]);
           });
         }
         this.view.graphics.add(graphic);
@@ -3163,6 +3163,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (value.length === 1 && event.key !== ',') {
       const valueInt = parseInt(value[0].split('.').join(''));
       if ((valueInt * 10) > 2000000 || value[0].length === 9) {
+        event.preventDefault();
+      }
+    }
+    if (event.key === ',') {
+      if (event.target.value === '' || event.target.value.indexOf(',') !== -1) {
         event.preventDefault();
       }
     }
