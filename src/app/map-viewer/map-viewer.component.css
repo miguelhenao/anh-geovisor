@@ -273,6 +273,10 @@ p-sidebar {
   cursor: default !important;
 }
 
+::ng-deep .wait-cursor {
+  cursor: wait !important;
+}
+
 .loading-machin {
   position: fixed;
   top: 50%;

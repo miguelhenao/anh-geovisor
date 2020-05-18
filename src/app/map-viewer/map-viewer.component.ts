@@ -77,7 +77,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   agsHost = 'anh-gisserver.anh.gov.co';
   // agsHost = 'services6.arcgis.com/QNcm0ph3xAgJ1Ghk';
   agsProtocol = 'https';
-  mapRestUrl = this.agsProtocol + '://' + this.agsHost + '/arcgis/rest/services/Tierras/Mapa_ANH_Sueje/FeatureServer';
+  mapRestUrl = this.agsProtocol + '://' + this.agsHost + '/arcgis/rest/services/Tierras/Mapa_ANH_Sueje/MapServer';
   // mapRestUrl = this.agsProtocol + '://' + this.agsHost + '/arcgis/rest/services/Tierras_2019_09_17/FeatureServer';
   agsDir = 'arcgis';
   agsUrlBase = this.agsProtocol + '://' + this.agsHost + '/' + this.agsDir + '/';
@@ -218,6 +218,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   supportsAttachment = false;
   identifyTask: any;
   identifyParameters: any;
+  popupAutoOpenEnabled = true;
 
   constructor(private dialogService: DialogService, private service: MapViewerService,
     private messageService: MessageService, private router: Router,
@@ -508,7 +509,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 this.buildOptionsLayers();
                 this.layerExtract = false;
                 this.visibleModal(false, false, false, true, false, false, false, false, false, false);
-                this.view.popup.autoOpenEnabled = false;
+                this.popupAutoOpenEnabled = false;
               }
             }
           }
@@ -525,7 +526,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               if (!this.errorArcgisService) {
                 this.buildOptionsLayers();
                 this.visibleModal(false, false, true, false, false, false, false, false, false, false);
-                this.view.popup.autoOpenEnabled = false;
+                this.popupAutoOpenEnabled = false;
               }
             }
           },
@@ -756,14 +757,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, LabelClass, BasemapGallery, SketchViewModel,
         GraphicsLayer, Graphic, Legend, ScaleBar, geometryEngine, SpatialReference, ProjectParameters, GeometryService,
-        TextContent, CoordinateVM, AttachmentsContent, IdentifyTask, IdentifyParameters] =
+        TextContent, CoordinateVM, AttachmentsContent, IdentifyTask, IdentifyParameters, IdentifyResult] =
         await loadModules(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/LayerList', 'esri/widgets/Print',
           'esri/widgets/Search', 'esri/widgets/Expand', 'esri/layers/support/LabelClass', 'esri/widgets/BasemapGallery',
           'esri/widgets/Sketch/SketchViewModel', 'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend',
           'esri/widgets/ScaleBar', 'esri/geometry/geometryEngine', 'esri/geometry/SpatialReference',
           'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService', 'esri/popup/content/TextContent',
           'esri/widgets/CoordinateConversion/CoordinateConversionViewModel', 'esri/popup/content/AttachmentsContent',
-          'esri/tasks/IdentifyTask', 'esri/tasks/support/IdentifyParameters']);
+          'esri/tasks/IdentifyTask', 'esri/tasks/support/IdentifyParameters', 'esri/tasks/support/IdentifyResult']);
 
       // Geometry Service
       const geomSvc = new GeometryService(this.urlGeometryService);
@@ -779,6 +780,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       const mapViewProperties = {
         container: this.mapViewEl.nativeElement,
         center: [this.longitude, this.latitude],
+        popup: {
+          autoOpenEnabled: false
+        },
         zoom: 5,
         map: this.map
       };
@@ -1210,11 +1214,46 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             });
           }
         }
-        if (this.view.popup.autoOpenEnabled) {
+        if (this.popupAutoOpenEnabled) {
           this.identifyParameters.geometry = e.mapPoint;
           this.identifyParameters.mapExtent = this.view.extent;
+          document.getElementsByClassName('esri-view-root')[0].classList.remove('help-cursor');
+          document.getElementsByClassName('esri-view-root')[0].classList.add('wait-cursor');
           this.identifyTask.execute(this.identifyParameters).then((success) => {
-            console.log(success);
+            const results = success.results;
+            const features = [];
+            results.map(result => {
+              const feature = result.feature;
+              if (feature.attributes !== null) {
+                const attributes = Object.keys(feature.attributes);
+                let text = '';
+                const textContent = new TextContent();
+                for (const field of attributes) {
+                  text = `${text} <b>${field}: </b> {${field}} <br>`;
+                }
+                textContent.text = text;
+
+                const attachmentsElement = new AttachmentsContent({
+                  displayType: 'list'
+                });
+
+                const template = {
+                  title: result.layerName,
+                  content: [textContent, attachmentsElement],
+                  fieldInfos: []
+                };
+                feature.popupTemplate = template;
+              }
+              features.push(feature);
+            });
+            if (features.length > 0) {
+              this.view.popup.open({
+                features,
+                location: e.mapPoint
+              });
+            }
+            document.getElementsByClassName('esri-view-root')[0].classList.remove('wait-cursor');
+            document.getElementsByClassName('esri-view-root')[0].classList.add('help-cursor');
           });
         }
       });
@@ -1334,13 +1373,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
         this.identifyTask = new IdentifyTask(this.mapRestUrl);
         this.identifyParameters = new IdentifyParameters({
-          layerOption: 'top',
+          layerOption: 'visible',
           layerIds: [0, 1, 2, 3, 4, 5, 6, 7],
-          tolerance: 3,
+          tolerance: 0,
           width: this.view.width,
-          height: this.view.height
+          height: this.view.height,
+          returnGeometry: true
         });
-        console.log(this.identifyParameters);
       });
 
       this.layerList = layerList;
@@ -1836,7 +1875,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public onHideDialogMedicion(): void {
     this.selectedMeasurement = '';
     this.setActiveWidget();
-    this.view.popup.autoOpenEnabled = true;
+    this.popupAutoOpenEnabled = true;
     this.flagSketch = false;
   }
 
@@ -2735,7 +2774,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.selectedLayers = [];
     this.selectedPolygon = undefined;
     this.sketchExtract.cancel();
-    this.view.popup.autoOpenEnabled = true;
+    this.popupAutoOpenEnabled = true;
     this.flagSketch = false;
   }
 
@@ -2793,7 +2832,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.selectedSketch = undefined;
     this.bufDistance = undefined;
     this.sketchBuffer.cancel();
-    this.view.popup.autoOpenEnabled = true;
+    this.popupAutoOpenEnabled = true;
     this.flagSketch = false;
   }
 
@@ -3003,22 +3042,22 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.layerExtract = true;
       this.buildOptionsLayers();
       this.visibleModal(false, false, false, true, false, false, false, false, false, false);
-      this.view.popup.autoOpenEnabled = false;
+      this.popupAutoOpenEnabled = false;
     }
   }
 
   public openMeasuringTools(): void {
     if (!this.errorArcgisService) {
       this.visibleModal(false, false, false, false, false, true, false, false, false, false);
-      this.view.popup.autoOpenEnabled = false;
+      this.popupAutoOpenEnabled = false;
       (window as any).ga('send', 'event', 'BUTTON', 'click', 'open-measure-menu');
     }
   }
 
   public openEnabledPopup(): void {
     if (!this.errorArcgisService) {
-      this.view.popup.autoOpenEnabled = !this.view.popup.autoOpenEnabled;
-      if (this.view.popup.autoOpenEnabled) {
+      this.popupAutoOpenEnabled = !this.popupAutoOpenEnabled;
+      if (this.popupAutoOpenEnabled) {
         document.getElementsByClassName('esri-view-root')[0].classList.remove('normal-cursor');
         document.getElementsByClassName('esri-view-root')[0].classList.add('help-cursor')
         this.messageService.add({ detail: `Se ha activado la selección de información`, summary: 'Información', severity: 'info' });
