@@ -541,14 +541,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           },
           {
             label: 'Análisis de Departamento',
-            icon: 'fas fa-clone',
+            icon: 'anh-icon analisis',
             command: () => {
               !this.errorArcgisService ? this.analisis() : null;
             }
           },
           {
             label: 'Cambiar Simbología',
-            icon: 'icofont-paint',
+            icon: 'anh-icon simbologia',
             command: () => {
               this.layerSelected = null;
               this.layerSelectedSelection = null;
@@ -688,7 +688,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.layerSelectedSelection = null;
     this.map.layers.items.forEach((layer) => {
       if (layer.title !== null) {
-        layer.copyright = layer.copyright !== null ? layer.copyright : '';
+        layer.copyright = layer.copyright !== null && layer.copyright !== undefined? layer.copyright : '';
         const label = layer.copyright.includes('SGC') ? layer.title + '*' :
           layer.copyright.includes('IGAC') ? layer.title + '**' : layer.title;
         if (layer.copyright.includes('SGC')) {
@@ -1310,7 +1310,41 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 id: 'decrease-opacity'
               }]
             ];
-          } else {
+          } else if (event.item.layer.title.startsWith('Shape') || event.item.layer.title.startsWith('CSV') || 
+          event.item.layer.title.startsWith('S-CSV') || event.item.layer.title.startsWith('S-JSON') || 
+          event.item.layer.title.startsWith('GeoJSON') || event.item.layer.title.startsWith('KML') || 
+          event.item.layer.title.startsWith('GPX') || event.item.layer.title.startsWith('WMS')) {
+            item.actionsSections = [
+              [{
+                title: 'Tabla de Atributos',
+                className: 'esri-icon-table',
+                id: 'attr-table'
+              },
+              {
+                title: 'Cambiar simbología',
+                className: 'esri-icon-edit',
+                id: 'simbologia'
+              },
+              {
+                title: 'Selección',
+                className: 'esri-icon-cursor',
+                id: 'seleccion'
+              },
+              {
+                title: 'Eliminar capa',
+                className: 'esri-icon-trash',
+                id: 'deleteLayer'
+              }], [{
+                title: 'Aumentar opacidad',
+                className: 'esri-icon-up',
+                id: 'increase-opacity'
+              }, {
+                title: 'Reducir opacidad',
+                className: 'esri-icon-down',
+                id: 'decrease-opacity'
+              }]
+            ];
+          }else {
             item.actionsSections = [
               [{
                 title: 'Tabla de Atributos',
@@ -1368,6 +1402,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             this.visibleModal(false, false, false, false, false, false, false, true, false, false);
             this.layerSelected = layer;
             layerListExpand.collapse();
+          } else if (event.action.id === 'deleteLayer') {
+            this.confirmationService.confirm({
+              message: `¿Desea eliminar la capa ${layer.title}?`,
+              acceptLabel: 'Si',
+              rejectLabel: 'No',
+              accept: () => {
+                this.map.remove(layer);
+                this.messageService.add({
+                  summary: 'Capas',
+                  detail: `La capa ${layer.title} ha sido removida existosamente`,
+                  severity: 'success'
+                });
+              }
+            });
           }
         });
 

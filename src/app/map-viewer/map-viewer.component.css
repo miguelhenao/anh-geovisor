@@ -253,6 +253,20 @@ p-sidebar {
   background-size: 400px;
 }
 
+::ng-deep .analisis {
+  background: url(../../assets/analisis-dpto.png);
+  background-repeat: no-repeat;
+  background-size: 25px;
+  background-position: 50%;
+}
+
+::ng-deep .simbologia {
+  background: url(../../assets/simbologia.png);
+  background-repeat: no-repeat;
+  background-size: 40px;
+  background-position: 50% 50%;
+}
+
 ::ng-deep .gpx-icon {
   background-position: 95% 84%;
 }
