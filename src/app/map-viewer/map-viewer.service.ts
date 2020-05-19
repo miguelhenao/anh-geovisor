@@ -15,4 +15,8 @@ export class MapViewerService {
   public validateServices(url: string): Observable<any> {
     return this.http.get(url + '?f=pjson');
   }
+
+  public getAttachment(url: string): Observable<any> {
+    return this.http.get(url);
+  }
 }

@@ -1,20 +1,20 @@
-.help-content {
-  width: 100%;
-  height: 100%;
+#help-content {
+  height: 490px;
   overflow-y: auto;
 }
 
-.help-nav {
-  width: 100%;
-  height: 100%;
+#help-nav {
+  height: 490px;
   overflow-y: auto;
 }
 
-.guide {
-  width: 700px;
+.ui-g {
+  width: 795px;
   height: 500px;
-  overflow-y: auto;
-  overflow-x: hidden;
+}
+
+h2, h3, h4 {
+  margin-top: 0;
 }
 
 p {
@@ -26,6 +26,7 @@ table {
   border-collapse: collapse;
   width: 100%;
   font-size: 12px;
+  text-align: center;
 }
 
 td,
@@ -34,12 +35,53 @@ th {
   padding: 8px;
 }
 
-tr:nth-child(even) {
+tr:nth-child(even),
+thead {
   background-color: #f2f2f2;
 }
 
-th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
+img {
+  width: 98%;
+  margin: 5px;
+}
+
+/* sidebar */
+.sidebar {
+  margin-bottom: 20px;
+  padding-top: 0;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+  margin-bottom: 0;
+  margin-top: 0;
+  list-style: none;
+}
+
+/* all links */
+.sidebar .nav > li > a {
+  color: #999;
+  border-left: 2px solid transparent;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 400;
+  display: block;
+}
+
+/* active & hover links */
+.sidebar .nav > .active > a,
+.sidebar .nav > li > a:hover,
+.sidebar .nav > li > a:focus {
+  color: #44546A;
+  text-decoration: none;
+  background-color: transparent;
+  border-left-color: #44546A;
+}
+/* all active links */
+.sidebar .nav > .active > a,
+.sidebar .nav > .active:hover > a,
+.sidebar .nav > .active:focus > a {
+  font-weight: 700;
 }

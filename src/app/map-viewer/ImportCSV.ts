@@ -16,7 +16,13 @@ export class ImportCSV {
     this.view = view;
     this.mapViewComponent = _this;
     if (files && files.length === 1) {
-      this.filename = files[0].name.split('.')[0];
+      let quantityType: number = 1;
+      this.map.layers.items.forEach((lay) => {
+        if (lay.title.startsWith('CSV')) {
+          quantityType += 1;
+        }
+      });
+      this.filename = `CSV${quantityType} - ${files[0].name.split('.')[0]}`;
       this.handleCsv(files[0]);
     }
   }

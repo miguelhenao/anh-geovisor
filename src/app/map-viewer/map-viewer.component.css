@@ -1,8 +1,10 @@
 @import url('https://js.arcgis.com/4.12/esri/css/main.css');
 #menu {
-  background-image: url("../../assets/logo-anh-q.png");
-  height: 67px;
-  width: 188px;
+  background-image: url("../../assets/logo-anh-menu.png");
+  background-size: 195px 80px;
+  background-position: right;
+  height: 80px;
+  width: 185px;
 }
 
 #opacidad {
@@ -29,6 +31,19 @@
   width: auto;
 }
 
+.layerSelected {
+  height: 40px;
+  background-color: white;
+  padding: 10px;
+  font-size: 13px;
+  font-family: "Avenir Next W00", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.layerSelected span {
+  margin-left: 5px;
+}
+
+
 /* #region  Accordion*/
 
 ::ng-deep .ui-accordion .ui-accordion-content {
@@ -37,6 +52,7 @@
 
 ::ng-deep :focus {
   outline: unset !important;
+  box-shadow: none !important;
 }
 
 ::ng-deep .ui-accordion .ui-accordion-header a {
@@ -81,6 +97,7 @@
 
 ::ng-deep body .ui-dialog .ui-dialog-content {
   border: none;
+  padding: 5px;
 }
 
 /* width */
@@ -185,10 +202,6 @@ p-sidebar {
   clear: both;
 }
 
-#excel {
-  margin-left: 70% !important;
-}
-
 #excel button {
   margin-right: 5%;
 }
@@ -222,13 +235,55 @@ p-sidebar {
   position: fixed;
 }
 
+::ng-deep .anh-icon {
+  width: 20px;
+  height: 20px;
+  float: left;
+}
+
+::ng-deep .is7 {
+  background: url(../../assets/is7.png);
+  background-repeat: no-repeat;
+  background-size: 150px;
+}
+
+::ng-deep .map {
+  background: url(../../assets/map.png);
+  background-repeat: no-repeat;
+  background-size: 400px;
+}
+
+::ng-deep .gpx-icon {
+  background-position: 95% 84%;
+}
+
+::ng-deep .geojson-icon {
+  background-position: 50% 61%;
+}
+
+::ng-deep .influence-zone-icon {
+  background-position: 95% 50%;
+}
+
+::ng-deep .help-cursor {
+  cursor: help !important;
+}
+
+::ng-deep .normal-cursor {
+  cursor: default !important;
+}
+
+::ng-deep .wait-cursor {
+  cursor: wait !important;
+}
+
 .loading-machin {
   position: fixed;
   top: 50%;
   left: 50%;
   width: 144px;
   height: 144px;
-  background: url(../../assets/machin144_sombra-suave.png) -5px -20px;
+  background: url(../../assets/loading-machin.png) -5px -20px;
   margin-top: -72px;
   margin-left: -72px;
   animation: mymove 1.6s steps(30, end) infinite;
@@ -264,27 +319,53 @@ p-sidebar {
   }
 }
 
-#ts-tierras-wrapper {
+#time-slider {
   background-color: rgba(255, 255, 255, 0.6) !important;
-  position: absolute;
-  bottom: 25px;
-  top: auto;
-  width: 40%;
+  width: 40vw;
+  margin-right: 16vw;
   align-items: center;
-  margin: 0 auto;
-  left: 26.8%;
 }
 
-#ts-tierras-wrapper .ts-bg {
-  position: relative;
+@media only screen and (max-width: 1286px){
+  #time-slider {
+    margin-right: 14vw;
+  }
+}
+
+@media only screen and (max-width: 1122px) {
+  #time-slider {
+    margin-right: 12vw;
+  }
+}
+
+@media only screen and (max-width: 958px) {
+  #time-slider {
+    margin-right: 10vw;
+  }
+}
+
+@media only screen and (max-width: 899px) {
+  #time-slider {
+    margin-right: 8vw;
+  }
+}
+
+@media only screen and (max-width: 850px) {
+  #time-slider {
+    margin-right: 7vw;
+  }
+}
+
+#time-slider .ts-bg {
   max-width: 100%;
-  background-color: white;
-  height: 45px;
+  background-color: transparent !important;
+  height: 51.5px;
   padding: 0px 20px;
   padding-top: 20px;
 }
 
 #ts-tierras {
+  background-color: transparent;
   position: relative;
   opacity: 1.0;
   text-align: center;
@@ -318,13 +399,17 @@ p-sidebar {
 }
 
 ::ng-deep .esri-slider__segment {
-  /* background-color: #FF9900; */
   height: 6px !important;
   top: -2px !important;
 }
 
 ::ng-deep .esri-slider__max {
   margin-left: 5px !important;
+}
+
+::ng-deep .esri-slider__max,
+::ng-deep .esri-slider__min {
+  font-weight: bold;
 }
 
 ::ng-deep .esri-icon-expand:before {
@@ -350,7 +435,7 @@ p-sidebar {
 
 @media only screen and (max-height: 700px) {
   #help {
-    width: 420px;
+    width: 398px;
   }
 }
 
@@ -398,20 +483,55 @@ p-sidebar {
   color: green;
 }
 
-#div {
-  margin: 2px;
+#buttons .button1 {
+  grid-area: 'button1';
+}
+#buttons .button2 {
+  grid-area: 'button2';
+}
+#buttons .button3 {
+  grid-area: 'button3';
+}
+#buttons .button4 {
+  grid-area: 'button4';
+}
+#buttons .button5 {
+  grid-area: 'button5';
 }
 
 #buttons {
   padding: 4px;
   display: grid;
-  grid-template-columns: auto auto auto auto auto;
-  grid-column-gap: 2px;
-  background-color: white;
+  grid-template-areas: 'button1 button2 button3 button4 button5';
+  grid-gap: 2px;
+  background-color:white;
 }
 
 #buttons p-button {
   margin: 0 auto;
+}
+
+@media only screen and (max-width: 445px) {
+  #buttons {
+    grid-template-areas:
+    'button1'
+    'button2'
+    'button3'
+    'button4'
+    'button5';
+    width: 45px;
+  }
+
+  #menu {
+    height: 51px;
+    width: 130px;
+    background-size: 131px 51px;
+  }
+
+  .logo-toggler:before, .logo-toggler:after {
+    width: 12px;
+    height: 1px;
+  }
 }
 
 @media only screen and (max-width: 544px) {
@@ -427,13 +547,13 @@ p-sidebar {
 }
 
 @media only screen and (max-width: 799px) {
-  #ts-tierras-wrapper {
+  #time-slider {
     display: none;
   }
 }
 
 @media only screen and (min-width: 800px) {
-  #ts-tierras-wrapper {
+  #time-slider {
     display: initial;
   }
 }
@@ -450,12 +570,28 @@ p-sidebar {
   margin-left: 10%;
 }
 
+::ng-deep td .esri-button {
+  height: 28px !important;
+  min-height: 28px !important;
+  width: 100% !important;
+  min-width: 28px !important;
+  background-color: transparent;
+  border: none;
+}
+
+::ng-deep td .esri-button i {
+  font-size: 16px;
+}
+/* ::ng-deep .esri-button:hover {
+  background-color: transparent;
+  border-color: transparent;
+} */
 
 /* Íconos menú */
 ::ng-deep .icofont-tools-alt-2,
 ::ng-deep .icofont-download-alt,
 ::ng-deep .icofont-printer,
-::ng-deep .icofont-upload {
+::ng-deep .esri-icon-upload {
   font-size: 22px !important;
 }
 
@@ -504,9 +640,16 @@ p-sidebar {
 
 ::ng-deep #coordsWidget .esri-select {
   border: none !important;
-  height: 20px;
+  height: auto;
   background: none;
-  font-size: 14px;
+  font-size: 11.5px;
+  padding: unset;
+}
+
+::ng-deep #coordsWidget {
+  width: 250px !important;
+  max-width: 250px !important;
+  font-size: 12px;
 }
 
 ::ng-deep .filter .esri-select {
@@ -522,4 +665,94 @@ p-sidebar {
 ::ng-deep .esri-icon-sketch-rectangle:before,
 ::ng-deep .esri-icon-polygon:before {
   color: initial;
+}
+
+
+::ng-deep .esri-print__author-info-container,
+::ng-deep .esri-print__copyright-info-container{
+  display: none !important;
+}
+
+::ng-deep body .ui-tieredmenu .ui-menuitem-link:focus {
+  box-shadow: none !important;
+}
+
+::ng-deep body .ui-dialog .ui-dialog-titlebar {
+  padding: 0.5em;
+  font-weight: 400;
+}
+
+.ui-button-rounded {
+  margin-right: 5px !important;
+}
+
+::ng-deep  body .ui-table .ui-table-tbody > tr > td,
+::ng-deep  body .ui-table .ui-table-thead > tr > th {
+  white-space: pre;
+  font-size: 11px;
+}
+
+.esri-select, .esri-input {
+  height: 25px;
+  font-size: 11px;
+}
+
+::ng-deep .maxTable {
+  width: 800px;
+}
+
+::ng-deep .minTable {
+  width: 238px;
+  height: 71px;
+  background-color: white;
+}
+
+::ng-deep .pi-sort-up:before,
+::ng-deep .pi-sort-down:before {
+  color: initial;
+}
+
+::ng-deep body .ui-table .ui-sortable-column.ui-state-highlight {
+  background: none;
+  color: initial;
+}
+
+::ng-deep .esri-coordinate-conversion__tools .esri-widget--button {
+  background-color: #f4f4f4;
+}
+
+::ng-deep .esri-coordinate-conversion {
+  width: 373px !important;
+}
+
+::ng-deep .esri-area-measurement-2d__container {
+  padding: unset;
+}
+
+::ng-deep .esri-coordinate-conversion__row {
+  padding: 0px 5px;
+}
+
+::ng-deep .esri-area-measurement-2d__settings,
+::ng-deep .esri-distance-measurement-2d__settings {
+  padding: 5px;
+}
+
+::ng-deep .esri-area-measurement-2d .esri-widget .esri-widget--panel,
+::ng-deep .esri-distance-measurement-2d .esri-widget .esri-widget--panel {
+  padding: 5px;
+}
+
+::ng-deep .esri-area-measurement-2d__measurement,
+::ng-deep .esri-distance-measurement-2d__measurement {
+  padding: 5px;
+  margin: 5px;
+}
+
+::ng-deep body .ui-widget {
+  font-size: 13px;
+}
+
+::ng-deep .esri-coordinate-conversion__settings-group-horizontal {
+  pointer-events: none;
 }
