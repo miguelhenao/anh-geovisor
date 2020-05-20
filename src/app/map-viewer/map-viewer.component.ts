@@ -152,6 +152,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   featuresSelected: Array<any> = [];
   layerList: any;
   optionsLayers: SelectItem[] = [];
+  optionsLayerExtractor: SelectItem[] = [];
   optionsDepartment: SelectItem[] = [];
   sketchExtract;
   sketchBuffer;
@@ -168,6 +169,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     value: 9036
   };
   selectedLayers: Array<string> = [];
+  layerExtractor: string;
   clearGraphic = false;
   visibleMenu = true;
   contractMenu = true;
@@ -663,7 +665,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.copyrightSGC = [];
     this.map.layers.items.forEach((layer) => {
       if (layer.title !== null) {
-        layer.copyright = layer.copyright !== null ? layer.copyright : '';
+        layer.copyright = layer.copyright !== null && layer.copyright !== undefined ? layer.copyright : '';
         const label = layer.copyright.includes('SGC') ? layer.title + '*' :
           layer.copyright.includes('IGAC') ? layer.title + '**' : layer.title;
         if (layer.copyright.includes('SGC')) {
@@ -675,8 +677,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           label,
           value: layer.title
         });
+        layer.geometryType === 'polygon' ? this.optionsLayerExtractor.push({label, value: layer.title}) : null;
       }
     });
+    this.optionsLayerExtractor = this.optionsLayerExtractor.reverse();
     this.optionsLayers = this.optionsLayers.reverse();
   }
 
@@ -688,7 +692,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.layerSelectedSelection = null;
     this.map.layers.items.forEach((layer) => {
       if (layer.title !== null) {
-        layer.copyright = layer.copyright !== null && layer.copyright !== undefined? layer.copyright : '';
+        layer.copyright = layer.copyright !== null && layer.copyright !== undefined ? layer.copyright : '';
         const label = layer.copyright.includes('SGC') ? layer.title + '*' :
           layer.copyright.includes('IGAC') ? layer.title + '**' : layer.title;
         if (layer.copyright.includes('SGC')) {
@@ -1310,10 +1314,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 id: 'decrease-opacity'
               }]
             ];
-          } else if (event.item.layer.title.startsWith('Shape') || event.item.layer.title.startsWith('CSV') || 
-          event.item.layer.title.startsWith('S-CSV') || event.item.layer.title.startsWith('S-JSON') || 
-          event.item.layer.title.startsWith('GeoJSON') || event.item.layer.title.startsWith('KML') || 
-          event.item.layer.title.startsWith('GPX') || event.item.layer.title.startsWith('WMS')) {
+          } else if (event.item.layer.title.startsWith('Shape') || event.item.layer.title.startsWith('CSV') ||
+            event.item.layer.title.startsWith('S-CSV') || event.item.layer.title.startsWith('S-JSON') ||
+            event.item.layer.title.startsWith('GeoJSON') || event.item.layer.title.startsWith('KML') ||
+            event.item.layer.title.startsWith('GPX') || event.item.layer.title.startsWith('WMS')) {
             item.actionsSections = [
               [{
                 title: 'Tabla de Atributos',
@@ -1344,7 +1348,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 id: 'decrease-opacity'
               }]
             ];
-          }else {
+          } else {
             item.actionsSections = [
               [{
                 title: 'Tabla de Atributos',
@@ -1527,30 +1531,28 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             this.view.graphics.add(graphic);
             this.clearGraphic = true;
           } else {
-            if (this.selectedLayers.length === 0) {
+            if (this.layerExtractor === null || this.layerExtractor === undefined) {
               this.messageService.add({
                 severity: 'warn',
                 summary: '',
                 detail: 'Debe seleccionar una capa.'
               });
             }
-            this.selectedLayers.forEach(layer => {
-              this.changeLayer(layer);
-              const spQry = this.layerSelected.createQuery();
-              spQry.maxAllowableOffset = 1;
-              spQry.geometry = event.graphic.geometry;
-              this.layerSelected.queryFeatures(spQry).then((result) => {
-                result.features.forEach(key => {
-                  const graphic = new Graphic({
-                    geometry: key.geometry,
-                    symbol: symbolF
-                  });
-                  const graphicCreated = this.view.graphics.find((x) => {
-                    return JSON.stringify(x.geometry) === JSON.stringify(graphic.geometry);
-                  });
-                  graphicCreated === undefined ? this.view.graphics.add(graphic) : this.view.graphics.remove(graphicCreated);
-                  this.clearGraphic = true;
+            this.changeLayer(this.layerExtractor);
+            const spQry = this.layerSelected.createQuery();
+            spQry.maxAllowableOffset = 1;
+            spQry.geometry = event.graphic.geometry;
+            this.layerSelected.queryFeatures(spQry).then((result) => {
+              result.features.forEach(key => {
+                const graphic = new Graphic({
+                  geometry: key.geometry,
+                  symbol: symbolF
                 });
+                const graphicCreated = this.view.graphics.find((x) => {
+                  return JSON.stringify(x.geometry) === JSON.stringify(graphic.geometry);
+                });
+                graphicCreated === undefined ? this.view.graphics.add(graphic) : this.view.graphics.remove(graphicCreated);
+                this.clearGraphic = true;
               });
             });
           }

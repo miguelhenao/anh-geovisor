@@ -89,6 +89,10 @@
         </p-button>
       </div>
     </div>
+    <div *ngIf="selectedPolygon != undefined && selectedPolygon != null && selectedPolygon.value == 'entity'">
+      <p>3. Seleccione la capa de la entidad donde se va a extraer la información</p>
+      <p-dropdown [options]="optionsLayerExtractor" placeholder="Click aquí..." [(ngModel)]="layerExtractor"></p-dropdown>
+    </div>
     <p-button label="Extraer" icon="pi pi-download" (onClick)="extractShape()" [style]="{'margin-top': '5px'}">
     </p-button>
   </div>
@@ -483,15 +487,15 @@
           <div class="ui-inputgroup">
             <span class="ui-inputgroup-addon">{{coordinateUnits.x}}</span>
             <input type="text" pInputText [(ngModel)]="coordinateX"
-              oninput="this.value=this.value.replace(/[^0-9\,]/g, '');" (ngModelChange)="formatCoordinatePlane(coordinateX, 'X')"
-              autofocus (keypress)="keypress($event)">
+              oninput="this.value=this.value.replace(/[^0-9\,]/g, '');"
+              (ngModelChange)="formatCoordinatePlane(coordinateX, 'X')" autofocus (keypress)="keypress($event)">
           </div>
           <div style="margin-top: 5px;">
             <div class="ui-inputgroup">
               <span class="ui-inputgroup-addon">{{coordinateUnits.y}}</span>
               <input type="text" pInputText [(ngModel)]="coordinateY"
-                oninput="this.value=this.value.replace(/[^0-9\,]/g, '');" (ngModelChange)="formatCoordinatePlane(coordinateY, 'Y')"
-                autofocus (keypress)="keypress($event)">
+                oninput="this.value=this.value.replace(/[^0-9\,]/g, '');"
+                (ngModelChange)="formatCoordinatePlane(coordinateY, 'Y')" autofocus (keypress)="keypress($event)">
             </div>
           </div>
         </div>
