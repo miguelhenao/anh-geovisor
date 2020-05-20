@@ -2461,7 +2461,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         wkid: 4326
       }
     });
-    if (!this.layerExtract && (this.selectedLayers.length === 0 || this.view.graphics.length === 0) && !this.shapeAttr && !this.advancedSearchShape) {
+    if (!this.layerExtract && (this.selectedLayers.length === 0 || this.view.graphics.length === 0) && !this.shapeAttr && !this.advancedSearchShape &&
+    (this.selectedPolygon.value === 'entity' && (this.layerExtractor === null || this.layerExtractor === undefined))) {
       if (this.selectedLayers.length === 0) {
         this.messageService.add({
           severity: 'warn',
@@ -2481,6 +2482,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           severity: 'warn',
           summary: '',
           detail: 'Debe dibujar el área de interes para poder extraer datos.'
+        });
+      }
+      if (this.selectedPolygon.value === 'entity' &&  (this.layerExtractor === null || this.layerExtractor === undefined)) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: '',
+          detail: 'Debe seleccionar la capa de la entidad de la cual se extraerán los datos.'
         });
       }
     } else if (this.layerExtract && this.selectedLayers.length === 0 && !this.shapeAttr) {
