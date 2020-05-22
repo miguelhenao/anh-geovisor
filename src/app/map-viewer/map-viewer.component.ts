@@ -209,6 +209,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   values: Array<any> = [];
   logicalOperators: Array<any> = [];
   arrQuantity = Array;
+  elements: Array<any> = [];
   copyrightSGC: Array<string> = [];
   copyrightIGAC: Array<string> = [];
   styleClassAttrTable: string;
@@ -1397,6 +1398,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             this.values = [];
             this.logicalOperators = [];
             this.quantityFields = 0;
+            this.elements = [];
             (window as any).ga('send', 'event', 'BUTTON', 'click', 'att-table-button');
             layerListExpand.collapse();
             this.getFeaturesLayer(layer);
@@ -2016,10 +2018,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               return f.name === 'basemap';
             });
             this.activeWidget.formats.remove(formatBasemap);
-            const basemap = formatBasemap.defaultPattern.split(',');
+            /* const basemap = formatBasemap.defaultPattern.split(',');
             formatBasemap.currentPattern = basemap[1] + ', ' + basemap[0];
             this.activeWidget.formats.push(formatBasemap);
-
+ */
             this.activeWidget.viewModel.locationSymbol = symbol;
             const ul = document.getElementsByClassName('esri-coordinate-conversion__tools')[0] as HTMLElement;
             ul.getElementsByTagName('li')[0].click();
@@ -2385,6 +2387,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.filterS = [];
       this.values = [];
       this.quantityFields = 0;
+      this.elements = [];
       const query = {
         outFields: ['*'],
         returnGeometry: false,
@@ -3021,6 +3024,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.values = [];
     this.logicalOperators = [];
     this.quantityFields = 0;
+    this.elements = [];
     this.getFilterParams();
   }
 
@@ -3298,7 +3302,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public addFormField(): void {
-    this.quantityFields += 1;
+    this.elements.push(1);
     this.objectFilter.push('');
     this.values.push('');
     this.logicalOperators.push('');
@@ -3306,7 +3310,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public removeFormField(index: number): void {
-    this.quantityFields -= 1;
+    this.elements.pop();
+    console.log(this.elements);
     this.objectFilter.splice(index, 1);
     this.values.splice(index, 1);
     this.logicalOperators.splice(index, 1);
