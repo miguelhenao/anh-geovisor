@@ -2647,7 +2647,23 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             outSpatialReference: outSR
           });
           geomSvc.project(params).then((response) => {
-            this.layerAttrTable.title === 'Pozo' || this.layerAttrTable.title.startsWith('Sísmica') ? this.view.goTo({ target: response[0], zoom: 9 }) : this.view.goTo(response[0]);
+            if (this.layerAttrTable.title.startsWith('Pozo')) {
+              let point = {
+                type: 'point',
+                longitude: response[0].longitude,
+                latitude: response[0].latitude
+              };
+              let graphicPozo = new Graphic({
+                geometry: point,
+                symbol: {
+                  type: 'simple-marker',
+                  color: 'red'
+                }
+              });
+              this.view.graphics.add(graphicPozo);
+              this.graphicGoTo = graphicPozo;
+            }
+            this.layerAttrTable.title.startsWith('Pozo') || this.layerAttrTable.title.startsWith('Sísmica') ? this.view.goTo({ target: response[0], zoom: 9 }) : this.view.goTo(response[0]);
           });
         }
         this.view.graphics.add(graphic);
