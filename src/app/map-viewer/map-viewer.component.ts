@@ -799,7 +799,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.addSlider();
       // Carga de capa de pozo
       //Last url: this.mapRestUrl + '/1'
-      const lyPozo = new FeatureLayer(`${this.mapRestUrlIndependent}/Pozos/MapServer`, {
+      const lyPozo = new FeatureLayer(`${this.mapRestUrl}/1`, {
         id: 'Pozo',
         opacity: 1.0,
         visible: true,
@@ -850,7 +850,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       // Carga de capa sismica
       //Last url: this.mapRestUrl + '/2'
-      const lySismica = new FeatureLayer(`${this.mapRestUrlIndependent}/SISMICA2D/MapServer`, {
+      const lySismica = new FeatureLayer(`${this.mapRestUrl}/2`, {
         id: 'Sismica 2D',
         opacity: 1.0,
         visible: true,
@@ -902,7 +902,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.map.add(lySismica);
       // Carga de capa sismica 3D
       // Last url: this.mapRestUrl + '/3+
-      const lySismica3d = new FeatureLayer(`${this.mapRestUrlIndependent}/SISMICA3D/MapServer`, {
+      const lySismica3d = new FeatureLayer(`${this.mapRestUrl}/3`, {
         id: 'Sismica 3D',
         opacity: 1.0,
         visible: true,
@@ -953,7 +953,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.map.add(lySismica3d);
       // Carga de capa de municipio
       //Last url: this.mapRestUrl + '5'
-      const lyMunicipio = new FeatureLayer(`${this.mapRestUrlIndependent}/Municipio/MapServer`, {
+      const lyMunicipio = new FeatureLayer(`${this.mapRestUrl}/5`, {
         id: 'Municipio',
         opacity: 1.0,
         visible: true,
@@ -992,7 +992,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.map.add(lyMunicipio);
       // Carga de capa de departamento
       //Last url: this.mapRestUrl + '/4'
-      const lyDepartamento = new FeatureLayer(`${this.mapRestUrlIndependent}/Departamento/MapServer`, {
+      const lyDepartamento = new FeatureLayer(`${this.mapRestUrl}/4`, {
         id: 'Departamento',
         opacity: 1.0,
         visible: true,
@@ -1045,7 +1045,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       // Carga de capa de sensibilidad
       // Last url: this.mapRestUrl + '/7'
-      const lySensibilidad = new FeatureLayer(`${this.mapRestUrlIndependent}/Sensibilidad_Socioambiental/MapServer`, {
+      /* const lySensibilidad = new FeatureLayer(`${this.mapRestUrl}/7`, {
         id: 'Sensibilidad',
         opacity: 1,
         visible: true,
@@ -1080,11 +1080,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         lySensibilidad.popupTemplate = templateSensibilidad;
       });
       lySensibilidad.labelingInfo = [statesLabelClass];
-      this.map.add(lySensibilidad);
+      this.map.add(lySensibilidad); */
 
       // Carga de capa rezumadero
       //Last url: this.mapRestUrl + '/0'
-      const lyRezumadero = new FeatureLayer(`${this.mapRestUrlIndependent}/Rezumaderos/MapServer`, {
+      const lyRezumadero = new FeatureLayer(`${this.mapRestUrl}/0`, {
         id: 'Rezumadero',
         opacity: 1.0,
         visible: true,
@@ -1123,7 +1123,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       // Carga de capa de cuencas
       //Last url: this.mapRestUrl + '/6'
-      const lyCuencas = new FeatureLayer(`${this.mapRestUrlIndependent}/Cuenca_Sedimentaria/MapServer`, {
+      const lyCuencas = new FeatureLayer(`${this.mapRestUrl}/6`, {
         id: 'Cuencas',
         opacity: 1.0,
         visible: true,
@@ -1162,7 +1162,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       // Carga de capa de tierras
       //Last url: this.mapRestUrl + '/8'
-      const lyTierras = new FeatureLayer(`${this.mapRestUrlIndependent}/Tierras20190917/MapServer`, {
+      const lyTierras = new FeatureLayer(`${this.mapRestUrl}/7`, {
         id: 'Tierras',
         opacity: 0.5,
         visible: true,
@@ -2224,22 +2224,21 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   async addSlider() {
     const [Slider, FeatureLayer, LabelClass] =
       await loadModules(['esri/widgets/Slider', 'esri/layers/FeatureLayer', 'esri/layers/support/LabelClass']);
-    this.service.getLayersOfServer(this.mapRestUrlIndependent, '?f=pjson').subscribe(success => {
+    this.service.getLayersOfServer(this.mapRestUrl, '?f=pjson').subscribe(success => {
       const timeStops = [];
       let layers = [];
-      layers = success.services;
+      layers = success.layers;
       layers.forEach(layer => {
         this.nameLayer = layer.name;
-        if (this.nameLayer.substr(this.nameLayer.indexOf("/") + 1).toUpperCase().startsWith('TIERRAS')) {
-          const tierrasDate = this.nameLayer.substr(this.nameLayer.length - 8);
+        if (this.nameLayer.substr(0, 8).toUpperCase().startsWith('TIERRAS')) {
+          const tierrasDate = this.nameLayer.substr(this.nameLayer.length - 10);
           const y = tierrasDate.substr(0, 4);
-          const m = tierrasDate.substr(4, 2);
-          const d = tierrasDate.substr(6, 2);
+          const m = tierrasDate.substr(5, 2);
+          const d = tierrasDate.substr(8, 2);
           const fecha = new Date(y + '/' + m + '/' + d);
-          timeStops.unshift([layer.name.substr(layer.name.indexOf("/")), fecha]);
+          timeStops.unshift([layer.id, fecha]);
         }
       });
-      timeStops.reverse();
       const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
       const slider = new Slider({
@@ -2270,7 +2269,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         if (slider.values[0] < timeStops.length - 1) {
           layerTierras.visible = false;
           const lyTierrasMdtd = timeStops[index][0];
-          lyTierrasMdt = new FeatureLayer(this.mapRestUrlIndependent + '/' + lyTierrasMdtd + '/MapServer', {
+          lyTierrasMdt = new FeatureLayer(this.mapRestUrl + '/' + lyTierrasMdtd, {
             id: 'Tierras_MDT',
             opacity: 0.5,
             visible: true,
@@ -2344,6 +2343,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       console.error(error);
     });
   }
+
 
   getFeaturesLayer(layer: any): void {
     this.styleClassAttrTable = 'maxTable';
@@ -2705,7 +2705,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 geometry: point,
                 symbol: {
                   type: 'simple-marker',
-                  color: 'red'
+                  color: 'black'
                 }
               });
               this.view.graphics.add(graphicPozo);
