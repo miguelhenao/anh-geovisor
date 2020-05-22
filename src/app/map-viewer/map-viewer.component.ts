@@ -77,6 +77,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   agsHost = 'anh-gisserver.anh.gov.co';
   // agsHost = 'services6.arcgis.com/QNcm0ph3xAgJ1Ghk';
   agsProtocol = 'https';
+  mapRestUrlIndependent = 'http://190.121.137.225/arcgisp/rest/services/ANH_Tierras'
   mapRestUrl = this.agsProtocol + '://' + this.agsHost + '/arcgis/rest/services/Tierras/Mapa_ANH_Sueje/MapServer';
   // mapRestUrl = this.agsProtocol + '://' + this.agsHost + '/arcgis/rest/services/Tierras_2019_09_17/FeatureServer';
   agsDir = 'arcgis';
@@ -677,7 +678,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           label,
           value: layer.title
         });
-        layer.geometryType === 'polygon' ? this.optionsLayerExtractor.push({label, value: layer.title}) : null;
+        layer.geometryType === 'polygon' ? this.optionsLayerExtractor.push({ label, value: layer.title }) : null;
       }
     });
     this.optionsLayerExtractor = this.optionsLayerExtractor.reverse();
@@ -797,7 +798,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       document.getElementsByClassName('esri-view-root')[0].classList.add('help-cursor')
       this.addSlider();
       // Carga de capa de pozo
-      const lyPozo = new FeatureLayer(this.mapRestUrl + '/1', {
+      //Last url: this.mapRestUrl + '/1'
+      const lyPozo = new FeatureLayer(`${this.mapRestUrlIndependent}/Pozos/MapServer`, {
         id: 'Pozo',
         opacity: 1.0,
         visible: true,
@@ -847,7 +849,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.map.add(lyPozo);
 
       // Carga de capa sismica
-      const lySismica = new FeatureLayer(this.mapRestUrl + '/2', {
+      //Last url: this.mapRestUrl + '/2'
+      const lySismica = new FeatureLayer(`${this.mapRestUrlIndependent}/SISMICA2D/MapServer`, {
         id: 'Sismica 2D',
         opacity: 1.0,
         visible: true,
@@ -898,7 +901,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       lySismica.labelingInfo = [sismicaLabelClass];
       this.map.add(lySismica);
       // Carga de capa sismica 3D
-      const lySismica3d = new FeatureLayer(this.mapRestUrl + '/3', {
+      // Last url: this.mapRestUrl + '/3+
+      const lySismica3d = new FeatureLayer(`${this.mapRestUrlIndependent}/SISMICA3D/MapServer`, {
         id: 'Sismica 3D',
         opacity: 1.0,
         visible: true,
@@ -948,12 +952,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       lySismica3d.labelingInfo = [sismica3DLabelClass];
       this.map.add(lySismica3d);
       // Carga de capa de municipio
-      const lyMunicipio = new FeatureLayer(this.mapRestUrl + '/5', {
+      //Last url: this.mapRestUrl + '5'
+      const lyMunicipio = new FeatureLayer(`${this.mapRestUrlIndependent}/Municipio/MapServer`, {
         id: 'Municipio',
         opacity: 1.0,
         visible: true,
         outFields: ['*'],
         showAttribution: true,
+        minScale: 1155600,
         mode: FeatureLayer.MODE_ONDEMAND
       });
       lyMunicipio.load().then(() => {
@@ -985,7 +991,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       this.map.add(lyMunicipio);
       // Carga de capa de departamento
-      const lyDepartamento = new FeatureLayer(this.mapRestUrl + '/4', {
+      //Last url: this.mapRestUrl + '/4'
+      const lyDepartamento = new FeatureLayer(`${this.mapRestUrlIndependent}/Departamento/MapServer`, {
         id: 'Departamento',
         opacity: 1.0,
         visible: true,
@@ -993,6 +1000,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
+      console.log(lyDepartamento);
       this.departmentLayer = lyDepartamento;
       lyDepartamento.load().then(() => {
         lyDepartamento.displayField = this.getDisplayField(lyDepartamento.displayField, lyDepartamento.fields);
@@ -1036,48 +1044,47 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       });
       // Carga de capa de sensibilidad
-      // const lySensibilidad = new FeatureLayer(this.mapRestUrl + '/7', {
-      //   labelExpressionInfo: { expression: '$feature.CONTRATO_N' },
-      //   id: 'Sensibilidad',
-      //   opacity: 0.5,
-      //   visible: false,
-      //   outFields: ['*'],
-      //   showAttribution: true,
-      //   mode: FeatureLayer.MODE_ONDEMAND
-      // });
-      // lySensibilidad.load().then(() => {
-      //   lySensibilidad.title = lySensibilidad.sourceJSON.name;
-      //   const searchField: Array<any> = [];
-      //   let text = '';
-      //   // this.layerSelected = lyTierras;
-      //   for (const field of lySensibilidad.fields) {
-      //     searchField.push(field.name);
-      //     text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
-      //   }
-      //   const templateSensibilidad = {
-      //     title: lySensibilidad.sourceJSON.name,
-      //     content: text,
-      //     fieldInfos: []
-      //   };
-      //   const sourceSearch: Array<any> = this.sourceSearch.slice();
-      //   sourceSearch.push({
-      //     layer: lySensibilidad,
-      //     searchFields: searchField,
-      //     exactMatch: false,
-      //     outFields: ['*'],
-      //     name: lySensibilidad.sourceJSON.name,
-      //     suggestionsEnabled: true,
-      //   });
-      //   this.sourceSearch = null;
-      //   this.sourceSearch = sourceSearch;
-      //   this.search.sources = this.sourceSearch;
-      //   lySensibilidad.popupTemplate = templateSensibilidad;
-      // });
-      // lySensibilidad.labelingInfo = [statesLabelClass];
-      // this.map.add(lySensibilidad);
+      // Last url: this.mapRestUrl + '/7'
+      const lySensibilidad = new FeatureLayer(`${this.mapRestUrlIndependent}/Sensibilidad_Socioambiental/MapServer`, {
+        id: 'Sensibilidad',
+        opacity: 1,
+        visible: true,
+        outFields: ['*'],
+      });
+      lySensibilidad.load().then(() => {
+        lySensibilidad.title = lySensibilidad.sourceJSON.name;
+        const searchField: Array<any> = [];
+        let text = '';
+        this.layerSelected = lyTierras;
+        for (const field of lySensibilidad.fields) {
+          searchField.push(field.name);
+          text = `${text} <b>${field.alias}: </b> {${field.name}} <br>`;
+        }
+        const templateSensibilidad = {
+          title: lySensibilidad.sourceJSON.name,
+          content: text,
+          fieldInfos: []
+        };
+        const sourceSearch: Array<any> = this.sourceSearch.slice();
+        sourceSearch.push({
+          layer: lySensibilidad,
+          searchFields: searchField,
+          exactMatch: false,
+          outFields: ['*'],
+          name: lySensibilidad.sourceJSON.name,
+          suggestionsEnabled: true,
+        });
+        this.sourceSearch = null;
+        this.sourceSearch = sourceSearch;
+        this.search.sources = this.sourceSearch;
+        lySensibilidad.popupTemplate = templateSensibilidad;
+      });
+      lySensibilidad.labelingInfo = [statesLabelClass];
+      this.map.add(lySensibilidad);
 
       // Carga de capa rezumadero
-      const lyRezumadero = new FeatureLayer(this.mapRestUrl + '/0', {
+      //Last url: this.mapRestUrl + '/0'
+      const lyRezumadero = new FeatureLayer(`${this.mapRestUrlIndependent}/Rezumaderos/MapServer`, {
         id: 'Rezumadero',
         opacity: 1.0,
         visible: true,
@@ -1115,7 +1122,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.map.add(lyRezumadero);
 
       // Carga de capa de cuencas
-      const lyCuencas = new FeatureLayer(this.mapRestUrl + '/6', {
+      //Last url: this.mapRestUrl + '/6'
+      const lyCuencas = new FeatureLayer(`${this.mapRestUrlIndependent}/Cuenca_Sedimentaria/MapServer`, {
         id: 'Cuencas',
         opacity: 1.0,
         visible: true,
@@ -1153,8 +1161,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.map.add(lyCuencas);
 
       // Carga de capa de tierras
-      // const lyTierras = new FeatureLayer(this.mapRestUrl + '/8', {
-      const lyTierras = new FeatureLayer(this.mapRestUrl + '/7', {
+      //Last url: this.mapRestUrl + '/8'
+      const lyTierras = new FeatureLayer(`${this.mapRestUrlIndependent}/Tierras20190917/MapServer`, {
         id: 'Tierras',
         opacity: 0.5,
         visible: true,
@@ -1276,6 +1284,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       this.view.on('pointer-move', (evt) => {
         this.showCoordinates(this.view.toMap({ x: evt.x, y: evt.y }));
+        if (this.modalMeasurement && this.coordsModel === 'G' && this.selectedMeasurement === 'coordinate') {
+          this.planasXY(this.view.toMap({ x: evt.x, y: evt.y }));
+        }
       });
       // Widget de LayerList
       const layerList = new LayerList({
@@ -1713,6 +1724,25 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     return dField.name;
   }
 
+  public planasXY(pt): void {
+    let coords = ''
+    loadModules(['esri/tasks/GeometryService', 'esri/geometry/SpatialReference', 'esri/tasks/support/ProjectParameters'])
+      .then(([GeometryService, SpatialReference, ProjectParameters]) => {
+        const geomSvc = new GeometryService(this.urlGeometryService);
+        const outSR = new SpatialReference({ wkid: 3116 });
+        const params = new ProjectParameters({
+          geometries: [pt],
+          outSpatialReference: outSR
+        });
+        geomSvc.project(params).then((response) => {
+          const pto = response[0];
+          coords = 'N ' + this.formatNumber(pto.y, 4) + ', E ' + this.formatNumber(pto.x, 4);
+          let v = document.getElementById('value-xy');
+          v !== undefined && v !== null ? v.innerHTML = coords : null;
+        });
+      });
+  }
+
   public showCoordinates(pt): void {
     this.coordsWidget = document.getElementById('coords');
     let coords = '';
@@ -1745,6 +1775,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             const pto = response[0];
             coords = 'N ' + this.formatNumber(pto.y, 4) + ', E ' + this.formatNumber(pto.x, 4);
             this.coordsWidget.innerHTML = coords;
+            let v = document.getElementById('value-xy');
+            v !== undefined && v !== null ? v.innerHTML = coords : null;
           });
         });
     }
@@ -1848,7 +1880,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public closeDialogAttr(): void {
     if (this.isFilteringAttrTab) {
       this.confirmationService.confirm({
-        message: 'Al cerrar la tabla de atributos perderá todos los datos filtrados. ¿Está seguro de cerrar la tabla de atributos?',
+        message: "Al cerrar la tabla de atributos perderá todos los datos filtrados. Si desea conservar los datos haz click en minimizar <i class='pi pi-window-minimize'></i> que se encuentra en la parte superior de la tabla de atributos.¿Está seguro de cerrar la tabla de atributos?",
         acceptLabel: 'Si',
         rejectLabel: 'No',
         accept: () => {
@@ -1995,6 +2027,21 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               const rowTools = document.getElementsByClassName('esri-coordinate-conversion__row')[1] as HTMLElement;
               const tools = rowTools.getElementsByClassName('esri-coordinate-conversion__tools')[0] as HTMLElement;
               tools.getElementsByTagName('li')[0].addEventListener('click', (e: Event) => this.visibleModal(false, false, false, false, false, false, false, false, true, false));
+              let conversionList = document.getElementById('divWidget__esri-coordinate-conversion__conversion-list');
+              let xyPlanas = document.createElement('div');
+              let textXy = document.createElement('div');
+              textXy.style.width = '20%';
+              textXy.style.cssFloat = 'left';
+              textXy.innerHTML = 'XY Planas';
+              textXy.style.padding = '10px 5px 5px 15px';
+              let valueXy = document.createElement('div');
+              valueXy.style.width = '80%';
+              valueXy.style.cssFloat = 'right';
+              valueXy.style.padding = '10px 0px 0px 12px';
+              valueXy.id = 'value-xy';
+              xyPlanas.appendChild(textXy);
+              xyPlanas.appendChild(valueXy);
+              conversionList.appendChild(xyPlanas);
             });
             const formatDMS = this.activeWidget.formats.find((f) => {
               return f.name === 'dms';
@@ -2177,21 +2224,22 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   async addSlider() {
     const [Slider, FeatureLayer, LabelClass] =
       await loadModules(['esri/widgets/Slider', 'esri/layers/FeatureLayer', 'esri/layers/support/LabelClass']);
-    this.service.getLayersOfServer(this.mapRestUrl, '?f=pjson').subscribe(success => {
+    this.service.getLayersOfServer(this.mapRestUrlIndependent, '?f=pjson').subscribe(success => {
       const timeStops = [];
       let layers = [];
-      layers = success.layers;
+      layers = success.services;
       layers.forEach(layer => {
         this.nameLayer = layer.name;
-        if (this.nameLayer.substr(0, 8).toUpperCase().startsWith('TIERRAS')) {
-          const tierrasDate = this.nameLayer.substr(this.nameLayer.length - 10);
+        if (this.nameLayer.substr(this.nameLayer.indexOf("/") + 1).toUpperCase().startsWith('TIERRAS')) {
+          const tierrasDate = this.nameLayer.substr(this.nameLayer.length - 8);
           const y = tierrasDate.substr(0, 4);
-          const m = tierrasDate.substr(5, 2);
-          const d = tierrasDate.substr(8, 2);
+          const m = tierrasDate.substr(4, 2);
+          const d = tierrasDate.substr(6, 2);
           const fecha = new Date(y + '/' + m + '/' + d);
-          timeStops.unshift([layer.id, fecha]);
+          timeStops.unshift([layer.name.substr(layer.name.indexOf("/")), fecha]);
         }
       });
+      timeStops.reverse();
       const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
       const slider = new Slider({
@@ -2222,7 +2270,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         if (slider.values[0] < timeStops.length - 1) {
           layerTierras.visible = false;
           const lyTierrasMdtd = timeStops[index][0];
-          lyTierrasMdt = new FeatureLayer(this.mapRestUrl + '/' + lyTierrasMdtd, {
+          lyTierrasMdt = new FeatureLayer(this.mapRestUrlIndependent + '/' + lyTierrasMdtd + '/MapServer', {
             id: 'Tierras_MDT',
             opacity: 0.5,
             visible: true,
@@ -2462,7 +2510,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
     });
     if (!this.layerExtract && (this.selectedLayers.length === 0 || this.view.graphics.length === 0) && !this.shapeAttr && !this.advancedSearchShape &&
-    (this.selectedPolygon.value === 'entity' && (this.layerExtractor === null || this.layerExtractor === undefined))) {
+      (this.selectedPolygon.value === 'entity' && (this.layerExtractor === null || this.layerExtractor === undefined))) {
       if (this.selectedLayers.length === 0) {
         this.messageService.add({
           severity: 'warn',
@@ -2484,7 +2532,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           detail: 'Debe dibujar el área de interes para poder extraer datos.'
         });
       }
-      if (this.selectedPolygon.value === 'entity' &&  (this.layerExtractor === null || this.layerExtractor === undefined)) {
+      if (this.selectedPolygon.value === 'entity' && (this.layerExtractor === null || this.layerExtractor === undefined)) {
         this.messageService.add({
           severity: 'warn',
           summary: '',
