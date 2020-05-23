@@ -15,6 +15,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { Table } from 'primeng/table';
 import { format, resolve } from 'url';
 import { Dialog } from 'primeng/dialog/dialog';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-map-viewer',
@@ -29,6 +30,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     ready: false
   };
   @ViewChild('dt', { static: false }) attrTable: Table;
+  filterAttrTable: any;
   @ViewChild('attr', { static: false }) attr: Dialog;
   loaded = false;
   eventLayer: any;
@@ -209,7 +211,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   values: Array<any> = [];
   logicalOperators: Array<any> = [];
   arrQuantity = Array;
-  elements: Array<any> = [];
   copyrightSGC: Array<string> = [];
   copyrightIGAC: Array<string> = [];
   styleClassAttrTable: string;
@@ -1001,7 +1002,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         showAttribution: true,
         mode: FeatureLayer.MODE_ONDEMAND
       });
-      console.log(lyDepartamento);
       this.departmentLayer = lyDepartamento;
       lyDepartamento.load().then(() => {
         lyDepartamento.displayField = this.getDisplayField(lyDepartamento.displayField, lyDepartamento.fields);
@@ -1398,7 +1398,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             this.values = [];
             this.logicalOperators = [];
             this.quantityFields = 0;
-            this.elements = [];
+            this.filterAttrTable = {};
             (window as any).ga('send', 'event', 'BUTTON', 'click', 'att-table-button');
             layerListExpand.collapse();
             this.getFeaturesLayer(layer);
@@ -1472,6 +1472,28 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               zoom: 9
             });
           }
+        }
+        if (event.source.layer.id === 'Pozo') {
+          let point = {
+            type: 'point',
+            latitude: event.result.feature.geometry.latitude,
+            longitude: event.result.feature.geometry.longitude
+          }
+          let pointSearch = new Graphic({
+            geometry: point,
+            symbol: {
+              type: 'simple-marker',
+              color: 'black'
+            }
+          });
+          this.view.graphics.add(pointSearch);
+          this.sleep(500).then(() => {
+            let closes = document.getElementsByClassName('esri-icon-close');
+            for (let index = 0; index < closes.length; index++) {
+              const element = closes[index] as HTMLElement;
+              element.addEventListener('click', (e: Event) => { this.view.graphics.remove(pointSearch)});
+            }
+          })
         }
       });
 
@@ -1762,7 +1784,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         coords = coords.replace('W', 'O');
         this.coordsWidget.innerHTML = coords;
       }, error => {
-        console.log(error);
+        console.error(error);
       });
     } else {
       loadModules(['esri/tasks/GeometryService', 'esri/geometry/SpatialReference', 'esri/tasks/support/ProjectParameters'])
@@ -1880,7 +1902,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public closeDialogAttr(): void {
-    if (this.isFilteringAttrTab) {
+    if (this.isFilteringAttrTab || (this.filterAttrTable !== undefined && this.filterAttrTable !== null) && (this.attrTable !== undefined &&this.attrTable.filteredValue !== undefined && this.attrTable.filteredValue !== null && this.attrTable.filteredValue.length > 0)) {
       this.confirmationService.confirm({
         message: "Al cerrar la tabla de atributos perderá todos los datos filtrados. Si desea conservar los datos haz click en minimizar <i class='pi pi-window-minimize'></i> que se encuentra en la parte superior de la tabla de atributos.¿Está seguro de cerrar la tabla de atributos?",
         acceptLabel: 'Si',
@@ -2387,7 +2409,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.filterS = [];
       this.values = [];
       this.quantityFields = 0;
-      this.elements = [];
       const query = {
         outFields: ['*'],
         returnGeometry: false,
@@ -2912,7 +2933,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     };
     if (this.modalAnalysis) {
       for (const r of this.featureDptos) {
-        if (r.attributes.DEPARTAMEN === ev.data.attributes.DEPARTAMEN) {
+        if (r.attributes.departamen === ev.data.attributes.departamen) {
           ev.data.geometry = r.geometry;
           break;
         }
@@ -2932,6 +2953,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     // this.featuresSelected = [];
     // this.clearGraphics();
     this.modalAnalysis = false;
+    this.view.graphics.removeAll();
   }
 
   /**
@@ -3024,7 +3046,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.values = [];
     this.logicalOperators = [];
     this.quantityFields = 0;
-    this.elements = [];
     this.getFilterParams();
   }
 
@@ -3302,7 +3323,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public addFormField(): void {
-    this.elements.push(1);
+    this.quantityFields += 1;
     this.objectFilter.push('');
     this.values.push('');
     this.logicalOperators.push('');
@@ -3310,8 +3331,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public removeFormField(index: number): void {
-    this.elements.pop();
-    console.log(this.elements);
+    this.quantityFields -= 1;
     this.objectFilter.splice(index, 1);
     this.values.splice(index, 1);
     this.logicalOperators.splice(index, 1);
@@ -3320,8 +3340,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public minimizeMaximizeAttrTable(flag: boolean): void {
-    this.minimizeMaximize = flag;
-    this.minimizeMaximize ? this.styleClassAttrTable = 'maxTable' : this.styleClassAttrTable = 'minTable';
+    if (flag) {
+      this.minimizeMaximize = flag;
+      this.minimizeMaximize ? this.styleClassAttrTable = 'maxTable' : this.styleClassAttrTable = 'minTable';
+      this.sleep(500).then(() => {
+        this.attrTable.filters = this.filterAttrTable;
+        this.attrTable._filter();
+      })
+    } else {
+      this.filterAttrTable = Object.assign({}, this.attrTable.filters);
+      this.minimizeMaximize = flag;
+      this.minimizeMaximize ? this.styleClassAttrTable = 'maxTable' : this.styleClassAttrTable = 'minTable';
+    }
   }
 
   public keySort(object: any): string {
