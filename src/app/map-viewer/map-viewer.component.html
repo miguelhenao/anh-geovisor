@@ -316,7 +316,7 @@
       label="Añadir Criterio" (click)="addFormField()"></button>
     <button pButton icon="pi pi-times" class="ui-button-rounded ui-button-warning" style="float: right;"
       label="Limpiar Filtros" (click)="cleanFilters()"></button>
-    <div *ngFor="let i of arrQuantity(quantityFields).fill(1); let p = index" style="margin-top: 20px; clear: both;">
+    <div *ngFor="let i of elements; let p = index" style="margin-top: 20px; clear: both;">
       <select name="selectField" style="width: 110px; float: left; margin-top: 3px;" class="esri-select"
         [(ngModel)]="objectFilter[p]">
         <option *ngFor="let item of columnsTable; let i = index" [ngValue]="item.name">{{item.alias}}</option>
