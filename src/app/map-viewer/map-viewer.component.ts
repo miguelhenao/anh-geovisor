@@ -1489,6 +1489,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.view.graphics.add(pointSearch);
           this.sleep(500).then(() => {
             let closes = document.getElementsByClassName('esri-icon-close');
+            document.getElementsByClassName('esri-view-root')[0].addEventListener('click', (e: Event) => {this.removePoint(pointSearch)})
             for (let index = 0; index < closes.length; index++) {
               const element = closes[index] as HTMLElement;
               element.addEventListener('click', (e: Event) => { this.view.graphics.remove(pointSearch)});
@@ -3368,6 +3369,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     } else if (xy === 'Y') {
       this.coordinateY = value;
     }
+  }
+
+  removePoint(point: any): void {
+    this.view.graphics.remove(point);
+    document.getElementsByClassName('esri-view-root')[0].removeEventListener('click', (e: Event) => { this.removePoint(point)});
   }
 
   keypress(event) {
