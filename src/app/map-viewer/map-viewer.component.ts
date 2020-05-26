@@ -1498,7 +1498,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.view.graphics.add(pointSearch);
           this.sleep(500).then(() => {
             let closes = document.getElementsByClassName('esri-icon-close');
-            document.getElementsByClassName('esri-view-root')[0].addEventListener('click', (e: Event) => { this.removePoint(pointSearch) })
+            console.log(closes);
+            /* document.getElementsByClassName('esri-view-root')[0].addEventListener('click', (e: Event) => { 
+              console.log(e);
+              this.removePoint(pointSearch) 
+            }) */
             for (let index = 0; index < closes.length; index++) {
               const element = closes[index] as HTMLElement;
               element.addEventListener('click', (e: Event) => { this.view.graphics.remove(pointSearch) });
