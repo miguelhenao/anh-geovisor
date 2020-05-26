@@ -46,6 +46,7 @@ export class DialogSymbologyChangeComponent implements OnInit {
   }
 
   public setupChange(): void {
+    console.log(this.changeForm);
     this.ref.close(this.changeForm.value);
   }
 }

@@ -676,15 +676,21 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         } else if (layer.copyright.includes('IGAC')) {
           this.copyrightIGAC.push(layer.title);
         }
-        this.optionsLayers.push({
-          label,
-          value: layer.title
-        });
-        layer.geometryType === 'polygon' ? this.optionsLayerExtractor.push({ label, value: layer.title }) : null;
+        this.isValidOption(layer.title) ? this.optionsLayers.push({
+            label,
+            value: layer.title
+          }) : null;
+        layer.geometryType === 'polygon' && (this.isValidOption(layer.title)) ? this.optionsLayerExtractor.push({ label, value: layer.title }) : null;
       }
     });
     this.optionsLayerExtractor = this.optionsLayerExtractor.reverse();
     this.optionsLayers = this.optionsLayers.reverse();
+  }
+
+  public isValidOption(title: string): boolean {
+    return !title.startsWith('Shape') && !title.startsWith('CSV') && !title.startsWith('S-CSV')
+      && !title.startsWith('S-JSON') && !title.startsWith('GeoJSON') && !title.startsWith('KML')
+      && !title.startsWith('GPX') && !title.startsWith('WMS');
   }
 
   buildOptionsLayersValue(nameLayer: string): void {
@@ -711,7 +717,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.layerSelectedSelection = sel.value;
           this.layerSelected = layer;
         }
-        this.optionsLayers.push(sel);
+        !layer.title.startsWith('Shape') ? this.optionsLayers.push(sel) : null;
       }
     });
     this.optionsLayers = this.optionsLayers.reverse();
@@ -1397,6 +1403,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             this.objectFilter = [];
             this.values = [];
             this.logicalOperators = [];
+            this.featuresSelected = [];
+            this.featureDptos = [];
+            this.columnsTable = [];
             this.quantityFields = 0;
             this.filterAttrTable = {};
             (window as any).ga('send', 'event', 'BUTTON', 'click', 'att-table-button');
@@ -1489,10 +1498,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.view.graphics.add(pointSearch);
           this.sleep(500).then(() => {
             let closes = document.getElementsByClassName('esri-icon-close');
-            document.getElementsByClassName('esri-view-root')[0].addEventListener('click', (e: Event) => {this.removePoint(pointSearch)})
+            document.getElementsByClassName('esri-view-root')[0].addEventListener('click', (e: Event) => { this.removePoint(pointSearch) })
             for (let index = 0; index < closes.length; index++) {
               const element = closes[index] as HTMLElement;
-              element.addEventListener('click', (e: Event) => { this.view.graphics.remove(pointSearch)});
+              element.addEventListener('click', (e: Event) => { this.view.graphics.remove(pointSearch) });
             }
           })
         }
@@ -1678,6 +1687,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 this.columnsTable = result.fields;
                 this.clearGraphics();
                 this.featureDptos = result.features;
+                this.featuresSelected = [];
                 this.layerAttrTable = this.layerSelected;
                 layerListExpand.collapse();
                 loadModules(['esri/symbols/SimpleFillSymbol', 'esri/symbols/SimpleLineSymbol', 'esri/Color', 'dojo/_base/array',
@@ -1825,7 +1835,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       if (res !== undefined) {
         this.map.layers.items.forEach((layer) => {
           if (layer.title !== null) {
-            if (layer.title === res.layerSelected) {
+            if (layer.title === res.feature) {
               this.layerSelected = layer;
             }
           }
@@ -1858,7 +1868,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public analisis(): void {
     const query = {
       outFields: ['*'],
-      returnGeometry: true,
+      returnGeometry: false,
       where: ''
     };
     this.departmentLayer.queryFeatures(query).then((result) => {
@@ -1903,7 +1913,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public closeDialogAttr(): void {
-    if (this.isFilteringAttrTab || (this.filterAttrTable !== undefined && this.filterAttrTable !== null) && (this.attrTable !== undefined &&this.attrTable.filteredValue !== undefined && this.attrTable.filteredValue !== null && this.attrTable.filteredValue.length > 0)) {
+    if (this.isFilteringAttrTab || (this.filterAttrTable !== undefined && this.filterAttrTable !== null) && (this.attrTable !== undefined && this.attrTable.filteredValue !== undefined && this.attrTable.filteredValue !== null && this.attrTable.filteredValue.length > 0)) {
       this.confirmationService.confirm({
         message: "Al cerrar la tabla de atributos perderá todos los datos filtrados. Si desea conservar los datos haz click en minimizar <i class='pi pi-window-minimize'></i> que se encuentra en la parte superior de la tabla de atributos.¿Está seguro de cerrar la tabla de atributos?",
         acceptLabel: 'Si',
@@ -2376,7 +2386,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.minimizeMaximize = true;
     const query = {
       outFields: ['*'],
-      returnGeometry: true,
+      returnGeometry: false,
       where: ''
     };
     layer.queryFeatures(query).then((result) => {
@@ -2495,7 +2505,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
     const query = {
       outFields: ['*'],
-      returnGeometry: true,
+      returnGeometry: false,
       where: params
     };
     this.layerAttrTable.queryFeatures(query).then((result) => {
@@ -2702,44 +2712,54 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           width: '2px',
         };
         const symbol = goTo ? symbolY : symbolX;
-        const graphic = new Graphic({
-          geometry: event.data.geometry,
-          symbol
-        });
-        const objectGraphic = {
-          attr: event.data.attributes,
-          graphic
-        };
-        this.graphicGoTo !== undefined ? this.view.graphics.remove(this.graphicGoTo) : null;
-        goTo ? this.graphicGoTo = graphic : this.graphics.push(objectGraphic);
-        if (goTo) {
-          const geomSvc = new GeometryService(this.urlGeometryService);
-          const outSR = new SpatialReference({ wkid: 4326 });
-          const params = new ProjectParameters({
-            geometries: [event.data.geometry],
-            outSpatialReference: outSR
-          });
-          geomSvc.project(params).then((response) => {
-            if (this.layerAttrTable.title.startsWith('Pozo')) {
-              let point = {
-                type: 'point',
-                longitude: response[0].longitude,
-                latitude: response[0].latitude
-              };
-              let graphicPozo = new Graphic({
-                geometry: point,
-                symbol: {
-                  type: 'simple-marker',
-                  color: 'black'
-                }
+        let layer = this.modalAnalysis ? this.departmentLayer : this.layerAttrTable;
+        let query = layer.createQuery();
+        console.log(event.data.attributes);
+        query.where = `${this.columnsTable[0].alias} = ${event.data.attributes[this.columnsTable[0].name]}`;
+        query.returnGeometry = true;
+        query.outFields = ['*'];
+        layer.queryFeatures(query).then((res) => {
+          dojo.forEach(res.features, (key) => {
+            const graphic = new Graphic({
+              geometry: key.geometry,
+              symbol
+            });
+            const objectGraphic = {
+              attr: event.data.attributes,
+              graphic
+            };
+            this.graphicGoTo !== undefined ? this.view.graphics.remove(this.graphicGoTo) : null;
+            goTo ? this.graphicGoTo = graphic : this.graphics.push(objectGraphic);
+            if (goTo) {
+              const geomSvc = new GeometryService(this.urlGeometryService);
+              const outSR = new SpatialReference({ wkid: 4326 });
+              const params = new ProjectParameters({
+                geometries: [key.geometry],
+                outSpatialReference: outSR
               });
-              this.view.graphics.add(graphicPozo);
-              this.graphicGoTo = graphicPozo;
+              geomSvc.project(params).then((response) => {
+                if (this.layerAttrTable.title.startsWith('Pozo')) {
+                  let point = {
+                    type: 'point',
+                    longitude: response[0].longitude,
+                    latitude: response[0].latitude
+                  };
+                  let graphicPozo = new Graphic({
+                    geometry: point,
+                    symbol: {
+                      type: 'simple-marker',
+                      color: 'black'
+                    }
+                  });
+                  this.view.graphics.add(graphicPozo);
+                  this.graphicGoTo = graphicPozo;
+                }
+                this.layerAttrTable.title.startsWith('Pozo') || this.layerAttrTable.title.startsWith('Sísmica') ? this.view.goTo({ target: response[0], zoom: 9 }) : this.view.goTo(response[0]);
+              });
             }
-            this.layerAttrTable.title.startsWith('Pozo') || this.layerAttrTable.title.startsWith('Sísmica') ? this.view.goTo({ target: response[0], zoom: 9 }) : this.view.goTo(response[0]);
+            this.view.graphics.add(graphic);
           });
-        }
-        this.view.graphics.add(graphic);
+        })
       });
   }
 
@@ -2870,7 +2890,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         let nameDptos = '';
         (window as any).ga('send', 'event', 'BUTTON', 'click', 'intersect-start');
         for (const dpto of this.dptosSelected) {
-          nameDptos = `${nameDptos}'${dpto.attributes.DEPARTAMEN}',`;
+          console.log(dpto);
+          nameDptos = `${nameDptos}'${dpto.attributes.departamen}',`;
         }
         nameDptos = nameDptos.substr(0, nameDptos.length - 1);
         const params = {
@@ -3055,7 +3076,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * @param analysis -> Bandera para dialog Análisis de cobertura
    * @param buffer -> Bandera para dialog Zona de influencia
    * @param extract -> Bandera para dialog Extraer capa
-   * @param guide -> Bandera para dialog Guía
+   * @param guide -> Bandera para dialog Guíaalse, false, false, false, false, false,
+    true, true, false, false)
    * @param measurement -> Bandera para dialog Herramientas de medición
    * @param table -> Bandera para dialog Tabla de atributos
    */
@@ -3373,7 +3395,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   removePoint(point: any): void {
     this.view.graphics.remove(point);
-    document.getElementsByClassName('esri-view-root')[0].removeEventListener('click', (e: Event) => { this.removePoint(point)});
+    document.getElementsByClassName('esri-view-root')[0].removeEventListener('click', (e: Event) => { this.removePoint(point) });
   }
 
   keypress(event) {
