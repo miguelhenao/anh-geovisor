@@ -677,9 +677,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.copyrightIGAC.push(layer.title);
         }
         this.isValidOption(layer.title) ? this.optionsLayers.push({
-            label,
-            value: layer.title
-          }) : null;
+          label,
+          value: layer.title
+        }) : null;
         layer.geometryType === 'polygon' && (this.isValidOption(layer.title)) ? this.optionsLayerExtractor.push({ label, value: layer.title }) : null;
       }
     });
@@ -2160,7 +2160,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           quantityType += 1;
         }
       });
-      const layerName = `Shape${quantityType} - ${layer.layerDefinition.name}`;
+      debugger;
+      let layerName: string;
+      if (layer.layerDefinition.name === 'Analisis_Cobertura') {
+        layerName = `Shape${quantityType} - Analisis_Departamento`;
+      } else {
+        layerName = `Shape${quantityType} - ${layer.layerDefinition.name}`;
+      }
       const graphics = layer.featureSet.features.map((feature) => {
         return Graphic.fromJSON(feature);
       });

@@ -98,7 +98,7 @@
     </p-button>
   </div>
   <p-message [escape]="false" id="infoMedicion" *ngIf="!layerExtract && infoTool" severity="info"
-    text="Proceda con los poligonos ya <b>seleccionados en la capa actual</b>. Si no<br> hay una selección en la capa actual debe usar las <b>Herramientas de</b><br><b>Selección.</b><br><b>Seleccione las capas</b> que se incluirán en la extracción">
+    text="Proceda con los poligonos ya <b>seleccionados en la capa actual</b>. Si no<br> hay una selección en la capa actual debe usar las <b>Herramientas de</b><br><b>Selección.</b><br><b>Pasos:</b><ul><li><b>Seleccione las capas</b> que se incluirán en la extracción</li><li>Definimos el area de interes que deseamos extraer (Polígono Rectangular, Polígono Libre, Entidad)</li><li>Si se definio el area de interes como una entidad, debe seleccionar la capa de selección de la entidad</li></ul>">
   </p-message>
   <p-message [escape]="false" id="infoMedicion" *ngIf="layerExtract && infoTool" severity="info"
     text="<b>Seleccione las capas</b> que se incluirán en la extracción">
@@ -233,7 +233,12 @@
         <colgroup>
           <col style="width: 28px !important;">
           <col style="width: 28px !important;" *ngIf="supportsAttachment">
-          <col *ngFor="let col of columns" style="width:150px">
+          <ng-container *ngIf="columns.length > 2">
+            <col *ngFor="let col of columns" style="width:150px">
+          </ng-container>
+          <ng-container *ngIf="columns.length <= 2">
+            <col *ngFor="let col of columns">
+          </ng-container>
         </colgroup>
       </ng-template>
       <ng-template pTemplate="header" let-columns>
