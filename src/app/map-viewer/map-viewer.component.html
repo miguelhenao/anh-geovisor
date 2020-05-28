@@ -98,7 +98,7 @@
     </p-button>
   </div>
   <p-message [escape]="false" id="infoMedicion" *ngIf="!layerExtract && infoTool" severity="info"
-    text="Proceda con los poligonos ya <b>seleccionados en la capa actual</b>. Si no<br> hay una selección en la capa actual debe usar las <b>Herramientas de</b><br><b>Selección.</b><br><b>Pasos:</b><ul><li><b>Seleccione las capas</b> que se incluirán en la extracción</li><li>Definimos el area de interes que deseamos extraer (Polígono Rectangular, Polígono Libre, Entidad)</li><li>Si se definio el area de interes como una entidad, debe seleccionar la capa de selección de la entidad</li></ul>">
+    text="Proceda <b>seleccionando</b> las capas que desea extraer.<br>Defina el <b>área de interés</b> para hacer el corte.<br>Si su área de interés es una <b>entidad</b>, seleccione la entidad de corte para su extracción.">
   </p-message>
   <p-message [escape]="false" id="infoMedicion" *ngIf="layerExtract && infoTool" severity="info"
     text="<b>Seleccione las capas</b> que se incluirán en la extracción">
@@ -130,7 +130,7 @@
     <br>
     <br>
     <p-message [escape]="false" id="infoMedicion" severity="info" *ngIf="infoTool"
-      text="Con este análisis se obtienen los <b>Bloques Explorativos que se <br> encuentran en la jurisdicción del Departamento</b> seleccionado,<br>indicando el porcentaje de cobertura de cada bloque. <br>Use las <b>herramientas de selección</b> o la <b>tabla de atributos</b> para indicar<br>cuales departamentos desea usar para este análisis.">
+      text="Con este análisis se obtienen los <b>Bloques Explorativos que se <br> encuentran en la jurisdicción del Departamento</b> seleccionado,<br>indicando el porcentaje de cobertura de cada bloque. Seleccione los departamentos necesarios de la lista.">
     </p-message>
   </div>
 </p-dialog>
@@ -312,8 +312,7 @@
   </div>
 </p-dialog>
 <p-dialog header="Búsqueda" [(visible)]="modalFilter" [style]="{width: '500px'}" [modal]="true"
-  (onHide)="hideAdvancedSearch($event)" [baseZIndex]=20 [resizable]="false" [draggable]="true"
-  [focusOnShow]="false">
+  (onHide)="hideAdvancedSearch($event)" [baseZIndex]=20 [resizable]="false" [draggable]="true" [focusOnShow]="false">
   <div *ngIf="modalFilter" style="max-height: 250px; overflow-y: scroll;">
     <p-progressBar mode="indeterminate" *ngIf="makingSearch" [style]="{'height': '6px'}">
     </p-progressBar>
@@ -518,14 +517,12 @@
       </div>
     </div>
     <br>
-    <p-message [escape]="false" id="infoMedicion" severity="info" *ngIf="infoTool" text="Ingrese los datos solicitados para <b>crear un punto en la coordenada</b>
+    <p-message [escape]="false" id="infoMedicion" severity="info" *ngIf="infoTool"
+      text="Ingrese los datos solicitados para <b>crear un punto en la coordenada</b>
       <br>que desea ubicar.
-      <br>Al ingresar Longitud y Latitud se deben <b>llenar todos los espacios
-        <br>subrayados</b> con dígitos entre 0 y 9. Para grados de un sólo dígito
-        <br>use un espacio o cero al inicio. Todo lo anterior no aplica para X e Y.
-        <br>Para X e Y utilice la coma como separador decimal.
-        <br>Máximo valor para X e Y de 1.999.999,9999">
-
+      <br>Al ingresar Longitud y Latitud se deben <b>llenar todos los espacios</b> 
+      con dígitos entre 0 y 9. Para grados de un sólo dígito use un cero al inicio. Todo lo anterior no aplica para X e Y. 
+      Para X e Y utilice la <b>coma</b> como separador decimal. <b>Máximo</b> valor para X e Y de 1.999.999,9999">
     </p-message>
   </div>
 </p-dialog>
