@@ -514,7 +514,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 this.buildOptionsLayers();
                 this.layerExtract = false;
                 this.visibleModal(false, false, false, true, false, false, false, false, false, false);
-                this.popupAutoOpenEnabled = false;
+                // this.popupAutoOpenEnabled = false;
+                this.openEnabledPopup(false);
               }
             }
           }
@@ -531,7 +532,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               if (!this.errorArcgisService) {
                 this.buildOptionsLayers();
                 this.visibleModal(false, false, true, false, false, false, false, false, false, false);
-                this.popupAutoOpenEnabled = false;
+                // this.popupAutoOpenEnabled = false;
+                this.openEnabledPopup(false);
               }
             }
           },
@@ -565,6 +567,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             icon: 'esri-icon-locate',
             command: () => {
               if (!this.errorArcgisService) {
+                this.openEnabledPopup(false);
                 this.visibleModal(false, false, false, false, false, false, false, false, true, false);
               }
             }
@@ -734,6 +737,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public openSelectionTool(): void {
     if (!this.errorArcgisService) {
       this.advancedSearchShape = true;
+      this.openEnabledPopup(false);
       const nameLayer = this.layerList.selectedItems.items[0] !== undefined ? this.layerList.selectedItems.items[0].title : null;
       this.buildOptionsLayersValue(nameLayer);
       this.visibleModal(false, false, false, false, false, false, false, true, false, false);
@@ -1870,6 +1874,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
   public analisis(): void {
+    this.openEnabledPopup(false);
     const query = {
       outFields: ['*'],
       returnGeometry: false,
@@ -1996,7 +2001,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public onHideDialogMedicion(): void {
     this.selectedMeasurement = '';
     this.setActiveWidget();
-    this.popupAutoOpenEnabled = true;
+    // this.popupAutoOpenEnabled = true;
+    this.openEnabledPopup(true);
     this.flagSketch = false;
   }
 
@@ -2952,7 +2958,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.selectedLayers = [];
     this.selectedPolygon = undefined;
     this.sketchExtract.cancel();
-    this.popupAutoOpenEnabled = true;
+    // this.popupAutoOpenEnabled = true;
+    this.openEnabledPopup(true);
     this.flagSketch = false;
   }
 
@@ -2986,6 +2993,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     // this.clearGraphics();
     this.modalAnalysis = false;
     this.view.graphics.removeAll();
+    this.openEnabledPopup(true);
   }
 
   /**
@@ -3011,8 +3019,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.selectedSketch = undefined;
     this.bufDistance = undefined;
     this.sketchBuffer.cancel();
-    this.popupAutoOpenEnabled = true;
+    // this.popupAutoOpenEnabled = true;(
+    this.openEnabledPopup(true);
     this.flagSketch = false;
+  }
+
+  onHideDialogCoordinate() {
+    this.openEnabledPopup(true);
   }
 
   /**
@@ -3134,6 +3147,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.sketchSelection.cancel();
     this.selectedSketch = null;
     this.advancedSearchShape = false;
+    this.openEnabledPopup(true);
   }
 
 
@@ -3222,29 +3236,36 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.layerExtract = true;
       this.buildOptionsLayers();
       this.visibleModal(false, false, false, true, false, false, false, false, false, false);
-      this.popupAutoOpenEnabled = false;
+      // this.popupAutoOpenEnabled = false;
+      this.openEnabledPopup(false);
     }
   }
 
   public openMeasuringTools(): void {
     if (!this.errorArcgisService) {
       this.visibleModal(false, false, false, false, false, true, false, false, false, false);
-      this.popupAutoOpenEnabled = false;
+      // this.popupAutoOpenEnabled = false;
+      this.openEnabledPopup(false);
       (window as any).ga('send', 'event', 'BUTTON', 'click', 'open-measure-menu');
     }
   }
 
-  public openEnabledPopup(): void {
+  public openEnabledPopup(enabled: boolean, message?: boolean): void {
     if (!this.errorArcgisService) {
-      this.popupAutoOpenEnabled = !this.popupAutoOpenEnabled;
+      this.popupAutoOpenEnabled = enabled;
+      // this.popupAutoOpenEnabled = !this.popupAutoOpenEnabled;
       if (this.popupAutoOpenEnabled) {
         document.getElementsByClassName('esri-view-root')[0].classList.remove('normal-cursor');
-        document.getElementsByClassName('esri-view-root')[0].classList.add('help-cursor')
-        this.messageService.add({ detail: `Se ha activado la selección de información`, summary: 'Información', severity: 'info' });
+        document.getElementsByClassName('esri-view-root')[0].classList.add('help-cursor');
+        message ?
+          this.messageService.add({ detail: `Se ha activado la selección de información`, summary: 'Información', severity: 'info' })
+          : null;
       } else {
         document.getElementsByClassName('esri-view-root')[0].classList.remove('help-cursor');
-        document.getElementsByClassName('esri-view-root')[0].classList.add('normal-cursor')
-        this.messageService.add({ detail: `Se ha desactivado la selección de información`, summary: 'Información', severity: 'info' });
+        document.getElementsByClassName('esri-view-root')[0].classList.add('normal-cursor');
+        message ?
+          this.messageService.add({ detail: `Se ha desactivado la selección de información`, summary: 'Información', severity: 'info' })
+          : null;
       }
     }
   }

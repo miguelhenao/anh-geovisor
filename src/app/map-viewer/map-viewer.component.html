@@ -26,7 +26,7 @@
         </button>
         <button class="esri-button button4"
           style="background-color: #e36222; border-color: #e36222; border-radius: 4px;" title="Identificar"
-          (click)="openEnabledPopup()">
+          (click)="openEnabledPopup(!popupAutoOpenEnabled, true)">
           <i class="esri-icon-description" align="center"></i>
         </button>
         <button class="esri-button button5"
@@ -449,7 +449,7 @@
 
 <!-- Componente ubicar coordenada -->
 <p-dialog header="Ubicar coordenada" [(visible)]="modalCoordinate" [resizable]="false" [focusOnShow]="false"
-  [style]="{'width': '411px'}">
+  [style]="{'width': '411px'}" (onHide)="onHideDialogCoordinate()">
   <div *ngIf="modalCoordinate">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
       (click)="requestHelp('h-ubicar-coordenada')" icon="pi pi-question"></button>
