@@ -491,12 +491,6 @@ p-sidebar {
   margin: 0 auto;
 }
 
-.magna {
-  margin: 5px 0px;
-  padding: 10px;
-  color: green;
-}
-
 #buttons .button1 {
   grid-area: 'button1';
 }
