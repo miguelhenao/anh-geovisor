@@ -1,0 +1,18 @@
+<button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
+    (click)="_this.requestHelp('h-cobertura')" icon="pi pi-question"></button>
+<button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoTool = !infoTool"
+    style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
+<p>
+    Departamentos seleccionados para el análisis:
+</p>
+<p-multiSelect defaultLabel="Seleccione los departamentos para realizar análisis"
+    (onChange)="_this.changeAttrTable($event)" [options]="_this.selectDpto" [(ngModel)]="_this.dptosSelected"
+    optionLabel="attributes.departamen"></p-multiSelect>
+<br>
+<p-button icon="pi pi-globe" [disabled]="_this.dptosSelected.length == 0" (click)="generateAnalisisCobertura()"
+    label="Iniciar Análisis de Cobertura"></p-button>
+<br>
+<br>
+<p-message [escape]="false" id="infoMedicion" severity="info" *ngIf="infoTool"
+    text="Con este análisis se obtienen los <b>Bloques Explorativos que se <br> encuentran en la jurisdicción del Departamento</b> seleccionado,<br>indicando el porcentaje de cobertura de cada bloque. Seleccione los departamentos necesarios de la lista.">
+</p-message>

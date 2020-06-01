@@ -305,16 +305,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '400px',
                   baseZIndex: 20,
                   header: 'Cargar un archivo Shapefile',
-                  data: { type: 'zip', help: this }
+                  data: { type: 'zip', mainContext: this, extFile: 'shapefile' }
                 });
                 dialog.onClose.subscribe(res => {
-                  if (res !== undefined) {
-                    if (res.data.indexOf('.zip') !== -1) {
-                      this.makingWork = true;
-                      (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-shp');
-                      this.generateFeatureCollection(res.data, res.form, 'shapefile');
-                    }
-                  }
+                  (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-shp');
                 });
               }
             }
@@ -329,14 +323,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '400px',
                   baseZIndex: 20,
                   header: 'Cargar un archivo CSV',
-                  data: { type: 'csv', help: this }
+                  data: { type: 'csv', mainContext: this, extFile: 'csv' }
                 });
                 dialog.onClose.subscribe(res => {
-                  if (res !== undefined) {
-                    this.makingWork = true;
-                    (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-csv');
-                    this.importCsv.uploadFileCsv(res.form.elements[0].files, res.data, this.urlGeometryService, this.map, this.view, this);
-                  }
+                  (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-csv');
                 });
               }
             }
@@ -351,16 +341,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '400px',
                   baseZIndex: 20,
                   header: 'Cargar un archivo GPX',
-                  data: { type: 'gpx', help: this }
+                  data: { type: 'gpx', mainContext: this, extFile: 'gpx' }
                 });
                 dialog.onClose.subscribe(res => {
-                  if (res !== undefined) {
-                    if (res.data.indexOf('.gpx') !== -1) {
-                      this.makingWork = true;
-                      (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-gpx');
-                      this.generateFeatureCollection(res.data, res.form, 'gpx');
-                    }
-                  }
+                  (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-gpx');
                 });
               }
             }
@@ -375,14 +359,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '400px',
                   baseZIndex: 20,
                   header: 'Cargar un archivo GeoJSON',
-                  data: { type: 'json', help: this }
+                  data: { type: 'json', mainContext: this, extFile: 'json' }
                 });
                 dialog.onClose.subscribe(res => {
-                  if (res !== undefined) {
-                    this.makingWork = true;
-                    (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-geojson');
-                    this.addGeoJSONToMap(res);
-                  }
+                  (window as any).ga('send', 'event', 'FORM', 'submit', 'upload-form-geojson');
                 });
               }
             }
@@ -2126,167 +2106,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
-  /**
-   * Genera colección a partir de la información encontrada en el archivo fuente
-   * @param fileName -> Nombre del archivo
-   * @param form -> Formulario del input
-   * @param fileType -> Tipo de archivo
-   */
-  async generateFeatureCollection(fileName, form, fileType) {
-    const [esriRequest] = await loadModules(['esri/request']);
-    let name = fileName.split('.');
-    name = name[0].replace('c:\\fakepath\\', '');
-    const params = {
-      name,
-      targetSR: this.view.spatialReference,
-      maxRecordCount: 1000,
-      enforceInputFileSizeLimit: true,
-      enforceOutputJsonSizeLimit: true,
-      generalize: true,
-      maxAllowableOffset: 10,
-      reducePrecision: true,
-      numberOfDigitsAfterDecimal: 0
-    };
-    const myContent = {
-      filetype: fileType,
-      publishParameters: JSON.stringify(params),
-      f: 'json'
-    };
-    esriRequest(this.urlGenerateFeatureCollection, {
-      query: myContent,
-      body: form,
-      responseType: 'json',
-      timeout: 0
-    }).then((response) => {
-      if (fileType === 'shapefile') {
-        this.addShapefileToMap(response);
-      } else if (fileType === 'gpx') {
-        this.addGpxToMap(response.data.featureCollection);
-      }
-    }, (err) => {
-      this.makingWork = false;
-      console.error(err);
-      this.messageService.add({ summary: 'Error de carga', detail: 'No se pudo realizar la petición de carga de capa', severity: 'error' });
-    });
-  }
-
-  /**
-   * Método encargado de construir un layer de acuerdo a un archivo shapefile
-   * @param featureCollection -> Lista de features para construir el layer
-   */
-  async addShapefileToMap(featureCollection) {
-    const [FeatureLayer, Graphic, Field, SimpleRenderer] =
-      await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/layers/support/Field', 'esri/renderers/SimpleRenderer']);
-    let sourceGraphics = [];
-    const layers = featureCollection.data.featureCollection.layers.map((layer) => {
-      let quantityType: number = 1;
-      this.map.layers.items.forEach((lay) => {
-        if (lay.title.startsWith('Shape')) {
-          quantityType += 1;
-        }
-      });
-      debugger;
-      let layerName: string;
-      if (layer.layerDefinition.name === 'Analisis_Cobertura') {
-        layerName = `Shape${quantityType} - Analisis_Departamento`;
-      } else {
-        layerName = `Shape${quantityType} - ${layer.layerDefinition.name}`;
-      }
-      const graphics = layer.featureSet.features.map((feature) => {
-        return Graphic.fromJSON(feature);
-      });
-      const renderer = SimpleRenderer.fromJSON(layer.layerDefinition.drawingInfo.renderer);
-      sourceGraphics = sourceGraphics.concat(graphics);
-      const featureLayer = new FeatureLayer({
-        id: 'local',
-        copyright: layer.layerDefinition.copyrightText,
-        title: layerName,
-        objectIdField: 'FID',
-        source: graphics,
-        fields: layer.layerDefinition.fields.map((field) => {
-          return Field.fromJSON(field);
-        }),
-        renderer
-      });
-      return featureLayer;
-    });
-    this.map.addMany(layers);
-    this.view.goTo(sourceGraphics);
-  }
-
-  /**
-   * Método encargado de la construcción de un layer segun un archivo GPX
-   * @param featureCollection -> Lista de features para construir el layer
-   */
-  async addGpxToMap(featureCollection) {
-    const [FeatureLayer, PopupTemplate, Graphic, Field, SimpleRenderer] =
-      await loadModules([
-        'esri/layers/FeatureLayer', 'esri/PopupTemplate', 'esri/Graphic', 'esri/layers/support/Field', 'esri/renderers/SimpleRenderer']);
-    let quantityType: number = 1;
-    this.map.layers.items.forEach((lay) => {
-      if (lay.title.startsWith('GPX')) {
-        quantityType += 1;
-      }
-    });
-    const filename = `GPX${quantityType} - ${featureCollection.layers[0].featureSet.features[0].attributes.name}`;
-    let sourceGraphics = [];
-    const layers = featureCollection.layers.map((layer) => {
-      const graphics = layer.featureSet.features.map((feature) => {
-        return Graphic.fromJSON(feature);
-      });
-      sourceGraphics = sourceGraphics.concat(graphics);
-      const popup = new PopupTemplate({
-        title: 'Atributos GPX',
-        content: '${*}'
-      });
-      const featureLayer = new FeatureLayer({
-        title: filename,
-        objectIdField: 'FID',
-        source: graphics,
-        popupTemplate: popup,
-        renderer: SimpleRenderer.fromJSON(layer.layerDefinition.drawingInfo.renderer),
-        fields: layer.layerDefinition.fields.map((field) => {
-          return Field.fromJSON(field);
-        })
-      });
-      return featureLayer;
-    });
-    this.map.addMany(layers);
-    this.view.goTo(sourceGraphics);
-  }
-
-  /**
-   * Método encargado de la construcción de un layer según un archivo geoJson
-   * @param featureCollection -> Colección de features con los cuales se construiran el layer de geoJson
-   */
-  async addGeoJSONToMap(featureCollection) {
-    const [Graphic, FeatureLayer, Field] = await loadModules(['esri/Graphic', 'esri/layers/FeatureLayer', 'esri/layers/support/Field']);
-    let sourceGraphics = [];
-    const graphics = featureCollection.features.map((feature) => {
-      return Graphic.fromJSON(geojsonToArcGIS(feature));
-    });
-    let quantityType: number = 1;
-    this.map.layers.items.forEach((lay) => {
-      if (lay.title.startsWith('GeoJSON')) {
-        quantityType += 1;
-      }
-    });
-    sourceGraphics = sourceGraphics.concat(graphics);
-    const fields = [
-      new Field({
-        name: 'ObjectID',
-        alias: 'ObjectID',
-        type: 'oid'
-      })
-    ];
-    const featureLayer = new FeatureLayer({
-      title: `GeoJSON ${quantityType}`,
-      source: graphics,
-      fields
-    });
-    this.map.add(featureLayer);
-    this.view.goTo(sourceGraphics);
-  }
 
   /**
    * Método encargado de inicializar el Slider de tierras y de dar funcionalidad al mismo
@@ -2910,52 +2729,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         break;
       }
     }
-  }
-
-  /**
-   * Método encargado de realizar el análisis de cobertura
-   */
-  public generateAnalisisCobertura(): void {
-    loadModules(['esri/tasks/support/FeatureSet', 'esri/tasks/Geoprocessor']).
-      then(([, Geoprocessor]) => {
-        this.makingWork = true;
-        this.modalAnalysis = false;
-        const gpIntersect = new Geoprocessor(this.urlAnalisisCobertura);
-        gpIntersect.outSpatialReference = { wkid: 4326 };
-        let nameDptos = '';
-        (window as any).ga('send', 'event', 'BUTTON', 'click', 'intersect-start');
-        for (const dpto of this.dptosSelected) {
-          console.log(dpto);
-          nameDptos = `${nameDptos}'${dpto.attributes.departamen}',`;
-        }
-        nameDptos = nameDptos.substr(0, nameDptos.length - 1);
-        const params = {
-          Nombres_Departamentos: nameDptos
-        };
-        gpIntersect.submitJob(params).then((jobInfo) => {
-          const options = {
-            statusCallback: () => {
-            }
-          };
-          gpIntersect.waitForJobCompletion(jobInfo.jobId, options).then((jobInfo2) => {
-            if (!jobInfo2.jobStatus.includes('fail')) {
-              gpIntersect.getResultData(jobInfo.jobId, 'Output_Zip_File').then((outputFile) => {
-                const theurl = outputFile.value.url;
-                window.location = theurl;
-              });
-            } else {
-              this.messageService.add({
-                severity: 'error',
-                summary: '',
-                detail: 'Error al generar analisis.'
-              });
-            }
-            this.layerSelected = [];
-            this.clearGraphics();
-            this.makingWork = false;
-          });
-        });
-      });
   }
 
   /**
