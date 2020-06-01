@@ -76,12 +76,12 @@
       (click)="requestHelp('h-extraer')" icon="pi pi-question"></button>
     <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoTool = !infoTool"
       style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
-    <p>1. Seleccione las capas a extraer</p>
+    <p>1. Seleccione la(s) capa(s) a extraer</p>
     <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados"
       [(ngModel)]="selectedLayers"></p-multiSelect>
     <br>
     <div *ngIf="!layerExtract">
-      <p>2. Defina el área de interés</p>
+      <p>2. Seleccione el parámetro para establecer su área de interés</p>
       <div style="display: grid; grid-template-columns: auto auto;">
         <p-dropdown [options]="optionsPolygon" optionLabel="name" placeholder="Selección en la capa actual"
           (onChange)="onChangeSelect()" [(ngModel)]="selectedPolygon"></p-dropdown>
@@ -90,7 +90,7 @@
       </div>
     </div>
     <div *ngIf="selectedPolygon != undefined && selectedPolygon != null && selectedPolygon.value == 'entity'">
-      <p>3. Seleccione la capa de la entidad donde se va a extraer la información</p>
+      <p>3. Seleccione la capa a la cual pertenece la entidad de interés</p>
       <p-dropdown [options]="optionsLayerExtractor" placeholder="Click aquí..." [(ngModel)]="layerExtractor">
       </p-dropdown>
     </div>
