@@ -6,7 +6,6 @@ import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked, 
 import { loadModules } from 'esri-loader';
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
 import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.component';
-import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
 import { ImportCSV } from './ImportCSV';
 import { DialogSymbologyChangeComponent } from '../dialog-symbology-change/dialog-symbology-change.component';
 import * as XLSX from 'xlsx';
@@ -509,7 +508,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 this.buildOptionsLayers();
                 this.layerExtract = false;
                 this.visibleModal(false, false, false, true, false, false, false, false, false, false);
-                // this.popupAutoOpenEnabled = false;
                 this.openEnabledPopup(false);
               }
             }
@@ -527,7 +525,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               if (!this.errorArcgisService) {
                 this.buildOptionsLayers();
                 this.visibleModal(false, false, true, false, false, false, false, false, false, false);
-                // this.popupAutoOpenEnabled = false;
                 this.openEnabledPopup(false);
               }
             }
@@ -1273,9 +1270,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       this.view.on('pointer-move', (evt) => {
         this.showCoordinates(this.view.toMap({ x: evt.x, y: evt.y }));
-        // if (this.modalMeasurement && this.coordsModel === 'G' && this.selectedMeasurement === 'coordinate') {
-        //   this.planasXY(this.view.toMap({ x: evt.x, y: evt.y }));
-        // }
       });
       // Widget de LayerList
       const layerList = new LayerList({
@@ -1872,7 +1866,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   ngOnInit() {
     this.service.validateServices(this.mapRestUrl).subscribe(success => {
-      // console.log(success);
     }, error => {
       this.errorArcgisService = true;
       console.error(error);
@@ -2145,7 +2138,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       };
       this.layerAttrTable.queryFeatures(query).then((result) => {
         this.featureDptos = result.features;
-        // this.columnsTable = Object.keys(this.featureDptos[0].attributes);
         result.fields !== undefined && result.fields !== null && result.fields[0] !== undefined ? this.columnsTable = result.fields : null;
         for (let index = 0; index < this.columnsTable.length; index++) {
           this.filter[index] = 'contains';
@@ -2385,7 +2377,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           }
           this.selectedLayers = [];
           this.selectedPolygon = undefined;
-          // this.clearGraphics();
           this.makingWork = false;
         }, (error) => {
           this.messageService.add({
@@ -2406,7 +2397,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       (window as any).ga('send', 'event', 'FORM', 'submit', 'extract');
     }
     this.sourceLayer = [];
-    // this.layerExtract = false;
     this.shapeAttr = false;
     this.advancedSearchShape = false;
   }
@@ -2614,7 +2604,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.selectedLayers = [];
     this.selectedPolygon = undefined;
     this.sketchExtract.cancel();
-    // this.popupAutoOpenEnabled = true;
     this.openEnabledPopup(true);
     this.flagSketch = false;
   }
@@ -2645,8 +2634,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Metodo que se realiza cuando se cierra el dialogo de análisis de cobertura
    */
   onHideDialogAnalisis() {
-    // this.featuresSelected = [];
-    // this.clearGraphics();
     this.modalAnalysis = false;
     this.view.graphics.removeAll();
     this.openEnabledPopup(true);
@@ -2675,7 +2662,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.selectedSketch = undefined;
     this.bufDistance = undefined;
     this.sketchBuffer.cancel();
-    // this.popupAutoOpenEnabled = true;(
     this.openEnabledPopup(true);
     this.flagSketch = false;
   }
@@ -2799,7 +2785,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    *  Metodo que se realiza cuando se cierra el dialog de Herramientas de selección
    */
   public onHideDialogSelection() {
-    // this.clearGraphics();
     this.sketchSelection.cancel();
     this.selectedSketch = null;
     this.advancedSearchShape = false;
@@ -2892,7 +2877,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.layerExtract = true;
       this.buildOptionsLayers();
       this.visibleModal(false, false, false, true, false, false, false, false, false, false);
-      // this.popupAutoOpenEnabled = false;
       this.openEnabledPopup(false);
     }
   }
@@ -2900,7 +2884,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public openMeasuringTools(): void {
     if (!this.errorArcgisService) {
       this.visibleModal(false, false, false, false, false, true, false, false, false, false);
-      // this.popupAutoOpenEnabled = false;
       this.openEnabledPopup(false);
       (window as any).ga('send', 'event', 'BUTTON', 'click', 'open-measure-menu');
     }
@@ -2909,7 +2892,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public openEnabledPopup(enabled: boolean, message?: boolean): void {
     if (!this.errorArcgisService) {
       this.popupAutoOpenEnabled = enabled;
-      // this.popupAutoOpenEnabled = !this.popupAutoOpenEnabled;
       if (this.popupAutoOpenEnabled) {
         document.getElementsByClassName('esri-view-root')[0].classList.remove('normal-cursor');
         document.getElementsByClassName('esri-view-root')[0].classList.add('help-cursor');
