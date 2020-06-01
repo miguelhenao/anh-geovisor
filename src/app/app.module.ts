@@ -38,6 +38,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ScrollSpyDirective } from './dialog-guide/scroll-spy.directive';
 import { DialogMaintenanceComponent } from './dialog-maintenance/dialog-maintenance.component';
+import { DialogUbicateCoordinateComponent } from './dialog-ubicate-coordinate/dialog-ubicate-coordinate.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { DialogMaintenanceComponent } from './dialog-maintenance/dialog-maintena
     DialogAboutComponent,
     DialogGuideComponent,
     ScrollSpyDirective,
-    DialogMaintenanceComponent
+    DialogMaintenanceComponent,
+    DialogUbicateCoordinateComponent
   ],
   imports: [
     BrowserModule,
