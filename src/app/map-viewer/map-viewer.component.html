@@ -230,7 +230,7 @@
                 <option *ngIf="col.type !== 'string'" value="gte">mayor o igual que</option>
               </select>
               <input class="esri-input" type="text"
-                (input)="dt.filter($event.target.value, attrFilter(col.name), filter[i])">
+                (input)="dt.filter($event.target.value, keySort(col.name), filter[i])">
             </span>
           </th>
         </tr>

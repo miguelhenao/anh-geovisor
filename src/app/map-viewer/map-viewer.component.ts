@@ -6,8 +6,6 @@ import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked, 
 import { loadModules } from 'esri-loader';
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
 import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.component';
-import { geojsonToArcGIS } from '@esri/arcgis-to-geojson-utils';
-import { ImportCSV } from './ImportCSV';
 import { DialogSymbologyChangeComponent } from '../dialog-symbology-change/dialog-symbology-change.component';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
@@ -156,9 +154,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   optionsLayers: SelectItem[] = [];
   optionsLayerExtractor: SelectItem[] = [];
   optionsDepartment: SelectItem[] = [];
-  sketchExtract;
-  sketchBuffer;
-  sketchSelection;
+  sketchExtract: any;
+  sketchBuffer: any;
+  sketchSelection: any;
   advancedSearchShape = false;
   selectedPolygon: SelectItem;
   shapeAttr = false;
@@ -175,7 +173,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   clearGraphic = false;
   visibleMenu = true;
   contractMenu = true;
-  importCsv = new ImportCSV();
   bufDistance: string;
   magnaSirgas = {
     x: null,
@@ -509,7 +506,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 this.buildOptionsLayers();
                 this.layerExtract = false;
                 this.visibleModal(false, false, false, true, false, false, false, false, false, false);
-                // this.popupAutoOpenEnabled = false;
                 this.openEnabledPopup(false);
               }
             }
@@ -527,7 +523,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               if (!this.errorArcgisService) {
                 this.buildOptionsLayers();
                 this.visibleModal(false, false, true, false, false, false, false, false, false, false);
-                // this.popupAutoOpenEnabled = false;
                 this.openEnabledPopup(false);
               }
             }
@@ -646,21 +641,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.lyTierrasCreate !== undefined ? this.lyTierrasCreate : null;
     this.currentLayerExist = this.currentLayer !== null ? true : false;
     this.ref.detectChanges();
-    /* debugger;
-    let gpxMenu = document.getElementsByClassName('ui-menuitem-icon gpx-icon ng-star-inserted')[0] as HTMLElement;
-    if (gpxMenu !== undefined && gpxMenu.childNodes.length === 0) {
-      let iconGpx = document.createElement('div');
-      iconGpx.className = 'gpx-icon';
-      gpxMenu.appendChild(iconGpx);
-    } */
   }
-
 
   public validateHeight(height: number): boolean {
     return height !== 1249 && height !== 478 && height !== 728 && height !== 704 && height !== 680 && height !== 656 && height !== 632
       && height !== 608 && height !== 584 && height !== 560 && height !== 536 && height !== 512 && height !== 488;
   }
-  buildOptionsLayers(): void {
+
+  public buildOptionsLayers(): void {
     this.optionsLayers = [];
     this.copyrightIGAC = [];
     this.copyrightSGC = [];
@@ -691,7 +679,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       && !title.startsWith('GPX') && !title.startsWith('WMS');
   }
 
-  buildOptionsLayersValue(nameLayer: string): void {
+  public buildOptionsLayersValue(nameLayer: string): void {
     this.layersOptionsList = [];
     this.copyrightSGC = [];
     this.copyrightIGAC = [];
@@ -721,7 +709,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.optionsLayers = this.optionsLayers.reverse();
   }
 
-  changeLayer(event: any): void {
+  public changeLayer(event: any): void {
     this.map.layers.items.forEach((layer) => {
       if (layer.title != null && layer.sourceJSON.name === event) {
         this.layerSelected = layer;
@@ -777,11 +765,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService', 'esri/popup/content/TextContent',
           'esri/widgets/CoordinateConversion/CoordinateConversionViewModel', 'esri/popup/content/AttachmentsContent',
           'esri/tasks/IdentifyTask', 'esri/tasks/support/IdentifyParameters', 'esri/tasks/support/IdentifyResult']);
-
       // Geometry Service
       const geomSvc = new GeometryService(this.urlGeometryService);
       // Servidor de AGS desde donde se cargan los servicios, capas, etc.
-
       // Configure the Map
       const mapProperties = {
         basemap: 'streets'
@@ -798,9 +784,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         zoom: 5,
         map: this.map
       };
-
       this.view = new MapView(mapViewProperties);
-
       this.ccViewModel = new CoordinateVM();
       document.getElementsByClassName('esri-view-root')[0].classList.add('help-cursor')
       this.addSlider();
@@ -1273,9 +1257,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       this.view.on('pointer-move', (evt) => {
         this.showCoordinates(this.view.toMap({ x: evt.x, y: evt.y }));
-        // if (this.modalMeasurement && this.coordsModel === 'G' && this.selectedMeasurement === 'coordinate') {
-        //   this.planasXY(this.view.toMap({ x: evt.x, y: evt.y }));
-        // }
       });
       // Widget de LayerList
       const layerList = new LayerList({
@@ -1481,10 +1462,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.sleep(500).then(() => {
             let closes = document.getElementsByClassName('esri-icon-close');
             console.log(closes);
-            /* document.getElementsByClassName('esri-view-root')[0].addEventListener('click', (e: Event) => { 
-              console.log(e);
-              this.removePoint(pointSearch) 
-            }) */
             for (let index = 0; index < closes.length; index++) {
               const element = closes[index] as HTMLElement;
               element.addEventListener('click', (e: Event) => { this.view.graphics.remove(pointSearch) });
@@ -1872,7 +1849,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   ngOnInit() {
     this.service.validateServices(this.mapRestUrl).subscribe(success => {
-      // console.log(success);
     }, error => {
       this.errorArcgisService = true;
       console.error(error);
@@ -1962,7 +1938,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Método que se realiza cuando el dialogo de medición es cerrado
    */
   public onHideDialogMedicion(): void {
-    // this.popupAutoOpenEnabled = true;
     this.openEnabledPopup(true);
     this.flagSketch = false;
   }
@@ -2145,7 +2120,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       };
       this.layerAttrTable.queryFeatures(query).then((result) => {
         this.featureDptos = result.features;
-        // this.columnsTable = Object.keys(this.featureDptos[0].attributes);
         result.fields !== undefined && result.fields !== null && result.fields[0] !== undefined ? this.columnsTable = result.fields : null;
         for (let index = 0; index < this.columnsTable.length; index++) {
           this.filter[index] = 'contains';
@@ -2229,8 +2203,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.layerAttrTable.queryFeatures(query).then((result) => {
       this.featureDptos = result.features;
       this.makingSearch = false;
-      // this.columnsTable = Object.keys(this.featureDptos[0].attributes);
-      //this.columnsTable = result.fields;
     }, (err) => {
       console.error(err);
       this.makingSearch = false;
@@ -2357,7 +2329,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           )
         }
       }
-
       const features = this.layerExtract || this.shapeAttr || this.advancedSearchShape ? this.sourceLayer : this.view.graphics.items;
       const featureSet = new FeatureSet();
       featureSet.features = features;
@@ -2385,7 +2356,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           }
           this.selectedLayers = [];
           this.selectedPolygon = undefined;
-          // this.clearGraphics();
           this.makingWork = false;
         }, (error) => {
           this.messageService.add({
@@ -2406,7 +2376,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       (window as any).ga('send', 'event', 'FORM', 'submit', 'extract');
     }
     this.sourceLayer = [];
-    // this.layerExtract = false;
     this.shapeAttr = false;
     this.advancedSearchShape = false;
   }
@@ -2581,6 +2550,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.columnsTable = null;
     this.getFeaturesLayer(this.layerSelected);
   }
+
   /**
    * Método que se ejecuta cuando un elemento de la tabla de atributos es deseleccionado
    * @param event -> Evento que contiene el dato deseleccionado
@@ -2614,7 +2584,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.selectedLayers = [];
     this.selectedPolygon = undefined;
     this.sketchExtract.cancel();
-    // this.popupAutoOpenEnabled = true;
     this.openEnabledPopup(true);
     this.flagSketch = false;
   }
@@ -2645,8 +2614,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Metodo que se realiza cuando se cierra el dialogo de análisis de cobertura
    */
   onHideDialogAnalisis() {
-    // this.featuresSelected = [];
-    // this.clearGraphics();
     this.modalAnalysis = false;
     this.view.graphics.removeAll();
     this.openEnabledPopup(true);
@@ -2698,14 +2665,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.sectionSelected = null;
     this.visibleModal(false, false, false, false, true, false, false, false, false, false);
     (window as any).ga('send', 'event', 'BUTTON', 'click', 'ayuda');
-  }
-
-  /**
-   * Retorna el nombre completo de filtro de la columna en la tabla de atributos
-   * @param col -> Nombre de la columna
-   */
-  public attrFilter(col: string): string {
-    return `attributes.${col}`;
   }
 
   /**
@@ -2773,6 +2732,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.modalCoordinate = coordinate;
     this.modalFilter = filter;
   }
+
   /**
    *
    * @param value -> Variable de control para menú
