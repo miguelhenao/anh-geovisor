@@ -168,27 +168,7 @@
 <p-dialog header="Herramientas de Medición" [(visible)]="modalMeasurement" [resizable]="false"
   (onHide)="onHideDialogMedicion()" [positionTop]="10" [positionLeft]="200" [focusOnShow]="false">
   <div *ngIf="modalMeasurement">
-    <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
-      (click)="requestHelp('h-herramientas-medicion')" icon="pi pi-question"></button>
-    <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoTool = !infoTool"
-      style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
-    <div style="width: 373px">
-      <p-selectButton [options]="modesMeasurement" [(ngModel)]="selectedMeasurement" (onChange)="setActiveWidget()">
-      </p-selectButton>
-      <div id="widgetMeasure">
-        <h3 style="text-align: center;">Resultado de la Medición</h3>
-        <hr>
-      </div>
-      <div class="magna" style="background-color: #DEF0D8;" *ngIf="magnaSirgasFlag">
-        <div>
-          <p>MAGNA-SIRGAS Origen Central</p>
-          <p>X(Este): {{magnaSirgas.x || ''}}</p>
-          <p>Y(Norte): {{magnaSirgas.y || ''}}</p>
-        </div>
-      </div>
-      <p-message [escape]="false" id="infoMedicion" severity="info" *ngIf="infoTool" text="Seleccione una herramienta y haga <b>clic</b> sobre el mapa para agregar puntos.
-    <b>Doble clic</b> para terminar la medición."></p-message>
-    </div>
+    <app-dialog-measurement [_this]="this"></app-dialog-measurement>
   </div>
 </p-dialog>
 <!-- Fin del modal de herramientas de medición -->

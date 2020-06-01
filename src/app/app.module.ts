@@ -40,6 +40,7 @@ import { ScrollSpyDirective } from './dialog-guide/scroll-spy.directive';
 import { DialogMaintenanceComponent } from './dialog-maintenance/dialog-maintenance.component';
 import { DialogUbicateCoordinateComponent } from './dialog-ubicate-coordinate/dialog-ubicate-coordinate.component';
 import { DialogAnalysisComponent } from './dialog-analysis/dialog-analysis.component';
+import { DialogMeasurementComponent } from './dialog-measurement/dialog-measurement.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { DialogAnalysisComponent } from './dialog-analysis/dialog-analysis.compo
     DialogMaintenanceComponent,
     DialogUbicateCoordinateComponent,
     DialogAnalysisComponent
+    DialogMeasurementComponent
   ],
   imports: [
     BrowserModule,

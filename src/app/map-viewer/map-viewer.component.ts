@@ -1089,7 +1089,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.map.add(lySensibilidad); */
 
       // Carga de capa rezumadero
-      //Last url: this.mapRestUrl + '/0'
+      // Last url: this.mapRestUrl + '/0'
       const lyRezumadero = new FeatureLayer(`${this.mapRestUrl}/0`, {
         id: 'Rezumadero',
         opacity: 1.0,
@@ -1128,7 +1128,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.map.add(lyRezumadero);
 
       // Carga de capa de cuencas
-      //Last url: this.mapRestUrl + '/6'
+      //  Last url: this.mapRestUrl + '/6'
       const lyCuencas = new FeatureLayer(`${this.mapRestUrl}/6`, {
         id: 'Cuencas',
         opacity: 1.0,
@@ -1215,23 +1215,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.map.add(lyTierras);
       this.lyTierrasCreate = lyTierras;
       this.view.on('click', (e) => {
-        if (this.activeWidget !== undefined && this.activeWidget !== null && this.activeWidget.viewModel.mode !== undefined) {
-          if (this.activeWidget.viewModel.mode === 'capture') {
-            const outSR = new SpatialReference({ wkid: 3116 }); // MAGNA-SIRGAS / Colombia Bogota zone
-            const params = new ProjectParameters();
-            params.geometries = [e.mapPoint];
-            params.outSpatialReference = outSR;
-            geomSvc.project(params).then((response) => {
-              this.magnaSirgas.x = this.formatNumber(response[0].x, 4);
-              this.magnaSirgas.y = this.formatNumber(response[0].y, 4);
-              this.magnaSirgasFlag = true;
-            });
-            this.view.goTo({
-              target: e.mapPoint,
-              zoom: 9
-            });
-          }
-        }
         if (this.popupAutoOpenEnabled) {
           this.identifyParameters.geometry = e.mapPoint;
           this.identifyParameters.mapExtent = this.view.extent;
@@ -1290,9 +1273,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       this.view.on('pointer-move', (evt) => {
         this.showCoordinates(this.view.toMap({ x: evt.x, y: evt.y }));
-        if (this.modalMeasurement && this.coordsModel === 'G' && this.selectedMeasurement === 'coordinate') {
-          this.planasXY(this.view.toMap({ x: evt.x, y: evt.y }));
-        }
+        // if (this.modalMeasurement && this.coordsModel === 'G' && this.selectedMeasurement === 'coordinate') {
+        //   this.planasXY(this.view.toMap({ x: evt.x, y: evt.y }));
+        // }
       });
       // Widget de LayerList
       const layerList = new LayerList({
@@ -1762,25 +1745,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     return dField.name;
   }
 
-  public planasXY(pt): void {
-    let coords = ''
-    loadModules(['esri/tasks/GeometryService', 'esri/geometry/SpatialReference', 'esri/tasks/support/ProjectParameters'])
-      .then(([GeometryService, SpatialReference, ProjectParameters]) => {
-        const geomSvc = new GeometryService(this.urlGeometryService);
-        const outSR = new SpatialReference({ wkid: 3116 });
-        const params = new ProjectParameters({
-          geometries: [pt],
-          outSpatialReference: outSR
-        });
-        geomSvc.project(params).then((response) => {
-          const pto = response[0];
-          coords = 'N ' + this.formatNumber(pto.y, 4) + ', E ' + this.formatNumber(pto.x, 4);
-          let v = document.getElementById('value-xy');
-          v !== undefined && v !== null ? v.innerHTML = coords : null;
-        });
-      });
-  }
-
   public showCoordinates(pt): void {
     this.coordsWidget = document.getElementById('coords');
     let coords = '';
@@ -1998,109 +1962,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Método que se realiza cuando el dialogo de medición es cerrado
    */
   public onHideDialogMedicion(): void {
-    this.selectedMeasurement = '';
-    this.setActiveWidget();
     // this.popupAutoOpenEnabled = true;
     this.openEnabledPopup(true);
     this.flagSketch = false;
-  }
-
-  /**
-   * Método con el cual se identifica cual fue el tipo de medición seleccionado por el usuario
-   */
-  public setActiveWidget() {
-    loadModules(['esri/widgets/DistanceMeasurement2D', 'esri/widgets/AreaMeasurement2D', 'esri/widgets/CoordinateConversion',
-      'esri/widgets/CoordinateConversion/support/Conversion']).then((
-        [DistanceMeasurement2D, AreaMeasurement2D, CoordinateConversion, Conversion]) => {
-        this.activeWidget != null ? this.activeWidget.destroy() : null;
-        this.activeWidget = null;
-        const container = document.createElement('div');
-        container.id = 'divWidget';
-        document.getElementById('widgetMeasure') != null ? document.getElementById('widgetMeasure').appendChild(container) : null;
-        this.magnaSirgasFlag = false;
-        switch (this.selectedMeasurement) {
-          case 'distance':
-            this.activeWidget = new DistanceMeasurement2D({
-              view: this.view,
-              container: document.getElementById('divWidget'),
-              unit: 'kilometers'
-            });
-            this.activeWidget.viewModel.newMeasurement();
-            break;
-          case 'area':
-            this.activeWidget = new AreaMeasurement2D({
-              view: this.view,
-              container: document.getElementById('divWidget'),
-              unit: 'hectares'
-            });
-            this.activeWidget.viewModel.newMeasurement();
-            break;
-          case 'coordinate':
-            this.activeWidget = new CoordinateConversion({
-              view: this.view,
-              orientation: 'expand-up',
-              container: document.getElementById('divWidget')
-            });
-            const symbol = {
-              type: 'picture-marker',  // autocasts as new PictureMarkerSymbol()
-              url: 'assets/marker.png',
-              width: '18px',
-              height: '32px',
-              yoffset: '16px'
-            };
-            const formatXY = this.activeWidget.formats.find((f) => {
-              return f.name === 'xy';
-            });
-            this.activeWidget.formats.remove(formatXY);
-            formatXY.name = 'grados';
-            const xy = formatXY.currentPattern.split(',');
-            formatXY.currentPattern = xy[1] + ', ' + xy[0];
-            this.activeWidget.formats.push(formatXY);
-            const formatBasemap = this.activeWidget.formats.find((f) => {
-              return f.name === 'basemap';
-            });
-            this.activeWidget.formats.remove(formatBasemap);
-            /* const basemap = formatBasemap.defaultPattern.split(',');
-            formatBasemap.currentPattern = basemap[1] + ', ' + basemap[0];
-            this.activeWidget.formats.push(formatBasemap);
- */
-            this.activeWidget.viewModel.locationSymbol = symbol;
-            const ul = document.getElementsByClassName('esri-coordinate-conversion__tools')[0] as HTMLElement;
-            ul.getElementsByTagName('li')[0].click();
-            this.sleep(500).then(() => {
-              const rowTools = document.getElementsByClassName('esri-coordinate-conversion__row')[1] as HTMLElement;
-              const tools = rowTools.getElementsByClassName('esri-coordinate-conversion__tools')[0] as HTMLElement;
-              tools.getElementsByTagName('li')[0].addEventListener('click', (e: Event) => this.visibleModal(false, false, false, false, false, false, false, false, true, false));
-              let conversionList = document.getElementById('divWidget__esri-coordinate-conversion__conversion-list');
-              let xyPlanas = document.createElement('div');
-              let textXy = document.createElement('div');
-              textXy.style.width = '20%';
-              textXy.style.cssFloat = 'left';
-              textXy.innerHTML = 'XY Planas';
-              textXy.style.padding = '10px 5px 5px 15px';
-              let valueXy = document.createElement('div');
-              valueXy.style.width = '80%';
-              valueXy.style.cssFloat = 'right';
-              valueXy.style.padding = '10px 0px 0px 12px';
-              valueXy.id = 'value-xy';
-              xyPlanas.appendChild(textXy);
-              xyPlanas.appendChild(valueXy);
-              conversionList.appendChild(xyPlanas);
-            });
-            const formatDMS = this.activeWidget.formats.find((f) => {
-              return f.name === 'dms';
-            });
-            this.activeWidget.conversions.removeAll();
-            this.activeWidget.conversions.add(new Conversion({ format: formatDMS }));
-            break;
-          case null:
-            if (this.activeWidget) {
-              this.activeWidget.destroy();
-              this.activeWidget = null;
-            }
-            break;
-        }
-      });
   }
 
   sleep(ms) {
