@@ -55,7 +55,7 @@ import { DialogMeasurementComponent } from './dialog-measurement/dialog-measurem
     ScrollSpyDirective,
     DialogMaintenanceComponent,
     DialogUbicateCoordinateComponent,
-    DialogAnalysisComponent
+    DialogAnalysisComponent,
     DialogMeasurementComponent
   ],
   imports: [
