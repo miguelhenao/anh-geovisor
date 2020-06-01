@@ -14,9 +14,7 @@ import * as FileSaver from 'file-saver';
 import { Router } from '@angular/router';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Table } from 'primeng/table';
-import { format, resolve } from 'url';
 import { Dialog } from 'primeng/dialog/dialog';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-map-viewer',
@@ -283,6 +281,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           baseZIndex: 2000,
           showHeader: false
         });
+      });
+    } else {
+      const maintenace = dialogService.open(DialogMaintenanceComponent, {
+        width: '50%',
+        height: 'auto',
+        baseZIndex: 2000,
+        showHeader: false
       });
     }
     this.menu = [
