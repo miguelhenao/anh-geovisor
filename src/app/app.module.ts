@@ -37,6 +37,7 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ScrollSpyDirective } from './dialog-guide/scroll-spy.directive';
+import { DialogMaintenanceComponent } from './dialog-maintenance/dialog-maintenance.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { ScrollSpyDirective } from './dialog-guide/scroll-spy.directive';
     DialogSymbologyChangeComponent,
     DialogAboutComponent,
     DialogGuideComponent,
-    ScrollSpyDirective
+    ScrollSpyDirective,
+    DialogMaintenanceComponent
   ],
   imports: [
     BrowserModule,
@@ -87,7 +89,8 @@ import { ScrollSpyDirective } from './dialog-guide/scroll-spy.directive';
     DialogUrlServiceComponent,
     DialogFileComponent,
     DialogTerminosComponent,
-    DialogSymbologyChangeComponent
+    DialogSymbologyChangeComponent,
+    DialogMaintenanceComponent
   ],
   bootstrap: [AppComponent]
 })

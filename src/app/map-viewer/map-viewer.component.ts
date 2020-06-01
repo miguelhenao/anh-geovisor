@@ -1,3 +1,4 @@
+import { DialogMaintenanceComponent } from './../dialog-maintenance/dialog-maintenance.component';
 import { MapViewerService } from './map-viewer.service';
 import { DialogUrlServiceComponent } from '../dialog-urlservice/dialog-urlservice.component';
 import { MenuItem, SelectItem, MessageService, ConfirmationService } from 'primeng/api';
@@ -268,11 +269,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       _this.indexColor++;
     }, 10);
     if (localStorage.getItem('agreeTerms') === undefined || localStorage.getItem('agreeTerms') === null) {
-      this.dialogService.open(DialogTerminosComponent, {
+      const ref = this.dialogService.open(DialogTerminosComponent, {
         width: '80%',
         height: '80%',
         baseZIndex: 2000,
         showHeader: false
+      });
+
+      ref.onClose.subscribe(result => {
+        const maintenace = dialogService.open(DialogMaintenanceComponent, {
+          width: '50%',
+          height: 'auto',
+          baseZIndex: 2000,
+          showHeader: false
+        });
       });
     }
     this.menu = [
@@ -1922,16 +1932,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public closeDialogAttr(): void {
-    if (this.isFilteringAttrTab || (this.filterAttrTable !== undefined && this.filterAttrTable !== null) && (this.attrTable !== undefined && this.attrTable.filteredValue !== undefined && this.attrTable.filteredValue !== null && this.attrTable.filteredValue.length > 0)) {
+    if (this.isFilteringAttrTab || (this.filterAttrTable !== undefined && this.filterAttrTable !== null) &&
+      (this.attrTable !== undefined && this.attrTable.filteredValue !== undefined &&
+        this.attrTable.filteredValue !== null && this.attrTable.filteredValue.length > 0)) {
       this.confirmationService.confirm({
-        message: "Al cerrar la tabla de atributos perderá todos los datos filtrados. Si desea conservar los datos haz click en minimizar <i class='pi pi-window-minimize'></i> que se encuentra en la parte superior de la tabla de atributos.¿Está seguro de cerrar la tabla de atributos?",
+        message: 'Al cerrar la tabla de atributos perderá su consulta.<br>' +
+          'Si desea conservarla, use el botón Minimizar <i class=\'pi pi-window-minimize\'></i>' +
+          'localizado en la esquina superior derecha.' + '<br> ¿Desea cerrar la tabla de atributos?',
         acceptLabel: 'Si',
         rejectLabel: 'No',
         accept: () => {
           this.modalTable = false;
           this.onHideDialogAtributos();
         }
-      })
+      });
     } else {
       this.modalTable = false;
       this.onHideDialogAtributos();
