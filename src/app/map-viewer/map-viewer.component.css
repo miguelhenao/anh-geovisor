@@ -279,6 +279,18 @@ p-sidebar {
   background-position: 95% 50%;
 }
 
+::ng-deep .ui-confirmdialog-message p {
+  text-align: center !important;
+  font-size: 17px !important;
+  font-style: italic !important;
+}
+
+
+::ng-deep .confirm {
+  color: red !important;
+  font-size: 3.5em !important;
+  margin-left: 45% !important;
+}
 ::ng-deep .help-cursor {
   cursor: help !important;
 }

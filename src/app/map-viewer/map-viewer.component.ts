@@ -1449,7 +1449,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             layerListExpand.collapse();
           } else if (event.action.id === 'deleteLayer') {
             this.confirmationService.confirm({
-              message: `¿Desea eliminar la capa ${layer.title}?`,
+              message: `<p>¿Desea eliminar la capa ${layer.title}?</p>`,
               acceptLabel: 'Si',
               rejectLabel: 'No',
               accept: () => {
@@ -1941,9 +1941,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       (this.attrTable !== undefined && this.attrTable.filteredValue !== undefined &&
         this.attrTable.filteredValue !== null && this.attrTable.filteredValue.length > 0)) {
       this.confirmationService.confirm({
-        message: 'Al cerrar la tabla de atributos perderá su consulta.<br>' +
+        message: "<p style='text-align: center' >Al cerrar la tabla de atributos perderá su consulta.<br>" +
           'Si desea conservarla, use el botón Minimizar <i class=\'pi pi-window-minimize\'></i>' +
-          'localizado en la esquina superior derecha.' + '<br> ¿Desea cerrar la tabla de atributos?',
+          'localizado en la esquina superior derecha.' + '<br> ¿Desea cerrar la tabla de atributos?</p>',
         acceptLabel: 'Si',
         rejectLabel: 'No',
         accept: () => {
