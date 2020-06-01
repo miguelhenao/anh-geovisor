@@ -2642,7 +2642,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.selectedSketch = undefined;
     this.bufDistance = undefined;
     this.sketchBuffer.cancel();
-    // this.popupAutoOpenEnabled = true;(
     this.openEnabledPopup(true);
     this.flagSketch = false;
   }
@@ -2759,7 +2758,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    *  Metodo que se realiza cuando se cierra el dialog de Herramientas de selección
    */
   public onHideDialogSelection() {
-    // this.clearGraphics();
     this.sketchSelection.cancel();
     this.selectedSketch = null;
     this.advancedSearchShape = false;
@@ -2852,7 +2850,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.layerExtract = true;
       this.buildOptionsLayers();
       this.visibleModal(false, false, false, true, false, false, false, false, false, false);
-      // this.popupAutoOpenEnabled = false;
       this.openEnabledPopup(false);
     }
   }
@@ -2860,7 +2857,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public openMeasuringTools(): void {
     if (!this.errorArcgisService) {
       this.visibleModal(false, false, false, false, false, true, false, false, false, false);
-      // this.popupAutoOpenEnabled = false;
       this.openEnabledPopup(false);
       (window as any).ga('send', 'event', 'BUTTON', 'click', 'open-measure-menu');
     }
@@ -2869,7 +2865,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   public openEnabledPopup(enabled: boolean, message?: boolean): void {
     if (!this.errorArcgisService) {
       this.popupAutoOpenEnabled = enabled;
-      // this.popupAutoOpenEnabled = !this.popupAutoOpenEnabled;
       if (this.popupAutoOpenEnabled) {
         document.getElementsByClassName('esri-view-root')[0].classList.remove('normal-cursor');
         document.getElementsByClassName('esri-view-root')[0].classList.add('help-cursor');
