@@ -30,7 +30,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   filterAttrTable: any;
   @ViewChild('attr', { static: false }) attr: Dialog;
   loaded = false;
-  eventLayer: any;
   modalTable = false;
   minimizeMaximize = true;
   modalFilter = false;
@@ -69,7 +68,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   search: any;
   sourceSearch: Array<any> = [];
   activeWidget: any;
-  tsLayer: any;
   legend: any;
   expandPrint: any;
   coordsWidget: any;
@@ -110,50 +108,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     { name: 'Metros', value: 9001 },
     { name: 'Pies', value: 9002 },
   ];
-  optionsCoordinateUnits = [
-    {
-      name: 'Grados, Minutos y Segundos ( ej. 04° 35\' 46,3215" )',
-      value: [{ label: 'MAGNA-SIRGAS (WGS84)', value: 4326 }],
-      x: 'Latitud', y: 'Longitud', geographical: true,
-      mask: '99° 99\' 99,9999"', code: 'dms'
-    },
-    {
-      name: 'Grados y Minutos Decimales ( ej. 04° 35,772025\' )',
-      value: [{ label: 'MAGNA-SIRGAS (WGS84)', value: 4326 }],
-      x: 'Latitud', y: 'Longitud', geographical: true,
-      mask: '99° 99,999999\'', code: 'ddm'
-    },
-    {
-      name: 'Grados decimales ( ej. 4,59620041° )',
-      value: [{ label: 'MAGNA-SIRGAS (WGS84)', value: 4326 }],
-      x: 'Latitud', y: 'Longitud', geographical: true,
-      mask: '99,99?999999°', code: 'dd'
-    },
-    {
-      name: 'Metros ( ej. 1.106.427 )',
-      value: [
-        { label: 'MAGNA-SIRGAS Origen Central', value: 3116 },
-        { label: 'MAGNA-SIRGAS Origen Este Central', value: 3117 },
-        { label: 'MAGNA-SIRGAS Origen Este Este', value: 3118 },
-        { label: 'MAGNA-SIRGAS Origen Oeste', value: 3115 },
-        { label: 'MAGNA-SIRGAS Origen Oeste Oeste', value: 3114 },
-      ],
-      x: 'X', y: 'Y', geographical: false, mask: '?9.999.999,9999',
-      code: 'm'
-    }
-  ];
-  coordinateUnits = this.optionsCoordinateUnits[0];
-  optionsCoordinateSystem = this.coordinateUnits.value;
-  coordinateSystem = this.optionsCoordinateSystem[0].value;
-  lathem = 'N';
-  lonhem = 'O';
-  coordinateX: string;
-  coordinateY: string;
   featuresSelected: Array<any> = [];
   layerList: any;
   optionsLayers: SelectItem[] = [];
   optionsLayerExtractor: SelectItem[] = [];
-  optionsDepartment: SelectItem[] = [];
   sketchExtract: any;
   sketchBuffer: any;
   sketchSelection: any;
@@ -164,7 +122,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   intervalChange: any;
   levelColors = 0;
   indexColor = 0;
-  items: MenuItem[];
   selectedBuffer: SelectItem = {
     value: 9036
   };
@@ -174,11 +131,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   visibleMenu = true;
   contractMenu = true;
   bufDistance: string;
-  magnaSirgas = {
-    x: null,
-    y: null
-  };
-  magnaSirgasFlag = false;
   sectionSelected: string;
   modesBuffer: SelectItem[] = [
     { value: 'point', title: 'Punto', icon: 'esri-icon-radio-checked' },
@@ -186,12 +138,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     { value: 'polyline', title: 'Polilínea', icon: 'esri-icon-polyline' },
     { value: 'rectangle', title: 'Rectángulo', icon: 'esri-icon-sketch-rectangle' },
     { value: 'polygon', title: 'Polígono Libre', icon: 'esri-icon-polygon' }
-  ];
-  selectedMeasurement: any;
-  modesMeasurement: SelectItem[] = [
-    { value: 'area', title: 'Área', icon: 'esri-icon-measure-area' },
-    { value: 'distance', title: 'Distancia', icon: 'esri-icon-measure-line' },
-    { value: 'coordinate', title: 'Ubicación', icon: 'esri-icon-map-pin' }
   ];
   colorsFirst: Array<any> = [];
   colorsSeconds: Array<any> = [];
@@ -221,9 +167,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   identifyParameters: any;
   popupAutoOpenEnabled = true;
 
-  constructor(private dialogService: DialogService, private service: MapViewerService,
-    private messageService: MessageService, private router: Router,
-    private ref: ChangeDetectorRef, private confirmationService: ConfirmationService) {
+  constructor(private dialogService: DialogService, private service: MapViewerService, private ref: ChangeDetectorRef,
+    private messageService: MessageService, private router: Router, private confirmationService: ConfirmationService) {
     this.setCurrentPosition();
     this.colorsFirst = this.generateColor('#F8C933', '#FFE933', 50);
     this.colorsSeconds = this.generateColor('#E18230', '#F8C933', 50);
@@ -272,7 +217,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
 
       ref.onClose.subscribe(result => {
-        const maintenace = dialogService.open(DialogMaintenanceComponent, {
+        dialogService.open(DialogMaintenanceComponent, {
           width: '50%',
           height: 'auto',
           baseZIndex: 2000,
@@ -280,7 +225,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
       });
     } else {
-      const maintenace = dialogService.open(DialogMaintenanceComponent, {
+      dialogService.open(DialogMaintenanceComponent, {
         width: '50%',
         height: 'auto',
         baseZIndex: 2000,
