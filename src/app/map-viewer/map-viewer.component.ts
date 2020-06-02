@@ -1339,8 +1339,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           } else if (event.action.id === 'deleteLayer') {
             this.confirmationService.confirm({
               message: `<p>¿Desea eliminar la capa ${layer.title}?</p>`,
-              acceptLabel: 'Si',
-              rejectLabel: 'No',
               accept: () => {
                 this.map.remove(layer);
                 this.messageService.add({
@@ -1809,8 +1807,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         message: "<p style='text-align: center' >Al cerrar la tabla de atributos perderá su consulta.<br>" +
           'Si desea conservarla, use el botón Minimizar <i class=\'pi pi-window-minimize\'></i>' +
           'localizado en la esquina superior derecha.' + '<br> ¿Desea cerrar la tabla de atributos?</p>',
-        acceptLabel: 'Si',
-        rejectLabel: 'No',
         accept: () => {
           this.modalTable = false;
           this.onHideDialogAtributos();
