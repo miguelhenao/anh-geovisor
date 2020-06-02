@@ -26,9 +26,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   view: any = {
     ready: false
   };
-  @ViewChild('dt', { static: false }) attrTable: Table;
+  @ViewChild('dt', {static: false}) attrTable: Table;
   filterAttrTable: any;
-  @ViewChild('attr', { static: false }) attr: Dialog;
+  @ViewChild('attr', {static: false}) attr: Dialog;
   loaded = false;
   modalTable = false;
   minimizeMaximize = true;
