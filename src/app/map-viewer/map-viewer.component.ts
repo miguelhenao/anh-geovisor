@@ -216,7 +216,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
 
       dialogTerms.onClose.subscribe(result => {
-        this.openDialogMaintenance();
+        setTimeout(() => {
+          this.openDialogMaintenance();
+        }, 500);
       });
     } else {
       this.openDialogMaintenance();
