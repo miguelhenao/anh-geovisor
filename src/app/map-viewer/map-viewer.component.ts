@@ -9,7 +9,6 @@ import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.comp
 import { DialogSymbologyChangeComponent } from '../dialog-symbology-change/dialog-symbology-change.component';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
-import { Router } from '@angular/router';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Table } from 'primeng/table';
 import { Dialog } from 'primeng/dialog/dialog';
@@ -168,7 +167,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   popupAutoOpenEnabled = true;
 
   constructor(private dialogService: DialogService, private service: MapViewerService, private ref: ChangeDetectorRef,
-    private messageService: MessageService, private router: Router, private confirmationService: ConfirmationService) {
+    private messageService: MessageService, private confirmationService: ConfirmationService) {
     this.setCurrentPosition();
     this.colorsFirst = this.generateColor('#F8C933', '#FFE933', 50);
     this.colorsSeconds = this.generateColor('#E18230', '#F8C933', 50);
@@ -209,28 +208,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       _this.indexColor++;
     }, 10);
     if (localStorage.getItem('agreeTerms') === undefined || localStorage.getItem('agreeTerms') === null) {
-      const ref = this.dialogService.open(DialogTerminosComponent, {
+      const dialogTerms = this.dialogService.open(DialogTerminosComponent, {
         width: '80%',
         height: '80%',
         baseZIndex: 2000,
         showHeader: false
       });
 
-      ref.onClose.subscribe(result => {
-        dialogService.open(DialogMaintenanceComponent, {
-          width: '50%',
-          height: 'auto',
-          baseZIndex: 2000,
-          showHeader: false
-        });
+      dialogTerms.onClose.subscribe(result => {
+        setTimeout(() => {
+          this.openDialogMaintenance();
+        }, 500);
       });
     } else {
-      dialogService.open(DialogMaintenanceComponent, {
-        width: '50%',
-        height: 'auto',
-        baseZIndex: 2000,
-        showHeader: false
-      });
+      this.openDialogMaintenance();
     }
     this.menu = [
       {
@@ -319,22 +310,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '50%',
                   baseZIndex: 100,
                   header: 'Cargar servicio KML',
-                  data: { help: this }
+                  data: { type: 'kml', mainContext: this }
                 });
-                dialog.onClose.subscribe(res => {
-                  if (res !== undefined) {
-                    loadModules(['esri/layers/KMLLayer']).then(([KMLLayer]) => {
-                      this.makingWork = true;
-                      (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-kml');
-                      const kml = new KMLLayer({
-                        url: res
-                      });
-                      let count = 1;
-                      this.map.layers.map(layer => { layer.type === 'kml' ? count++ : null });
-                      kml.title = 'KML ' + count.toString() + kml.title;
-                      this.map.add(kml);
-                    });
-                  }
+                dialog.onClose.subscribe(() => {
+                  (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-kml');
                 });
               }
             }
@@ -349,22 +328,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '50%',
                   baseZIndex: 100,
                   header: 'Cargar servicio WMS',
-                  data: { help: this }
+                  data: { type: 'wms', mainContext: this }
                 });
                 dialog.onClose.subscribe(res => {
-                  if (res !== undefined) {
-                    loadModules(['esri/layers/WMSLayer']).then(([WMSLayer]) => {
-                      this.makingWork = true;
-                      (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-wms');
-                      const wms = new WMSLayer({
-                        url: res
-                      });
-                      let count = 1;
-                      this.map.layers.map(layer => { layer.type === 'wms' ? count++ : null });
-                      wms.title = 'WMS ' + count.toString() + wms.title;
-                      this.map.add(wms);
-                    });
-                  }
+                  (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-wms');
                 });
               }
             }
@@ -379,22 +346,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '50%',
                   baseZIndex: 100,
                   header: 'Cargar servicio GeoJSON',
-                  data: { help: this }
+                  data: { type: 'json', mainContext: this }
                 });
                 dialog.onClose.subscribe(res => {
-                  if (res !== undefined) {
-                    loadModules(['esri/layers/GeoJSONLayer']).then(([GeoJSONLayer]) => {
-                      this.makingWork = true;
-                      (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-geojson');
-                      const geo = new GeoJSONLayer({
-                        url: res
-                      });
-                      let count = 1;
-                      this.map.layers.map(layer => { layer.type === 'geojson' ? count++ : null });
-                      geo.title = 'S-JSON ' + count.toString() + geo.title;
-                      this.map.add(geo);
-                    });
-                  }
+                  (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-geojson');
                 });
               }
             }
@@ -409,22 +364,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   width: '50%',
                   baseZIndex: 100,
                   header: 'Cargar servicio CSV',
-                  data: { help: this }
+                  data: { type: 'csv', mainContext: this }
                 });
                 dialog.onClose.subscribe(res => {
-                  if (res !== undefined) {
-                    loadModules(['esri/layers/CSVLayer']).then(([CSVLayer]) => {
-                      this.makingWork = true;
-                      (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-csv');
-                      const csv = new CSVLayer({
-                        url: res
-                      });
-                      let count = 1;
-                      this.map.layers.map(layer => { layer.type === 'csv' ? count++ : null });
-                      csv.title = 'S-CSV ' + count.toString() + csv.title;
-                      this.map.add(csv);
-                    });
-                  }
+                  (window as any).ga('send', 'event', 'FORM', 'submit', 'services-form-csv');
                 });
               }
             }
@@ -2489,34 +2432,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.extractShape();
   }
 
-  public nextLayer(): void {
-    this.makingWork = true;
-    let index = this.map.layers.items.indexOf(this.layerSelected);
-    if (index >= this.map.layers.items.length - 1) {
-      index = 0;
-    } else {
-      index++;
-    }
-    this.layerSelected = this.map.layers.items[index];
-    this.featureDptos = null;
-    this.columnsTable = null;
-    this.getFeaturesLayer(this.layerSelected);
-  }
-
-  public previousLayer(): void {
-    this.makingWork = true;
-    let index = this.map.layers.items.indexOf(this.layerSelected);
-    if (index === 0) {
-      index = this.map.layers.items.length - 1;
-    } else {
-      index--;
-    }
-    this.layerSelected = this.map.layers.items[index];
-    this.featureDptos = null;
-    this.columnsTable = null;
-    this.getFeaturesLayer(this.layerSelected);
-  }
-
   /**
    * Método que se ejecuta cuando un elemento de la tabla de atributos es deseleccionado
    * @param event -> Evento que contiene el dato deseleccionado
@@ -2891,5 +2806,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   removePoint(point: any): void {
     this.view.graphics.remove(point);
     document.getElementsByClassName('esri-view-root')[0].removeEventListener('click', (e: Event) => { this.removePoint(point) });
+  }
+
+  public openDialogMaintenance(): void {
+    this.dialogService.open(DialogMaintenanceComponent, {
+      width: '50%',
+      height: 'auto',
+      baseZIndex: 2000,
+      showHeader: false
+    });
   }
 }

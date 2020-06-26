@@ -39,8 +39,9 @@ export class DialogFileComponent implements OnInit {
           data: this.valueCoordenate,
           form: document.getElementById('uploadForm')
         }); */
-        let form = document.getElementById('uploadForm') as any;
-        this.importCsv.uploadFileCsv(form.elements[0].files, this.valueCoordenate, this.mainContext.urlGeometryService, this.mainContext.map, this.mainContext.view, this.mainContext);
+        const form = document.getElementById('uploadForm') as any;
+        this.importCsv.uploadFileCsv(form.elements[0].files, this.valueCoordenate, this.mainContext.urlGeometryService,
+          this.mainContext.map, this.mainContext.view, this.mainContext);
         this.dialogRef.close();
       } else if (fileName.indexOf('.json') !== -1) {
         this.processJson(event.target.elements[0].files[0]);
@@ -93,7 +94,11 @@ export class DialogFileComponent implements OnInit {
     }, (err) => {
       this.mainContext.makingWork = false;
       console.error(err);
-      this.mainContext.messageService.add({ summary: 'Error de carga', detail: 'No se pudo realizar la petición de carga de capa', severity: 'error' });
+      this.mainContext.messageService.add({
+        summary: 'Error de carga',
+        detail: 'No se pudo realizar la petición de carga de capa',
+        severity: 'error'
+      });
     });
   }
 
@@ -106,7 +111,7 @@ export class DialogFileComponent implements OnInit {
       await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/layers/support/Field', 'esri/renderers/SimpleRenderer']);
     let sourceGraphics = [];
     const layers = featureCollection.data.featureCollection.layers.map((layer) => {
-      let quantityType: number = 1;
+      let quantityType = 1;
       this.mainContext.map.layers.items.forEach((lay) => {
         if (lay.title.startsWith('Shape')) {
           quantityType += 1;
@@ -148,7 +153,7 @@ export class DialogFileComponent implements OnInit {
     const [FeatureLayer, PopupTemplate, Graphic, Field, SimpleRenderer] =
       await loadModules([
         'esri/layers/FeatureLayer', 'esri/PopupTemplate', 'esri/Graphic', 'esri/layers/support/Field', 'esri/renderers/SimpleRenderer']);
-    let quantityType: number = 1;
+    let quantityType = 1;
     this.mainContext.map.layers.items.forEach((lay) => {
       if (lay.title.startsWith('GPX')) {
         quantityType += 1;
@@ -204,7 +209,7 @@ export class DialogFileComponent implements OnInit {
     const graphics = featureCollection.features.map((feature) => {
       return Graphic.fromJSON(geojsonToArcGIS(feature));
     });
-    let quantityType: number = 1;
+    let quantityType = 1;
     this.mainContext.map.layers.items.forEach((lay) => {
       if (lay.title.startsWith('GeoJSON')) {
         quantityType += 1;
