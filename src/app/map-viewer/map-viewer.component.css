@@ -285,6 +285,10 @@ p-sidebar {
   font-style: italic !important;
 }
 
+::ng-deep .esri-feature {
+  height: 100px !important;
+  max-height: 100px !important;
+}
 
 ::ng-deep .confirm {
   color: red !important;
