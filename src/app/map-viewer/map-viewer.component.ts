@@ -26,9 +26,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   view: any = {
     ready: false
   };
-  @ViewChild('dt', {static: false}) attrTable: Table;
+  @ViewChild('dt', { static: false }) attrTable: Table;
   filterAttrTable: any;
-  @ViewChild('attr', {static: false}) attr: Dialog;
+  @ViewChild('attr', { static: false }) attr: Dialog;
   loaded = false;
   modalTable = false;
   minimizeMaximize = true;
@@ -648,7 +648,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.layerSelectedSelection = sel.value;
           this.layerSelected = layer;
         }
-        !layer.title.startsWith('Shape') ? this.optionsLayers.push(sel) : null;
+        !this.validateOptionsSimbologyChange(layer.title) ? this.optionsLayers.push(sel) : null;
       }
     });
     this.optionsLayers = this.optionsLayers.reverse();
@@ -1222,11 +1222,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 id: 'analisis'
               },
               {
-                title: 'Cambiar simbología',
-                className: 'esri-icon-edit',
-                id: 'simbologia'
-              },
-              {
                 title: 'Selección',
                 className: 'esri-icon-cursor',
                 id: 'seleccion'
@@ -1280,11 +1275,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 title: 'Tabla de Atributos',
                 className: 'esri-icon-table',
                 id: 'attr-table'
-              },
-              {
-                title: 'Cambiar simbología',
-                className: 'esri-icon-edit',
-                id: 'simbologia'
               },
               {
                 title: 'Selección',
@@ -1708,10 +1698,45 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     return n.toLocaleString('de-DE', { minimumFractionDigits: min, maximumFractionDigits: 4 });
   }
 
+  public buildOptionsToChangeSimbology(nameLayer: string): void {
+    this.layersOptionsList = [];
+    this.copyrightSGC = [];
+    this.copyrightIGAC = [];
+    this.optionsLayers = [];
+    this.layerSelectedSelection = null;
+    this.map.layers.items.forEach((layer) => {
+      if (layer.title !== null) {
+        layer.copyright = layer.copyright !== null && layer.copyright !== undefined ? layer.copyright : '';
+        const label = layer.copyright.includes('SGC') ? layer.title + '*' :
+          layer.copyright.includes('IGAC') ? layer.title + '**' : layer.title;
+        if (layer.copyright.includes('SGC')) {
+          this.copyrightSGC.push(layer.title);
+        } else if (layer.copyright.includes('IGAC')) {
+          this.copyrightIGAC.push(layer.title);
+        }
+        const sel: SelectItem = {
+          label,
+          value: layer.title
+        };
+        if (layer.title === nameLayer) {
+          this.layerSelectedSelection = sel.value;
+          this.layerSelected = layer;
+        }
+        this.validateOptionsSimbologyChange(layer.title) ? this.optionsLayers.push(sel) : null;
+      }
+    });
+    this.optionsLayers = this.optionsLayers.reverse();
+  }
+
+  public validateOptionsSimbologyChange(nameLayer: string): boolean {
+    return nameLayer.startsWith('Shape') || nameLayer.startsWith('GPX') || nameLayer.startsWith('CSV')
+      || nameLayer.startsWith('GeoJSON');
+  }
+
   public symbologyChange(): void {
     const title = this.layerSelected != null && this.layerSelected !== undefined ? this.layerSelected.title :
       this.layerList.selectedItems.items[0] !== undefined ? this.layerList.selectedItems.items[0].title : '';
-    this.buildOptionsLayersValue(title);
+    this.buildOptionsToChangeSimbology(title);
     const dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
       width: '400px',
       header: `Cambio de Simbología ${title}`,
