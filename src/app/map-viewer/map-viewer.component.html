@@ -1,10 +1,10 @@
 <p-toast></p-toast>
 <p-confirmDialog #cd header="Confirmar" icon="pi pi-exclamation-triangle confirm">
   <p-footer>
-    <button style="width: 48%; float: left;" pButton type="button" icon="pi pi-check" label="Si" class="ui-button-rounded ui-button-success"
-      (click)="cd.accept()"></button>
-    <button style="width: 48%; float: left; margin-left: 1%;" pButton type="button" icon="pi pi-times" label="No" class="ui-button-rounded ui-button-warning"
-      (click)="cd.reject()"></button>
+    <button style="width: 48%; float: left;" pButton type="button" icon="pi pi-check" label="Si"
+      class="ui-button-rounded ui-button-success" (click)="cd.accept()"></button>
+    <button style="width: 48%; float: left; margin-left: 1%;" pButton type="button" icon="pi pi-times" label="No"
+      class="ui-button-rounded ui-button-warning" (click)="cd.reject()"></button>
   </p-footer>
 </p-confirmDialog>
 <!-- Menú con Accordion -->
@@ -287,17 +287,15 @@
     <p-progressBar mode="indeterminate" *ngIf="makingSearch" [style]="{'height': '6px'}">
     </p-progressBar>
     <br>
-    <button pButton icon="pi pi-plus" class="ui-button-rounded ui-button-success" style="float: left;"
-      label="Añadir Criterio" (click)="addFormField()"></button>
-    <button pButton icon="pi pi-times" class="ui-button-rounded ui-button-warning" style="float: right;"
-      label="Limpiar Filtros" (click)="cleanFilters()"></button>
+    <button pButton icon="pi pi-plus" class="ui-button-success" label="Añadir Criterio"
+      (click)="addFormField()"></button>
     <div id="contentField">
-      <div *ngFor="let i of arrQuantity(quantityFields).fill(1); let p = index" style="margin-top: 20px; clear: both;">
+      <div *ngFor="let i of arrQuantity(quantityFields).fill(1); let p = index" style="margin-top: 10px; clear: both;">
         <select name="selectField" style="width: 110px; float: left; margin-top: 3px;" class="esri-select"
           [(ngModel)]="objectFilter[p]">
           <option *ngFor="let item of columnsTable; let i = index" [ngValue]="item.name">{{item.alias}}</option>
         </select>
-        <select name="selectType" style="width: 110px; float: left; margin-left: 5px; margin-top: 3px;"
+        <select name="selectType" style="width: 150px; float: left; margin-left: 5px; margin-top: 3px;"
           *ngIf="view.ready" [(ngModel)]="filterS[p]" class="esri-select">
           <option value='' disabled>Seleccione un matcher</option>
           <option *ngIf="objectFilter[p] !== undefined" value="contains">contiene</option>
@@ -325,12 +323,20 @@
           <option value="AND" selected>Y</option>
           <option value="OR">O</option>
         </select>
-        <button pButton icon="pi pi-times" style="margin-left: 5px;" class="ui-button-rounded ui-button-danger"
+        <button pButton icon="pi pi-times" style="margin-left: 5px;" class="ui-button-danger"
           (click)="removeFormField(p)"></button>
       </div>
     </div>
-    <button pButton *ngIf="quantityFields > 0" style="margin-left: 43%;" icon="pi pi-filter" label="Filtrar"
-      (click)="getFilterParams()" class="ui-button-rounded"></button>
+    <div style="display: grid; grid-template-columns: 50% 50%; margin-top: 10px;">
+      <div>
+        <button pButton icon="pi pi-times" class="ui-button-warning" label="Limpiar Filtros"
+          (click)="cleanFilters()"></button>
+      </div>
+      <div align="right">
+        <button pButton [disabled]="quantityFields === 0" icon="pi pi-filter" label="Filtrar"
+          (click)="getFilterParams()"></button>
+      </div>
+    </div>
   </div>
 </p-dialog>
 <!-- Fin del modal de tabla de atributos -->
