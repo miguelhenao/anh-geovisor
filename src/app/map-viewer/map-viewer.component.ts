@@ -207,22 +207,23 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
       _this.indexColor++;
     }, 10);
-    if (localStorage.getItem('agreeTerms') === undefined || localStorage.getItem('agreeTerms') === null) {
-      const dialogTerms = this.dialogService.open(DialogTerminosComponent, {
-        width: '80%',
-        height: '80%',
-        baseZIndex: 2000,
-        showHeader: false
-      });
 
-      dialogTerms.onClose.subscribe(result => {
-        setTimeout(() => {
-          this.openDialogMaintenance();
-        }, 500);
-      });
-    } else {
-      this.openDialogMaintenance();
-    }
+    const dialogMaintenance = this.dialogService.open(DialogMaintenanceComponent, {
+      width: '50%',
+      height: 'auto',
+      baseZIndex: 2000,
+      showHeader: false
+    });
+    dialogMaintenance.onClose.subscribe(result => {
+      setTimeout(() => {
+        this.dialogService.open(DialogTerminosComponent, {
+          width: '80%',
+          height: '80%',
+          baseZIndex: 2000,
+          showHeader: false
+        });
+      }, 500);
+    });
     this.menu = [
       {
         label: 'Cargar capas',
@@ -2806,14 +2807,5 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   removePoint(point: any): void {
     this.view.graphics.remove(point);
     document.getElementsByClassName('esri-view-root')[0].removeEventListener('click', (e: Event) => { this.removePoint(point) });
-  }
-
-  public openDialogMaintenance(): void {
-    this.dialogService.open(DialogMaintenanceComponent, {
-      width: '50%',
-      height: 'auto',
-      baseZIndex: 2000,
-      showHeader: false
-    });
   }
 }
