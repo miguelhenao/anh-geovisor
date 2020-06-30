@@ -1569,9 +1569,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       this.sketchBuffer = sketchVMBuffer;
       const scaleBar = new ScaleBar({
-        style: 'line',
+        style: 'ruler',
         view: this.view,
-        unit: 'dual'
+        unit: 'metric'
       });
       this.view.ui.add(scaleBar, {
         position: 'bottom-left',
