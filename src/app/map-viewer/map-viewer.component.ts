@@ -1093,6 +1093,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.identifyParameters.mapExtent = this.view.extent;
           document.getElementsByClassName('esri-view-root')[0].classList.remove('help-cursor');
           document.getElementsByClassName('esri-view-root')[0].classList.add('wait-cursor');
+          this.identifyParameters.layerIds = this.listForIdentifyParameters();
           this.identifyTask.execute(this.identifyParameters).then((success) => {
             const results = success.results;
             const features = [];
@@ -2807,5 +2808,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   removePoint(point: any): void {
     this.view.graphics.remove(point);
     document.getElementsByClassName('esri-view-root')[0].removeEventListener('click', (e: Event) => { this.removePoint(point) });
+  }
+
+  listForIdentifyParameters(): Array<number> {
+    const layers = [];
+    this.map.layers.map(layer => {
+      this.isValidOption(layer.title) && layer.visible ? layers.push(layer.layerId) : null;
+    });
+    return layers;
   }
 }
