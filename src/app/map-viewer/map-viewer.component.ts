@@ -1333,7 +1333,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             geometry: point,
             symbol: {
               type: 'simple-marker',
-              color: 'black'
+              color: 'cyan'
             }
           });
           this.view.graphics.add(pointSearch);
@@ -2346,7 +2346,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                     geometry: point,
                     symbol: {
                       type: 'simple-marker',
-                      color: 'black'
+                      color: 'cyan'
                     }
                   });
                   this.view.graphics.add(graphicPozo);
