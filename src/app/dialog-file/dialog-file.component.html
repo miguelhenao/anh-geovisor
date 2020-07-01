@@ -1,8 +1,13 @@
+<div *ngIf="makingWork">
+  <p-progressBar mode="indeterminate" [style]="{'height': '6px', 'margin-bottom': '5px', 'margin-left': '-72px'}">
+  </p-progressBar>
+</div>
 <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
   (click)="requestHelp('h-importar')" icon="pi pi-question"></button>
 <form id="uploadForm" method="post" enctype="multipart/form-data" (ngSubmit)="onUpload($event)">
   <input type="file" name="file" id="upload-file-input" (change)="validateFormat($event)" /> &nbsp;
-  <button type="submit" [disabled]="type === '.csv' && valueCoordenate === undefined || formatError">Cargar</button>
+  <button *ngIf="!makingWork" type="submit" [disabled]="type === '.csv' && valueCoordenate === undefined || formatError">Cargar</button>
+  <button *ngIf="makingWork" disabled>Cargando...</button>
 </form>
 <div class="ui-g" style="width:300px;margin-bottom:10px" *ngIf="type === '.csv'">
   <div class="ui-g-12">

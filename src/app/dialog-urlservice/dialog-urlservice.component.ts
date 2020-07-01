@@ -13,6 +13,7 @@ export class DialogUrlServiceComponent implements OnInit {
   serviceForm: FormGroup;
   mainContext: any;
   type: string;
+  makingWork = false;
 
   constructor(private formBuilder: FormBuilder, private dialogRef: DynamicDialogRef, private config: DynamicDialogConfig) {
     this.mainContext = config.data.mainContext;
@@ -35,9 +36,11 @@ export class DialogUrlServiceComponent implements OnInit {
 
   public close(): void {
     this.dialogRef.close();
+    this.makingWork = false;
   }
 
   public sendUrl(): void {
+    this.makingWork = true;
     let count;
     loadModules(['esri/layers/KMLLayer', 'esri/layers/WMSLayer', 'esri/layers/GeoJSONLayer', 'esri/layers/CSVLayer']).then(
       ([KMLLayer, WMSLayer, GeoJSONLayer, CSVLayer]) => {

@@ -306,17 +306,13 @@
           <option value="equals">igual</option>
           <option value="notEquals">no igual a</option>
           <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'" value="lt">
-            menor que
-          </option>
-          <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'" value="lte">menor
-            o
-            igual que</option>
+            menor que </option>
+          <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'" value="lte">
+            menor o igual que</option>
           <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'" value="gt">
-            mayor que
-          </option>
-          <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'" value="gte">mayor
-            o
-            igual que</option>
+            mayor que </option>
+          <option *ngIf="objectFilter[p] !== undefined && getTypeObject(objectFilter[p]) !== 'string'" value="gte">
+            mayor o igual que</option>
         </select>
         <input class="esri-input" [(ngModel)]="values[p]" type="text"
           style="width: 110px; float: left; margin-left: 5px; margin-top: 3px;">
@@ -458,7 +454,7 @@
 
 <!-- Componente Limpieza profunda -->
 <p-dialog header="Limpiar" [(visible)]="modalClear" [resizable]="false" [draggable]="false" [modal]="true">
-  <div *ngIf="modalClear" style="width: 400px;">
+  <div *ngIf="modalClear" style="max-width: 500px;">
     <app-dialog-clear [_this]="this"></app-dialog-clear>
   </div>
 </p-dialog>

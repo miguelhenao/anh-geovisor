@@ -9,8 +9,9 @@
   grid-template-rows: auto auto auto auto;
   grid-gap: 5px;
   margin-bottom: 5px;
+  max-width: 450px !important;
 }
 
 ::ng-deep .ui-multiselect {
-  width: 50%;
+  width: 90%;
 }
