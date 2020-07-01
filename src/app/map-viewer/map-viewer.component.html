@@ -281,9 +281,9 @@
     </p-table>
   </div>
 </p-dialog>
-<p-dialog header="Búsqueda" [(visible)]="modalFilter" [style]="{width: '500px'}" [modal]="true"
-  (onHide)="hideAdvancedSearch($event)" [baseZIndex]=20 [resizable]="false" [draggable]="true" [focusOnShow]="false">
-  <div *ngIf="modalFilter" style="max-height: 250px; overflow-y: scroll;">
+<p-dialog header="Búsqueda" [(visible)]="modalFilter" [style]="{width: '500px'}" (onHide)="hideAdvancedSearch($event)"
+  [baseZIndex]=20 [resizable]="false" [draggable]="true" [focusOnShow]="false">
+  <div *ngIf="modalFilter" class="advancedSearch" style="max-height: 250px; overflow-y: scroll;">
     <p-progressBar mode="indeterminate" *ngIf="makingSearch" [style]="{'height': '6px'}">
     </p-progressBar>
     <button pButton icon="pi pi-plus" class="ui-button-success" label="Añadir Criterio"
@@ -295,7 +295,8 @@
       <div *ngFor="let i of arrQuantity(quantityFields).fill(1); let p = index" style="margin-top: 10px; clear: both;">
         <select name="selectField" style="width: 110px; float: left; margin-top: 3px;" class="esri-select"
           [(ngModel)]="objectFilter[p]">
-          <option *ngFor="let item of columnsTable; let i = index" [ngValue]="item.name">{{item.alias}}</option>
+          <option *ngFor="let item of columnsTable; let i = index" [ngValue]="item.name">
+            {{item.alias}}</option>
         </select>
         <select name="selectType" style="width: 150px; float: left; margin-left: 5px; margin-top: 3px;"
           *ngIf="view.ready" [(ngModel)]="filterS[p]" class="esri-select">
@@ -321,8 +322,8 @@
           <option value="AND" selected>Y</option>
           <option value="OR">O</option>
         </select>
-        <button pButton icon="pi pi-times" style="margin-left: 5px;" class="ui-button-danger"
-          (click)="removeFormField(p)"></button>
+        <button pButton type="button" icon="pi pi-times" style="margin-left: 5px;"
+          class="ui-button-rounded ui-button-danger" (click)="removeFormField(p)"></button>
       </div>
     </div>
     <div style="display: grid; grid-template-columns: 50% 50%; margin-top: 10px;" *ngIf="quantityFields > 0">
