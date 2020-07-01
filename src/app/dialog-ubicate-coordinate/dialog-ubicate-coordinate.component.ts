@@ -149,6 +149,7 @@ export class DialogUbicateCoordinateComponent implements OnInit {
             }
             const coor = x + this.lathem + ', ' + y + this.lonhem;
             coordinateVM.reverseConvert(coor, format).then((e) => {
+              this.clearGraphics();
               this._this.view.graphics.add(new Graphic({
                 symbol,
                 geometry: e

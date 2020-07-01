@@ -74,7 +74,7 @@
 
 <!-- Modal de extracción de datos -->
 <p-dialog [(visible)]="modalExtract" [resizable]="false" (onHide)="onHideDialogExtract()" [focusOnShow]="false"
-  [style]="{'width': '390px'}">
+  [style]="{'width': '390px'}" position="top">
   <p-header>
     {{headerExtract}}
   </p-header>
@@ -119,7 +119,7 @@
 
 <!-- Modal de análisis de departamento -->
 <p-dialog header="Análisis de Cobertura por Departamento" [(visible)]="modalAnalysis" [resizable]="false"
-  (onHide)="onHideDialogAnalisis()" [focusOnShow]="false" [style]="{'width': '390px'}">
+  (onHide)="onHideDialogAnalisis()" [focusOnShow]="false" [style]="{'width': '390px'}" position="top">
   <div *ngIf="modalAnalysis">
     <app-dialog-analysis [_this]="this"></app-dialog-analysis>
   </div>
@@ -127,7 +127,7 @@
 <!-- Fin del modal de análisis de cobertura -->
 
 <!-- Modal de zona de influencia -->
-<p-dialog header="Zona de Influencia (Buffer)" [(visible)]="modalBuffer" [resizable]="false"
+<p-dialog header="Zona de Influencia (Buffer)" [(visible)]="modalBuffer" [resizable]="false" position="topright"
   (onHide)="onHideDialogBuffer()" [style]="{'width': '400px'}" [focusOnShow]="false" [focusOnShow]="false">
   <div *ngIf="modalBuffer">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
@@ -173,7 +173,7 @@
 
 <!-- Modal de herramientas de medicion -->
 <p-dialog header="Herramientas de Medición" [(visible)]="modalMeasurement" [resizable]="false"
-  (onHide)="onHideDialogMedicion()" [positionTop]="10" [positionLeft]="200" [focusOnShow]="false">
+  (onHide)="onHideDialogMedicion()" [focusOnShow]="false" position="top">
   <div *ngIf="modalMeasurement">
     <app-dialog-measurement [_this]="this"></app-dialog-measurement>
   </div>
@@ -286,19 +286,19 @@
   <div *ngIf="modalFilter" class="advancedSearch" style="max-height: 250px; overflow-y: scroll;">
     <p-progressBar mode="indeterminate" *ngIf="makingSearch" [style]="{'height': '6px'}">
     </p-progressBar>
-    <br>
-    <button pButton icon="pi pi-plus" class="ui-button-rounded ui-button-success" style="float: left;"
-      label="Añadir Criterio" (click)="addFormField()"></button>
-    <button pButton icon="pi pi-times" class="ui-button-rounded ui-button-warning" style="float: right;"
-      label="Limpiar Filtros" (click)="cleanFilters()"></button>
+    <button pButton icon="pi pi-plus" class="ui-button-success" label="Añadir Criterio"
+      (click)="addFormField()"></button>
+    <div *ngIf="quantityFields === 0">
+      <p>Añade un criterio para realizar una búsqueda.</p>
+    </div>
     <div id="contentField">
-      <div *ngFor="let i of arrQuantity(quantityFields).fill(1); let p = index" style="margin-top: 20px; clear: both;">
+      <div *ngFor="let i of arrQuantity(quantityFields).fill(1); let p = index" style="margin-top: 10px; clear: both;">
         <select name="selectField" style="width: 110px; float: left; margin-top: 3px;" class="esri-select"
           [(ngModel)]="objectFilter[p]">
           <option *ngFor="let item of columnsTable; let i = index" [ngValue]="item.name">
             {{item.alias}}</option>
         </select>
-        <select name="selectType" style="width: 110px; float: left; margin-left: 5px; margin-top: 3px;"
+        <select name="selectType" style="width: 150px; float: left; margin-left: 5px; margin-top: 3px;"
           *ngIf="view.ready" [(ngModel)]="filterS[p]" class="esri-select">
           <option value='' disabled>Seleccione un matcher</option>
           <option *ngIf="objectFilter[p] !== undefined" value="contains">contiene</option>
@@ -330,8 +330,16 @@
           class="ui-button-rounded ui-button-danger" (click)="removeFormField(p)"></button>
       </div>
     </div>
-    <button pButton *ngIf="quantityFields > 0" style="margin-left: 43%;" icon="pi pi-filter" label="Filtrar"
-      (click)="getFilterParams()" class="ui-button-rounded"></button>
+    <div style="display: grid; grid-template-columns: 50% 50%; margin-top: 10px;" *ngIf="quantityFields > 0">
+      <div>
+        <button pButton icon="pi pi-times" class="ui-button-warning" label="Limpiar Filtros"
+          (click)="cleanFilters()"></button>
+      </div>
+      <div align="right">
+        <button pButton [disabled]="quantityFields === 0" icon="pi pi-filter" label="Filtrar"
+          (click)="getFilterParams()"></button>
+      </div>
+    </div>
   </div>
 </p-dialog>
 <!-- Fin del modal de tabla de atributos -->
@@ -386,7 +394,7 @@
 
 <!-- Modal Herramientas de selección -->
 <p-dialog header="Herramientas de Selección" [(visible)]="modalSelection" [resizable]="false"
-  (onHide)="onHideDialogSelection()" [focusOnShow]="false" [style]="{'width': '400px'}">
+  (onHide)="onHideDialogSelection()" [focusOnShow]="false" [style]="{'width': '400px'}" position="top">
   <div *ngIf="modalSelection">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
       (click)="requestHelp('h-seleccion')" icon="pi pi-question"></button>
@@ -420,7 +428,7 @@
 
 <!-- Componente ubicar coordenada -->
 <p-dialog header="Ubicar coordenada" [(visible)]="modalCoordinate" [resizable]="false" [focusOnShow]="false"
-  [style]="{'width': '411px'}" (onHide)="onHideDialogCoordinate()">
+  [style]="{'width': '411px'}" (onHide)="onHideDialogCoordinate()" position="topright">
   <div *ngIf="modalCoordinate">
     <app-dialog-ubicate-coordinate [_this]="this"></app-dialog-ubicate-coordinate>
   </div>
@@ -448,3 +456,11 @@
   </div>
 </div>
 <!-- Fin del tierra slider del mapa -->
+
+<!-- Componente Limpieza profunda -->
+<p-dialog header="Limpiar" [(visible)]="modalClear" [resizable]="false" [draggable]="false" [modal]="true">
+  <div *ngIf="modalClear" style="width: 400px;">
+    <app-dialog-clear [_this]="this"></app-dialog-clear>
+  </div>
+</p-dialog>
+<!-- Fin componente -->

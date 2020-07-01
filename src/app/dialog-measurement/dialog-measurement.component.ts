@@ -174,7 +174,7 @@ export class DialogMeasurementComponent implements OnInit, OnDestroy {
   }
 
   public planasXY(pt): void {
-    let coords = ''
+    let coords = '';
     loadModules(['esri/tasks/GeometryService', 'esri/geometry/SpatialReference', 'esri/tasks/support/ProjectParameters'])
       .then(([GeometryService, SpatialReference, ProjectParameters]) => {
         const geomSvc = new GeometryService(this._this.urlGeometryService);

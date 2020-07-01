@@ -36,6 +36,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   modalAbout = false;
   modalGuide = false;
   modalExtract = false;
+  modalClear = false;
   layersOptionsList: Array<any> = [];
   layerExtract = false;
   sourceLayer: Array<any> = [];
@@ -207,22 +208,27 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
       _this.indexColor++;
     }, 10);
-    if (localStorage.getItem('agreeTerms') === undefined || localStorage.getItem('agreeTerms') === null) {
-      const dialogTerms = this.dialogService.open(DialogTerminosComponent, {
-        width: '80%',
-        height: '80%',
-        baseZIndex: 2000,
-        showHeader: false
-      });
 
-      dialogTerms.onClose.subscribe(result => {
-        setTimeout(() => {
-          this.openDialogMaintenance();
-        }, 500);
-      });
-    } else {
-      this.openDialogMaintenance();
-    }
+    const dialogMaintenance = this.dialogService.open(DialogMaintenanceComponent, {
+      width: '50%',
+      height: 'auto',
+      baseZIndex: 2000,
+      showHeader: false,
+      closable: false,
+      closeOnEscape: false
+    });
+    dialogMaintenance.onClose.subscribe(result => {
+      setTimeout(() => {
+        this.dialogService.open(DialogTerminosComponent, {
+          width: '80%',
+          height: '80%',
+          baseZIndex: 2000,
+          showHeader: false,
+          closable: false,
+          closeOnEscape: false
+        });
+      }, 500);
+    });
     this.menu = [
       {
         label: 'Cargar capas',
@@ -474,6 +480,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             }
           }
         ]
+      },
+      {
+        label: 'Limpiar todo',
+        icon: 'icofont-ui-delete',
+        command: () => {
+          // this.visibleModal(false, false, false, false, false, false, false, false, false, false);
+          this.modalClear = true;
+        }
       },
       {
         icon: 'esri-icon-collapse',
@@ -1092,6 +1106,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.identifyParameters.mapExtent = this.view.extent;
           document.getElementsByClassName('esri-view-root')[0].classList.remove('help-cursor');
           document.getElementsByClassName('esri-view-root')[0].classList.add('wait-cursor');
+          this.identifyParameters.layerIds = this.listForIdentifyParameters();
           this.identifyTask.execute(this.identifyParameters).then((success) => {
             const results = success.results;
             const features = [];
@@ -1331,7 +1346,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             geometry: point,
             symbol: {
               type: 'simple-marker',
-              color: 'black'
+              color: 'cyan'
             }
           });
           this.view.graphics.add(pointSearch);
@@ -1568,9 +1583,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       this.sketchBuffer = sketchVMBuffer;
       const scaleBar = new ScaleBar({
-        style: 'line',
+        style: 'ruler',
         view: this.view,
-        unit: 'dual'
+        unit: 'metric'
       });
       this.view.ui.add(scaleBar, {
         position: 'bottom-left',
@@ -2344,7 +2359,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                     geometry: point,
                     symbol: {
                       type: 'simple-marker',
-                      color: 'black'
+                      color: 'cyan'
                     }
                   });
                   this.view.graphics.add(graphicPozo);
@@ -2827,12 +2842,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     document.getElementsByClassName('esri-view-root')[0].removeEventListener('click', (e: Event) => { this.removePoint(point) });
   }
 
-  public openDialogMaintenance(): void {
-    this.dialogService.open(DialogMaintenanceComponent, {
-      width: '50%',
-      height: 'auto',
-      baseZIndex: 2000,
-      showHeader: false
+  listForIdentifyParameters(): Array<number> {
+    const layers = [];
+    this.map.layers.map(layer => {
+      this.isValidOption(layer.title) && layer.visible ? layers.push(layer.layerId) : null;
     });
+    return layers;
   }
 }
