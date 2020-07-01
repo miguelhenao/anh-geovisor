@@ -1,6 +1,6 @@
 <div>
   <p>Seleccione los elementos a eliminar:</p>
-  <form [formGroup]="formClear" (ngSubmit)="clear()">
+  <form [formGroup]="formClear">
     <div class="content">
       <div>
         <p>Capas: </p>
@@ -14,7 +14,8 @@
         <p-checkbox binary="true" label="Selección tabla de atributos" formControlName="selection"></p-checkbox>
       </div>
       <div align="right">
-        <button pButton label="Limpiar" type="submit"></button>
+        <button pButton label="Limpiar" (click)="clear(false)"></button>&nbsp;
+        <button pButton label="Limpiar todo" (click)="clear(true)"></button>
       </div>
     </div>
   </form>
@@ -22,4 +23,11 @@
   <p-message [escape]="true" severity="info" id="info"
     text="Desde esta ventana podrá elegir los elementos a borrar como selecciones, gráficos y capas cargadas.">
   </p-message>
+
+  <div class="message">
+
+    <p><i class="pi pi-info-circle"></i><span><b>Capas:</b> Son todas las capas cargadas por el usuario.</span> </p>
+    <p><span><b>Gráficos:</b> Son todos los dibujos producto de acciones del usuario como selección, ubicación de coordenada, extracción.</span></p>
+    <p><span><b>Selección tabla de atributos:</b> Son las entidades seleccionadas en la tabla de atributos.</span></p>
+  </div>
 </div>

@@ -27,13 +27,20 @@ export class DialogClearComponent implements OnInit {
     });
   }
 
-  clear() {
-    this.formClear.value.layers.forEach(element => {
-      const layer = this._this.map.layers.find(x => x.title === element);
-      this._this.map.layers.remove(layer);
-    });
-    this.formClear.value.graphics ? this._this.clearGraphics() : null;
-    this.formClear.value.selection ? this._this.featuresSelected = [] : null;
+  clear(all: boolean) {
+    if (!all) {
+      this.formClear.value.layers.forEach(element => {
+        const layer = this._this.map.layers.find(x => x.title === element);
+        this._this.map.layers.remove(layer);
+      });
+    } else {
+      this.layers.forEach(element => {
+        const layer = this._this.map.layers.find(x => x.title === element.value);
+        this._this.map.layers.remove(layer);
+      });
+    }
+    this.formClear.value.graphics || all ? this._this.clearGraphics() : null;
+    this.formClear.value.selection || all ? this._this.featuresSelected = [] : null;
     this._this.messageService.add({
       summary: 'Mapa',
       detail: `Los elementos seleccionados han sido removidos exitosamente`,
