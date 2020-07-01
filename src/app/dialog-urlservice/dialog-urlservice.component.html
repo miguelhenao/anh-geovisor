@@ -1,3 +1,7 @@
+<div *ngIf="makingWork">
+  <p-progressBar mode="indeterminate" [style]="{'height': '6px', 'margin-bottom': '5px', 'margin-left': '-72px'}">
+  </p-progressBar>
+</div>
 <form [formGroup]="serviceForm" (ngSubmit)="sendUrl()">
   <div class="ui-g ui-fluid">
     <div class="ui-g-12 ui-md-12">
@@ -16,7 +20,9 @@
   <div class="ui-g ui-fluid">
     <div class="ui-g-12 ui-md-6">
       <button pButton type="submit" [disabled]="!serviceForm.valid" icon="pi pi-check" iconPos="left"
-        class="ui-button-rounded ui-button-success" label="Guardar"></button>
+        class="ui-button-rounded ui-button-success" label="Cargar" *ngIf="!makingWork"></button>
+      <button pButton disabled icon="pi pi-check" iconPos="left" *ngIf="makingWork"
+        class="ui-button-rounded ui-button-success" label="Cargando"></button>
     </div>
     <div class="ui-g-12 ui-md-6">
       <button pButton type="button" (click)="close()" label="Cancelar" icon="pi pi-times"

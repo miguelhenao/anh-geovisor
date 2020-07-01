@@ -18,6 +18,7 @@ export class DialogFileComponent implements OnInit {
   extFile: string;
   valueCoordenate: string;
   formatError = false;
+  makingWork = false;
   constructor(private dialogRef: DynamicDialogRef, private config: DynamicDialogConfig) {
     this.type = '.' + config.data.type;
     this.mainContext = config.data.mainContext;
@@ -33,16 +34,14 @@ export class DialogFileComponent implements OnInit {
 
   onUpload(event) {
     if (event.target.elements[0].files.length > 0) {
+      this.makingWork = true;
       const fileName = event.target.elements[0].files[0].name;
       if (fileName.indexOf('.csv') !== -1) {
-        /* this.dialogRef.close({
-          data: this.valueCoordenate,
-          form: document.getElementById('uploadForm')
-        }); */
         const form = document.getElementById('uploadForm') as any;
         this.importCsv.uploadFileCsv(form.elements[0].files, this.valueCoordenate, this.mainContext.urlGeometryService,
           this.mainContext.map, this.mainContext.view, this.mainContext);
         this.dialogRef.close();
+        this.makingWork = false;
       } else if (fileName.indexOf('.json') !== -1) {
         this.processJson(event.target.elements[0].files[0]);
       } else if (fileName.indexOf('.zip') !== -1 || fileName.indexOf('.gpx') !== -1) {
@@ -91,6 +90,7 @@ export class DialogFileComponent implements OnInit {
         this.addGpxToMap(response.data.featureCollection);
       }
       this.dialogRef.close();
+      this.makingWork = false;
     }, (err) => {
       this.mainContext.makingWork = false;
       console.error(err);
@@ -231,6 +231,7 @@ export class DialogFileComponent implements OnInit {
     this.mainContext.map.add(featureLayer);
     this.mainContext.view.goTo(sourceGraphics);
     this.dialogRef.close();
+    this.makingWork = false;
   }
 }
 
