@@ -173,7 +173,7 @@
 
 <!-- Modal de herramientas de medicion -->
 <p-dialog header="Herramientas de Medición" [(visible)]="modalMeasurement" [resizable]="false"
-  (onHide)="onHideDialogMedicion()" [positionTop]="10" [positionLeft]="200" [focusOnShow]="false">
+  (onHide)="onHideDialogMedicion()" [focusOnShow]="false" position="left">
   <div *ngIf="modalMeasurement">
     <app-dialog-measurement [_this]="this"></app-dialog-measurement>
   </div>
@@ -286,9 +286,11 @@
   <div *ngIf="modalFilter" style="max-height: 250px; overflow-y: scroll;">
     <p-progressBar mode="indeterminate" *ngIf="makingSearch" [style]="{'height': '6px'}">
     </p-progressBar>
-    <br>
     <button pButton icon="pi pi-plus" class="ui-button-success" label="Añadir Criterio"
       (click)="addFormField()"></button>
+    <div *ngIf="quantityFields === 0">
+      <p>Añade un criterio para realizar una búsqueda.</p>
+    </div>
     <div id="contentField">
       <div *ngFor="let i of arrQuantity(quantityFields).fill(1); let p = index" style="margin-top: 10px; clear: both;">
         <select name="selectField" style="width: 110px; float: left; margin-top: 3px;" class="esri-select"
@@ -327,7 +329,7 @@
           (click)="removeFormField(p)"></button>
       </div>
     </div>
-    <div style="display: grid; grid-template-columns: 50% 50%; margin-top: 10px;">
+    <div style="display: grid; grid-template-columns: 50% 50%; margin-top: 10px;" *ngIf="quantityFields > 0">
       <div>
         <button pButton icon="pi pi-times" class="ui-button-warning" label="Limpiar Filtros"
           (click)="cleanFilters()"></button>
@@ -425,7 +427,7 @@
 
 <!-- Componente ubicar coordenada -->
 <p-dialog header="Ubicar coordenada" [(visible)]="modalCoordinate" [resizable]="false" [focusOnShow]="false"
-  [style]="{'width': '411px'}" (onHide)="onHideDialogCoordinate()">
+  [style]="{'width': '411px'}" (onHide)="onHideDialogCoordinate()" position="left">
   <div *ngIf="modalCoordinate">
     <app-dialog-ubicate-coordinate [_this]="this"></app-dialog-ubicate-coordinate>
   </div>

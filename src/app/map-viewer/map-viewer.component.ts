@@ -212,7 +212,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       width: '50%',
       height: 'auto',
       baseZIndex: 2000,
-      showHeader: false
+      showHeader: false,
+      closable: false,
+      closeOnEscape: false
     });
     dialogMaintenance.onClose.subscribe(result => {
       setTimeout(() => {
@@ -220,7 +222,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           width: '80%',
           height: '80%',
           baseZIndex: 2000,
-          showHeader: false
+          showHeader: false,
+          closable: false,
+          closeOnEscape: false
         });
       }, 500);
     });
