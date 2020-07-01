@@ -1,0 +1,26 @@
+<div>
+  <p>Seleccione los elementos a eliminar:</p>
+
+  <form [formGroup]="formClear" (ngSubmit)="clear()">
+    <div class="content">
+      <div>
+        <p>Capas: </p>
+        <p-multiSelect [defaultLabel]="'Seleccionar'" formControlName="layers" [options]="layers"
+          selectedItemsLabel="{0} items seleccionados" emptyFilterMessage="Sin resultados"></p-multiSelect>
+      </div>
+      <div>
+        <p-checkbox binary="true" label="Gráficos" formControlName="graphics"></p-checkbox>
+      </div>
+      <div>
+        <p-checkbox binary="true" label="Selección tabla de atributos" formControlName="selection"></p-checkbox>
+      </div>
+      <div align="right">
+        <button pButton label="Limpiar" type="submit"></button>
+      </div>
+    </div>
+  </form>
+
+  <p-message [escape]="true" severity="info" id="info"
+    text="Desde esta ventana podrá elegir los elementos a borrar como selecciones, gráficos y capas cargadas.">
+  </p-message>
+</div>

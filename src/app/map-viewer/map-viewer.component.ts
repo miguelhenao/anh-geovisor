@@ -36,6 +36,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   modalAbout = false;
   modalGuide = false;
   modalExtract = false;
+  modalClear = false;
   layersOptionsList: Array<any> = [];
   layerExtract = false;
   sourceLayer: Array<any> = [];
@@ -479,6 +480,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             }
           }
         ]
+      },
+      {
+        label: 'Limpiar todo',
+        icon: 'icofont-ui-delete',
+        command: () => {
+          // this.visibleModal(false, false, false, false, false, false, false, false, false, false);
+          this.modalClear = true;
+        }
       },
       {
         icon: 'esri-icon-collapse',

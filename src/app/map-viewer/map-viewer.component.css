@@ -615,7 +615,8 @@ p-sidebar {
 ::ng-deep .icofont-tools-alt-2,
 ::ng-deep .icofont-download-alt,
 ::ng-deep .icofont-printer,
-::ng-deep .esri-icon-upload {
+::ng-deep .esri-icon-upload,
+::ng-deep .ui-menuitem-icon.icofont-ui-delete {
   font-size: 22px !important;
 }
 

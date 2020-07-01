@@ -1,0 +1,16 @@
+::ng-deep #info .ui-message {
+  font-size: smaller;
+  width: 100%;
+}
+
+.content {
+  margin-left: 10px;
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  grid-gap: 5px;
+  margin-bottom: 5px;
+}
+
+::ng-deep .ui-multiselect {
+  width: 50%;
+}

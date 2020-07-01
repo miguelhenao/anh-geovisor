@@ -127,7 +127,7 @@
 <!-- Fin del modal de análisis de cobertura -->
 
 <!-- Modal de zona de influencia -->
-<p-dialog header="Zona de Influencia (Buffer)" [(visible)]="modalBuffer" [resizable]="false" position="top"
+<p-dialog header="Zona de Influencia (Buffer)" [(visible)]="modalBuffer" [resizable]="false" position="topright"
   (onHide)="onHideDialogBuffer()" [style]="{'width': '400px'}" [focusOnShow]="false" [focusOnShow]="false">
   <div *ngIf="modalBuffer">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
@@ -455,3 +455,11 @@
   </div>
 </div>
 <!-- Fin del tierra slider del mapa -->
+
+<!-- Componente Limpieza profunda -->
+<p-dialog header="Limpiar" [(visible)]="modalClear" [resizable]="false" [draggable]="false" [modal]="true">
+  <div *ngIf="modalClear" style="width: 400px;">
+    <app-dialog-clear [_this]="this"></app-dialog-clear>
+  </div>
+</p-dialog>
+<!-- Fin componente -->

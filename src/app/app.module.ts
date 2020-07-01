@@ -6,9 +6,9 @@ import { AppComponent } from './app.component';
 import { MapViewerComponent } from './map-viewer/map-viewer.component';
 import { HttpClientModule } from '@angular/common/http';
 import { SidebarModule } from 'primeng/sidebar';
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { DialogUrlServiceComponent } from './dialog-urlservice/dialog-urlservice.component';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
@@ -41,6 +41,8 @@ import { DialogMaintenanceComponent } from './dialog-maintenance/dialog-maintena
 import { DialogUbicateCoordinateComponent } from './dialog-ubicate-coordinate/dialog-ubicate-coordinate.component';
 import { DialogAnalysisComponent } from './dialog-analysis/dialog-analysis.component';
 import { DialogMeasurementComponent } from './dialog-measurement/dialog-measurement.component';
+import { DialogClearComponent } from './dialog-clear/dialog-clear.component';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   declarations: [
@@ -56,7 +58,8 @@ import { DialogMeasurementComponent } from './dialog-measurement/dialog-measurem
     DialogMaintenanceComponent,
     DialogUbicateCoordinateComponent,
     DialogAnalysisComponent,
-    DialogMeasurementComponent
+    DialogMeasurementComponent,
+    DialogClearComponent
   ],
   imports: [
     BrowserModule,
@@ -87,6 +90,7 @@ import { DialogMeasurementComponent } from './dialog-measurement/dialog-measurem
     TieredMenuModule,
     ConfirmDialogModule,
     InputMaskModule,
+    CheckboxModule
   ],
   providers: [
     ConfirmationService
