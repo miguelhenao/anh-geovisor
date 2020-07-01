@@ -74,7 +74,7 @@
 
 <!-- Modal de extracción de datos -->
 <p-dialog [(visible)]="modalExtract" [resizable]="false" (onHide)="onHideDialogExtract()" [focusOnShow]="false"
-  [style]="{'width': '390px'}">
+  [style]="{'width': '390px'}" position="top">
   <p-header>
     {{headerExtract}}
   </p-header>
@@ -119,7 +119,7 @@
 
 <!-- Modal de análisis de departamento -->
 <p-dialog header="Análisis de Cobertura por Departamento" [(visible)]="modalAnalysis" [resizable]="false"
-  (onHide)="onHideDialogAnalisis()" [focusOnShow]="false" [style]="{'width': '390px'}">
+  (onHide)="onHideDialogAnalisis()" [focusOnShow]="false" [style]="{'width': '390px'}" position="top">
   <div *ngIf="modalAnalysis">
     <app-dialog-analysis [_this]="this"></app-dialog-analysis>
   </div>
@@ -127,7 +127,7 @@
 <!-- Fin del modal de análisis de cobertura -->
 
 <!-- Modal de zona de influencia -->
-<p-dialog header="Zona de Influencia (Buffer)" [(visible)]="modalBuffer" [resizable]="false"
+<p-dialog header="Zona de Influencia (Buffer)" [(visible)]="modalBuffer" [resizable]="false" position="top"
   (onHide)="onHideDialogBuffer()" [style]="{'width': '400px'}" [focusOnShow]="false" [focusOnShow]="false">
   <div *ngIf="modalBuffer">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
@@ -173,7 +173,7 @@
 
 <!-- Modal de herramientas de medicion -->
 <p-dialog header="Herramientas de Medición" [(visible)]="modalMeasurement" [resizable]="false"
-  (onHide)="onHideDialogMedicion()" [focusOnShow]="false" position="left">
+  (onHide)="onHideDialogMedicion()" [focusOnShow]="false" position="top">
   <div *ngIf="modalMeasurement">
     <app-dialog-measurement [_this]="this"></app-dialog-measurement>
   </div>
@@ -393,7 +393,7 @@
 
 <!-- Modal Herramientas de selección -->
 <p-dialog header="Herramientas de Selección" [(visible)]="modalSelection" [resizable]="false"
-  (onHide)="onHideDialogSelection()" [focusOnShow]="false" [style]="{'width': '400px'}">
+  (onHide)="onHideDialogSelection()" [focusOnShow]="false" [style]="{'width': '400px'}" position="top">
   <div *ngIf="modalSelection">
     <button pButton class="ui-button-rounded ui-button-secondary" title="Ayuda" style="color: #007ad8; float: right;"
       (click)="requestHelp('h-seleccion')" icon="pi pi-question"></button>
@@ -427,7 +427,7 @@
 
 <!-- Componente ubicar coordenada -->
 <p-dialog header="Ubicar coordenada" [(visible)]="modalCoordinate" [resizable]="false" [focusOnShow]="false"
-  [style]="{'width': '411px'}" (onHide)="onHideDialogCoordinate()" position="left">
+  [style]="{'width': '411px'}" (onHide)="onHideDialogCoordinate()" position="topright">
   <div *ngIf="modalCoordinate">
     <app-dialog-ubicate-coordinate [_this]="this"></app-dialog-ubicate-coordinate>
   </div>
