@@ -1,10 +1,10 @@
 <p-toast></p-toast>
 <p-confirmDialog #cd header="Confirmar" icon="pi pi-exclamation-triangle confirm">
   <p-footer>
-    <button style="width: 48%; float: left;" pButton type="button" icon="pi pi-check" label="Si" class="ui-button-rounded ui-button-success"
-      (click)="cd.accept()"></button>
-    <button style="width: 48%; float: left; margin-left: 1%;" pButton type="button" icon="pi pi-times" label="No" class="ui-button-rounded ui-button-warning"
-      (click)="cd.reject()"></button>
+    <button style="width: 48%; float: left;" pButton type="button" icon="pi pi-check" label="Si"
+      class="ui-button-rounded ui-button-success" (click)="cd.accept()"></button>
+    <button style="width: 48%; float: left; margin-left: 1%;" pButton type="button" icon="pi pi-times" label="No"
+      class="ui-button-rounded ui-button-warning" (click)="cd.reject()"></button>
   </p-footer>
 </p-confirmDialog>
 <!-- Menú con Accordion -->
@@ -281,9 +281,9 @@
     </p-table>
   </div>
 </p-dialog>
-<p-dialog header="Búsqueda" [(visible)]="modalFilter" [style]="{width: '500px'}" [modal]="true"
-  (onHide)="hideAdvancedSearch($event)" [baseZIndex]=20 [resizable]="false" [draggable]="true" [focusOnShow]="false">
-  <div *ngIf="modalFilter" style="max-height: 250px; overflow-y: scroll;">
+<p-dialog header="Búsqueda" [(visible)]="modalFilter" [style]="{width: '500px'}" (onHide)="hideAdvancedSearch($event)"
+  [baseZIndex]=20 [resizable]="false" [draggable]="true" [focusOnShow]="false">
+  <div *ngIf="modalFilter" class="advancedSearch" style="max-height: 250px; overflow-y: scroll;">
     <p-progressBar mode="indeterminate" *ngIf="makingSearch" [style]="{'height': '6px'}">
     </p-progressBar>
     <br>
@@ -295,7 +295,8 @@
       <div *ngFor="let i of arrQuantity(quantityFields).fill(1); let p = index" style="margin-top: 20px; clear: both;">
         <select name="selectField" style="width: 110px; float: left; margin-top: 3px;" class="esri-select"
           [(ngModel)]="objectFilter[p]">
-          <option *ngFor="let item of columnsTable; let i = index" [ngValue]="item.name">{{item.alias}}</option>
+          <option *ngFor="let item of columnsTable; let i = index" [ngValue]="item.name">
+            {{item.alias}}</option>
         </select>
         <select name="selectType" style="width: 110px; float: left; margin-left: 5px; margin-top: 3px;"
           *ngIf="view.ready" [(ngModel)]="filterS[p]" class="esri-select">
@@ -325,8 +326,8 @@
           <option value="AND" selected>Y</option>
           <option value="OR">O</option>
         </select>
-        <button pButton icon="pi pi-times" style="margin-left: 5px;" class="ui-button-rounded ui-button-danger"
-          (click)="removeFormField(p)"></button>
+        <button pButton type="button" icon="pi pi-times" style="margin-left: 5px;"
+          class="ui-button-rounded ui-button-danger" (click)="removeFormField(p)"></button>
       </div>
     </div>
     <button pButton *ngIf="quantityFields > 0" style="margin-left: 43%;" icon="pi pi-filter" label="Filtrar"

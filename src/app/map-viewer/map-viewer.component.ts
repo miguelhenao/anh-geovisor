@@ -2,7 +2,7 @@ import { DialogMaintenanceComponent } from './../dialog-maintenance/dialog-maint
 import { MapViewerService } from './map-viewer.service';
 import { DialogUrlServiceComponent } from '../dialog-urlservice/dialog-urlservice.component';
 import { MenuItem, SelectItem, MessageService, ConfirmationService } from 'primeng/api';
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked, ChangeDetectorRef, HostListener } from '@angular/core';
 import { loadModules } from 'esri-loader';
 import { DialogFileComponent } from '../dialog-file/dialog-file.component';
 import { DialogTerminosComponent } from '../dialog-terminos/dialog-terminos.component';
@@ -2654,6 +2654,25 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.advancedSearchShape = true;
     this.visibleModal(false, false, false, false, false, false, true, false, false, true);
   }
+
+  @HostListener('click', ['$event'])
+  public onClick(event: any): void {
+    this.modalFilter && !event.srcElement.className.includes('ui-button') &&
+      !event.srcElement.className.includes('ui-dialog-titlebar') &&
+      !this.isClickedByAdvancedSearch(event) ? this.modalFilter = false : null;
+  }
+
+  public isClickedByAdvancedSearch(event: any): boolean {
+    let result: boolean = false;
+    for (const path of event.path) {
+      if (path.className !== undefined && path.className.includes('advancedSearch')) {
+        result = true;
+        break;
+      }
+    }
+    return result;
+  }
+
   public requestHelp(modal: string): void {
     this.sectionSelected = modal;
     switch (modal) {
@@ -2768,7 +2787,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public addFormField(): void {
-    this.quantityFields += 1;
+    this.quantityFields++;
     this.objectFilter.push('');
     this.values.push('');
     this.logicalOperators.push('');
@@ -2776,7 +2795,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public removeFormField(index: number): void {
-    this.quantityFields -= 1;
+    this.quantityFields--;
     this.objectFilter.splice(index, 1);
     this.values.splice(index, 1);
     this.logicalOperators.splice(index, 1);
