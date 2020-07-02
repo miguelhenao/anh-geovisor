@@ -74,7 +74,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   agsHost = 'anh-gisserver.anh.gov.co';
   // agsHost = 'services6.arcgis.com/QNcm0ph3xAgJ1Ghk';
   agsProtocol = 'https';
-  mapRestUrlIndependent = 'http://190.121.137.225/arcgisp/rest/services/ANH_Tierras'
+  mapRestUrlIndependent = 'http://190.121.137.225/arcgisp/rest/services/ANH_Tierras';
   mapRestUrl = this.agsProtocol + '://' + this.agsHost + '/arcgis/rest/services/Tierras/Mapa_ANH_Sueje/MapServer';
   // mapRestUrl = this.agsProtocol + '://' + this.agsHost + '/arcgis/rest/services/Tierras_2019_09_17/FeatureServer';
   agsDir = 'arcgis';
@@ -568,7 +568,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           label,
           value: layer.title
         }) : null;
-        layer.geometryType === 'polygon' && (this.isValidOption(layer.title)) ? this.optionsLayerExtractor.push({ label, value: layer.title }) : null;
+        layer.geometryType === 'polygon' && (this.isValidOption(layer.title)) ?
+          this.optionsLayerExtractor.push({ label, value: layer.title }) : null;
       }
     });
     this.optionsLayerExtractor = this.optionsLayerExtractor.reverse();
@@ -688,10 +689,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       };
       this.view = new MapView(mapViewProperties);
       this.ccViewModel = new CoordinateVM();
-      document.getElementsByClassName('esri-view-root')[0].classList.add('help-cursor')
+      document.getElementsByClassName('esri-view-root')[0].classList.add('help-cursor');
       this.addSlider();
       // Carga de capa de pozo
-      //Last url: this.mapRestUrl + '/1'
+      // Last url: this.mapRestUrl + '/1'
       const lyPozo = new FeatureLayer(`${this.mapRestUrl}/1`, {
         id: 'Pozo',
         opacity: 1.0,
@@ -742,7 +743,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.map.add(lyPozo);
 
       // Carga de capa sismica
-      //Last url: this.mapRestUrl + '/2'
+      // Last url: this.mapRestUrl + '/2'
       const lySismica = new FeatureLayer(`${this.mapRestUrl}/2`, {
         id: 'Sismica 2D',
         opacity: 1.0,
@@ -845,7 +846,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       lySismica3d.labelingInfo = [sismica3DLabelClass];
       this.map.add(lySismica3d);
       // Carga de capa de municipio
-      //Last url: this.mapRestUrl + '5'
+      // Last url: this.mapRestUrl + '5'
       const lyMunicipio = new FeatureLayer(`${this.mapRestUrl}/5`, {
         id: 'Municipio',
         opacity: 1.0,
@@ -884,7 +885,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       this.map.add(lyMunicipio);
       // Carga de capa de departamento
-      //Last url: this.mapRestUrl + '/4'
+      // Last url: this.mapRestUrl + '/4'
       const lyDepartamento = new FeatureLayer(`${this.mapRestUrl}/4`, {
         id: 'Departamento',
         opacity: 1.0,
@@ -1053,7 +1054,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.map.add(lyCuencas);
 
       // Carga de capa de tierras
-      //Last url: this.mapRestUrl + '/8'
+      // Last url: this.mapRestUrl + '/8'
       const lyTierras = new FeatureLayer(`${this.mapRestUrl}/7`, {
         id: 'Tierras',
         opacity: 0.5,
@@ -1337,12 +1338,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           }
         }
         if (event.source.layer.id === 'Pozo') {
-          let point = {
+          const point = {
             type: 'point',
             latitude: event.result.feature.geometry.latitude,
             longitude: event.result.feature.geometry.longitude
-          }
-          let pointSearch = new Graphic({
+          };
+          const pointSearch = new Graphic({
             geometry: point,
             symbol: {
               type: 'simple-marker',
@@ -1351,13 +1352,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           });
           this.view.graphics.add(pointSearch);
           this.sleep(500).then(() => {
-            let closes = document.getElementsByClassName('esri-icon-close');
+            const closes = document.getElementsByClassName('esri-icon-close');
             console.log(closes);
             for (let index = 0; index < closes.length; index++) {
               const element = closes[index] as HTMLElement;
-              element.addEventListener('click', (e: Event) => { this.view.graphics.remove(pointSearch) });
+              element.addEventListener('click', (e: Event) => { this.view.graphics.remove(pointSearch); });
             }
-          })
+          });
         }
       });
 
@@ -1645,7 +1646,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             const pto = response[0];
             coords = 'N ' + this.formatNumber(pto.y, 4) + ', E ' + this.formatNumber(pto.x, 4);
             this.coordsWidget.innerHTML = coords;
-            let v = document.getElementById('value-xy');
+            const v = document.getElementById('value-xy');
             v !== undefined && v !== null ? v.innerHTML = coords : null;
           });
         });
@@ -1718,10 +1719,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             let defaultSymbol: any;
             switch (this.layerSelected.geometryType) {
               case 'point':
-                defaultSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 8, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), 1), new Color(res.fillColor));
+                defaultSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 8,
+                  new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), 1), new Color(res.fillColor));
                 break;
               case 'polygon':
-                defaultSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), res.borderSize), new Color(res.fillColor));
+                defaultSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+                  new Color(res.borderColor), res.borderSize), new Color(res.fillColor));
                 break;
               case 'polyline':
                 defaultSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(res.borderColor), res.borderSize);
@@ -1769,7 +1772,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.clearGraphic = false;
     if (this.modalSelection) {
       this.advancedSearchShape = true;
-      this.featureDptos = []
+      this.featureDptos = [];
     }
   }
 
@@ -1787,7 +1790,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       (this.attrTable !== undefined && this.attrTable.filteredValue !== undefined &&
         this.attrTable.filteredValue !== null && this.attrTable.filteredValue.length > 0)) {
       this.confirmationService.confirm({
-        message: "<p style='text-align: center' >Al cerrar la tabla de atributos perderá su consulta.<br>" +
+        message: '<p style=\'text-align: center\' >Al cerrar la tabla de atributos perderá su consulta.<br>' +
           'Si desea conservarla, use el botón Minimizar <i class=\'pi pi-window-minimize\'></i>' +
           'localizado en la esquina superior derecha.' + '<br> ¿Desea cerrar la tabla de atributos?</p>',
         accept: () => {
@@ -2069,7 +2072,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     let params = '';
     this.makingSearch = true;
     for (let index = 0; index < this.objectFilter.length; index++) {
-      if (this.filterS[index] !== undefined && this.filterS[index] !== '' && this.values[index] !== undefined && this.values[index] !== '') {
+      if (this.filterS[index] !== undefined && this.filterS[index] !== '' &&
+        this.values[index] !== undefined && this.values[index] !== '') {
         if (index > 0) {
           params = `${params} ${this.logicalOperators[index - 1]}`;
         }
@@ -2158,8 +2162,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         wkid: 4326
       }
     });
-    if (!this.layerExtract && (this.selectedLayers.length === 0 || this.view.graphics.length === 0) && !this.shapeAttr && !this.advancedSearchShape &&
-      (this.selectedPolygon.value === 'entity' && (this.layerExtractor === null || this.layerExtractor === undefined))) {
+    if (!this.layerExtract && (this.selectedLayers.length === 0 || this.view.graphics.length === 0) && !this.shapeAttr
+      && !this.advancedSearchShape && (this.selectedPolygon.value === 'entity' && (this.layerExtractor === null
+        || this.layerExtractor === undefined))) {
       if (this.selectedLayers.length === 0) {
         this.messageService.add({
           severity: 'warn',
@@ -2250,7 +2255,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 width: '2px',
               }
             })
-          )
+          );
         }
       }
       const features = this.layerExtract || this.shapeAttr || this.advancedSearchShape ? this.sourceLayer : this.view.graphics.items;
@@ -2323,9 +2328,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           width: '2px',
         };
         const symbol = goTo ? symbolY : symbolX;
-        let layer = this.modalAnalysis ? this.departmentLayer : this.layerAttrTable;
-        let query = layer.createQuery();
-        console.log(event.data.attributes);
+        const layer = this.modalAnalysis ? this.departmentLayer : this.layerAttrTable;
+        const query = layer.createQuery();
         query.where = `${this.columnsTable[0].alias} = ${event.data.attributes[this.columnsTable[0].name]}`;
         query.returnGeometry = true;
         query.outFields = ['*'];
@@ -2350,12 +2354,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               });
               geomSvc.project(params).then((response) => {
                 if (this.layerAttrTable.title.startsWith('Pozo')) {
-                  let point = {
+                  const point = {
                     type: 'point',
                     longitude: response[0].longitude,
                     latitude: response[0].latitude
                   };
-                  let graphicPozo = new Graphic({
+                  const graphicPozo = new Graphic({
                     geometry: point,
                     symbol: {
                       type: 'simple-marker',
@@ -2365,12 +2369,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   this.view.graphics.add(graphicPozo);
                   this.graphicGoTo = graphicPozo;
                 }
-                this.layerAttrTable.title.startsWith('Pozo') || this.layerAttrTable.title.startsWith('Sísmica') ? this.view.goTo({ target: response[0], zoom: 9 }) : this.view.goTo(response[0]);
+                this.layerAttrTable.title.startsWith('Pozo') || this.layerAttrTable.title.startsWith('Sísmica') ?
+                  this.view.goTo({ target: response[0], zoom: 9 }) : this.view.goTo(response[0]);
               });
             }
             this.view.graphics.add(graphic);
           });
-        })
+        });
       });
   }
 
@@ -2402,7 +2407,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public downloadFile(url, name) {
-    let link = document.createElement('a');
+    const link = document.createElement('a');
     link.target = '_blank';
     link.download = name;
     link.href = url;
@@ -2430,10 +2435,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public extractShapeFromAttr(): void {
-    if (!this.advancedSearchShape && this.featuresSelected.length === 0 && (this.attrTable.filteredValue === undefined || this.attrTable.filteredValue === null || this.attrTable.filteredValue.length === 0)) {
+    if (!this.advancedSearchShape && this.featuresSelected.length === 0 &&
+      (this.attrTable.filteredValue === undefined || this.attrTable.filteredValue === null || this.attrTable.filteredValue.length === 0)) {
       this.layerExtract = true;
       this.shapeAttr = false;
-    } else if (this.featuresSelected.length === 0 && (this.attrTable.filteredValue !== undefined && this.attrTable.filteredValue !== null && this.attrTable.filteredValue.length > 0)) {
+    } else if (this.featuresSelected.length === 0 &&
+      (this.attrTable.filteredValue !== undefined && this.attrTable.filteredValue !== null && this.attrTable.filteredValue.length > 0)) {
       this.layerExtract = false;
       this.shapeAttr = true;
     }
@@ -2572,7 +2579,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       if (this.attrTable.filteredValue !== undefined && this.attrTable.filteredValue !== null) {
         for (const r of this.attrTable.filteredValue) {
           const object = r.attributes;
-          attribute.push(object)
+          attribute.push(object);
         }
       } else {
         for (const r of this.featureDptos) {
@@ -2610,7 +2617,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * @param buffer -> Bandera para dialog Zona de influencia
    * @param extract -> Bandera para dialog Extraer capa
    * @param guide -> Bandera para dialog Guíaalse, false, false, false, false, false,
-    true, true, false, false)
+   *    true, true, false, false)
    * @param measurement -> Bandera para dialog Herramientas de medición
    * @param table -> Bandera para dialog Tabla de atributos
    */
@@ -2678,7 +2685,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   public isClickedByAdvancedSearch(event: any): boolean {
-    let result: boolean = false;
+    let result = false;
     for (const path of event.path) {
       if (path.className !== undefined && path.className.includes('advancedSearch')) {
         result = true;
@@ -2825,7 +2832,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.sleep(500).then(() => {
         this.attrTable.filters = this.filterAttrTable;
         this.attrTable._filter();
-      })
+      });
     } else {
       this.filterAttrTable = Object.assign({}, this.attrTable.filters);
       this.minimizeMaximize = flag;
@@ -2839,7 +2846,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   removePoint(point: any): void {
     this.view.graphics.remove(point);
-    document.getElementsByClassName('esri-view-root')[0].removeEventListener('click', (e: Event) => { this.removePoint(point) });
+    document.getElementsByClassName('esri-view-root')[0].removeEventListener('click', (e: Event) => { this.removePoint(point); });
   }
 
   listForIdentifyParameters(): Array<number> {
@@ -2848,5 +2855,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.isValidOption(layer.title) && layer.visible ? layers.push(layer.layerId) : null;
     });
     return layers;
+  }
+
+  onHeaderCheckboxToggle(event) {
+    if (event.checked) {
+      this.featuresSelected.forEach(feature => {
+        const f = this.graphics.find(x => x.attr === feature.attributes);
+        if (f === undefined) {
+          this.onRowSelect({ data: feature });
+        }
+      });
+    } else {
+      this.featureDptos.forEach(feature => {
+        this.onRowUnselect({ data: feature });
+      });
+    }
   }
 }

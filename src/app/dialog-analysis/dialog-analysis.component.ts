@@ -9,7 +9,7 @@ import { loadModules } from 'esri-loader';
 export class DialogAnalysisComponent implements OnInit {
 
   @Input() _this: any;
-  infoTool: boolean = true;
+  infoTool = true;
 
   constructor() { }
 

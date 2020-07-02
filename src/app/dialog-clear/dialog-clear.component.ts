@@ -40,7 +40,12 @@ export class DialogClearComponent implements OnInit {
       });
     }
     this.formClear.value.graphics || all ? this._this.clearGraphics() : null;
-    this.formClear.value.selection || all ? this._this.featuresSelected = [] : null;
+    if (this.formClear.value.selection || all) {
+      this._this.featuresSelected.forEach(element => {
+        this._this.onRowUnselect({data: element});
+      });
+      this._this.featuresSelected = [];
+    }
     this._this.messageService.add({
       summary: 'Mapa',
       detail: `Los elementos seleccionados han sido removidos exitosamente`,
