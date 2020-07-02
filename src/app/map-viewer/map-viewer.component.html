@@ -290,8 +290,8 @@
     </p-table>
   </div>
 </p-dialog>
-<p-dialog header="Búsqueda" [(visible)]="modalFilter" [style]="{width: '500px'}" (onHide)="hideAdvancedSearch($event)"
-  [baseZIndex]=20 [resizable]="false" [draggable]="true" [focusOnShow]="false">
+<p-dialog header="Búsqueda" [(visible)]="modalFilter" [style]="{width: '558px'}" (onHide)="hideAdvancedSearch($event)"
+  [baseZIndex]=20 [resizable]="false" [draggable]="true" [focusOnShow]="false" position="topright">
   <div *ngIf="modalFilter" class="advancedSearch" style="max-height: 250px; overflow-y: scroll;">
     <p-progressBar mode="indeterminate" *ngIf="makingSearch" [style]="{'height': '6px'}">
     </p-progressBar>
@@ -302,7 +302,7 @@
     </div>
     <div id="contentField">
       <div *ngFor="let i of arrQuantity(quantityFields).fill(1); let p = index" style="margin-top: 10px; clear: both;">
-        <select name="selectField" style="width: 110px; float: left; margin-top: 3px;" class="esri-select"
+        <select name="selectField" style="width: 170px; float: left; margin-top: 3px;" class="esri-select"
           [(ngModel)]="objectFilter[p]">
           <option *ngFor="let item of columnsTable; let i = index" [ngValue]="item.name">
             {{item.alias}}</option>
