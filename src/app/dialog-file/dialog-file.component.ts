@@ -32,6 +32,10 @@ export class DialogFileComponent implements OnInit {
     this.mainContext.requestHelp(modal);
   }
 
+  /**
+   * Método de carga de archivo y validaciones necesarias
+   * @param event -> Evento de carga
+   */
   onUpload(event) {
     if (event.target.elements[0].files.length > 0) {
       this.makingWork = true;

@@ -15,6 +15,9 @@ export class DialogGuideComponent implements OnInit, OnChanges {
   ngOnInit() {
   }
 
+  /**
+   * Método de escucha para el cambio de información en el componente de Guía de Usuario
+   */
   ngOnChanges() {
     this.currentSection = 'h-introduccion';
     if (this.flag && this.elementId !== null) {
@@ -25,6 +28,10 @@ export class DialogGuideComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * Método para ir a una sección en particular del componente
+   * @param sectionId -> Id de la sección
+   */
   onSectionChange(sectionId: string) {
     sectionId = sectionId === undefined ? 'h-introduccion' : sectionId;
     this.currentSection = sectionId;

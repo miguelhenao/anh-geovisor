@@ -21,12 +21,19 @@ export class DialogClearComponent implements OnInit {
     this.getLayersToDelete();
   }
 
+  /**
+   * Método para obtener las capas que son posible eliminar
+   */
   getLayersToDelete() {
     this._this.map.layers.map(layer => {
       (!this._this.isValidOption(layer.title)) ? this.layers.push({ label: layer.title, value: layer.title }) : null;
     });
   }
 
+  /**
+   * Método para hacer limpieza en el mapa
+   * @param all -> Bandera que indica si se puede borrar o no, todo
+   */
   clear(all: boolean) {
     if (!all) {
       this.formClear.value.layers.forEach(element => {
