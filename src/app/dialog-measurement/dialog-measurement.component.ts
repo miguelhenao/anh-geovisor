@@ -35,6 +35,9 @@ export class DialogMeasurementComponent implements OnInit, OnDestroy {
     this.setActiveWidget();
   }
 
+  /**
+   * Instaciación del componente
+   */
   async initializeComponent() {
     try {
       const [SpatialReference, ProjectParameters, GeometryService] =
@@ -71,6 +74,9 @@ export class DialogMeasurementComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Método para la activación de una de las herramientas de medición
+   */
   public setActiveWidget() {
     loadModules(['esri/widgets/DistanceMeasurement2D', 'esri/widgets/AreaMeasurement2D', 'esri/widgets/CoordinateConversion',
       'esri/widgets/CoordinateConversion/support/Conversion']).then((
@@ -173,6 +179,10 @@ export class DialogMeasurementComponent implements OnInit, OnDestroy {
     return n.toLocaleString('de-DE', { minimumFractionDigits: min, maximumFractionDigits: 4 });
   }
 
+  /**
+   * Método para obtener las coordenadas en formato MAGNA SIRGAS Origen Central Bogotá
+   * @param pt -> Punto en el mapa
+   */
   public planasXY(pt): void {
     let coords = '';
     loadModules(['esri/tasks/GeometryService', 'esri/geometry/SpatialReference', 'esri/tasks/support/ProjectParameters'])
@@ -186,7 +196,7 @@ export class DialogMeasurementComponent implements OnInit, OnDestroy {
         geomSvc.project(params).then((response) => {
           const pto = response[0];
           coords = 'N ' + this.formatNumber(pto.y, 4) + ', E ' + this.formatNumber(pto.x, 4);
-          let v = document.getElementById('value-xy');
+          const v = document.getElementById('value-xy');
           v !== undefined && v !== null ? v.innerHTML = coords : null;
         });
       });

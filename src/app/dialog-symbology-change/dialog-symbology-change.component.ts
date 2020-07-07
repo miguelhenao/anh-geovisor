@@ -32,6 +32,9 @@ export class DialogSymbologyChangeComponent implements OnInit {
     this.validateForm();
   }
 
+  /**
+   * Método para validar la completitud del formulario
+   */
   public validateForm(): void {
     this.changeForm = this.formBuilder.group({
       feature: new FormControl(this.changeObject.layerSelected, Validators.required),
@@ -41,10 +44,17 @@ export class DialogSymbologyChangeComponent implements OnInit {
     });
   }
 
+  /**
+   * Método que abre la guía de usuario en la sección de Cambiar Simbología
+   * @param modal -> Nombre de la sección
+   */
   requestHelp(modal: string): void {
     this.help.requestHelp(modal);
   }
 
+  /**
+   * Método para aplicar el cambio de simbología
+   */
   public setupChange(): void {
     console.log(this.changeForm);
     this.ref.close(this.changeForm.value);

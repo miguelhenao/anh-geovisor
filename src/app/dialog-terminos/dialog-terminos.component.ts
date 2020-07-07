@@ -14,11 +14,17 @@ export class DialogTerminosComponent implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * Método de aceptación de términos
+   */
   public agreeTerms(): void {
     localStorage.setItem('agreeTerms', 'ok');
     this.ref.close();
   }
 
+  /**
+   * Método de rechazo de términos y redirección a la página principal de la ANH
+   */
   public deagreeTerms(): void {
     window.location.href = 'http://www.anh.gov.co/';
   }

@@ -68,6 +68,11 @@ export class DialogUbicateCoordinateComponent implements OnInit {
     this.coordinateY = '';
   }
 
+  /**
+   * Método para dar formato a las coordenadas planas
+   * @param value -> Valor del campo
+   * @param xy -> Identificación de campo
+   */
   public formatCoordinatePlane(value, xy) {
     value = value.replace(',', '.') as string;
     value = parseFloat(value);
@@ -80,10 +85,19 @@ export class DialogUbicateCoordinateComponent implements OnInit {
     }
   }
 
+  /**
+   * Método para cambiar el formato de un número
+   * @param n -> Valor
+   * @param min -> Valor de mínimos decimales
+   */
   public formatNumber(n, min?) {
     return n.toLocaleString('de-DE', { minimumFractionDigits: min, maximumFractionDigits: 4 });
   }
 
+  /**
+   * Método para controlar la entrada de valores a los campos de coordenadas planas
+   * @param event -> Evento de escritura
+   */
   keypress(event) {
     const value = event.target.value.split(',') as Array<string>;
     if (value.length > 1 && value[1].length === 4) {
@@ -103,6 +117,9 @@ export class DialogUbicateCoordinateComponent implements OnInit {
     }
   }
 
+  /**
+   * Método para limpiar el mapa de gráficos
+   */
   public clearGraphics() {
     this._this.view.graphics.removeAll();
   }

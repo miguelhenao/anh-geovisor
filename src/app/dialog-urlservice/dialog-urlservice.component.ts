@@ -24,21 +24,34 @@ export class DialogUrlServiceComponent implements OnInit {
     this.validateForm();
   }
 
+  /**
+   * Método para ir a la sección de Carga de capas en el componente de Guía de usuario
+   * @param modal Nombre de la sección
+   */
   requestHelp(modal: string): void {
     this.mainContext.requestHelp(modal);
   }
 
+  /**
+   * Método para la validación del formulario
+   */
   public validateForm(): void {
     this.serviceForm = this.formBuilder.group({
       urlService: ['', [Validators.required]]
     });
   }
 
+  /**
+   * Método para cerrar el dialogo
+   */
   public close(): void {
     this.dialogRef.close();
     this.makingWork = false;
   }
 
+  /**
+   * Método para agregar la capa
+   */
   public sendUrl(): void {
     this.makingWork = true;
     let count;
