@@ -170,6 +170,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   constructor(private dialogService: DialogService, private service: MapViewerService, private ref: ChangeDetectorRef,
     private messageService: MessageService, private confirmationService: ConfirmationService) {
     this.setCurrentPosition();
+    // Color de la barra de carga.
     this.colorsFirst = this.generateColor('#F8C933', '#FFE933', 50);
     this.colorsSeconds = this.generateColor('#E18230', '#F8C933', 50);
     this.colorsThirst = this.generateColor('#D75C31', '#E18230', 50);
@@ -209,6 +210,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       _this.indexColor++;
     }, 10);
 
+    // Dialogo de mantenimiento
     const dialogMaintenance = this.dialogService.open(DialogMaintenanceComponent, {
       width: '50%',
       height: 'auto',
@@ -218,6 +220,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       closeOnEscape: false
     });
     dialogMaintenance.onClose.subscribe(result => {
+      // Dialogo de términos y condiciones
       setTimeout(() => {
         this.dialogService.open(DialogTerminosComponent, {
           width: '80%',
@@ -229,6 +232,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
       }, 500);
     });
+
+    // Instanciación del menú
     this.menu = [
       {
         label: 'Cargar capas',
@@ -512,20 +517,22 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (!this.loaded) {
       this.retractMenu();
     }
-    if (this.modalTable) {
-      const panel = document.getElementsByClassName('ui-dialog-content ui-widget-content');
-      if (panel !== undefined && panel[0] !== undefined) {
-        const height: number = panel[0].clientHeight;
-        if (this.validateHeight(height)) {
-          if (panel[0].clientHeight >= 450) {
-            this.heightTable = panel[0].clientHeight - 220;
-          } else {
-            this.heightTable = 450;
-          }
-          this.ref.detectChanges();
-        }
-      }
-    }
+    // if (this.modalTable) {
+    //   const panel = document.getElementsByClassName('ui-dialog-content ui-widget-content');
+    //   if (panel !== undefined && panel[0] !== undefined) {
+    //     const height: number = panel[0].clientHeight;
+    //     if (this.validateHeight(height)) {
+    //       if (panel[0].clientHeight >= 450) {
+    //         this.heightTable = panel[0].clientHeight - 220;
+    //       } else {
+    //         this.heightTable = 450;
+    //       }
+    //       this.ref.detectChanges();
+    //     }
+    //   }
+    // }
+
+    // Cambio de título en botones de Popup
     const paginationPrevious: HTMLCollection = document.getElementsByClassName('esri-popup__pagination-previous');
     const newTextPrevious = 'Ver anterior capa';
     if (paginationPrevious.length > 0) {
@@ -538,6 +545,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (paginationNext.length > 0) {
       paginationNext.item(0).getAttribute('title') !== newTextNext ? paginationNext.item(0).setAttribute('title', newTextNext) : null;
     }
+
+    // Reconocimiento de capa actual
     this.currentLayer = this.layerList !== undefined && this.layerList.selectedItems.length > 0 &&
       this.layerList.selectedItems.items[0] !== null ? this.layerList.selectedItems.items[0].layer :
       this.lyTierrasCreate !== undefined ? this.lyTierrasCreate : null;
@@ -545,11 +554,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.ref.detectChanges();
   }
 
-  public validateHeight(height: number): boolean {
-    return height !== 1249 && height !== 478 && height !== 728 && height !== 704 && height !== 680 && height !== 656 && height !== 632
-      && height !== 608 && height !== 584 && height !== 560 && height !== 536 && height !== 512 && height !== 488;
-  }
 
+  // public validateHeight(height: number): boolean {
+  //   return height !== 1249 && height !== 478 && height !== 728 && height !== 704 && height !== 680 && height !== 656 && height !== 632
+  //     && height !== 608 && height !== 584 && height !== 560 && height !== 536 && height !== 512 && height !== 488;
+  // }
+
+  /**
+   * Método para construir las opciones con las capas
+   */
   public buildOptionsLayers(): void {
     this.optionsLayers = [];
     this.copyrightIGAC = [];
@@ -576,13 +589,22 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.optionsLayers = this.optionsLayers.reverse();
   }
 
+  /**
+   * Método para validar si una capa es cargada por el usuario o proviene del servidor de ArcGIS ANH
+   * @param title Título de la capa
+   */
   public isValidOption(title: string): boolean {
     return !title.startsWith('Shape') && !title.startsWith('CSV') && !title.startsWith('S-CSV')
       && !title.startsWith('S-JSON') && !title.startsWith('GeoJSON') && !title.startsWith('KML')
       && !title.startsWith('GPX') && !title.startsWith('WMS');
   }
 
-  public buildOptionsLayersValue(nameLayer: string): void {
+  /**
+   * Método  para construir las opciones con la capa seleccionada
+   *
+   * @param title Título de la capa
+   */
+  public buildOptionsLayersValue(title: string): void {
     this.layersOptionsList = [];
     this.copyrightSGC = [];
     this.copyrightIGAC = [];
@@ -602,7 +624,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           label,
           value: layer.title
         };
-        if (layer.title === nameLayer) {
+        if (layer.title === title) {
           this.layerSelectedSelection = sel.value;
           this.layerSelected = layer;
         }
@@ -612,6 +634,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.optionsLayers = this.optionsLayers.reverse();
   }
 
+  /**
+   * Método para cambiar de capa (layer)
+   *
+   * @param event Evento de selección de capa
+   */
   public changeLayer(event: any): void {
     this.map.layers.items.forEach((layer) => {
       if (layer.title != null && layer.sourceJSON.name === event) {
@@ -620,6 +647,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
+  /**
+   * Método para abrir la herramienta de seleeción
+   */
   public openSelectionTool(): void {
     if (!this.errorArcgisService) {
       this.advancedSearchShape = true;
@@ -630,6 +660,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  /**
+   * Método para capturar el click en alguno de los botónes aquí descritos y enviar el evento a Google Analytics
+   * @param event Evento click
+   */
   clickItemExpand: (arg0: any) => void = (event: any): void => {
     if (event.srcElement.className.includes('layer-list')) {
       (window as any).ga('send', 'event', 'BUTTON', 'click', 'legend-button');
@@ -668,9 +702,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService', 'esri/popup/content/TextContent',
           'esri/widgets/CoordinateConversion/CoordinateConversionViewModel', 'esri/popup/content/AttachmentsContent',
           'esri/tasks/IdentifyTask', 'esri/tasks/support/IdentifyParameters', 'esri/tasks/support/IdentifyResult']);
-      // Geometry Service
-      const geomSvc = new GeometryService(this.urlGeometryService);
-      // Servidor de AGS desde donde se cargan los servicios, capas, etc.
       // Configure the Map
       const mapProperties = {
         basemap: 'streets'
@@ -1101,7 +1132,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       lyTierras.labelingInfo = [statesLabelClass];
       this.map.add(lyTierras);
       this.lyTierrasCreate = lyTierras;
+
+      // Evento click que captura cualquier interacción del usuario
       this.view.on('click', (e) => {
+        // Evento de identificación de entidades con la clase IdentifyTask de Esri
         if (this.popupAutoOpenEnabled) {
           this.identifyParameters.geometry = e.mapPoint;
           this.identifyParameters.mapExtent = this.view.extent;
@@ -1146,19 +1180,27 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           });
         }
       });
+
+      // Evento de creación de capa
       this.view.on('layerview-create', () => {
         if (this.makingWork) {
           this.makingWork = false;
         }
       });
+
+      // Evento de error en la creación de una capa
       this.view.on('layerview-create-error', (e) => {
         if (e.error.message !== 'Aborted') {
           this.messageService.add({ detail: `Error cargando la capa ${e.layer.id}`, summary: 'Carga de capas', severity: 'error' });
         }
       });
+
+      // Evento lanzado cuando el cursor se estaciona (deja de moverse) para obtener las coordenadas
       this.view.watch('stationary', (isStationary) => {
         this.showCoordinates(this.view.center);
       });
+
+      // Evento lanzada en todo momento que el cursor se mueve para obtener las coordenadas
       this.view.on('pointer-move', (evt) => {
         this.showCoordinates(this.view.toMap({ x: evt.x, y: evt.y }));
       });
@@ -1252,6 +1294,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           }
         }
       });
+
+      // Evento de escucha al componente view
       this.view.when(() => {
         layerList.on('trigger-action', (event) => {
           const layer = event.item.layer;
@@ -1300,6 +1344,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           }
         });
 
+        // Instanciación del servicio de identificar
         this.identifyTask = new IdentifyTask(this.mapRestUrl);
         this.identifyParameters = new IdentifyParameters({
           layerOption: 'visible',
@@ -1311,6 +1356,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
       });
 
+      // Expand LayerList
       this.layerList = layerList;
       const layerListExpand = new Expand({
         expandIconClass: 'esri-icon-layers',
@@ -1320,6 +1366,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         group: 'expand',
       });
 
+      // Widget Search (Buscar)
       this.search = new Search({
         view: this.view,
         sources: this.sourceSearch,
@@ -1328,6 +1375,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         maxSuggestions: 100000000000
       });
 
+      // Captura del evento en el Widget Search
       this.search.on('select-result', (event) => {
         if (this.view.zoom < 9) {
           if (event.source.layer.id === 'Pozo' || event.source.layer.id === 'Sismica 2D' || event.source.layer.id === 'Sismica 3D') {
@@ -1362,12 +1410,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       });
 
-      this.view.ui.add(this.search, {
-        position: 'top-right'
-      });
-
-      this.view.ui.move(['zoom'], 'top-right');
-
+      // Widget Print (Exportar) y su respectivo Expand
       const print = new Print({
         view: this.view,
         printServiceUrl: this.printUrl,
@@ -1383,6 +1426,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         content: print,
         group: 'expand'
       });
+
+      // Widget Legend (Convenciones) y su respectivo Expand
       const legend = new Legend({
         view: this.view,
       });
@@ -1394,6 +1439,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         content: legend,
         group: 'expand'
       });
+
+      // Widget Basemap (Mapas base) y su respectivo Expand
       const basemapGallery = new BasemapGallery({
         view: this.view
       });
@@ -1404,6 +1451,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         content: basemapGallery,
         group: 'expand'
       });
+
+      // Instaciación de herramienta de dibujo de formas para la herramienta Extraer área
       const graphicsLayer = new GraphicsLayer();
       this.sketchExtract = new SketchViewModel({
         layer: graphicsLayer,
@@ -1459,11 +1508,13 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.onChangeSelect();
         }
       });
-      const sketchVMBuffer = new SketchViewModel({
+
+      // Instaciación de herramienta de dibujo de formas para la herramienta Zona de influencia
+      this.sketchBuffer = new SketchViewModel({
         layer: graphicsLayer,
         view: this.view
       });
-      sketchVMBuffer.on('create', (event) => {
+      this.sketchBuffer.on('create', (event) => {
         this.flagSketch = true;
         if (event.state === 'complete') {
           this.flagSketch = false;
@@ -1510,6 +1561,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       });
 
+      // Instaciación de herramienta de dibujo de formas para la herramienta de Selección
       this.sketchSelection = new SketchViewModel({
         layer: graphicsLayer,
         view: this.view
@@ -1582,15 +1634,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.onChangeSelectedSketchSelection();
         }
       });
-      this.sketchBuffer = sketchVMBuffer;
+
+      // Widget ScaleBar (Escala)
       const scaleBar = new ScaleBar({
         style: 'ruler',
         view: this.view,
         unit: 'metric'
       });
-      this.view.ui.add(scaleBar, {
-        position: 'bottom-left',
-      });
+
+      // Expand de ayuda
       const help = new Expand({
         expandIconClass: 'esri-icon-question',
         view: this.view,
@@ -1598,6 +1650,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         group: 'expand',
         expandTooltip: 'Ayuda'
       });
+
+      // Adición de los expands y widgets al mapa (view)
+      this.view.ui.add(scaleBar, 'bottom-left');
+      this.view.ui.add(this.search, 'top-right');
+      this.view.ui.move(['zoom'], 'top-right');
       this.view.ui.add(['coordsWidget', 'time-slider'], 'bottom-right');
       this.view.ui.add([this.expandPrint, expandBaseMapGallery, expandLegend, layerListExpand, help], 'top-right');
       return this.view;
@@ -1606,6 +1663,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  /**
+   * Método que identifica el campo a mostrar en el mapa (DisplayField)
+   * @param displayField Propiedad de la capa (Campo a mostrar)
+   * @param fields Propiedad de la capa (Atributos del modelo para la capa)
+   */
   getDisplayField(displayField: string, fields): string {
     let dField = fields.find(x => (x.name.toLowerCase() === displayField.toLowerCase()) && (x.type !== 'oid'));
     if (dField === undefined) {
@@ -1614,6 +1676,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     return dField.name;
   }
 
+  /**
+   * Método para mostrar las coordenadas en live, tanto planas como geográficas
+   * @param pt Punto en el mapa
+   */
   public showCoordinates(pt): void {
     this.coordsWidget = document.getElementById('coords');
     let coords = '';
@@ -1653,11 +1719,20 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  /**
+   * Método para cambiar el formato de un número
+   * @param n Número
+   * @param min Minimo de decimales
+   */
   public formatNumber(n, min?) {
     return n.toLocaleString('de-DE', { minimumFractionDigits: min, maximumFractionDigits: 4 });
   }
 
-  public buildOptionsToChangeSimbology(nameLayer: string): void {
+  /**
+   * Método para construir las opciones para la herramienta Cambio de Simbología
+   * @param title Título de la capa
+   */
+  public buildOptionsToChangeSimbology(title: string): void {
     this.layersOptionsList = [];
     this.copyrightSGC = [];
     this.copyrightIGAC = [];
@@ -1677,7 +1752,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           label,
           value: layer.title
         };
-        if (layer.title === nameLayer) {
+        if (layer.title === title) {
           this.layerSelectedSelection = sel.value;
           this.layerSelected = layer;
         }
@@ -1687,21 +1762,31 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.optionsLayers = this.optionsLayers.reverse();
   }
 
-  public validateOptionsSimbologyChange(nameLayer: string): boolean {
-    return nameLayer.startsWith('Shape') || nameLayer.startsWith('GPX') || nameLayer.startsWith('CSV')
-      || nameLayer.startsWith('GeoJSON');
+  /**
+   * Método para validar si a la capa se le puede cambiar al simbología
+   * @param title Título de la capa
+   */
+  public validateOptionsSimbologyChange(title: string): boolean {
+    return title.startsWith('Shape') || title.startsWith('GPX') || title.startsWith('CSV')
+      || title.startsWith('GeoJSON');
   }
 
+  /**
+   * Método para el cambio de simbología a una capa
+   */
   public symbologyChange(): void {
     const title = this.layerSelected != null && this.layerSelected !== undefined ? this.layerSelected.title :
       this.layerList.selectedItems.items[0] !== undefined ? this.layerList.selectedItems.items[0].title : '';
+    // Construcción de opciones
     this.buildOptionsToChangeSimbology(title);
+    // Apertura de modal de Cambiar Simbología
     const dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
       width: '400px',
       header: `Cambio de Simbología ${title}`,
       baseZIndex: 20,
       data: { help: this, optionsLayers: this.optionsLayers, layerSelected: this.layerSelectedSelection }
     });
+    // Captura del evento de cerrado para aplicar acciones sobre la capa
     dialog.onClose.subscribe(res => {
       if (res !== undefined) {
         this.map.layers.items.forEach((layer) => {
@@ -1738,6 +1823,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
     });
   }
+
+  /**
+   * Método de Análisis de Cobertura
+   */
   public analisis(): void {
     this.openEnabledPopup(false);
     const query = {
@@ -1785,6 +1874,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.initializeMap();
   }
 
+  /**
+   * Método para capturar el cierre de la tabla de atributos y hacer otras acciones
+   */
   public closeDialogAttr(): void {
     if (this.isFilteringAttrTab || (this.filterAttrTable !== undefined && this.filterAttrTable !== null) &&
       (this.attrTable !== undefined && this.attrTable.filteredValue !== undefined &&
@@ -1804,6 +1896,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  /**
+   * Método para el cambio de color de la barra de carga
+   * @param indexColor ->
+   * @param colors ->
+   */
   public changeColor(indexColor: number, colors: Array<any>): void {
     const elements = document.getElementsByClassName('ui-progressbar');
     for (let index = 0; index < elements.length; index++) {
@@ -1862,7 +1959,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   /**
-   * Método que se realiza cuando el dialogo de medición es cerrado
+   * Método que se realiza cuando el dialogo de Herramientas de Medición es cerrado
    */
   public onHideDialogMedicion(): void {
     this.openEnabledPopup(true);
@@ -1999,7 +2096,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
-
+/**
+ * Método para obtener los atributos de una capa y mostrarlos en la tabla de atributos
+ * @param layer Capa seleccionada para visualizar su tabla de atributos
+ */
   getFeaturesLayer(layer: any): void {
     this.styleClassAttrTable = 'maxTable';
     this.supportsAttachment = layer.capabilities.data.supportsAttachment;
@@ -2024,6 +2124,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
+  /**
+   * Método para ocultar el dialogo de Búsqueda Avanzada
+   * @param event Evento ocultar
+   */
   hideAdvancedSearch(event) {
     if (this.objectFilter.length === 0 && this.values.length === 0 && this.logicalOperators.length === 0) {
       this.hideSearch = true;
@@ -2033,6 +2137,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  /**
+   * Método para obtener los atributos de una capa seleccionada
+   */
   getFeaturesLayerSelected(): void {
     if (this.hideSearch) {
       this.advancedSearchShape = false;
@@ -2058,6 +2165,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  /**
+   * Método para obtener el tipo de dato de un objeto
+   * @param name Nombre del objeto
+   */
   public getTypeObject(name: string): string {
     let type: string;
     for (const col of this.columnsTable) {
@@ -2068,6 +2179,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
     return type;
   }
+
+  /**
+   * Método para la aplicación de filtros en la Búsqueda Avanzada
+   */
   public getFilterParams(): void {
     let params = '';
     this.makingSearch = true;
@@ -2379,11 +2494,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
   }
 
+  /**
+   * Método para acerca al elemento seleccionado en la tabla de atributos
+   * @param item -> Fila de la tabla seleccionada
+   */
   public onRowSelectGoTo(item: any) {
     const event = { data: item };
     this.onRowSelect(event, true);
   }
 
+  /**
+   * Método para descargar archivos adjuntos a la entidad, en caso de que los tenga
+   * @param item -> Fila de la tabla seleccionada
+   */
   public downloadAttachment(item: any) {
     const url = this.mapRestUrl + '/' + item.layer.layerId + '/' + item.attributes.objectid + '/attachments?f=json';
     this.service.getAttachment(url).subscribe(success => {
@@ -2406,6 +2529,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
+  /**
+   * Método para la descarga del documento
+   * @param url -> Url donde se aloja el documento
+   * @param name -> Nombre del documento para la descarga
+   */
   public downloadFile(url, name) {
     const link = document.createElement('a');
     link.target = '_blank';
@@ -2434,6 +2562,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     return this.columnsTable !== null && this.columnsTable !== undefined ? `attributes.${this.columnsTable[0].name}` : null;
   }
 
+  /**
+   * Método para extraer en formato Shape desde la tabla de atributos
+   */
   public extractShapeFromAttr(): void {
     if (!this.advancedSearchShape && this.featuresSelected.length === 0 &&
       (this.attrTable.filteredValue === undefined || this.attrTable.filteredValue === null || this.attrTable.filteredValue.length === 0)) {
@@ -2549,6 +2680,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.flagSketch = false;
   }
 
+  /**
+   * Método que se ejecuta cuando el dialogo de Ubicar Coordenada es cerrado
+   */
   onHideDialogCoordinate() {
     this.openEnabledPopup(true);
   }
@@ -2603,6 +2737,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.makingWork = false;
   }
 
+  /**
+   * Método para limpiar los filtros de Búsqueda Avanzada
+   */
   public cleanFilters(): void {
     this.objectFilter = [];
     this.values = [];
@@ -2616,10 +2753,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * @param analysis -> Bandera para dialog Análisis de cobertura
    * @param buffer -> Bandera para dialog Zona de influencia
    * @param extract -> Bandera para dialog Extraer capa
-   * @param guide -> Bandera para dialog Guíaalse, false, false, false, false, false,
-   *    true, true, false, false)
+   * @param guide -> Bandera para dialog Guía
    * @param measurement -> Bandera para dialog Herramientas de medición
    * @param table -> Bandera para dialog Tabla de atributos
+   * @param selection -> Bandera para dialogo de Herramientas de Selección
+   * @param coordinate -> Bandera para el dialogo de Ubicar Coordenada
+   * @param filter -> Bandera para el dialogo de Búsqueda Avanzada
    */
   public visibleModal(about: boolean, analysis: boolean, buffer: boolean, extract: boolean, guide: boolean, measurement: boolean,
     table: boolean, selection: boolean, coordinate: boolean, filter: boolean) {
@@ -2667,11 +2806,16 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.openEnabledPopup(true);
   }
 
-
+  /**
+   * Método para obtener el título de una capa
+   */
   public getNameLayer(): string {
     return this.layerSelected !== undefined || this.layerSelected != null ? this.layerSelected.title : null;
   }
 
+  /**
+   * Método para abrir el dialogo de Búsqueda Avanzada
+   */
   public openFilter(): void {
     this.advancedSearchShape = true;
     this.visibleModal(false, false, false, false, false, false, true, false, false, true);
@@ -2695,6 +2839,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     return result;
   }
 
+  /**
+   * Método para abrir la guía de usuario en un punto determinado
+   * @param modal -> Modal de donde proviene el llamado del método
+   */
   public requestHelp(modal: string): void {
     this.sectionSelected = modal;
     switch (modal) {
@@ -2766,6 +2914,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     return isValid;
   }
 
+  /**
+   * Método para abrir el dialogo de Descargar Capa
+   */
   public openExtract(): void {
     if (!this.errorArcgisService) {
       this.headerExtract = 'Descargar capa';
@@ -2776,6 +2927,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  /**
+   * Método para abrir el dialogo de Herramientas de Medición
+   */
   public openMeasuringTools(): void {
     if (!this.errorArcgisService) {
       this.visibleModal(false, false, false, false, false, true, false, false, false, false);
@@ -2784,6 +2938,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  /**
+   * Método que activa o desactiva la identificación de información en el mapa por medio de un click
+   * @param enabled -> Bandera para activar o desactivar la identificación de información
+   * @param message -> Bandera para mostrar o no el mensaje
+   */
   public openEnabledPopup(enabled: boolean, message?: boolean): void {
     if (!this.errorArcgisService) {
       this.popupAutoOpenEnabled = enabled;
@@ -2803,11 +2962,17 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  /**
+   * Método Home, lleva a la vista del mapa a la vista inicial
+   */
   public viewAll(): void {
     this.view.center = [this.longitude, this.latitude];
     this.view.zoom = 5;
   }
 
+  /**
+   * Método para añadir un nuevo criterio de búsqueda en el dialogo de Búsqueda Avanzada
+   */
   public addFormField(): void {
     this.quantityFields++;
     this.objectFilter.push('');
@@ -2816,6 +2981,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.filterS.push('');
   }
 
+  /**
+   * Método para remover un criterio de búsqueda en el dialogo de Búsqueda Avanzada
+   * @param index -> Posición del criterio de búsqueda a borrar
+   */
   public removeFormField(index: number): void {
     this.quantityFields--;
     this.objectFilter.splice(index, 1);
@@ -2825,6 +2994,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.getFilterParams();
   }
 
+  /**
+   * Método para máximizar o minimizar la tabla de atributos y hacer otras acciones necesarias
+   * @param flag -> Bandera para minimizar o maximinzar la tabla de atributos
+   */
   public minimizeMaximizeAttrTable(flag: boolean): void {
     if (flag) {
       this.minimizeMaximize = flag;
@@ -2849,6 +3022,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     document.getElementsByClassName('esri-view-root')[0].removeEventListener('click', (e: Event) => { this.removePoint(point); });
   }
 
+  /**
+   * Método para hallar la lista de capas visibles para consultar en la herramienta de Identificar
+   */
   listForIdentifyParameters(): Array<number> {
     const layers = [];
     this.map.layers.map(layer => {
@@ -2857,6 +3033,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     return layers;
   }
 
+  /**
+   * Método para seleccionar todos los campos en la tabla de atributos, o por el contrario, deseleccionarlos
+   * @param event -> Evento producido al seleccionar o no, el checkbox de selección general en la tabla de atributos
+   */
   onHeaderCheckboxToggle(event) {
     if (event.checked) {
       this.featuresSelected.forEach(feature => {
