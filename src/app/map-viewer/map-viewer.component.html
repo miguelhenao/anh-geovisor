@@ -290,6 +290,7 @@
     </p-table>
   </div>
 </p-dialog>
+<!-- Modal Búsqueda avanzada -->
 <p-dialog header="Búsqueda" [(visible)]="modalFilter" [style]="{width: '558px'}" (onHide)="hideAdvancedSearch($event)"
   [baseZIndex]=20 [resizable]="false" [draggable]="true" [focusOnShow]="false" position="topright">
   <div *ngIf="modalFilter" class="advancedSearch" style="max-height: 250px; overflow-y: scroll;">
@@ -347,6 +348,7 @@
     </div>
   </div>
 </p-dialog>
+<!-- Fin del modal de búsqueda avanzada -->
 <!-- Fin del modal de tabla de atributos -->
 
 <!-- Div contenedor del widget de ayuda -->
