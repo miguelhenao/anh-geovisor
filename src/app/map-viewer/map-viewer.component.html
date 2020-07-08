@@ -202,7 +202,7 @@
       (onHeaderCheckboxToggle)="onHeaderCheckboxToggle($event)">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
-          <col style="width: 3em !important;">
+          <!-- <col style="width: 3em !important;"> -->
           <col style="width: 28px !important;">
           <col style="width: 28px !important;" *ngIf="supportsAttachment">
           <ng-container *ngIf="columns.length > 2">
@@ -215,9 +215,9 @@
       </ng-template>
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th style="width: 3em">
+          <!-- <th style="width: 3em">
             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-          </th>
+          </th> -->
           <th></th>
           <th *ngIf="supportsAttachment"></th>
           <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="keySort(col.name)">
@@ -226,7 +226,7 @@
           </th>
         </tr>
         <tr>
-          <th></th>
+          <!-- <th></th> -->
           <th></th>
           <th *ngIf="supportsAttachment"></th>
           <th *ngFor="let col of columns; let i = index">
@@ -255,9 +255,9 @@
       </ng-template>
       <ng-template pTemplate="body" let-item let-columns="columns">
         <tr [pSelectableRow]="item">
-          <td>
-            <!-- <p-tableCheckbox [value]="item"></p-tableCheckbox> -->
-          </td>
+          <!-- <td>
+            <p-tableCheckbox [value]="item"></p-tableCheckbox>
+          </td> -->
           <td style="padding: 0px; width: 28px !important;" title="Acerca a">
             <button class="esri-button" (click)="onRowSelectGoTo(item)">
               <i class="esri-icon-zoom-in-magnifying-glass"></i>
