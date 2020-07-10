@@ -44,6 +44,7 @@ import { DialogMeasurementComponent } from './dialog-measurement/dialog-measurem
 import { DialogClearComponent } from './dialog-clear/dialog-clear.component';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TabViewModule } from 'primeng/tabview';
+import { SliderModule } from 'primeng/slider';
 
 @NgModule({
   declarations: [
@@ -92,7 +93,8 @@ import { TabViewModule } from 'primeng/tabview';
     ConfirmDialogModule,
     InputMaskModule,
     CheckboxModule,
-    TabViewModule
+    TabViewModule,
+    SliderModule
   ],
   providers: [
     ConfirmationService

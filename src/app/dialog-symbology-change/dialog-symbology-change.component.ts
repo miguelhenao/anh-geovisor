@@ -40,7 +40,8 @@ export class DialogSymbologyChangeComponent implements OnInit {
       feature: new FormControl(this.changeObject.layerSelected, Validators.required),
       borderColor: new FormControl({ r: 0, g: 0, b: 0 }, Validators.required),
       fillColor: new FormControl({ r: 255, g: 0, b: 0 }, Validators.required),
-      borderSize: new FormControl(1, Validators.required)
+      borderSize: new FormControl(1, Validators.required),
+      transparency: new FormControl(1)
     });
   }
 
@@ -57,6 +58,7 @@ export class DialogSymbologyChangeComponent implements OnInit {
    */
   public setupChange(): void {
     console.log(this.changeForm);
+    this.changeForm.value.fillColor.a = this.changeForm.value.transparency;
     this.ref.close(this.changeForm.value);
   }
 }
