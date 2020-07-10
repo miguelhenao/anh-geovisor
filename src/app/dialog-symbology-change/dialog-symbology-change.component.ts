@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 
@@ -14,7 +14,7 @@ export class ChangeSymbology {
   templateUrl: './dialog-symbology-change.component.html',
   styleUrls: ['./dialog-symbology-change.component.css']
 })
-export class DialogSymbologyChangeComponent implements OnInit {
+export class DialogSymbologyChangeComponent implements OnInit, AfterViewChecked {
 
   changeForm: FormGroup;
   optionsLayers: Array<any>;
@@ -30,6 +30,17 @@ export class DialogSymbologyChangeComponent implements OnInit {
 
   ngOnInit() {
     this.validateForm();
+  }
+
+  ngAfterViewChecked(): void {
+    const element = document.getElementById('sample');
+    // Fill color
+    element.style.backgroundColor = 'rgba(' + this.changeForm.value.fillColor.r + ', ' +
+      this.changeForm.value.fillColor.g + ', ' + this.changeForm.value.fillColor.b + ', ' + this.changeForm.value.transparency + ')';
+    // Border color
+    element.style.borderColor = 'rgb(' + this.changeForm.value.borderColor.r + ', ' +
+      this.changeForm.value.borderColor.g + ', ' + this.changeForm.value.borderColor.b + ')';
+    element.style.borderWidth = this.changeForm.value.borderSize + 'px';
   }
 
   /**
