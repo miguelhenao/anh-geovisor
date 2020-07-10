@@ -714,7 +714,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         container: this.mapViewEl.nativeElement,
         center: [this.longitude, this.latitude],
         popup: {
-          autoOpenEnabled: true
+          autoOpenEnabled: false
         },
         zoom: 5,
         map: this.map
@@ -1137,54 +1137,26 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       // Evento click que captura cualquier interacción del usuario
       this.view.on('click', (e) => {
         // Evento de identificación de entidades con la clase IdentifyTask de Esri
-        if (this.popupAutoOpenEnabled && false) {
+        if (this.popupAutoOpenEnabled) {
           this.identifyParameters.geometry = e.mapPoint;
           this.identifyParameters.mapExtent = this.view.extent;
           document.getElementsByClassName('esri-view-root')[0].classList.remove('help-cursor');
           document.getElementsByClassName('esri-view-root')[0].classList.add('wait-cursor');
           this.identifyParameters.layerIds = this.listForIdentifyParameters();
           this.identifyTask.execute(this.identifyParameters).then((success) => {
-            const results = success.results;
-            console.log(success);
             const features = [];
-            results.map(result => {
+            success.results.map(result => {
               const feature = result.feature;
               const layer = this.getLayerForPopup(result.layerId);
               if (feature.attributes !== null) {
-                const attributes = Object.keys(feature.attributes);
-                // let text = '';
-                // const textContent = new TextContent();
-                // for (const field of attributes) {
-                //   text = `${text} <b>${field}: </b> {${field}} <br>`;
-                // }
-                // textContent.text = text;
-
-                // const attachmentsElement = new AttachmentsContent({
-                //   displayType: 'list'
-                // });
-
-                // const template = {
-                //   title: result.layerName,
-                //   content: [textContent, attachmentsElement],
-                //   fieldInfos: []
-                // };
-                // feature.symbol = {
-                //   type: 'simple-line',  // autocasts as new SimpleLineSymbol()
-                //   color: 'lightblue',
-                //   width: '2px',
-                //   style: 'solid'
-                // };
-                // feature.popupTemplate = template;
-                attributes.forEach(aliasField => {
-                  const nameField = this.getNameOfField(aliasField, layer.fields);
-                  if (nameField !== aliasField) {
-                    feature.attributes[nameField] = feature.attributes[aliasField];
-                    delete feature.attributes[aliasField];
+                layer.fields.map(field => {
+                  if (field.name !== field.alias) {
+                    feature.attributes[field.name] = feature.attributes[field.alias];
+                    delete feature.attributes[field.alias];
                   }
                 });
                 feature.popupTemplate = layer.popupTemplate;
                 feature.layer = layer;
-                console.log(feature);
               }
               features.push(feature);
             });
@@ -3076,10 +3048,5 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   getLayerForPopup(layerId) {
     const layer = this.map.layers.find(x => x.layerId === layerId);
     return layer;
-  }
-
-  getNameOfField(alias: string, fields: Array<any>) {
-    const nameField = fields.find(field => field.alias === alias);
-    return (nameField.name);
   }
 }
