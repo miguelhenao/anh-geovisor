@@ -1782,7 +1782,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.buildOptionsToChangeSimbology(title);
     // Apertura de modal de Cambiar Simbología
     const dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
-      width: '400px',
+      width: '500px',
       header: `Cambio de Simbología ${title}`,
       baseZIndex: 20,
       data: { help: this, optionsLayers: this.optionsLayers, layerSelected: this.layerSelectedSelection }
@@ -2097,10 +2097,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
-/**
- * Método para obtener los atributos de una capa y mostrarlos en la tabla de atributos
- * @param layer Capa seleccionada para visualizar su tabla de atributos
- */
+  /**
+   * Método para obtener los atributos de una capa y mostrarlos en la tabla de atributos
+   * @param layer Capa seleccionada para visualizar su tabla de atributos
+   */
   getFeaturesLayer(layer: any): void {
     this.styleClassAttrTable = 'maxTable';
     this.supportsAttachment = layer.capabilities.data.supportsAttachment;
@@ -2391,6 +2391,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             gpExtract.getResultData(jobInfo.jobId, 'Output_Zip_File').then((outputFile) => {
               const theurl = outputFile.value.url;
               window.location = theurl;
+              this.modalExtract = false;
             });
           } else {
             this.messageService.add({
