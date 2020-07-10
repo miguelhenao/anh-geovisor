@@ -41,7 +41,7 @@ export class DialogSymbologyChangeComponent implements OnInit {
       borderColor: new FormControl({ r: 0, g: 0, b: 0 }, Validators.required),
       fillColor: new FormControl({ r: 255, g: 0, b: 0 }, Validators.required),
       borderSize: new FormControl(1, Validators.required),
-      transparency: new FormControl(1)
+      transparency: new FormControl(0.5)
     });
   }
 
