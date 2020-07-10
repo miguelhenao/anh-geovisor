@@ -1,47 +1,51 @@
-<div>
+<div style="max-width: 450px;">
   <form [formGroup]="formClear">
     <div class="content">
-      
-      <p>Herramienta de limpieza de selecciones y capas para el Geovisor ANH</p>
-
-      <p-tabView>
-        <p-tabPanel header="Selección" leftIcon="esri-icon-checkbox-checked">
-          <p>Seleccione los elementos que desea limpiar:</p>
-          <div>
-            <p-checkbox binary="true" label="Selección en el mapa" formControlName="graphics"></p-checkbox>
-          </div>
-          <div style="margin-top: 5px;">
-            <p-checkbox binary="true" label="Selección tabla de atributos" formControlName="selection"></p-checkbox>
-          </div>
-          <div align="right">
-            <button pButton label="Limpiar" (click)="clear(false)"></button>&nbsp;
-          </div>
-        </p-tabPanel>
-        <p-tabPanel header="Capas" leftIcon="esri-icon-layers">
-          <div>
-            <p>Seleccione las capas que desea eliminar:</p>
-            <p-multiSelect [defaultLabel]="'Seleccionar'" formControlName="layers" [options]="layers"
-              selectedItemsLabel="{0} items seleccionados" emptyFilterMessage="Sin resultados"></p-multiSelect>
-          </div>
-          <div align="right" style="margin-top: 5px;">
-            <button pButton label="Eliminar" (click)="clear(false)"></button>&nbsp;
-          </div>
-        </p-tabPanel>
-      </p-tabView>
-      <div align="right">
-        <button pButton label="Limpiar todo" (click)="clear(true)" pTooltip="Se limpiarán todas las selecciones y se eliminarán las capas cargadas por el usuario"></button>
+      <div>
+        <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoTool = !infoTool"
+          style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
+        <p>Herramienta de limpieza de selecciones y capas para el Geovisor ANH</p>
+      </div>
+      <div>
+        <button pButton label="Limpiar todo" (click)="clearAll()" class="ui-button-warning" style="float: right;"
+          pTooltip="Se limpiarán todas las selecciones y se eliminarán las capas cargadas por el usuario"></button>
+        <p-tabView>
+          <p-tabPanel header="Selección" leftIcon="esri-icon-checkbox-checked">
+            <p>Seleccione los elementos que desea limpiar:</p>
+            <div>
+              <p-checkbox binary="true" label="Selección en el mapa" formControlName="graphics"></p-checkbox>
+            </div>
+            <div style="margin-top: 5px;">
+              <p-checkbox binary="true" label="Selección tabla de atributos" formControlName="selection"></p-checkbox>
+            </div>
+            <div align="right">
+              <button pButton label="Limpiar" (click)="clear()"></button>&nbsp;
+            </div>
+          </p-tabPanel>
+          <p-tabPanel header="Capas" leftIcon="esri-icon-layers">
+            <div>
+              <p>Seleccione las capas que desea eliminar:</p>
+              <p-multiSelect [defaultLabel]="'Seleccionar'" formControlName="layers" [options]="layers"
+                selectedItemsLabel="{0} items seleccionados" emptyFilterMessage="Sin resultados"></p-multiSelect>
+            </div>
+            <div align="right" style="margin-top: 5px;">
+              <button pButton label="Eliminar" (click)="clear()"></button>&nbsp;
+            </div>
+          </p-tabPanel>
+        </p-tabView>
       </div>
     </div>
   </form>
 
-  <p-message [escape]="true" severity="info" id="info"
+  <p-message [escape]="true" severity="info" id="info" *ngIf="infoTool"
     text="Desde esta ventana podrá elegir los elementos a limpiar como selecciones, gráficos y capas cargadas.">
   </p-message>
 
-  <div class="message">
+  <div class="message" *ngIf="infoTool">
     <p><i class="pi pi-info-circle"></i><span><b>Capas:</b> Son todas las capas cargadas por el usuario.</span> </p>
     <p>
-      <span><b>Gráficos:</b> Son todas las selecciones en el mapa producto de acciones del usuario como selección, ubicación de
+      <span><b>Gráficos:</b> Son todas las selecciones en el mapa producto de acciones del usuario como selección,
+        ubicación de
         coordenada, extracción.</span>
     </p>
     <p><span><b>Selección tabla de atributos:</b> Son las entidades seleccionadas en la tabla de atributos.</span></p>
