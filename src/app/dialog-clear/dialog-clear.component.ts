@@ -34,28 +34,43 @@ export class DialogClearComponent implements OnInit {
    * Método para hacer limpieza en el mapa
    * @param all -> Bandera que indica si se puede borrar o no, todo
    */
-  clear(all: boolean) {
-    if (!all) {
-      this.formClear.value.layers.forEach(element => {
-        const layer = this._this.map.layers.find(x => x.title === element);
-        this._this.map.layers.remove(layer);
-      });
-    } else {
-      this.layers.forEach(element => {
-        const layer = this._this.map.layers.find(x => x.title === element.value);
-        this._this.map.layers.remove(layer);
-      });
-    }
-    this.formClear.value.graphics || all ? this._this.clearGraphics() : null;
-    if (this.formClear.value.selection || all) {
+  clear() {
+    this.formClear.value.layers.forEach(element => {
+      const layer = this._this.map.layers.find(x => x.title === element);
+      this._this.map.layers.remove(layer);
+    });
+    this.formClear.value.graphics ? this._this.clearGraphics() : null;
+    if (this.formClear.value.selection) {
       this._this.featuresSelected.forEach(element => {
-        this._this.onRowUnselect({data: element});
+        this._this.onRowUnselect({ data: element });
       });
       this._this.featuresSelected = [];
     }
+    this.close('Los elementos seleccionados han sido removidos exitosamente')
+  }
+
+  clearAll() {
+    this._this.confirmationService.confirm({
+      message: `<p>¿Desea eliminar todos los elementos?</p>`,
+      accept: () => {
+        this.layers.forEach(element => {
+          const layer = this._this.map.layers.find(x => x.title === element.value);
+          this._this.map.layers.remove(layer);
+        });
+        this._this.clearGraphics();
+        this._this.featuresSelected.forEach(element => {
+          this._this.onRowUnselect({ data: element });
+        });
+        this._this.featuresSelected = [];
+        this.close('Todos los elementos han sido removidos exitosamente');
+      }
+    });
+  }
+
+  close(message) {
     this._this.messageService.add({
       summary: 'Mapa',
-      detail: `Los elementos seleccionados han sido removidos exitosamente`,
+      detail: message,
       severity: 'success'
     });
     this.formClear.reset();
