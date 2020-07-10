@@ -12,6 +12,7 @@ import * as FileSaver from 'file-saver';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Table } from 'primeng/table';
 import { Dialog } from 'primeng/dialog/dialog';
+import { zip } from 'rxjs';
 
 @Component({
   selector: 'app-map-viewer',
@@ -713,7 +714,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         container: this.mapViewEl.nativeElement,
         center: [this.longitude, this.latitude],
         popup: {
-          autoOpenEnabled: false
+          autoOpenEnabled: true
         },
         zoom: 5,
         map: this.map
@@ -1136,7 +1137,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       // Evento click que captura cualquier interacción del usuario
       this.view.on('click', (e) => {
         // Evento de identificación de entidades con la clase IdentifyTask de Esri
-        if (this.popupAutoOpenEnabled) {
+        if (this.popupAutoOpenEnabled && false) {
           this.identifyParameters.geometry = e.mapPoint;
           this.identifyParameters.mapExtent = this.view.extent;
           document.getElementsByClassName('esri-view-root')[0].classList.remove('help-cursor');
@@ -1144,28 +1145,46 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.identifyParameters.layerIds = this.listForIdentifyParameters();
           this.identifyTask.execute(this.identifyParameters).then((success) => {
             const results = success.results;
+            console.log(success);
             const features = [];
             results.map(result => {
               const feature = result.feature;
+              const layer = this.getLayerForPopup(result.layerId);
               if (feature.attributes !== null) {
                 const attributes = Object.keys(feature.attributes);
-                let text = '';
-                const textContent = new TextContent();
-                for (const field of attributes) {
-                  text = `${text} <b>${field}: </b> {${field}} <br>`;
-                }
-                textContent.text = text;
+                // let text = '';
+                // const textContent = new TextContent();
+                // for (const field of attributes) {
+                //   text = `${text} <b>${field}: </b> {${field}} <br>`;
+                // }
+                // textContent.text = text;
 
-                const attachmentsElement = new AttachmentsContent({
-                  displayType: 'list'
+                // const attachmentsElement = new AttachmentsContent({
+                //   displayType: 'list'
+                // });
+
+                // const template = {
+                //   title: result.layerName,
+                //   content: [textContent, attachmentsElement],
+                //   fieldInfos: []
+                // };
+                // feature.symbol = {
+                //   type: 'simple-line',  // autocasts as new SimpleLineSymbol()
+                //   color: 'lightblue',
+                //   width: '2px',
+                //   style: 'solid'
+                // };
+                // feature.popupTemplate = template;
+                attributes.forEach(aliasField => {
+                  const nameField = this.getNameOfField(aliasField, layer.fields);
+                  if (nameField !== aliasField) {
+                    feature.attributes[nameField] = feature.attributes[aliasField];
+                    delete feature.attributes[aliasField];
+                  }
                 });
-
-                const template = {
-                  title: result.layerName,
-                  content: [textContent, attachmentsElement],
-                  fieldInfos: []
-                };
-                feature.popupTemplate = template;
+                feature.popupTemplate = layer.popupTemplate;
+                feature.layer = layer;
+                console.log(feature);
               }
               features.push(feature);
             });
@@ -2096,10 +2115,10 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
-/**
- * Método para obtener los atributos de una capa y mostrarlos en la tabla de atributos
- * @param layer Capa seleccionada para visualizar su tabla de atributos
- */
+  /**
+   * Método para obtener los atributos de una capa y mostrarlos en la tabla de atributos
+   * @param layer Capa seleccionada para visualizar su tabla de atributos
+   */
   getFeaturesLayer(layer: any): void {
     this.styleClassAttrTable = 'maxTable';
     this.supportsAttachment = layer.capabilities.data.supportsAttachment;
@@ -3050,5 +3069,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.onRowUnselect({ data: feature });
       });
     }
+  }
+
+  getLayerForPopup(layerId) {
+    const layer = this.map.layers.find(x => x.layerId === layerId);
+    return layer;
+  }
+
+  getNameOfField(alias: string, fields: Array<any>) {
+    const nameField = fields.find(field => field.alias === alias);
+    return (nameField.name);
   }
 }
