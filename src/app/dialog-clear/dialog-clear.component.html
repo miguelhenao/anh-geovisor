@@ -1,8 +1,11 @@
-<div>
+<div style="max-width: 450px;">
   <form [formGroup]="formClear">
     <div class="content">
-
-      <p>Herramienta de limpieza de selecciones y capas para el Geovisor ANH</p>
+      <div>
+        <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoTool = !infoTool"
+          style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
+        <p>Herramienta de limpieza de selecciones y capas para el Geovisor ANH</p>
+      </div>
       <div>
         <button pButton label="Limpiar todo" (click)="clearAll()" class="ui-button-warning" style="float: right;"
           pTooltip="Se limpiarán todas las selecciones y se eliminarán las capas cargadas por el usuario"></button>
@@ -34,11 +37,11 @@
     </div>
   </form>
 
-  <p-message [escape]="true" severity="info" id="info"
+  <p-message [escape]="true" severity="info" id="info" *ngIf="infoTool"
     text="Desde esta ventana podrá elegir los elementos a limpiar como selecciones, gráficos y capas cargadas.">
   </p-message>
 
-  <div class="message">
+  <div class="message" *ngIf="infoTool">
     <p><i class="pi pi-info-circle"></i><span><b>Capas:</b> Son todas las capas cargadas por el usuario.</span> </p>
     <p>
       <span><b>Gráficos:</b> Son todas las selecciones en el mapa producto de acciones del usuario como selección,

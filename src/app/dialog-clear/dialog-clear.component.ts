@@ -9,6 +9,7 @@ import { FormBuilder, FormControl } from '@angular/forms';
 export class DialogClearComponent implements OnInit {
   @Input() _this: any;
   layers: any = [];
+  infoTool = true;
   constructor(private fb: FormBuilder) { }
 
   formClear = this.fb.group({
@@ -46,7 +47,7 @@ export class DialogClearComponent implements OnInit {
       });
       this._this.featuresSelected = [];
     }
-    this.close('Los elementos seleccionados han sido removidos exitosamente')
+    this.close('Los elementos seleccionados han sido removidos exitosamente');
   }
 
   clearAll() {
