@@ -1169,6 +1169,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               }
               features.push(feature);
             });
+            features.reverse();
             if (features.length > 0) {
               this.view.popup.open({
                 features,
