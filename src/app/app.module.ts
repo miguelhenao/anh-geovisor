@@ -43,6 +43,7 @@ import { DialogAnalysisComponent } from './dialog-analysis/dialog-analysis.compo
 import { DialogMeasurementComponent } from './dialog-measurement/dialog-measurement.component';
 import { DialogClearComponent } from './dialog-clear/dialog-clear.component';
 import { CheckboxModule } from 'primeng/checkbox';
+import { TabViewModule } from 'primeng/tabview';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { CheckboxModule } from 'primeng/checkbox';
     TieredMenuModule,
     ConfirmDialogModule,
     InputMaskModule,
-    CheckboxModule
+    CheckboxModule,
+    TabViewModule
   ],
   providers: [
     ConfirmationService
