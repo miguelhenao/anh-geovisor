@@ -1,33 +1,49 @@
 <div>
-  <p>Seleccione los elementos a eliminar:</p>
   <form [formGroup]="formClear">
     <div class="content">
-      <div>
-        <p>Capas: </p>
-        <p-multiSelect [defaultLabel]="'Seleccionar'" formControlName="layers" [options]="layers"
-          selectedItemsLabel="{0} items seleccionados" emptyFilterMessage="Sin resultados"></p-multiSelect>
-      </div>
-      <div>
-        <p-checkbox binary="true" label="Gráficos" formControlName="graphics"></p-checkbox>
-      </div>
-      <div>
-        <p-checkbox binary="true" label="Selección tabla de atributos" formControlName="selection"></p-checkbox>
-      </div>
+      
+      <p>Herramienta de limpieza de selecciones y capas para el Geovisor ANH</p>
+
+      <p-tabView>
+        <p-tabPanel header="Selección" leftIcon="esri-icon-checkbox-checked">
+          <p>Seleccione los elementos que desea limpiar:</p>
+          <div>
+            <p-checkbox binary="true" label="Selección en el mapa" formControlName="graphics"></p-checkbox>
+          </div>
+          <div style="margin-top: 5px;">
+            <p-checkbox binary="true" label="Selección tabla de atributos" formControlName="selection"></p-checkbox>
+          </div>
+          <div align="right">
+            <button pButton label="Limpiar" (click)="clear(false)"></button>&nbsp;
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="Capas" leftIcon="esri-icon-layers">
+          <div>
+            <p>Seleccione las capas que desea eliminar:</p>
+            <p-multiSelect [defaultLabel]="'Seleccionar'" formControlName="layers" [options]="layers"
+              selectedItemsLabel="{0} items seleccionados" emptyFilterMessage="Sin resultados"></p-multiSelect>
+          </div>
+          <div align="right" style="margin-top: 5px;">
+            <button pButton label="Eliminar" (click)="clear(false)"></button>&nbsp;
+          </div>
+        </p-tabPanel>
+      </p-tabView>
       <div align="right">
-        <button pButton label="Limpiar" (click)="clear(false)"></button>&nbsp;
-        <button pButton label="Limpiar todo" (click)="clear(true)"></button>
+        <button pButton label="Limpiar todo" (click)="clear(true)" pTooltip="Se limpiarán todas las selecciones y se eliminarán las capas cargadas por el usuario"></button>
       </div>
     </div>
   </form>
 
   <p-message [escape]="true" severity="info" id="info"
-    text="Desde esta ventana podrá elegir los elementos a borrar como selecciones, gráficos y capas cargadas.">
+    text="Desde esta ventana podrá elegir los elementos a limpiar como selecciones, gráficos y capas cargadas.">
   </p-message>
 
   <div class="message">
-
     <p><i class="pi pi-info-circle"></i><span><b>Capas:</b> Son todas las capas cargadas por el usuario.</span> </p>
-    <p><span><b>Gráficos:</b> Son todos los dibujos producto de acciones del usuario como selección, ubicación de coordenada, extracción.</span></p>
+    <p>
+      <span><b>Gráficos:</b> Son todas las selecciones en el mapa producto de acciones del usuario como selección, ubicación de
+        coordenada, extracción.</span>
+    </p>
     <p><span><b>Selección tabla de atributos:</b> Son las entidades seleccionadas en la tabla de atributos.</span></p>
   </div>
 </div>

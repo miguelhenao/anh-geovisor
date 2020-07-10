@@ -1188,6 +1188,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
               }
               features.push(feature);
             });
+            features.reverse();
             if (features.length > 0) {
               this.view.popup.open({
                 features,
@@ -1800,7 +1801,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.buildOptionsToChangeSimbology(title);
     // Apertura de modal de Cambiar Simbología
     const dialog = this.dialogService.open(DialogSymbologyChangeComponent, {
-      width: '400px',
+      width: '500px',
       header: `Cambio de Simbología ${title}`,
       baseZIndex: 20,
       data: { help: this, optionsLayers: this.optionsLayers, layerSelected: this.layerSelectedSelection }
@@ -2409,6 +2410,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             gpExtract.getResultData(jobInfo.jobId, 'Output_Zip_File').then((outputFile) => {
               const theurl = outputFile.value.url;
               window.location = theurl;
+              this.modalExtract = false;
             });
           } else {
             this.messageService.add({
