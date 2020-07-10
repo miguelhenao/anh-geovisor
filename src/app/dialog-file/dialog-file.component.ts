@@ -96,6 +96,8 @@ export class DialogFileComponent implements OnInit {
       this.dialogRef.close();
       this.makingWork = false;
     }, (err) => {
+      this.dialogRef.close();
+      this.makingWork = false;
       this.mainContext.makingWork = false;
       console.error(err);
       this.mainContext.messageService.add({
@@ -114,7 +116,8 @@ export class DialogFileComponent implements OnInit {
     const [FeatureLayer, Graphic, Field, SimpleRenderer] =
       await loadModules(['esri/layers/FeatureLayer', 'esri/Graphic', 'esri/layers/support/Field', 'esri/renderers/SimpleRenderer']);
     let sourceGraphics = [];
-    const layers = featureCollection.data.featureCollection.layers.map((layer) => {
+    const layersInOrder = this.sortLayers(featureCollection.data.featureCollection.layers);
+    const layers = layersInOrder.map((layer) => {
       let quantityType = 1;
       this.mainContext.map.layers.items.forEach((lay) => {
         if (lay.title.startsWith('Shape')) {
@@ -236,6 +239,15 @@ export class DialogFileComponent implements OnInit {
     this.mainContext.view.goTo(sourceGraphics);
     this.dialogRef.close();
     this.makingWork = false;
+  }
+
+  sortLayers(layers: Array<any>) {
+    const layersInOrder = [];
+    layers.map(layer => {
+      ((layer.featureSet.geometryType).includes('Point') || (layer.featureSet.geometryType).includes('Polyline')) ?
+        layersInOrder.push(layer) : layersInOrder.unshift(layer);
+    });
+    return layersInOrder;
   }
 }
 
