@@ -167,6 +167,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   identifyTask: any;
   identifyParameters: any;
   popupAutoOpenEnabled = true;
+  home: any;
 
   constructor(private dialogService: DialogService, private service: MapViewerService, private ref: ChangeDetectorRef,
     private messageService: MessageService, private confirmationService: ConfirmationService) {
@@ -694,15 +695,14 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       // Load the modules for the ArcGIS API for JavaScript
       const [Map, MapView, FeatureLayer, LayerList, Print, Search, Expand, LabelClass, BasemapGallery, SketchViewModel,
-        GraphicsLayer, Graphic, Legend, ScaleBar, geometryEngine, SpatialReference, ProjectParameters, GeometryService,
-        TextContent, CoordinateVM, AttachmentsContent, IdentifyTask, IdentifyParameters, IdentifyResult] =
+        GraphicsLayer, Graphic, Legend, ScaleBar, geometryEngine, TextContent, CoordinateVM, AttachmentsContent, IdentifyTask,
+        IdentifyParameters, Home] =
         await loadModules(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/widgets/LayerList', 'esri/widgets/Print',
           'esri/widgets/Search', 'esri/widgets/Expand', 'esri/layers/support/LabelClass', 'esri/widgets/BasemapGallery',
           'esri/widgets/Sketch/SketchViewModel', 'esri/layers/GraphicsLayer', 'esri/Graphic', 'esri/widgets/Legend',
-          'esri/widgets/ScaleBar', 'esri/geometry/geometryEngine', 'esri/geometry/SpatialReference',
-          'esri/tasks/support/ProjectParameters', 'esri/tasks/GeometryService', 'esri/popup/content/TextContent',
+          'esri/widgets/ScaleBar', 'esri/geometry/geometryEngine', 'esri/popup/content/TextContent',
           'esri/widgets/CoordinateConversion/CoordinateConversionViewModel', 'esri/popup/content/AttachmentsContent',
-          'esri/tasks/IdentifyTask', 'esri/tasks/support/IdentifyParameters', 'esri/tasks/support/IdentifyResult']);
+          'esri/tasks/IdentifyTask', 'esri/tasks/support/IdentifyParameters', 'esri/widgets/Home']);
       // Configure the Map
       const mapProperties = {
         basemap: 'streets'
@@ -1644,6 +1644,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         content: document.getElementById('help'),
         group: 'expand',
         expandTooltip: 'Ayuda'
+      });
+
+      // Home
+      this.home = new Home({
+        view: this.view
       });
 
       // Adición de los expands y widgets al mapa (view)
@@ -2956,14 +2961,6 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           : null;
       }
     }
-  }
-
-  /**
-   * Método Home, lleva a la vista del mapa a la vista inicial
-   */
-  public viewAll(): void {
-    this.view.center = [this.longitude, this.latitude];
-    this.view.zoom = 5;
   }
 
   /**
