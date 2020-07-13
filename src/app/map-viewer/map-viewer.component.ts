@@ -1148,16 +1148,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             success.results.map(result => {
               const feature = result.feature;
               const layer = this.getLayerForPopup(result.layerId);
-              if (feature.attributes !== null) {
-                layer.fields.map(field => {
-                  if (field.name !== field.alias) {
-                    feature.attributes[field.name] = feature.attributes[field.alias];
-                    delete feature.attributes[field.alias];
-                  }
-                });
-                feature.popupTemplate = layer.popupTemplate;
-                feature.layer = layer;
-              }
+              feature.popupTemplate = layer.popupTemplate;
+              feature.layer = layer;
               features.push(feature);
             });
             features.reverse();
@@ -1344,7 +1336,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           tolerance: 0,
           width: this.view.width,
           height: this.view.height,
-          returnGeometry: true
+          returnGeometry: true,
+          returnFieldName: true
         });
       });
 
