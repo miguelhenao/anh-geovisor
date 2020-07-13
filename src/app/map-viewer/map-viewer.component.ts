@@ -714,7 +714,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         container: this.mapViewEl.nativeElement,
         center: [this.longitude, this.latitude],
         popup: {
-          autoOpenEnabled: false
+          autoOpenEnabled: false,
+          dockEnabled: true,
+          dockOptions: {
+            position: 'top-right',
+            breakpoint: false
+          }
         },
         zoom: 5,
         map: this.map
@@ -1154,6 +1159,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             });
             features.reverse();
             if (features.length > 0) {
+              this.view.popup.set('dockOptions', {
+                breakpoint: false,
+                buttonEnabled: true,
+                position: 'top-right'
+              });
               this.view.popup.open({
                 features,
                 location: e.mapPoint
