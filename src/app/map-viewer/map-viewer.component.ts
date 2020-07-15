@@ -83,8 +83,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   // Url servidor ArcGIS.com para servicios de conversión (sharing)
   sharingUrl = 'https://www.arcgis.com'; // importante que sea https para evitar problemas de SSL
   // Url del servicio de impresión, por el momento no funciona
-  printUrl = this.agsUrlBase + 'rest/services/ExportWebMap_10/GPServer/Export%20Web%20Map';
-  // printUrl = this.agsUrlBase + 'rest/services/Utilities/PrintingTools/GPServer/Export Web Map Task';
+  // printUrl = this.agsUrlBase + 'rest/services/ExportWebMap_10/GPServer/Export%20Web%20Map';
+  printUrl = this.agsUrlBase + 'rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task';
   // Url del servicio de impresión por defecto de Arcgis. Comentar o eliminar cuando funcione el servicio de ANH
   // printUrl = 'https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task';
   // Geometry Service
