@@ -1,5 +1,5 @@
 #help-content {
-  height: 490px;
+  height: 500px;
   overflow-y: auto;
 }
 
@@ -9,8 +9,8 @@
 }
 
 .ui-g {
-  width: 795px;
-  height: 500px;
+  width: 790px;
+  height: 505px;
 }
 
 h2, h3, h4 {
@@ -41,7 +41,7 @@ thead {
 }
 
 img {
-  width: 98%;
+  width: 90%;
   margin: 5px;
 }
 
