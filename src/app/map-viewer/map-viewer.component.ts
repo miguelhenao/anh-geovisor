@@ -99,7 +99,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   optionsPolygon = [
     { name: 'Polígono Rectangular', value: 'rectangle' },
     { name: 'Polígono Libre', value: 'free-pol' },
-    { name: 'Entidad', value: 'entity' }
+    { name: 'Elemento Geográfico', value: 'entity' }
   ];
   optionsBuffer = [
     { name: 'Kilómetros', value: 9036 },
@@ -572,11 +572,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.map.layers.items.forEach((layer) => {
       if (layer.title !== null) {
         layer.copyright = layer.copyright !== null && layer.copyright !== undefined ? layer.copyright : '';
-        const label = layer.copyright.includes('SGC') ? layer.title + '*' :
-          layer.copyright.includes('IGAC') ? layer.title + '**' : layer.title;
-        if (layer.copyright.includes('SGC')) {
+        const label = layer.copyright.includes('SGC') || layer.title === 'Sísmica 3D' ? layer.title + '*' :
+          layer.copyright.includes('IGAC') || layer.title === 'Departamento' || layer.title === 'Pozo'
+          ? layer.title + '**' : layer.title;
+        if (layer.copyright.includes('SGC') || layer.title === 'Sísmica 3D') {
           this.copyrightSGC.push(layer.title);
-        } else if (layer.copyright.includes('IGAC')) {
+        } else if (layer.copyright.includes('IGAC') || layer.title === 'Departamento' || layer.title === 'Pozo') {
           this.copyrightIGAC.push(layer.title);
         }
         this.isValidOption(layer.title) ? this.optionsLayers.push({
@@ -613,13 +614,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.optionsLayers = [];
     this.layerSelectedSelection = null;
     this.map.layers.items.forEach((layer) => {
+      debugger;
       if (layer.title !== null) {
         layer.copyright = layer.copyright !== null && layer.copyright !== undefined ? layer.copyright : '';
-        const label = layer.copyright.includes('SGC') ? layer.title + '*' :
-          layer.copyright.includes('IGAC') ? layer.title + '**' : layer.title;
-        if (layer.copyright.includes('SGC')) {
+        const label = layer.copyright.includes('SGC') || layer.title === 'Sismica 3D' ? layer.title + '*' :
+          layer.copyright.includes('IGAC') || layer.title === 'Departamento' || layer.title === 'Pozo'
+          ? layer.title + '**' : layer.title;
+        if (layer.copyright.includes('SGC') || layer.title === 'Sísmica 3D') {
           this.copyrightSGC.push(layer.title);
-        } else if (layer.copyright.includes('IGAC')) {
+        } else if (layer.copyright.includes('IGAC') || layer.title === 'Departamento' || layer.title === 'Pozo') {
           this.copyrightIGAC.push(layer.title);
         }
         const sel: SelectItem = {
@@ -1741,8 +1744,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.map.layers.items.forEach((layer) => {
       if (layer.title !== null) {
         layer.copyright = layer.copyright !== null && layer.copyright !== undefined ? layer.copyright : '';
-        const label = layer.copyright.includes('SGC') ? layer.title + '*' :
-          layer.copyright.includes('IGAC') ? layer.title + '**' : layer.title;
+        const label = layer.copyright.includes('SGC') || layer.title === 'Sísmica 3D' ? layer.title + '*' :
+          layer.copyright.includes('IGAC') || layer.title === 'Departamento' || layer.title === 'Pozo'
+          ? layer.title + '**' : layer.title;
         if (layer.copyright.includes('SGC')) {
           this.copyrightSGC.push(layer.title);
         } else if (layer.copyright.includes('IGAC')) {
@@ -1836,6 +1840,15 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     };
     this.departmentLayer.queryFeatures(query).then((result) => {
       const dptos: Array<any> = [];
+      result.features.sort((a, b) => {
+        if (a.attributes.departamen > b.attributes.departamen) {
+          return 1;
+        }
+        if (a.attributes.departamen < b.attributes.departamen) {
+          return -1;
+        }
+        return 0;
+      });
       for (const r of result.features) {
         const dpto = {
           attributes: Object.assign({}, r.attributes),
@@ -2278,7 +2291,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
     });
     if (!this.layerExtract && (this.selectedLayers.length === 0 || this.view.graphics.length === 0) && !this.shapeAttr
-      && !this.advancedSearchShape && (this.selectedPolygon.value === 'entity' && (this.layerExtractor === null
+      && !this.advancedSearchShape && (this.selectedPolygon !== undefined && this.selectedPolygon.value === 'entity' && (this.layerExtractor === null
         || this.layerExtractor === undefined))) {
       if (this.selectedLayers.length === 0) {
         this.messageService.add({

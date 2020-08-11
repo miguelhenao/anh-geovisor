@@ -22,6 +22,6 @@
 </div>
 <br>
 <p-message id="infoMedicion" severity="info" [escape]="false"
-  text="Seleccione un <b>archivo local</b> para cargarlo como una capa sobre el mapa"></p-message>
+  text="Seleccione un <b>archivo local</b> en formato {{type}} para cargarlo como una capa sobre el mapa"></p-message>
 <br>
 <p-message *ngIf="formatError" id="infoMedicion" severity="error" text="Formato no aceptado"></p-message>
