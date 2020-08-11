@@ -743,7 +743,7 @@ p-sidebar {
 }
 
 ::ng-deep .esri-coordinate-conversion__tools .esri-widget--button {
-  background-color: #f4f4f4;
+  background-color: #afafaf;
 }
 
 ::ng-deep .esri-coordinate-conversion {
