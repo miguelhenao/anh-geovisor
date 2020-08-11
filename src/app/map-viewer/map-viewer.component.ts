@@ -574,7 +574,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         layer.copyright = layer.copyright !== null && layer.copyright !== undefined ? layer.copyright : '';
         const label = layer.copyright.includes('SGC') || layer.title === 'Sísmica 3D' ? layer.title + '*' :
           layer.copyright.includes('IGAC') || layer.title === 'Departamento' || layer.title === 'Pozo'
-          ? layer.title + '**' : layer.title;
+            ? layer.title + '**' : layer.title;
         if (layer.copyright.includes('SGC') || layer.title === 'Sísmica 3D') {
           this.copyrightSGC.push(layer.title);
         } else if (layer.copyright.includes('IGAC') || layer.title === 'Departamento' || layer.title === 'Pozo') {
@@ -614,12 +614,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.optionsLayers = [];
     this.layerSelectedSelection = null;
     this.map.layers.items.forEach((layer) => {
-      debugger;
+      // debugger;
       if (layer.title !== null) {
         layer.copyright = layer.copyright !== null && layer.copyright !== undefined ? layer.copyright : '';
         const label = layer.copyright.includes('SGC') || layer.title === 'Sismica 3D' ? layer.title + '*' :
           layer.copyright.includes('IGAC') || layer.title === 'Departamento' || layer.title === 'Pozo'
-          ? layer.title + '**' : layer.title;
+            ? layer.title + '**' : layer.title;
         if (layer.copyright.includes('SGC') || layer.title === 'Sísmica 3D') {
           this.copyrightSGC.push(layer.title);
         } else if (layer.copyright.includes('IGAC') || layer.title === 'Departamento' || layer.title === 'Pozo') {
@@ -1346,7 +1346,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.identifyParameters = new IdentifyParameters({
           layerOption: 'visible',
           layerIds: [0, 1, 2, 3, 4, 5, 6, 7],
-          tolerance: 0,
+          tolerance: 4,
           width: this.view.width,
           height: this.view.height,
           returnGeometry: true,
@@ -1746,7 +1746,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         layer.copyright = layer.copyright !== null && layer.copyright !== undefined ? layer.copyright : '';
         const label = layer.copyright.includes('SGC') || layer.title === 'Sísmica 3D' ? layer.title + '*' :
           layer.copyright.includes('IGAC') || layer.title === 'Departamento' || layer.title === 'Pozo'
-          ? layer.title + '**' : layer.title;
+            ? layer.title + '**' : layer.title;
         if (layer.copyright.includes('SGC')) {
           this.copyrightSGC.push(layer.title);
         } else if (layer.copyright.includes('IGAC')) {
