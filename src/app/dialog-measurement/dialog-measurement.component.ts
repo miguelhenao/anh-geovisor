@@ -24,10 +24,13 @@ export class DialogMeasurementComponent implements OnInit, OnDestroy {
     y: null
   };
 
+  message: string;
+
   constructor() { }
 
   ngOnInit() {
     this.initializeComponent();
+    this.message = 'Seleccione una herramienta.';
   }
 
   ngOnDestroy(): void {
@@ -96,6 +99,7 @@ export class DialogMeasurementComponent implements OnInit, OnDestroy {
               unit: 'kilometers'
             });
             this.activeWidget.viewModel.newMeasurement();
+            this.message = 'Haga <b>clic</b> sobre el mapa para agregar puntos. <b>Doble clic</b> para terminar la medición.';
             break;
           case 'area':
             this.activeWidget = new AreaMeasurement2D({
@@ -104,6 +108,7 @@ export class DialogMeasurementComponent implements OnInit, OnDestroy {
               unit: 'hectares'
             });
             this.activeWidget.viewModel.newMeasurement();
+            this.message = 'Haga <b>clic</b> sobre el mapa para agregar puntos. <b>Doble clic</b> para terminar la medición.';
             break;
           case 'coordinate':
             this.activeWidget = new CoordinateConversion({
@@ -160,6 +165,9 @@ export class DialogMeasurementComponent implements OnInit, OnDestroy {
             });
             this.activeWidget.conversions.removeAll();
             this.activeWidget.conversions.add(new Conversion({ format: formatDMS }));
+
+            this.message = 'Recorra el mapa con el cursor para obtener la coordenada en algún punto.' +
+              ' Realice la captura de una coordenada en el <b>Modo Captura</b> o ingrese una coordenada en <b>Coordenada de Entrada</b>';
             break;
           case null:
             if (this.activeWidget) {
