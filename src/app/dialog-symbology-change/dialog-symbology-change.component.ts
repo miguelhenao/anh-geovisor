@@ -21,6 +21,7 @@ export class DialogSymbologyChangeComponent implements OnInit, AfterViewChecked 
   layerSelected: string;
   help: any;
   changeObject: ChangeSymbology = new ChangeSymbology();
+  infoTool = true;
 
   constructor(private formBuilder: FormBuilder, private ref: DynamicDialogRef, private config: DynamicDialogConfig) {
     this.help = config.data.help;
