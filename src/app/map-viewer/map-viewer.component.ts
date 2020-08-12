@@ -1151,14 +1151,23 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           document.getElementsByClassName('esri-view-root')[0].classList.remove('help-cursor');
           document.getElementsByClassName('esri-view-root')[0].classList.add('wait-cursor');
           this.identifyParameters.layerIds = this.listForIdentifyParameters();
-          this.identifyTask.execute(this.identifyParameters).then((success) => {
-            const features = [];
-            success.results.map(result => {
+          this.identifyTask.execute(this.identifyParameters).then((response) => {
+            const features = response.results.map(result => {
               const feature = result.feature;
               const layer = this.getLayerForPopup(result.layerId);
               feature.popupTemplate = layer.popupTemplate;
               feature.layer = layer;
-              features.push(feature);
+
+              const fieldInfos = [];
+              // tslint:disable-next-line: forin
+              for (const field in feature.attributes) {
+                fieldInfos.push({
+                  fieldName: field,
+                  visible: true
+                });
+              }
+              feature.popupTemplate.fieldInfos = fieldInfos;
+              return feature;
             });
             features.reverse();
             if (features.length > 0) {
