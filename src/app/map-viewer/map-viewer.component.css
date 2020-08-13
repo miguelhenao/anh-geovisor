@@ -785,3 +785,7 @@ p-sidebar {
 ::ng-deep .esri-coordinate-conversion__settings-group-horizontal {
   pointer-events: none;
 }
+
+::ng-deep .ui-dialog .ui-dialog-content {
+  overflow-y: unset;
+}
