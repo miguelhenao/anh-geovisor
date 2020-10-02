@@ -2580,7 +2580,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * Retorna el data key de la tabla de atributos
    */
   public dataKey(): string {
-    return this.columnsTable !== null && this.columnsTable !== undefined ? `attributes.${this.columnsTable[0].name}` : null;
+    return this.columnsTable !== null && this.columnsTable !== undefined ?
+      `attributes.${this.columnsTable.find(x => x.type === 'oid').name}` : null;
   }
 
   /**
