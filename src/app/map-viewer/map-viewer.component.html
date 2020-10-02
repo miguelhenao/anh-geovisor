@@ -74,7 +74,7 @@
 
 <!-- Modal de extracción de datos -->
 <p-dialog [(visible)]="modalExtract" [resizable]="false" (onHide)="onHideDialogExtract()" [focusOnShow]="false"
-  [style]="{'width': '390px'}" position="topright">
+  [style]="{'width': '450px'}" position="topright">
   <p-header>
     {{headerExtract}}
   </p-header>
@@ -83,7 +83,7 @@
       (click)="requestHelp('h-extraer')" icon="pi pi-question"></button>
     <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoTool = !infoTool"
       style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
-    <p>1. Seleccione la(s) capa(s) a extraer</p>
+    <p>1. Seleccione la(s) capa(s) a extraer, posteriormente de click en el ícono de cerrar del Select</p>
     <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados"
       [(ngModel)]="selectedLayers"></p-multiSelect>
     <br>
@@ -97,13 +97,13 @@
       </div>
     </div>
     <div *ngIf="selectedPolygon != undefined && selectedPolygon != null && selectedPolygon.value == 'entity'">
-      <p>3. Seleccione la capa a la cual pertenece el elemento geográfico "molde de corte"</p>
+      <p>3. Seleccione la capa a la cual pertenece el Elemento Geográfico (o “molde de corte”)</p>
       <p-dropdown [options]="optionsLayerExtractor" placeholder="Click aquí..." [(ngModel)]="layerExtractor">
       </p-dropdown>
     </div>
     <div *ngIf="selectedPolygon != undefined && selectedPolygon != null">
       <span *ngIf="selectedPolygon.value == 'entity' && layerExtractor != undefined">
-        4. Haga click en el mapa sobre un elemento geográfico “molde de corte”
+        4. Haga click en el mapa sobre el Elemento Geográfico (o “molde de corte”)
       </span>
       <span *ngIf="selectedPolygon.value != 'entity'">
         3. Dibuje en el mapa el polígono
