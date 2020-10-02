@@ -572,12 +572,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.map.layers.items.forEach((layer) => {
       if (layer.title !== null) {
         layer.copyright = layer.copyright !== null && layer.copyright !== undefined ? layer.copyright : '';
-        const label = layer.copyright.includes('SGC') || layer.title === 'Sísmica 3D' ? layer.title + '*' :
-          layer.copyright.includes('IGAC') || layer.title === 'Departamento' || layer.title === 'Pozo'
-            ? layer.title + '**' : layer.title;
-        if (layer.copyright.includes('SGC') || layer.title === 'Sísmica 3D') {
+        const label = layer.copyright.includes('SGC') || layer.title === 'Sísmica 3D' || layer.title === 'Pozo' ? layer.title + '*' :
+          layer.copyright.includes('IGAC') || layer.title === 'Departamento' ? layer.title + '**' : layer.title;
+        if (layer.copyright.includes('SGC') || layer.title === 'Sísmica 3D' || layer.title === 'Pozo') {
           this.copyrightSGC.push(layer.title);
-        } else if (layer.copyright.includes('IGAC') || layer.title === 'Departamento' || layer.title === 'Pozo') {
+        } else if (layer.copyright.includes('IGAC') || layer.title === 'Departamento') {
           this.copyrightIGAC.push(layer.title);
         }
         this.isValidOption(layer.title) ? this.optionsLayers.push({
@@ -617,12 +616,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       // debugger;
       if (layer.title !== null) {
         layer.copyright = layer.copyright !== null && layer.copyright !== undefined ? layer.copyright : '';
-        const label = layer.copyright.includes('SGC') || layer.title === 'Sismica 3D' ? layer.title + '*' :
-          layer.copyright.includes('IGAC') || layer.title === 'Departamento' || layer.title === 'Pozo'
-            ? layer.title + '**' : layer.title;
-        if (layer.copyright.includes('SGC') || layer.title === 'Sísmica 3D') {
+        const label = layer.copyright.includes('SGC') || layer.title === 'Sismica 3D' || layer.title === 'Pozo' ? layer.title + '*' :
+          layer.copyright.includes('IGAC') || layer.title === 'Departamento' ? layer.title + '**' : layer.title;
+        if (layer.copyright.includes('SGC') || layer.title === 'Sísmica 3D' || layer.title === 'Pozo') {
           this.copyrightSGC.push(layer.title);
-        } else if (layer.copyright.includes('IGAC') || layer.title === 'Departamento' || layer.title === 'Pozo') {
+        } else if (layer.copyright.includes('IGAC') || layer.title === 'Departamento') {
           this.copyrightIGAC.push(layer.title);
         }
         const sel: SelectItem = {
