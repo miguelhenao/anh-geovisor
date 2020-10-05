@@ -2506,9 +2506,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   this.view.graphics.add(graphicPozo);
                   this.graphicGoTo = graphicPozo;
                 }
-                this.layerAttrTable.title.startsWith('Pozo') || this.layerAttrTable.title.startsWith('Sísmica')
-                  || this.layerAttrTable.title.startsWith('Rezumadero') ? this.view.goTo({ target: response[0], zoom: 20 }) :
-                  this.view.goTo(response[0]);
+                this.layerAttrTable.title.startsWith('Pozo') || this.layerAttrTable.title.startsWith('Rezumadero') ?
+                  this.view.goTo({ target: response[0], zoom: 20 }) : this.layerAttrTable.title.startsWith('Sísmica') ?
+                    this.view.goTo({ target: response[0], zoom: 10 }) : this.view.goTo(response[0]);
               });
             }
             this.view.graphics.add(graphic);
