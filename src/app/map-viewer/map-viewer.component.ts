@@ -2466,7 +2466,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         const symbol = goTo ? symbolY : symbolX;
         const layer = this.modalAnalysis ? this.departmentLayer : this.layerAttrTable;
         const query = layer.createQuery();
-        query.where = `${this.columnsTable[0].alias} = ${event.data.attributes[this.columnsTable[0].name]}`;
+        query.where = `${this.columnsTable.find(x => x.type === 'oid').name} =
+          ${event.data.attributes[this.columnsTable.find(x => x.type === 'oid').name]}`;
         query.returnGeometry = true;
         query.outFields = ['*'];
         layer.queryFeatures(query).then((res) => {
@@ -2489,7 +2490,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 outSpatialReference: outSR
               });
               geomSvc.project(params).then((response) => {
-                if (this.layerAttrTable.title.startsWith('Pozo')) {
+                if (this.layerAttrTable.title.startsWith('Pozo') || this.layerAttrTable.title.startsWith('Rezumadero')) {
                   const point = {
                     type: 'point',
                     longitude: response[0].longitude,
@@ -2505,8 +2506,9 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                   this.view.graphics.add(graphicPozo);
                   this.graphicGoTo = graphicPozo;
                 }
-                this.layerAttrTable.title.startsWith('Pozo') || this.layerAttrTable.title.startsWith('Sísmica') ?
-                  this.view.goTo({ target: response[0], zoom: 9 }) : this.view.goTo(response[0]);
+                this.layerAttrTable.title.startsWith('Pozo') || this.layerAttrTable.title.startsWith('Sísmica')
+                  || this.layerAttrTable.title.startsWith('Rezumadero') ? this.view.goTo({ target: response[0], zoom: 20 }) :
+                  this.view.goTo(response[0]);
               });
             }
             this.view.graphics.add(graphic);
