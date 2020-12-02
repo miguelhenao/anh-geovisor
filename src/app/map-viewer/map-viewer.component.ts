@@ -2121,16 +2121,18 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
    * @param layer Capa seleccionada para visualizar su tabla de atributos
    */
   getFeaturesLayer(layer: any): void {
+    this.makingWork = true;
     this.styleClassAttrTable = 'maxTable';
     this.supportsAttachment = layer.capabilities.data.supportsAttachment;
     this.minimizeMaximize = true;
     const query = {
       outFields: ['*'],
-      returnGeometry: false,
+      returnGeometry: true,
       where: ''
     };
     layer.queryFeatures(query).then((result) => {
       this.featureDptos = result.features;
+      console.log(this.featureDptos);
       this.columnsTable = result.fields[0] !== undefined ? result.fields : layer.fields;
       for (let index = 0; index < this.columnsTable.length; index++) {
         this.filter[index] = 'contains';
@@ -2140,6 +2142,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.makingWork = false;
       this.visibleModal(false, false, false, false, false, false, true, false, false, false);
     }, (err) => {
+      this.makingWork = false;
       console.error(err);
     });
   }
@@ -2169,7 +2172,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.quantityFields = 0;
       const query = {
         outFields: ['*'],
-        returnGeometry: false,
+        returnGeometry: true,
         where: ''
       };
       this.layerAttrTable.queryFeatures(query).then((result) => {
@@ -2178,7 +2181,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         for (let index = 0; index < this.columnsTable.length; index++) {
           this.filter[index] = 'contains';
         }
-        this.visibleModal(false, false, false, false, false, false, true, false, false, false);
+        // this.visibleModal(false, false, false, false, false, false, true, false, false, false);
       }, (err) => {
         console.error(err);
       });
@@ -2260,7 +2263,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
     const query = {
       outFields: ['*'],
-      returnGeometry: false,
+      returnGeometry: true,
       where: params
     };
     this.layerAttrTable.queryFeatures(query).then((result) => {
@@ -2336,64 +2339,71 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
     } else {
       this.makingWork = true;
-      if (this.layerExtract) {
-        this.sourceLayer.push({
-          geometry: new Polygon({
-            spatialReference: {
-              wkid: 102100
-            },
-            rings: [
-              [
-                [-9618186.050867643, 1884309.6297609266],
-                [-7622262.368285651, 1982149.0259659262],
-                [-7250472.662706653, -498079.6678308132],
-                [-9412723.318837143, -566567.245174313],
-                [-9618186.050867643, 1884309.6297609266]
+      let features = [];
+      if (this.view.graphics.items.length === 0) {
+        if (this.layerExtract) {
+          this.sourceLayer.push({
+            geometry: new Polygon({
+              spatialReference: {
+                wkid: 102100
+              },
+              rings: [
+                [
+                  [-9618186.050867643, 1884309.6297609266],
+                  [-7622262.368285651, 1982149.0259659262],
+                  [-7250472.662706653, -498079.6678308132],
+                  [-9412723.318837143, -566567.245174313],
+                  [-9618186.050867643, 1884309.6297609266]
+                ]
               ]
-            ]
-          }),
-          symbol: {
-            type: 'simple-fill',
-            color: [255, 255, 0, 64],
-            outline: {
-              type: 'simple-line',
-              color: [255, 0, 0, 255],
-              width: 2,
-              style: 'dash-dot'
+            }),
+            symbol: {
+              type: 'simple-fill',
+              color: [255, 255, 0, 64],
+              outline: {
+                type: 'simple-line',
+                color: [255, 0, 0, 255],
+                width: 2,
+                style: 'dash-dot'
+              },
+              style: 'solid'
             },
-            style: 'solid'
-          },
-          attributes: {},
-          popupTemplate: null
-        });
-      } else if (this.shapeAttr) {
-        for (const filter of this.attrTable.filteredValue) {
-          this.sourceLayer.push(
-            new Graphic({
-              geometry: filter.geometry,
-              symbol: {
-                type: 'simple-line',  // autocasts as new SimpleLineSymbol()
-                color: 'red',
-                width: '2px',
-              }
-            })
-          );
+            attributes: {},
+            popupTemplate: null
+          });
+        } else if (this.shapeAttr) {
+          for (const filter of this.attrTable.filteredValue) {
+            this.sourceLayer.push(
+              new Graphic({
+                geometry: filter.geometry,
+                symbol: {
+                  type: 'simple-line',  // autocasts as new SimpleLineSymbol()
+                  color: 'red',
+                  width: '2px',
+                }
+              })
+            );
+          }
+        } else if (this.advancedSearchShape) {
+          for (const value of this.featureDptos) {
+            this.sourceLayer.push(
+              new Graphic({
+                geometry: value.geometry,
+                symbol: {
+                  type: 'simple-line',  // autocasts as new SimpleLineSymbol()
+                  color: 'red',
+                  width: '2px',
+                }
+              })
+            );
+          }
         }
-      } else if (this.advancedSearchShape) {
-        for (const value of this.featureDptos) {
-          this.sourceLayer.push(
-            new Graphic({
-              geometry: value.geometry,
-              symbol: {
-                type: 'simple-line',  // autocasts as new SimpleLineSymbol()
-                color: 'red',
-                width: '2px',
-              }
-            })
-          );
+        if (this.layerExtract || this.shapeAttr || this.advancedSearchShape) {
+          features = this.sourceLayer;
         }
+      } else if (this.view.graphics.items.length > 0) {
+        features = this.view.graphics.items;
       }
-      const features = this.layerExtract || this.shapeAttr || this.advancedSearchShape ? this.sourceLayer : this.view.graphics.items;
       const featureSet = new FeatureSet();
       featureSet.features = features;
       const params = {
