@@ -1210,7 +1210,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       // Widget de LayerList
       const layerList = new LayerList({
-        selectionEnabled: true,
+        selectionEnabled: false,
         multipleSelectionEnabled: true,
         view: this.view,
         listItemCreatedFunction: (event) => {

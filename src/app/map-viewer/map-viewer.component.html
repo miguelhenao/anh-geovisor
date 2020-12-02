@@ -44,10 +44,10 @@
       </div>
       <div id="layerSelected" class="layerSelected" title="Capa actual">
         <div *ngIf="view.ready">
-          <i class="esri-icon-checkbox-unchecked" *ngIf="!currentLayerExist"></i>
-          <i class="esri-icon-checkbox-checked" *ngIf="currentLayerExist"></i>
-          <span *ngIf="currentLayerExist">{{currentLayer.title}}</span>
-          <span *ngIf="!currentLayerExist">...</span>
+          <i class="esri-icon-checkbox-unchecked" *ngIf="!lyTierrasCreate"></i>
+          <i class="esri-icon-checkbox-checked" *ngIf="lyTierrasCreate"></i>
+          <span *ngIf="lyTierrasCreate">{{lyTierrasCreate.title}}</span>
+          <span *ngIf="!lyTierrasCreate">...</span>
         </div>
       </div>
       <div>
