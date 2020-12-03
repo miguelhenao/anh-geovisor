@@ -170,7 +170,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
   home: any;
 
   constructor(private dialogService: DialogService, private service: MapViewerService, private ref: ChangeDetectorRef,
-    private messageService: MessageService, private confirmationService: ConfirmationService) {
+              private messageService: MessageService, private confirmationService: ConfirmationService) {
     this.setCurrentPosition();
     // Color de la barra de carga.
     this.colorsFirst = this.generateColor('#F8C933', '#FFE933', 50);
@@ -752,7 +752,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       });
       lyPozo.load().then(() => {
-        lyPozo.title = lyPozo.sourceJSON.name;
+				lyPozo.displayField = this.getDisplayField(lyPozo.displayField, lyPozo.fields);
+    		lyPozo.title = lyPozo.sourceJSON.name;
         let text = '';
         const searchField: Array<any> = [];
         for (const field of lyPozo.fields) {
