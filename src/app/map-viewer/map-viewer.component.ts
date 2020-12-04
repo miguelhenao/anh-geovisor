@@ -438,7 +438,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             }
           },
           {
-            label: 'Análisis de Departamento',
+            label: 'Análisis de Contratos por Departamento',
             icon: 'anh-icon analisis',
             command: () => {
               !this.errorArcgisService ? this.analisis() : null;
@@ -1223,7 +1223,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
                 className: 'esri-icon-table',
                 id: 'attr-table'
               }, {
-                title: 'Análisis de Departamento',
+                title: 'Análisis de Contratos por Departamento',
                 className: 'esri-icon-description',
                 id: 'analisis'
               },

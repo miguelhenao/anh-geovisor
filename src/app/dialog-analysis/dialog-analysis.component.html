@@ -3,8 +3,7 @@
     (click)="_this.requestHelp('h-cobertura')" icon="pi pi-question"></button>
   <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoTool = !infoTool"
     style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
-  <p> Seleccionados los departamentos para realizar el análisis, posteriormente de click en el ícono de cerrar
-     del Select:</p>
+  <p> Seleccione el(los) departamento(s) para realizar el análisis y a continuación oculte la lista desplegada con el ícono <i class="pi pi-times"></i></p>
   <p-multiSelect defaultLabel="Seleccione los departamentos para realizar análisis"
     (onChange)="_this.changeAttrTable($event)" [options]="_this.selectDpto" [(ngModel)]="_this.dptosSelected"
     optionLabel="attributes.departamen"></p-multiSelect>

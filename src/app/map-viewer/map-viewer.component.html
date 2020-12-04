@@ -83,7 +83,7 @@
       (click)="requestHelp('h-extraer')" icon="pi pi-question"></button>
     <button pButton class="ui-button-rounded ui-button-secondary" title="Info" (click)="infoTool = !infoTool"
       style="color: #007ad8; float: right; margin-right: 5px; box-shadow: none;" icon="pi pi-info"></button>
-    <p>1. Seleccione la(s) capa(s) a extraer, posteriormente de click en el ícono de cerrar del Select</p>
+    <p>1. Seleccione la(s) capa(s) a extraer y a continuación oculte la lista desplegada con el ícono <i class="pi pi-times"></i></p>
     <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados"
       [(ngModel)]="selectedLayers"></p-multiSelect>
     <br>
@@ -126,7 +126,7 @@
 <!-- Fin del modal de extracción de datos -->
 
 <!-- Modal de análisis de departamento -->
-<p-dialog header="Análisis de Departamento" [(visible)]="modalAnalysis" [resizable]="false"
+<p-dialog header="Análisis de Contratos por Departamento" [(visible)]="modalAnalysis" [resizable]="false"
   (onHide)="onHideDialogAnalisis()" [focusOnShow]="false" [style]="{'width': '390px'}" position="topright">
   <div *ngIf="modalAnalysis">
     <app-dialog-analysis [_this]="this"></app-dialog-analysis>
@@ -158,7 +158,7 @@
         </p-button>
       </div>
     </div>
-    <p>3. Seleccione las capas a extraer</p>
+    <p>3. Seleccione las capas a extraer y a continuación oculte la lista desplegada con el ícono <i class="pi pi-times"></i></p>
     <div style="display: grid; grid-template-columns: auto auto; margin-bottom: 5px; margin-right: 5px;">
       <p-multiSelect [options]="optionsLayers" defaultLabel="Click aquí..." selectedItemsLabel="{0} items seleccionados"
         [(ngModel)]="selectedLayers" maxSelectedLabels="2"></p-multiSelect>
