@@ -311,11 +311,11 @@ p-sidebar {
   position: fixed;
   top: 50%;
   left: 50%;
-  width: 144px;
-  height: 144px;
+  width: 100px;
+  height: 100px;
   background: url(../../assets/loading-machin.png) -5px -20px;
-  margin-top: -72px;
-  margin-left: -72px;
+  margin-top: -50px;
+  margin-left: -50px;
   animation: mymove 1.6s steps(30, end) infinite;
   z-index: 1001;
 }
@@ -333,7 +333,7 @@ p-sidebar {
 
 @-webkit-keyframes mymove {
   from {
-    background-position: -4320px;
+    background-position: -3000px;
   }
   to {
     background-position: 0px;
@@ -342,7 +342,7 @@ p-sidebar {
 
 @keyframes mymove {
   from {
-    background-position: -4320px;
+    background-position: -3000px;
   }
   to {
     background-position: 0px;

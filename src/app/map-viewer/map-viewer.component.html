@@ -60,10 +60,11 @@
 
 
 <!-- Div de carga de tareas -->
-<div id="loading" *ngIf="(view.updating || makingWork) && !modalMeasurement && !flagSketch">
+<!-- <div id="loading" *ngIf="(view.updating || makingWork) && !modalMeasurement && !flagSketch"> -->
+<div id="loading">
   <div class="loading-machin">
   </div>
-  <p-progressBar mode="indeterminate" [style]="{'height': '6px', 'margin-top': '56px', 'margin-left': '-72px'}">
+  <p-progressBar mode="indeterminate" [style]="{'height': '6px', 'margin-top': '50px', 'margin-left': '-60px'}">
   </p-progressBar>
 </div>
 <!-- Fin de div de carga de tareas -->
