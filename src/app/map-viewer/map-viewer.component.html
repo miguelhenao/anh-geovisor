@@ -60,8 +60,7 @@
 
 
 <!-- Div de carga de tareas -->
-<!-- <div id="loading" *ngIf="(view.updating || makingWork) && !modalMeasurement && !flagSketch"> -->
-<div id="loading">
+<div id="loading" *ngIf="(view.updating || makingWork) && !modalMeasurement && !flagSketch">
   <div class="loading-machin">
   </div>
   <p-progressBar mode="indeterminate" [style]="{'height': '6px', 'margin-top': '50px', 'margin-left': '-60px'}">
@@ -290,7 +289,7 @@
             <button pButton icon="pi pi-search" class="ui-button-rounded ui-button-secodnary"
               pTooltip="Buscar información" (click)="openFilter()"></button>
             <button pButton icon="esri-icon-download" class="ui-button-rounded ui-button-warning"
-              pTooltip="Exportar a Shapefile" (click)="extractShapeFromAttr()"></button>
+              pTooltip="Exportar a Shapefile" (click)="extractShapeFromAttr()" [disabled]="layerAttrTable.id === 'local'"></button>
             <button pButton icon="fas fa-file-excel" class="ui-button-rounded ui-button-success"
               pTooltip="Exportar a Excel" (click)="generateExcelFeaturesLayer()"></button>
           </div>

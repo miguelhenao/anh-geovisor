@@ -135,6 +135,7 @@ export class ImportCSV {
               });
               sourceGraphics = sourceGraphics.concat(graphics);
               const featureLayer = new FeatureLayer({
+                id: 'local',
                 title: this.filename,
                 objectIdField: '__OBJECTID',
                 source: graphics,

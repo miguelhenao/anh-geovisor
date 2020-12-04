@@ -178,6 +178,7 @@ export class DialogFileComponent implements OnInit {
         content: '${*}'
       });
       const featureLayer = new FeatureLayer({
+        id: 'local',
         title: filename,
         objectIdField: 'FID',
         source: graphics,
@@ -231,6 +232,7 @@ export class DialogFileComponent implements OnInit {
       })
     ];
     const featureLayer = new FeatureLayer({
+      id: 'local',
       title: `GeoJSON ${quantityType}`,
       source: graphics,
       fields

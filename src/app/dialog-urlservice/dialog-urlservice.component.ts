@@ -60,6 +60,7 @@ export class DialogUrlServiceComponent implements OnInit {
         switch (this.type) {
           case 'kml':
             const kml = new KMLLayer({
+              id: 'local',
               url: this.serviceForm.value.urlService
             });
             count = 1;
@@ -70,6 +71,7 @@ export class DialogUrlServiceComponent implements OnInit {
             break;
           case 'wms':
             const wms = new WMSLayer({
+              id: 'local',
               url: this.serviceForm.value.urlService
             });
             count = 1;
@@ -80,6 +82,7 @@ export class DialogUrlServiceComponent implements OnInit {
             break;
           case 'json':
             const geo = new GeoJSONLayer({
+              id: 'local',
               url: this.serviceForm.value.urlService
             });
             count = 1;
@@ -90,6 +93,7 @@ export class DialogUrlServiceComponent implements OnInit {
             break;
           case 'csv':
             const csv = new CSVLayer({
+              id: 'local',
               url: this.serviceForm.value.urlService
             });
             count = 1;
