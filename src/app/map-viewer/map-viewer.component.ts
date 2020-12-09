@@ -1439,7 +1439,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       });
       this.legend = legend;
       const expandLegend = new Expand({
-        expandIconClass: 'esri-icon-layer-list',
+        expandIconClass: 'esri-icon-legend',
         expandTooltip: 'Convenciones',
         view: this.view,
         content: legend,
