@@ -570,6 +570,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.optionsLayers = [];
     this.copyrightIGAC = [];
     this.copyrightSGC = [];
+    this.optionsLayerExtractor = [];
     this.map.layers.items.forEach((layer) => {
       if (layer.title !== null) {
         layer.copyright = layer.copyright !== null && layer.copyright !== undefined ? layer.copyright : '';
@@ -588,8 +589,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           this.optionsLayerExtractor.push({ label, value: layer.title }) : null;
       }
     });
-    this.optionsLayerExtractor = this.optionsLayerExtractor.reverse();
-    this.optionsLayers = this.optionsLayers.reverse();
+    this.optionsLayerExtractor.reverse();
+    this.optionsLayers.reverse();
   }
 
   /**
