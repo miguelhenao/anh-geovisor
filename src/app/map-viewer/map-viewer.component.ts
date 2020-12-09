@@ -213,6 +213,7 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     }, 10);
 
     // Dialogo de mantenimiento
+    /*
     const dialogMaintenance = this.dialogService.open(DialogMaintenanceComponent, {
       width: '50%',
       height: 'auto',
@@ -222,19 +223,19 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       closeOnEscape: false
     });
     dialogMaintenance.onClose.subscribe(result => {
-      // Dialogo de términos y condiciones
-      setTimeout(() => {
-        this.dialogService.open(DialogTerminosComponent, {
-          width: '80%',
-          height: '80%',
-          baseZIndex: 2000,
-          showHeader: false,
-          closable: false,
-          closeOnEscape: false
-        });
-      }, 500);
     });
-
+    */
+    // Dialogo de términos y condiciones
+    setTimeout(() => {
+      this.dialogService.open(DialogTerminosComponent, {
+        width: '80%',
+        height: '80%',
+        baseZIndex: 2000,
+        showHeader: false,
+        closable: false,
+        closeOnEscape: false
+      });
+    }, 500);
     // Instanciación del menú
     this.menu = [
       {
