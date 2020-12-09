@@ -400,11 +400,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
             }
           },
           {
-            label: 'Extraer Datos Geográficos',
+            label: 'Extraer Área',
             icon: 'esri-icon-maps',
             command: () => {
               if (!this.errorArcgisService) {
-                this.headerExtract = 'Extraer Datos Geográficos';
+                this.headerExtract = 'Extraer Área';
                 this.buildOptionsLayers();
                 this.layerExtract = false;
                 this.visibleModal(false, false, false, true, false, false, false, false, false, false);
