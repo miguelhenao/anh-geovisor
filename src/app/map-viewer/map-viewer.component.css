@@ -389,7 +389,7 @@ p-sidebar {
 #time-slider .ts-bg {
   max-width: 100%;
   background-color: transparent !important;
-  height: 51.5px;
+  height: 65px;
   padding: 0px 20px;
   padding-top: 20px;
 }
@@ -399,11 +399,11 @@ p-sidebar {
   position: relative;
   opacity: 1.0;
   text-align: center;
-  height: 20px;
+  height: 50px;
 }
 
 #ts-tierras .ts-label {
-  bottom: 20px;
+  bottom: 30px;
   display: block;
   position: absolute;
   width: 100%;
