@@ -2029,12 +2029,12 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       const maxValueSlider = document.getElementsByClassName('esri-slider__max')[0];
       maxValueSlider.textContent = timeStops[timeStops.length - 1][1].getFullYear();
       let d = timeStops[slider.values[0]][1];
-      this.nameLayer = monthNames[d.getMonth()] + ' ' + d.getFullYear();
+      this.nameLayer = 'Histórico de Tierras <br>' + monthNames[d.getMonth()] + ' ' + d.getFullYear();
       let lyTierrasMdt;
       slider.on(['thumb-change', 'thumb-drag'], () => {
         const index = slider.values[0];
         d = timeStops[index][1];
-        this.nameLayer = monthNames[d.getMonth()] + ' ' + d.getFullYear();
+        this.nameLayer = 'Histórico de Tierras <br>' + monthNames[d.getMonth()] + ' ' + d.getFullYear();
         const layerTierras = this.map.layers.items.find(x => x.id === 'Tierras');
         lyTierrasMdt = this.map.layers.items.find(x => x.id === 'Tierras_MDT');
         if (lyTierrasMdt !== undefined) {
