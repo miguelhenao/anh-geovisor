@@ -1,11 +1,20 @@
+.terms {
+  min-width: 250px !important;
+  max-width: 800px;
+  /* margin: 10px !important; */
+}
+
 #body {
   overflow-y: scroll;
+  padding: 10px;
+  margin: 10px;
   height: 372px;
   clear: both;
+  background-color: rgb(248, 248, 248);
 }
 
 #header {
-  margin-bottom: 10px;
+  margin: 10px;
 }
 
 #header {
@@ -17,51 +26,91 @@ h2, h4 {
   margin: 0;
 }
 
+#body p {
+  text-align: justify;
+}
+
 /* Pixel 2 XL */
 @media screen and (max-height: 823px) and (max-width: 411px) {
+  .terms {
+    width: 350px;
+  }
+
   #body {
-    height: 382px;
+    height: 510px;
   }
 }
 
 /* iPhone X */
 @media screen and (max-height: 812px) and (max-width: 375px) {
+  .terms {
+    width: 309px;
+  }
+
   #body {
-    height: 372px;
+    height: 499px;
   }
 }
 
 /* Pixel 2 */
 @media screen and (max-height: 731px) and (max-width: 411px) {
+  .terms {
+    width: 350px;
+  }
+
   #body {
-    height: 350px;
+    height: 418px;
   }
 }
 
 /* iPhone 6/7/8 Plus */
 @media screen and (max-height: 736px) and (max-width: 414px) {
+  .terms {
+    width: 350px;
+  }
+
   #body {
-    height: 335px;
+    height: 423px;
   }
 }
 
 /* iPhone 6/7/8 */
 @media screen and (max-height: 667px) and (max-width: 375px) {
+  .terms {
+    width: 300px;
+  }
+
   #body {
-    height: 265px;
+    height: 354px;
   }
 }
 
 /* Galaxy S5 */
 @media screen and (max-height: 640px) and (max-width: 360px) {
+  .terms {
+    width: 300px;
+  }
+
   #body {
-    height: 265px;
+    height: 327px;
   }
 }
 
 /* iPhone 5/SE */
 @media screen and (max-height: 568px) and (max-width: 320px) {
+  .terms {
+    width: 300px;
+  }
+
   #body {
-    height: 190px;
+    height: 255px;
+  }
+}
+
+/* Galaxy Fold */
+
+@media screen and (max-height: 653px) and (max-width: 280px) {
+  .terms {
+    width: 250px;
   }
 }

@@ -228,8 +228,8 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     // Dialogo de términos y condiciones
     setTimeout(() => {
       this.dialogService.open(DialogTerminosComponent, {
-        width: '80%',
-        height: '80%',
+        width: 'auto',
+        height: 'auto',
         baseZIndex: 2000,
         showHeader: false,
         closable: false,
