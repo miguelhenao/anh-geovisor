@@ -2146,6 +2146,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.visibleModal(false, false, false, false, false, false, true, false, false, false);
     }, (err) => {
       this.makingWork = false;
+      this.messageService.add({
+        severity: 'error',
+        summary: '',
+        detail: 'Error: ' + err.message
+      });
       console.error(err);
     });
   }
@@ -2405,7 +2410,11 @@ export class MapViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           features = this.sourceLayer;
         }
       } else if (this.view.graphics.items.length > 0) {
-        features = this.view.graphics.items;
+        if (this.featuresSelected.length > 0) {
+          features = this.featuresSelected;
+        } else {
+          features = this.view.graphics.items;
+        }
       }
       const featureSet = new FeatureSet();
       featureSet.features = features;
